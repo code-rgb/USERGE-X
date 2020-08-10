@@ -11,8 +11,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     else:
         ubot = userge
   
-  @ubot.on_inline_query()
-  async def inline_query_handler(_, query: InlineQuery):
+@ubot.on_inline_query()
+async def inline_query_handler(_, query: InlineQuery):
     string = query.query.lower()
     results = []
     if string == "":
