@@ -14,8 +14,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     results = []
     @ubot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
-      string = inline_query.query.lower()
-
+        string = inline_query.query.lower()
         if string == "":
             button = [[
                     InlineKeyboardButton(
@@ -38,9 +37,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         reply_markup=InlineKeyboardMarkup(button)
                     )
                 )
-    
+
         if string =="lmao":
-           button = [[
+            button = [[
                     InlineKeyboardButton(
                     text="YOU TYPED LMAO", 
                     url="https://www.youtube.com/"
@@ -61,7 +60,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         reply_markup=InlineKeyboardMarkup(button)
                     )
                 )
-           
+            
         elif string == "error":
             switch_pm_text = f"{Emoji.SHARK} Syntax ERROR BABYYYY"
 
