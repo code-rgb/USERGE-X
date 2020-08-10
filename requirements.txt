@@ -37,3 +37,7 @@ urbandict==0.5
 wget
 wikipedia
 youtube_dl
+jikanpy
+nekos.py
+html-telegraph-poster
+igramscraper

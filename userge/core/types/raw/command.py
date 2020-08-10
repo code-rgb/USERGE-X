@@ -81,7 +81,7 @@ def _format_about(about: Union[str, Dict[str, Union[str, List[str], Dict[str, st
             tmp_chelp += f"<i><b>{about['header'].title()}</b><i>"
             del about['header']
         if 'description' in about and isinstance(about['description'], str):
-            tmp_chelp += ("\n\n📝 <u><b>Description</b></u> :\n\n    "
+            tmp_chelp += ("\n\n📝 <u><b>Description</b></u> :\n    "
                           f"<i>{about['description'].capitalize()}</i>")
             del about['description']
         if 'flags' in about:
@@ -101,7 +101,7 @@ def _format_about(about: Union[str, Dict[str, Union[str, List[str], Dict[str, st
                 tmp_chelp += f"\n    {about['options']}"
             del about['options']
         if 'types' in about:
-            tmp_chelp += "\n\n🎨 <u><b>Supported Types</b></u> :\n\n"
+            tmp_chelp += "\n\n🎨 <u><b>Supported Types</b></u> :\n"
             if isinstance(about['types'], list):
                 for _opt in about['types']:
                     tmp_chelp += f"    <code>{_opt}</code> ,"
@@ -109,18 +109,18 @@ def _format_about(about: Union[str, Dict[str, Union[str, List[str], Dict[str, st
                 tmp_chelp += f"    {about['types']}"
             del about['types']
         if 'usage' in about:
-            tmp_chelp += f"\n\n✒ <u><b>Usage</b></u> :\n\n<code>{about['usage']}</code>"
+            tmp_chelp += f"\n\n✒ <u><b>Usage</b></u> :\n<code>{about['usage']}</code>"
             del about['usage']
         if 'examples' in about:
             tmp_chelp += "\n\n✏ <u><b>Examples</b></u> :"
             if isinstance(about['examples'], list):
                 for ex_ in about['examples']:
-                    tmp_chelp += f"\n\n    <code>{ex_}</code>"
+                    tmp_chelp += f"\n    <code>{ex_}</code>"
             else:
-                tmp_chelp += f"\n\n    <code>{about['examples']}</code>"
+                tmp_chelp += f"\n    <code>{about['examples']}</code>"
             del about['examples']
         if 'others' in about:
-            tmp_chelp += f"\n\n📎 <u><b>Others</b></u> :\n\n{about['others']}"
+            tmp_chelp += f"\n\n📎 <u><b>Others</b></u> :\n{about['others']}"
             del about['others']
         if about:
             for t_n, t_d in about.items():

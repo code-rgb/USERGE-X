@@ -26,7 +26,7 @@ _CATEGORY = {
     'misc': '⚙️',
     'tools': '🧰',
     'utils': '🗂',
-    'unofficial': '🃏',
+    'Extra': '🍑',
     'temp': '♻️',
     'plugins': '💎'
 }
@@ -57,7 +57,7 @@ async def helpme(message: Message) -> None:  # pylint: disable=missing-function-
                 and (len(plugins[key].enabled_commands) > 1
                      or plugins[key].enabled_commands[0].name.lstrip(Config.CMD_TRIGGER) != key)):
             commands = plugins[key].enabled_commands
-            out_str = f"""⚔ <b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
+            out_str = f"""<b><u>(<code>{len(commands)}</code>) Command(s) Available</u></b>
 
 🔧 <b>Plugin:</b>  <code>{key}</code>
 📘 <b>Doc:</b>  <code>{plugins[key].doc}</code>\n\n"""
@@ -96,7 +96,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             else:
                 user_dict = await ubot.get_user_dict(Config.OWNER_ID)
                 await c_q.answer(
-                    f"Only {user_dict['flname']} Can Access this...! Build Your Own @TheUserge 🤘",
+                    f"Only {user_dict['flname']} Can Access this...! Build Your USERGE-X",
                     show_alert=True)
         return wrapper
 
@@ -114,7 +114,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                     userge.manager.get_all_plugins())
         elif len(pos_list) == 2:
             buttons = parse_buttons(p_num, cur_pos,
-                                    lambda x: f"🗃 {x}",
+                                    lambda x: f"🔹 {x}",
                                     userge.manager.get_all_plugins()[pos_list[-1]])
         elif len(pos_list) == 3:
             _, buttons = plugin_data(cur_pos, p_num)
@@ -130,7 +130,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("you are in main menu", show_alert=True)
             return
         if len(pos_list) == 2:
-            text = "🖥 **Userge Main Menu** 🖥"
+            text = " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
             buttons = main_menu_buttons()
         elif len(pos_list) == 3:
             text, buttons = category_data(cur_pos)
@@ -177,7 +177,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
         await callback_query.edit_message_text(
-            "🖥 **Userge Main Menu** 🖥", reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
+            " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 ", reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
     @ubot.on_callback_query(filters=Filters.regex(pattern=r"^chgclnt$"))
     @check_owner
@@ -212,7 +212,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                       cur_pos: str,
                       func: Callable[[str], str],
                       data: Union[List[str], Dict[str, Any]],
-                      rows: int = 3):
+                      rows: int = 5):
         buttons = [InlineKeyboardButton(
             func(x), callback_data=f"enter({cur_pos}|{x})".encode()) for x in sorted(data)]
         pairs = list(map(list, zip(buttons[::2], buttons[1::2])))
@@ -247,7 +247,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 tmp_btns.append(InlineKeyboardButton(
                     "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()))
         else:
-            cur_clnt = "👲 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "🤖 BOT"
+            cur_clnt = "🎴 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
             tmp_btns.append(InlineKeyboardButton(
                 f"🔩 Client for Checks and Sudos : {cur_clnt}", callback_data="chgclnt".encode()))
         return [tmp_btns]
@@ -256,21 +256,21 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         pos_list = cur_pos.split('|')
         plugins = userge.manager.get_all_plugins()[pos_list[1]]
         text = (f"**(`{len(plugins)}`) Plugin(s) Under : "
-                f"`{_CATEGORY.get(pos_list[1], '📁')} {pos_list[1]}` 🎭 Category**")
+                f"`{_CATEGORY.get(pos_list[1], '📁')} {pos_list[1]}`  Category**")
         buttons = parse_buttons(0, '|'.join(pos_list[:2]),
-                                lambda x: f"🗃 {x}",
+                                lambda x: f"🔹 {x}",
                                 plugins)
         return text, buttons
 
     def plugin_data(cur_pos: str, p_num: int = 0):
         pos_list = cur_pos.split('|')
         plg = userge.manager.plugins[pos_list[2]]
-        text = f"""🗃 **--Plugin Status--** 🗃
+        text = f"""🔹 **--Plugin Status--** 🔹
 
 🎭 **Category** : `{pos_list[1]}`
 🔖 **Name** : `{plg.name}`
 📝 **Doc** : `{plg.doc}`
-⚔ **Commands** : `{len(plg.commands)}`
+◾️ **Commands** : `{len(plg.commands)}`
 ⚖ **Filters** : `{len(plg.filters)}`
 ✅ **Loaded** : `{plg.is_loaded}`
 ➕ **Enabled** : `{plg.is_enabled}`
@@ -289,7 +289,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             tmp_btns.append(InlineKeyboardButton(
                 "➕ Enable", callback_data=f"enable({'|'.join(pos_list[:3])})".encode()))
         buttons = parse_buttons(p_num, '|'.join(pos_list[:3]),
-                                lambda x: f"⚖ {x}" if is_filter(x) else f"⚔ {x}",
+                                lambda x: f"⚖ {x}" if is_filter(x) else f" {x}",
                                 (flt.name for flt in plg.commands + plg.filters))
         buttons = buttons[:-1] + [tmp_btns] + [buttons[-1]]
         return text, buttons
@@ -306,7 +306,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 ✅ **Loaded** : `{flt.is_loaded}`
 ➕ **Enabled** : `{flt.is_enabled}`"""
         if hasattr(flt, 'about'):
-            text = f"""⚔ **--Command Status--**
+            text = f"""**--Command Status--**
 {flt_data}
 {flt.about}
 """
@@ -338,19 +338,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 id=uuid4(),
                 title="Repo",
                 input_message_content=InputTextMessageContent(
-                    "**Here's how to setup Userge** 😎"
+                    "**Here's how to setup USERGE-X** "
                 ),
-                url="https://github.com/UsergeTeam/Userge",
+                url="https://github.com/code-rgb/USERGE-X",
                 description="Setup Your Own",
-                thumb_url="https://imgur.com/download/Inyeb1S",
+                thumb_url="https://i.imgur.com/1xsOo9o.png",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton(
-                                "🧰 Userge Repo",
-                                url="https://github.com/UsergeTeam/Userge"),
+                                "🔥 USERGE-X Repo",
+                                url="https://github.com/code-rgb/USERGE-X"),
                             InlineKeyboardButton(
-                                "🖥 Deploy Userge",
+                                "🚀 Deploy USERGE-X",
                                 url=("https://heroku.com/deploy?template="
                                      "https://github.com/UsergeTeam/Userge/tree/master"))
                         ]
@@ -364,11 +364,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     id=uuid4(),
                     title="Main Menu",
                     input_message_content=InputTextMessageContent(
-                        "🖥 **Userge Main Menu** 🖥"
+                        " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
                     ),
-                    url="https://github.com/UsergeTeam/Userge",
-                    description="Userge Main Menu",
-                    thumb_url="https://imgur.com/download/Inyeb1S",
+                    url="https://github.com/code-rgb/USERGE-X",
+                    description="Userge-X Main Menu",
+                    thumb_url="https://i.imgur.com/1xsOo9o.png",
                     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
                 )
             )

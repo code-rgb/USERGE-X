@@ -140,11 +140,11 @@ _checkUpstreamRepo() {
 }
 
 _checkUnoffPlugins() {
-    editLastMessage "Checking UnOfficial Plugins ..."
+    editLastMessage "Checking Userge-X [Extra] Plugins ..."
     if test $LOAD_UNOFFICIAL_PLUGINS = true; then
-        editLastMessage "\tLoading UnOfficial Plugins ..."
+        editLastMessage "\tLoading Userge-X [Extra] Plugins ..."
         replyLastMessage "\t\tClonning ..."
-        gitClone --depth=1 https://github.com/UsergeTeam/Userge-Plugins.git
+        gitClone --depth=1 https://github.com/code-rgb/Userge-Plugins.git
         editLastMessage "\t\tUpgrading PIP ..."
         upgradePip
         editLastMessage "\t\tInstalling Requirements ..."
@@ -155,9 +155,9 @@ _checkUnoffPlugins() {
         cp -r Userge-Plugins/resources/* resources/
         rm -rf Userge-Plugins/
         deleteLastMessage
-        editLastMessage "\tUnOfficial Plugins Loaded Successfully !"
+        editLastMessage "\tUserge-X [Extra] Plugins Loaded Successfully !"
     else
-        editLastMessage "\tUnOfficial Plugins Disabled !"
+        editLastMessage "\tUserge-X [Extra] Plugins Disabled !"
     fi
     sleep 1
     deleteLastMessage

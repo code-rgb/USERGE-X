@@ -1,147 +1,111 @@
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
+<br>
+
 <p align="center">
-    <a href="https://github.com/UsergeTeam/Userge">
-        <img src="resources/userge.png" alt="Userge">
-    </a>
+    <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
     <br>
-    <b>Pluggable Telegram UserBot</b>
     <br>
-    <a href="https://github.com/UsergeTeam/Userge#inspiration-">Inspiration</a>
-    &nbsp•&nbsp
-    <a href="https://github.com/UsergeTeam/Userge#features-">Features</a>
-    &nbsp•&nbsp
-    <a href="https://github.com/UsergeTeam/Userge#example-plugin-">Example</a>
-    &nbsp•&nbsp
-    <a href="https://github.com/UsergeTeam/Userge#requirements-">Requirements</a>
-    &nbsp•&nbsp
-    <a href="https://github.com/UsergeTeam/Userge#project-credits-">Project Credits</a>
-    &nbsp•&nbsp
-    <a href="https://github.com/UsergeTeam/Userge#copyright--license-">Copyright & License</a>
 </p>
 
-# Userge 🔥
+<h1>USERGE-X</h1>
+<b>Pluggable Telegram UserBot</b>
+<br>
+<br>
 
-[![Build Status](https://travis-ci.com/UsergeTeam/Userge.svg?branch=dev)](https://travis-ci.com/UsergeTeam/Userge) ![Python Version](https://img.shields.io/badge/python-3.8-lightgrey) ![Release](https://img.shields.io/github/v/release/UsergeTeam/Userge) ![Stars](https://img.shields.io/github/stars/UsergeTeam/Userge) ![Forks](https://img.shields.io/github/forks/UsergeTeam/Userge) ![Issues Open](https://img.shields.io/github/issues/UsergeTeam/Userge) ![Issues Closed](https://img.shields.io/github/issues-closed/UsergeTeam/Userge) ![PR Open](https://img.shields.io/github/issues-pr/UsergeTeam/Userge) ![PR Closed](https://img.shields.io/github/issues-pr-closed/UsergeTeam/Userge) ![Contributors](https://img.shields.io/github/contributors/UsergeTeam/Userge) ![Repo Size](https://img.shields.io/github/repo-size/UsergeTeam/Userge) ![License](https://img.shields.io/github/license/UsergeTeam/Userge) ![Commit Activity](https://img.shields.io/github/commit-activity/m/UsergeTeam/Userge) [![Plugins Repo!](https://img.shields.io/badge/Plugins%20Repo-!-orange)](https://github.com/UsergeTeam/Userge-Plugins) [![Join Channel!](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/theUserge) [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/UsergeTeam/Userge/?ref=repository-badge)
+![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)
+![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)
+![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)
+![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X)
+![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)
+![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
+![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
 
-> **Userge** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
+<br>
 
-## Inspiration 😇
+ **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
+<br>
 
-> This project is inspired by the following projects :)
+<br>
 
-* [tg_userbot](https://github.com/watzon/tg_userbot) ( heavily ) 🤗
-* [PyroGramUserBot](https://github.com/SpEcHiDe/PyroGramUserBot)
-* [Telegram-Paperplane](https://github.com/RaphielGang/Telegram-Paperplane)
-* [UniBorg](https://github.com/SpEcHiDe/UniBorg)
+## How to Use ??
 
-> Special Thanks to all of you !!!.
+1. If you already on official Userge repo just add 
+<b>UPSTREAM_REPO</b> to <b>https://github.com/code-rgb/USERGE-X</b> and update normally.
 
-## Features 😍
 
-* Powerful and Very Useful **built-in** Plugins
-  * gdrive [ upload / download / etc ] ( Team Drives Supported! ) 🤥
-  * zip / tar / unzip / untar / unrar
-  * telegram upload / download
-  * pmpermit / afk
-  * notes / filters
-  * split / combine
-  * gadmin
-  * plugin manager
-  * etc...
-* Channel & Group log support
-* Database support
-* Build-in help support
-* Easy to Setup & Use
-* Easy to add / port Plugins
-* Easy to write modules with the modified client
+<p align="center">OR</p>
 
-## Example Plugin 🤨
 
-```python
-from userge import userge, Message
+2. First see <a href="https://github.com/code-rgb/USERGE-X#how-to-deploy">DEPLOY GUIDE</a> and add UPSTEAM_REPO var.
+<br>
 
-LOG = userge.getLogger(__name__)  # logger object
+## Disclaimer
 
-CHANNEL = userge.getCLogger(__name__)  # channel logger object
+                
+   ```
 
-@userge.on_cmd("test", about="help text to this command")  # adding handler and help text to .test command
-async def testing(message: Message):
-   LOG.info("starting test command...")  # log to console
-
-   await message.edit("testing...", del_in=5)  # this will be automatically deleted after 5 sec
-
-   await CHANNEL.log("testing completed!")  # log to channel
+/**
+    ⚠️Kang at your own risk⚠️          
+    Your Telegram account may get banned.
+    I am not responsible for any improper use of this bot
+    This bot is intended for the purpose of having fun with memes,
+    as well as efficiently managing groups.
+    It can help you with managing yourself as well.
+    You ended up spamming groups, getting reported left and right,
+    and then you ended up in a Final Battle with Telegram
+    and at the end the Telegram Team
+    deleted your account?
+    And after that, you pointed your fingers at us
+    for getting your account deleted?
+    We will be rolling on the floor laughing at you.
+    Yes! you heard it right.
+/**
 ```
 
-## Requirements 🥴
 
-* Python 3.8 or Higher 👻
+## Requirements 
+
+* Python 3.8 or Higher
 * Telegram [API Keys](https://my.telegram.org/apps)
 * Google Drive [API Keys](https://console.developers.google.com/)
 * MongoDB [Database URL](https://cloud.mongodb.com/)
 
-## How To Deploy 👷
+## How To Deploy 
 
-* **[HEROKU](https://www.heroku.com/) Method** 🔧
+<p align="center">
+<a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/Userge/tree/master"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
+<br>
 
-  > First click the button below. 
+<h3><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">HEROKU Method</a></h3>
 
-  > If you don't have HU_STRING_SESSION just ignore it.  
+<b>First click the BUTTON ABOVE</b> 
 
-  > After Deployed to Heroku first turn off the app (resources -> turn off) and run `bash genStr` in console (more -> run console).  
-
+  > If you don't have HU_STRING_SESSION just ignore it. 
+  
+  > After Deployed to Heroku first turn off the app (resources -> turn off) and run `bash genStr` in console (more -> run console). 
+  
   > After that copy the string session and past it in Config Vars (settings -> reveal config vars). 
-
+  
   > Finally turn on the app and check the logs (settings -> view logs) :)
 
-  [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/UsergeTeam/Userge/tree/master)
+<br>
+<h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
 
-* **Other Method** 🔧
 
-  ```bash
-  # clone the repo
-  git clone https://github.com/UsergeTeam/Userge.git
-  cd Userge
+<h2>Guide to Upstream Forked Repo</h2>
+<a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
+<br>
+<br>
 
-  # create virtualenv
-  virtualenv -p /usr/bin/python3 venv
-  . ./venv/bin/activate
+<h3 align="center">Youtube Tutorial<h3>
+<p align="center"><a href="https://youtu.be/M4T_BJvFqkc"><img src="https://i.imgur.com/2mDbUXW.png" width=300px></a>
+</p>
 
-  # install requirements
-  pip install -r requirements.txt
+### Project Credits 
 
-  # Create config.env as given config.env.sample and fill that
-  cp config.env.sample config.env
+* [Team Userge](https://github.com/UsergeTeam)
 
-  # get string session and add it to config.env
-  bash genStr
+### Copyright & License 
 
-  # finally run the Userge ;)
-  bash run
-  ```
-
-* **[More Detailed Guide](https://docs.google.com/document/d/15uoiOn2NkN518MMkx9h5UaMEWMp8aNZqJocXvS0uI6E)** 📝
-
-> TODO: add Docker Support.
-
-### Video Tutorial 🎥
-
-  [![Tutorial](resources/tutorial.jpg)](https://youtu.be/M4T_BJvFqkc "Tutorial")
-
-### Support & Discussions 👥
-
-> Head over to the [Discussion Group](https://t.me/slbotsbugs) and [Update Channel](https://t.me/theUserge)
-
-### Project Credits 💆‍♂️
-
-* [Specially to these projects](https://github.com/UsergeTeam/Userge#inspiration-) 🥰
-* [@uaudIth](https://t.me/uaudIth)
-* [@K_E_N_W_A_Y](https://t.me/K_E_N_W_A_Y)
-* [@nawwasl](https://t.me/nawwasl)
-* [@TharukaN97](https://t.me/TharukaN97)
-* [@Supun97](https://t.me/Supun97)
-* [@gotstc](https://t.me/gotstc)
-
-### Copyright & License 👮
-
-* Copyright (C) 2020 by [UsergeTeam](https://github.com/UsergeTeam) ❤️️
-* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/UsergeTeam/Userge/blob/master/LICENSE)
+* Copyright (C) 2020 by [UsergeTeam](https://github.com/UsergeTeam) 
+* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/code-rgb/Userge/blob/master/LICENSE)
