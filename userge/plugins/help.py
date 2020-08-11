@@ -47,9 +47,7 @@ REPO_X = InlineQueryResultArticle(
                                     url=("https://heroku.com/deploy?template="
                                         "https://github.com/UsergeTeam/Userge/tree/master"))]]))
 
-BUTTON_BASE = get_collection("TEMP_BUTTON")  
-async for data in BUTTON_BASE.find():
-  BTN_DATA = data['msg_data']
+
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({'_id': 'CURRENT_CLIENT'})
@@ -426,6 +424,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 results.append(REPO_X)
 
             if string =="buttonnn":
+                BUTTON_BASE = get_collection("TEMP_BUTTON")  
+                async for data in BUTTON_BASE.find():
+                BTN_DATA = data['msg_data']
                 text, buttons = pb(BTN_DATA)
                 
                 results.append(
