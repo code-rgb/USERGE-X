@@ -10,6 +10,7 @@
 
 from math import ceil
 from uuid import uuid4
+import asyncio
 from typing import List, Callable, Dict, Union, Any
 from userge.utils import parse_buttons as pb
 from pyrogram import (
