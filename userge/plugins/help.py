@@ -427,8 +427,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="buttonnn":
                 BUTTON_BASE = get_collection("TEMP_BUTTON")  
                 async for data in BUTTON_BASE.find():
-                BTN_DATA = data['msg_data']
-                text, buttons = pb(BTN_DATA)
+                    button_data = data['msg_data']
+                text, buttons = pb(button_data)
                 
                 results.append(
                             InlineQueryResultArticle(
