@@ -333,43 +333,108 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     @ubot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
-        results = [
-            InlineQueryResultArticle(
-                id=uuid4(),
-                title="Repo",
-                input_message_content=InputTextMessageContent(
-                    "**Here's how to setup USERGE-X** "
-                ),
-                url="https://github.com/code-rgb/USERGE-X",
-                description="Setup Your Own",
-                thumb_url="https://i.imgur.com/1xsOo9o.png",
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "🔥 USERGE-X Repo",
-                                url="https://github.com/code-rgb/USERGE-X"),
-                            InlineKeyboardButton(
-                                "🚀 Deploy USERGE-X",
-                                url=("https://heroku.com/deploy?template="
-                                     "https://github.com/UsergeTeam/Userge/tree/master"))
-                        ]
-                    ]
-                )
-            )
-        ]
+        results = []
+        string = inline_query.query.lower()
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID:
-            results.append(
+            if string == "":
+                results.append(
+                    InlineQueryResultArticle(
+                        id=uuid4(),
+                        title="Main Menu",
+                        input_message_content=InputTextMessageContent(
+                            " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
+                        ),
+                        url="https://github.com/code-rgb/USERGE-X",
+                        description="Userge-X Main Menu",
+                        thumb_url="https://i.imgur.com/1xsOo9o.png",
+                        reply_markup=InlineKeyboardMarkup(main_menu_buttons())
+                    )
+                )
+        
+            if string == "syntax":
+                owner = [[
+                        InlineKeyboardButton(
+                        text="UwU", 
+                        url="https://t.me/deleteduser420"
+                        )
+                ]]
+                results.append(
+                        InlineQueryResultPhoto(
+                            photo_url="https://i.imgur.com/53mdl2v.png",
+                            title="You Solved 𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r",
+                            description="Click on this Url",
+                            caption="Sup 𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r UwU",
+                            reply_markup=InlineKeyboardMarkup(owner)
+                        )
+                )
+
+            if string =="lmao":
+                lmao = [[
+                        InlineKeyboardButton(
+                        text="YOU TYPED LMAO", 
+                        url="https://www.youtube.com/"
+                        )
+                ]]                           
+                results.append(
+                        InlineQueryResultArticle(
+                            id=uuid4(),
+                            title="OH God i laughed so Hard",
+                            input_message_content=InputTextMessageContent(
+                                "VROOOOOO"
+                            ),
+                            url="https://google.com",
+                            description="FUCKING FIRE BRO",
+                            thumb_url="https://i.imgur.com/1xsOo9o.png",
+                            reply_markup=InlineKeyboardMarkup(lmao)
+                        )
+                )
+
+            else:
+                notfound = [[
+                        InlineKeyboardButton(
+                        text="notfound", 
+                        url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg"
+                        )
+                ]]                           
+                results.append(
+                        InlineQueryResultArticle(
+                            id=uuid4(),
+                            title="notfound",
+                            input_message_content=InputTextMessageContent(
+                                "notfound"
+                            ),
+                            url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg",
+                            description="notfound",
+                            #thumb_url="https://i.imgur.com/1xsOo9o.png",
+                            reply_markup=InlineKeyboardMarkup(notfound)
+                        )
+                )                    
+        else:
+            results = [
                 InlineQueryResultArticle(
                     id=uuid4(),
-                    title="Main Menu",
+                    title="Repo",
                     input_message_content=InputTextMessageContent(
-                        " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
+                        "**Here's how to setup USERGE-X** "
                     ),
                     url="https://github.com/code-rgb/USERGE-X",
-                    description="Userge-X Main Menu",
+                    description="Setup Your Own",
                     thumb_url="https://i.imgur.com/1xsOo9o.png",
-                    reply_markup=InlineKeyboardMarkup(main_menu_buttons())
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "🔥 USERGE-X Repo",
+                                    url="https://github.com/code-rgb/USERGE-X"),
+                                InlineKeyboardButton(
+                                    "🚀 Deploy USERGE-X",
+                                    url=("https://heroku.com/deploy?template="
+                                        "https://github.com/UsergeTeam/Userge/tree/master"))
+                            ]
+                        ]
+                    )
                 )
-            )
+            ]
+
         await inline_query.answer(results=results, cache_time=1)
+        return
