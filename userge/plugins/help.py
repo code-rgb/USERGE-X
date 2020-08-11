@@ -15,7 +15,7 @@ from userge.utils import parse_buttons as pb
 from pyrogram import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    Filters, CallbackQuery, InlineQuery)
+    Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
 from userge import userge, Message, Config, get_collection
 
