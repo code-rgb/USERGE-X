@@ -15,7 +15,7 @@ from typing import List, Callable, Dict, Union, Any
 from pyrogram import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    Filters, CallbackQuery, InlineQuery)
+    Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid
 
 from userge import userge, Message, Config, get_collection
