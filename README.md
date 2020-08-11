@@ -88,7 +88,6 @@
   
   > Finally turn on the app and check the logs (settings -> view logs) :)
 
-<br>
 <h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
 
 
