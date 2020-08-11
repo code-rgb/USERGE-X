@@ -364,7 +364,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         thumb_url="https://i.imgur.com/1xsOo9o.png",
                         reply_markup=InlineKeyboardMarkup(main_menu_buttons())
                     )           
-            result = [MAIN_MENU]              
+            results.append(MAIN_MENU)             
         
             if string == "syntax":
                 owner = [[
@@ -440,9 +440,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                 )
-    
+# TODO: make pb for inline buttons  
         else:
-            results = [REPO_X] 
+            results.append(REPO_X)
 
         await inline_query.answer(results=results, cache_time=1)
         return
