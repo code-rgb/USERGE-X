@@ -427,7 +427,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="buttonnn":
                 BUTTON_BASE = get_collection("TEMP_BUTTON")  
                 async for data in BUTTON_BASE.find():
-                    button_data = str(data['msg_data'])
+                    button_data = data['msg_data']
                 text, buttons = pb(button_data)
                 
                 results.append(
@@ -437,7 +437,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 input_message_content=InputTextMessageContent(text),
                                 #description="Definately Not a Rick Roll",
                             # thumb_url="https://i.imgur.com/hRCaKAy.png",
-                                reply_markup=InlineKeyboardMarkup(buttons)
+                                reply_markup=buttons
                             )
                 )
 # TODO: make pb for inline buttons  
