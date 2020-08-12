@@ -15,13 +15,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     else:
         ubot = userge
 
-def error_call(_, CallbackQuery):
-    if re.match("notfound", CallbackQuery.data):
-        return True
+# def error_call(_, CallbackQuery):
+#     if re.match("notfound", CallbackQuery.data):
+#         return True
 
-call_create = Filters.create(error_call)
+# call_create = Filters.create(error_call)
 
-@ubot.on_callback_query(call_create)
+@ubot.on_callback_query(filters=Filters.regex(pattern=r"^right_btn$"))
 async def speedtestxyz_callback(callback_query: CallbackQuery):
     await callback_query.edit_message_text("processing...")
     if callback_query.data == 'right_btn':
