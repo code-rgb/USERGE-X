@@ -441,7 +441,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 id=uuid4(),
                                 title=text,
                                 input_message_content=InputTextMessageContent(text),
-                                reply_markup=InlineKeyboardMarkup(buttons)
+                                reply_markup=buttons
                             )
                 )
 
