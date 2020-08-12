@@ -220,6 +220,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             text, buttons = plugin_data(cur_pos)
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons))
+# TODO
+    # @ubot.on_callback_query(filters=Filters.regex(pattern=r"^clickbtn$"))
+    # @check_owner
+    # async def callback_clickbtn(callback_query: CallbackQuery):
+        
+    #     await callback_query.edit_message_reply_markup(
+    #         reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
     def is_filter(name: str) -> bool:
         split_ = name.split('.')
@@ -264,7 +271,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 tmp_btns.append(InlineKeyboardButton(
                     "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()))
         else:
-            cur_clnt = "🎴 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
+            cur_clnt = "👤 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
             tmp_btns.append(InlineKeyboardButton(
                 f"🔩 Client for Checks and Sudos : {cur_clnt}", callback_data="chgclnt".encode()))
         return [tmp_btns]
@@ -348,11 +355,14 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         buttons = [tmp_btns] + buttons
         return text, buttons
 
+
+
+
     @ubot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
         string = inline_query.query.lower()
-        if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID:
+        if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
                         id=uuid4(),
                         title="Main Menu",
@@ -384,7 +394,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="rick":
                 rick = [[
                         InlineKeyboardButton(
-                        text="Press For Help", 
+                        text="Go", 
                         url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                         )
                 ]]                           
@@ -402,23 +412,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="notfound":
-                notfound = [[
-                        InlineKeyboardButton(
-                        text="notfound", 
-                        url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg"
-                        )
-                ]]                           
+                buttons = [[InlineKeyboardButton("Left", callback_data="left_btn"),
+                            InlineKeyboardButton("Right", callback_data="right_btn")]]
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
-                            title="notfound",
+                            title="Which Way You Wanna Go ?",
                             input_message_content=InputTextMessageContent(
-                                "notfound"
+                                "Which Way You Wanna Go ?"
                             ),
                             url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg",
-                            description="notfound",
+                            description="Left Or Right",
                            
-                            reply_markup=InlineKeyboardMarkup(notfound)
+                            reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )                    
             if string =="repo":        
@@ -435,12 +441,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 id=uuid4(),
                                 title=text,
                                 input_message_content=InputTextMessageContent(text),
-                                #description="Definately Not a Rick Roll",
-                            # thumb_url="https://i.imgur.com/hRCaKAy.png",
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                 )
-# TODO: make pb for inline buttons  
+
         else:
             results.append(REPO_X)
 
