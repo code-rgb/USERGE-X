@@ -21,7 +21,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 # call_create = Filters.create(error_call)
 
-@ubot.on_CallbackQuery(filters=Filters.regex(pattern=r"^right_btn$"))
+@ubot.on_callback_query(filters=Filters.regex(pattern=r"^right_btn$"))
 async def xyz_callback(CallbackQuery):
     await CallbackQuery.edit_message_text("processing...")
     if CallbackQuery.data == 'right_btn':
