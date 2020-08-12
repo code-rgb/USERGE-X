@@ -21,12 +21,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 # call_create = Filters.create(error_call)
 
-@ubot.on_callback_query(filters=Filters.regex(pattern=r"^right_btn$"))
-async def speedtestxyz_callback(callback_query: CallbackQuery):
-    await callback_query.edit_message_text("processing...")
-    if callback_query.data == 'right_btn':
-        await callback_query.edit_message_text("YOU Pressed Right Button")
-    elif callback_query.data == 'left_btn':
-        await callback_query.edit_message_text("YOU Pressed Left Button")
-    else:
-        await callback_query.answer("Tell Me if you can see this text", show_alert=True)
+@ubot.on_CallbackQuery(filters=Filters.regex(pattern=r"^right_btn$"))
+async def xyz_callback(CallbackQuery):
+    await CallbackQuery.edit_message_text("processing...")
+    if CallbackQuery.data == 'right_btn':
+        await CallbackQuery.edit_message_text("YOU Pressed Right Button")
+    elif CallbackQuery.data == 'left_btn':
+        await CallbackQuery.edit_message_text("YOU Pressed Left Button")
+    await CallbackQuery.answer("Tell Me if you can see this text", show_alert=True)
