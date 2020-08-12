@@ -15,8 +15,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     else:
         ubot = userge
 
-def error_call(callback_query: CallbackQuery):
-    if re.match("notfound", callback_query.data):
+def error_call(_, CallbackQuery):
+    if re.match("notfound", CallbackQuery.data):
         return True
 
 call_create = Filters.create(error_call)
