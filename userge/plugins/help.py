@@ -436,8 +436,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 async for data in BUTTON_BASE.find():
                     button_data = data['msg_data']
                 text, buttons = pb(button_data)
-                if data['photo_url']:
+                try:
                     photo_url = data['photo_url']
+                except KeyError:
+                    photo_url = None
+                if photo_url:
                     results.append(
                             InlineQueryResultPhoto(
                                 photo_url=photo_url,
