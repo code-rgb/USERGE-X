@@ -222,13 +222,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             text, buttons = plugin_data(cur_pos)
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons))
-# TODO
-    # @ubot.on_callback_query(filters=Filters.regex(pattern=r"^clickbtn$"))
-    # @check_owner
-    # async def callback_clickbtn(callback_query: CallbackQuery):
-        
-    #     await callback_query.edit_message_reply_markup(
-    #         reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
     def is_filter(name: str) -> bool:
         split_ = name.split('.')
@@ -413,9 +406,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                 )
 
-            if string =="notfound":
-                buttons = [[InlineKeyboardButton("Left", callback_data="left_btn"),
-                            InlineKeyboardButton("Right", callback_data="right_btn")]]
+            if string =="callback_test":
+                buttons = [[InlineKeyboardButton("Press me", callback_data="btn_press")]]
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
@@ -424,7 +416,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 "Which Way You Wanna Go ?"
                             ),
                             url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg",
-                            description="Left Or Right",
+                            description="Lets see if it works now",
                            
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
