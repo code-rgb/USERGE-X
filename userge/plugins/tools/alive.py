@@ -5,10 +5,9 @@
 # Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
-
+from pyrogram import Filters, CallbackQuery
 from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest, ChannelInvalid, MediaEmpty
-
 from userge import userge, Message, Config, versions, get_version
 
 LOGO_STICKER_ID, LOGO_STICKER_REF = None, None
@@ -74,3 +73,30 @@ async def sendit(message):
             pass
         else:
             await send_sticker(message)
+
+@userge.on_cmd("ialive", about={
+    'header': "Alive.py in inline mode"}, allow_channels=False)
+async def alive_inline(message: Message):
+    bot = await userge.bot.get_me()
+    x = await userge.get_inline_bot_results(bot.username, "alive")
+    await userge.send_inline_bot_result(chat_id=message.chat.id,
+                                        query_id=x.query_id,
+                                        result_id=x.results[1].id)
+
+
+ALIVE_CALL = f"""
+• 🕔** Uptime** : `{userge.uptime}`
+
+• 🐍** Python** : `v{versions.__python_version__}`
+• 🔥** Pyrogram** : `v{versions.__pyro_version__}`
+• 🧬** Userge** : `v{get_version()}`
+"""
+if Config.BOT_TOKEN and Config.OWNER_ID:
+    if Config.HU_STRING_SESSION:
+        ubot = userge.bot
+    else:
+        ubot = userge
+
+@ubot.on_callback_query(filters=Filters.regex(pattern=r"^info_btn$"))
+async def alive_callback(_, callback_query: CallbackQuery):
+    await callback_query.answer(ALIVE_CALL, show_alert=True)

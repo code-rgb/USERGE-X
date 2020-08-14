@@ -50,6 +50,17 @@ REPO_X = InlineQueryResultArticle(
 
 BUTTON_BASE = get_collection("TEMP_BUTTON")
 
+if {Config.LOAD_UNOFFICIAL_PLUGINS}:
+    extra_plugin = "✅ Enabled"
+else:
+    extra_plugin = "❌ Disabled"
+
+ALIVE_INFO = f"""
+<b> <a href="tg://msg?text=I_Am_Using_USERGE-X_⚡️">USERGE-X</a> is Up and Running</b>
+│   
+└─ Extra Plugins :  <u>{extra_plugin}</u>
+                
+"""
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({'_id': 'CURRENT_CLIENT'})
     if data:
@@ -406,21 +417,17 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                 )
 
-            if string =="callback_test":
-                buttons = [[InlineKeyboardButton("Press me", callback_data="btn_press")]]
+            if string =="alive":
+                buttons = [[InlineKeyboardButton("ℹ️", callback_data="info_btn"),
+                            InlineKeyboardButton(text="⚡️ REPO", url="https://github.com/code-rgb/USERGE-X")]]
                 results.append(
-                        InlineQueryResultArticle(
-                            id=uuid4(),
-                            title="Lets see if it works now",
-                            input_message_content=InputTextMessageContent(
-                                "Lets see if it works now"
-                            ),
-                            url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg",
-                            description="Lets see if it works now",
-                           
+                        InlineQueryResultPhoto(
+                            photo_url="https://i.imgur.com/eCCVVJY.jpg",
+                            caption=ALIVE_INFO,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
-                )                    
+                )
+                
             if string =="repo":        
                 results.append(REPO_X)
 
