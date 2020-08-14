@@ -5,6 +5,9 @@
 # Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
+# X logo - Created by graphic designer and creative director Tom Muller [https://www.hellomuller.com/] 
+# Registered Trademark of helloMuller Ltd.
+
 from pyrogram import Filters, CallbackQuery
 from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest, ChannelInvalid, MediaEmpty
