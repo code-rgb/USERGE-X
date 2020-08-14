@@ -85,11 +85,10 @@ async def alive_inline(message: Message):
 
 
 ALIVE_CALL = f"""
-• 🕔** Uptime** : `{userge.uptime}`
-
-• 🐍** Python** : `v{versions.__python_version__}`
-• 🔥** Pyrogram** : `v{versions.__pyro_version__}`
-• 🧬** Userge** : `v{get_version()}`
+• 🕔 𝗨𝗽𝘁𝗶𝗺𝗲 : {userge.uptime}
+• 🐍 𝗣𝘆𝘁𝗵𝗼𝗻 : v {versions.__python_version__}
+• 🔥 𝗣𝘆𝗿𝗼𝗴𝗿𝗮𝗺 : v {versions.__pyro_version__}
+• 🧬 𝗨𝘀𝗲𝗿𝗴𝗲 : v {get_version()}
 """
 if Config.BOT_TOKEN and Config.OWNER_ID:
     if Config.HU_STRING_SESSION:

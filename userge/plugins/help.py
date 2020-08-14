@@ -418,11 +418,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="alive":
-                buttons = [[InlineKeyboardButton("ℹ️", callback_data="info_btn"),
+                buttons = [[InlineKeyboardButton("ℹ️ INFO", callback_data="info_btn"),
                             InlineKeyboardButton(text="⚡️ REPO", url="https://github.com/code-rgb/USERGE-X")]]
                 results.append(
                         InlineQueryResultPhoto(
-                            photo_url="https://i.imgur.com/eCCVVJY.jpg",
+                            photo_url="https://i.imgur.com/Cb2vE4t.jpg",
                             caption=ALIVE_INFO,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
