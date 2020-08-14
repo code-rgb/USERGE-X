@@ -411,9 +411,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
-                            title="Which Way You Wanna Go ?",
+                            title="Lets see if it works now",
                             input_message_content=InputTextMessageContent(
-                                "Which Way You Wanna Go ?"
+                                "Lets see if it works now"
                             ),
                             url="https://image.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg",
                             description="Lets see if it works now",
