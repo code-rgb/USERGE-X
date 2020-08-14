@@ -56,9 +56,9 @@ else:
     extra_plugin = "❌ Disabled"
 
 ALIVE_INFO = f"""
-<b> <a href="tg://msg?text=I_Am_Using_USERGE-X_⚡️">USERGE-X</a> is Up and Running</b>
+<b> <a href="tg://msg?text=I_Am_Using_USERGE-X_⚡️">USERGE-X</a></b> is Up and Running 🏃
 │   
-└─ Extra Plugins :  <u>{extra_plugin}</u>
+└─ Extra Plugins :  <code>{extra_plugin}</code>
                 
 """
 async def _init() -> None:
