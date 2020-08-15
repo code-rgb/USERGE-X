@@ -461,28 +461,41 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 )
                     )
            
-            if str_x[0] == "secret" and len(str_x) == 3:
-                user_name = str_x[1]
-                msg = str_x[2]       
-                try:
-                  a = await userge.get_users(user_name)
-                  user_id = a.id
-                except:
-                  return
-                buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
-                await SECRET_MSG.drop()
-                SECRET_MSG.insert_one({'user_id': user_id, 'msg': msg})
-               
-                results.append(
-                            InlineQueryResultArticle(
-                                id=uuid4(),
-                                title="Send A Secret Message",
-                                input_message_content=InputTextMessageContent(f"🔒 <b>Secret Message</b> for {user_name}. ☣️ TOPSECRET!"),
-                                description="secret @username you message here",
-                                thumb_url="https://i.imgur.com/lx3nT7p.png",
-                                reply_markup=InlineKeyboardMarkup(buttons)
-                            )
-                )
+            if str_x[0] == "secret":
+                if len(str_x) == 3:
+                    user_name = str_x[1]
+                    msg = str_x[2]       
+                    try:
+                    a = await userge.get_users(user_name)
+                    user_id = a.id
+                    except:
+                    return
+                    buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
+                    await SECRET_MSG.drop()
+                    SECRET_MSG.insert_one({'user_id': user_id, 'msg': msg})
+                
+                    results.append(
+                                InlineQueryResultArticle(
+                                    id=uuid4(),
+                                    title="Send A Secret Message",
+                                    input_message_content=InputTextMessageContent(f"☣️ <b>TOPSECRET!</b> for {user_name}. Only he/she can open it."),
+                                    description="secret @username you message here",
+                                    thumb_url="https://i.imgur.com/lx3nT7p.png",
+                                    reply_markup=InlineKeyboardMarkup(buttons)
+                                )
+                    )
+                else:
+                    buttons_h = [[InlineKeyboardButton("See Help", callback_data="secret_btn_help")]]
+                    results.append(
+                                InlineQueryResultArticle(
+                                    id=uuid4(),
+                                    title="Send A Secret Message",
+                                    input_message_content=InputTextMessageContent(f"@botname secret @username message"),
+                                    description="secret @username you message here",
+                                    thumb_url="https://i.imgur.com/lx3nT7p.png",
+                                    reply_markup=InlineKeyboardMarkup(buttons_h)
+                                )
+                    )
 
         else:
             results.append(REPO_X)
