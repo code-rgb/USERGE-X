@@ -477,7 +477,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             InlineQueryResultArticle(
                                 id=uuid4(),
                                 title="Send A Secret Message",
-                                input_message_content=InputTextMessageContent("🔒 <b>Secret Message</b> for user_name. ☣️ TOPSECRET!"),
+                                input_message_content=InputTextMessageContent(f"🔒 <b>Secret Message</b> for {user_name}. ☣️ TOPSECRET!"),
                                 description="secret @username you message here",
                                 thumb_url="https://i.imgur.com/lx3nT7p.png",
                                 reply_markup=InlineKeyboardMarkup(buttons)
