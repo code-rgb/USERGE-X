@@ -11,7 +11,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 @ubot.on_callback_query(filters=Filters.regex(pattern=r"^secret_btn$"))
 async def alive_callback(_, callback_query: CallbackQuery):  
     sender = await userge.get_me()
-    msg = "🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: " + sender.first_name
+    msg = f"🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: {sender.first_name}"
     if sender.last_name:
         msg += f" {sender.last_name}\n\n"
     else:

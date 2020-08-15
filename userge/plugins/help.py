@@ -466,10 +466,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     user_name = str_x[1]
                     msg = str_x[2]       
                     try:
-                    a = await userge.get_users(user_name)
-                    user_id = a.id
+                        a = await userge.get_users(user_name)
+                        user_id = a.id
                     except:
-                    return
+                        return
                     buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
                     await SECRET_MSG.drop()
                     SECRET_MSG.insert_one({'user_id': user_id, 'msg': msg})
