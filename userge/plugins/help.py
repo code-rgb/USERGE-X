@@ -462,15 +462,16 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     )
            
             if str_x[0] == "secret":
+              if len(str_x) = 3:
                 user_name = str_x[1]
                 msg = str_x[2]       
-               # try:
-                a = await userge.get_users(user_name)
-                user_id = a.id
-              #  except:
-              #  return
+                try:
+                  a = await userge.get_users(user_name)
+                  user_id = a.id
+                except:
+                  return
                 buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
-              # await SECRET_MSG.drop()
+                await SECRET_MSG.drop()
                 SECRET_MSG.insert_one({'user_id': user_id, 'msg': msg})
                
                 results.append(
@@ -480,7 +481,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 input_message_content=InputTextMessageContent("🔒 <b>Secret Message</b> for user_name. ☣️ TOPSECRET!"),
                                 description="secret @username you message here",
                                 thumb_url="https://i.imgur.com/lx3nT7p.png",
-                                reply_markup=buttons
+                                reply_markup=InlineKeyboardMarkup(buttons)
                             )
                 )
 
