@@ -7,7 +7,7 @@
 # Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
-
+import random
 from math import ceil
 from uuid import uuid4
 import asyncio
@@ -64,6 +64,14 @@ ALIVE_INFO = f"""
 └─ Extra Plugins :  <code>{extra_plugin}</code>
                 
 """
+# Shout Out to @FLAMEPOSEIDON For the Images
+
+ALIVE_IMGS = ["https://i.imgur.com/TDuG6ub.jpg", "https://i.imgur.com/uzKdTXG.jpg",
+"https://telegra.ph/file/6ecab390e4974c74c3764.png",
+"https://telegra.ph/file/995c75983a6c0e4499b55.png",
+"https://telegra.ph/file/86cc25c78ad667ca5e691.png",
+"https://i.imgur.com/Cb2vE4t.jpg"]
+
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({'_id': 'CURRENT_CLIENT'})
     if data:
@@ -422,11 +430,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="alive":
+                random_alive = random.choice(ALIVE_IMGS) 
                 buttons = [[InlineKeyboardButton("ℹ️ INFO", callback_data="info_btn"),
                             InlineKeyboardButton(text="⚡️ REPO", url="https://github.com/code-rgb/USERGE-X")]]
                 results.append(
                         InlineQueryResultPhoto(
-                            photo_url="https://i.imgur.com/Cb2vE4t.jpg",
+                            photo_url=random_alive,
                             caption=ALIVE_INFO,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
