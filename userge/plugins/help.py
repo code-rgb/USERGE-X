@@ -461,8 +461,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 )
                     )
            
-            if str_x[0] == "secret":
-              if len(str_x) = 3:
+            if str_x[0] == "secret" and len(str_x) == 3:
                 user_name = str_x[1]
                 msg = str_x[2]       
                 try:
