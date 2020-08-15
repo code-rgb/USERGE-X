@@ -30,7 +30,11 @@ _CATEGORY = {
     'temp': '♻️',
     'plugins': '💎'
 }
+# Database
 SAVED_SETTINGS = get_collection("CONFIGS")
+SECRET_MSG = get_collection("SECRET_MSG")
+BUTTON_BASE = get_collection("TEMP_BUTTON")
+
 
 REPO_X = InlineQueryResultArticle(
                     id=uuid4(),
@@ -48,7 +52,6 @@ REPO_X = InlineQueryResultArticle(
                                     url=("https://heroku.com/deploy?template="
                                         "https://github.com/UsergeTeam/Userge/tree/master"))]]))
 
-BUTTON_BASE = get_collection("TEMP_BUTTON")
 
 if {Config.LOAD_UNOFFICIAL_PLUGINS}:
     extra_plugin = "✅ Enabled"
@@ -368,6 +371,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
         string = inline_query.query.lower()
+        str_x = string.split(" ", 2)
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
                         id=uuid4(),
@@ -456,6 +460,31 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                     reply_markup=buttons
                                 )
                     )
+           
+            if str_x[0] == "secret":
+                user_name = str_x[1]
+                msg = str_x[2]       
+                try:
+                    a = await userge.get_users(user_name)
+                    user_id = a.id
+                except:
+                    return
+                buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
+                await SECRET_MSG.drop()
+                SECRET_MSG.insert_one(
+                {'user_id': user_id, 'msg': msg})
+               
+                results.append(
+                            InlineQueryResultArticle(
+                                id=uuid4(),
+                                title="Send A Secret Message",
+                                input_message_content=InputTextMessageContent(f"🔒 <b>Secret Message</b> for {user_name}. ☣️ TOPSECRET!"),
+                                description="secret @username you message here",
+                                thumb_url="https://i.imgur.com/lx3nT7p.png",
+                                reply_markup=buttons
+                            )
+                )
+
         else:
             results.append(REPO_X)
 
