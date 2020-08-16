@@ -62,6 +62,8 @@ ALIVE_IMGS = ["https://i.imgur.com/TDuG6ub.jpg", "https://i.imgur.com/uzKdTXG.jp
 "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
 "https://i.imgur.com/Cb2vE4t.jpg"]
 
+ALIVE_INFO = "**[USERGE-X](https://github.com/code-rgb/USERGE-X) **  __is Up and Running 🏃__"
+
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({'_id': 'CURRENT_CLIENT'})
     if data:
@@ -424,11 +426,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 buttons = [[InlineKeyboardButton("ℹ️ INFO", callback_data="info_btn"),
                             InlineKeyboardButton("🔧 SETTINGS", callback_data="settings_btn")],
                            [InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
-                alive_info = "<b><a href="https://github.com/code-rgb/USERGE-X">USERGE-X</a></b><i> is Up and Running 🏃</i>"
+
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url=random_alive,
-                            caption=alive_info,
+                            caption=ALIVE_INFO,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
