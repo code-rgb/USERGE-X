@@ -19,6 +19,8 @@ from pyrogram import (
     Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
+from requests import get
+from bs4 import BeautifulSoup
 
 _CATEGORY = {
     'admin': '👨‍✈️',
@@ -62,11 +64,11 @@ ALIVE_IMGS = ["https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg", "https://i.im
 "https://telegra.ph/file/86cc25c78ad667ca5e691.png"]
 
 ALIVE_INFO = f"""
-**[USERGE-X](https://github.com/code-rgb/USERGE-X) is Up and Running 🏃**
+  **[USERGE-X](https://github.com/code-rgb/USERGE-X) is Up and Running 🏃**
 
- • 🐍 𝗣𝘆𝘁𝗵𝗼𝗻 : v `{versions.__python_version__}`
- • 🔥 𝗣𝘆𝗿𝗼𝗴𝗿𝗮𝗺 : v `{versions.__pyro_version__}`
- • 🧬 𝗨𝘀𝗲𝗿𝗴𝗲 : v `{get_version()}`
+ • 🐍 Python :  `v{versions.__python_version__}`
+ • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
+ • 🧬 Userge :  `v{get_version()}`
 """
 
 async def _init() -> None:
@@ -438,7 +440,45 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
-                
+
+            if string =="gapps":
+                gapps_link = []
+                sforge = "https://sourceforge.net/projects/opengapps/files/arm64/"
+                url = get(sforge)
+                if url.status_code == 404:
+                    return
+                page = BeautifulSoup(url.content, 'lxml')
+                date = page.table.tbody.tr['title']
+                varient = ["aroma", "super", "stock", "full", "mini", "micro", "nano", "pico"]
+                gapps = len(varient) - 1
+                for i in range(gapps):
+                    link = f"{sforge}/{date}/open_gapps-arm64-10.0-{varient[i]}-{date}.zip/download"
+                    gapps_link.append(link)                
+
+                buttons = [
+                [InlineKeyboardButton(text="aroma", url=gapps_link[0]),
+                InlineKeyboardButton(text="super", url=gapps_link[1]),
+                InlineKeyboardButton(text="stock", url=gapps_link[2])],
+                [InlineKeyboardButton(text="full", url=gapps_link[3]),
+                InlineKeyboardButton(text="mini", url=gapps_link[4]),
+                InlineKeyboardButton(text="micro", url=gapps_link[5]],
+                [InlineKeyboardButton(text="pico", url=gapps_link[6]),
+                InlineKeyboardButton(text="nano", url=gapps_link[7])],
+                ]
+
+                results.append(
+                        InlineQueryResultArticle(
+                            id=uuid4(),
+                            title="Gapps",
+                            input_message_content=InputTextMessageContent(
+                                "**LATEST GAPPS**"
+                            ),
+                            description="Get latest gapps link directly from SF",
+                            thumb_url="https://i.imgur.com/b2g1D9c.png",
+                            reply_markup=InlineKeyboardMarkup(buttons)
+                        )
+                )
+
             if string =="repo":        
                 results.append(REPO_X)
 

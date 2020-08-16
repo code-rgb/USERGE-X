@@ -20,12 +20,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 @ubot.on_callback_query(filters=Filters.regex(pattern=r"^settings_btn$"))
 async def alive_cb(_, callback_query: CallbackQuery):
     alive_settings=f"""
-🕔 𝗨𝗽𝘁𝗶𝗺𝗲 : {userge.uptime}
+   🕔 Uptime : {userge.uptime}
 
- • 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}
- • 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}`
- • ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 : {_parse_arg(RawClient.DUAL_MODE)}
- • ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
+• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}
+• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}
+• ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 : {_parse_arg(RawClient.DUAL_MODE)}
+• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
 """
     await callback_query.answer(alive_settings, show_alert=True)
 
