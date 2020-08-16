@@ -19,7 +19,7 @@ from pyrogram import (
     Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
 from userge import userge, Message, Config, get_collection
-
+from userge.core.ext import RawClient
 _CATEGORY = {
     'admin': '👨‍✈️',
     'fun': '🎨',
@@ -53,19 +53,11 @@ REPO_X = InlineQueryResultArticle(
                                         "https://github.com/UsergeTeam/Userge/tree/master"))]]))
 
 
-if {Config.LOAD_UNOFFICIAL_PLUGINS}:
-    extra_plugin = "✅ Enabled"
-else:
-    extra_plugin = "❌ Disabled"
 
-ALIVE_INFO = f"""
-<b> <a href="tg://msg?text=I_Am_Using_USERGE-X_⚡️">USERGE-X</a></b> is Up and Running 🏃
-│   
-└─ Extra Plugins :  <code>{extra_plugin}</code>
-                
-"""
-# Shout Out to @FLAMEPOSEIDON For the Images
+def _parse_arg(arg: bool) -> str:
+    return "✅ Enabled" if arg else "❌ Disabled"     
 
+# Thanks boi @FLAMEPOSEIDON
 ALIVE_IMGS = ["https://i.imgur.com/TDuG6ub.jpg", "https://i.imgur.com/uzKdTXG.jpg",
 "https://telegra.ph/file/6ecab390e4974c74c3764.png",
 "https://telegra.ph/file/995c75983a6c0e4499b55.png",
@@ -432,11 +424,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="alive":
                 random_alive = random.choice(ALIVE_IMGS) 
                 buttons = [[InlineKeyboardButton("ℹ️ INFO", callback_data="info_btn"),
-                            InlineKeyboardButton(text="⚡️ REPO", url="https://github.com/code-rgb/USERGE-X")]]
+                            InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
+                alive_info = f"""
+<b> <a href="https://github.com/code-rgb/USERGE-X">USERGE-X</a></b> is Up and Running 🏃
+│   
+├──👥 **Sudo** : `{_parse_arg(Config.SUDO_ENABLED)}` 
+├──🚨 **Antispam** : `{_parse_arg(Config.ANTISPAM_SENTRY)}`
+├──↕️ **Dual Mode** : `{_parse_arg(RawClient.DUAL_MODE)}`
+└──➕ **Extra Plugins** : `{_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}`
+"""
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url=random_alive,
-                            caption=ALIVE_INFO,
+                            caption=alive_info,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
@@ -499,9 +499,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 InlineQueryResultArticle(
                                     id=uuid4(),
                                     title="Send A Secret Message",
-                                    input_message_content=InputTextMessageContent(f"@botname secret @username message"),
+                                    input_message_content=InputTextMessageContent("@xyzbot secret @username <your message>"),
                                     description="secret @username you message here",
-                                    thumb_url="https://i.imgur.com/lx3nT7p.png",
+                                    #thumb_url="https://i.imgur.com/lx3nT7p.png"
                                     reply_markup=InlineKeyboardMarkup(buttons_h)
                                 )
                     )
