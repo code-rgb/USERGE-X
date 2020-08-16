@@ -461,7 +461,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 InlineKeyboardButton(text="stock", url=gapps_link[2])],
                 [InlineKeyboardButton(text="full", url=gapps_link[3]),
                 InlineKeyboardButton(text="mini", url=gapps_link[4]),
-                InlineKeyboardButton(text="micro", url=gapps_link[5]],
+                InlineKeyboardButton(text="micro", url=gapps_link[5])],
                 [InlineKeyboardButton(text="pico", url=gapps_link[6]),
                 InlineKeyboardButton(text="nano", url=gapps_link[7])],
                 ]
