@@ -450,7 +450,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 page = BeautifulSoup(url.content, 'lxml')
                 date = page.table.tbody.tr['title']
                 varient = ["aroma", "super", "stock", "full", "mini", "micro", "nano", "pico"]
-                gapps = len(varient) - 1
+                gapps = len(varient)
                 for i in range(gapps):
                     link = f"{sforge}/{date}/open_gapps-arm64-10.0-{varient[i]}-{date}.zip/download"
                     gapps_link.append(link)                
@@ -462,8 +462,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 [InlineKeyboardButton(text="full", url=gapps_link[3]),
                 InlineKeyboardButton(text="mini", url=gapps_link[4]),
                 InlineKeyboardButton(text="micro", url=gapps_link[5])],
-                [InlineKeyboardButton(text="pico", url=gapps_link[6]),
-                InlineKeyboardButton(text="nano", url=gapps_link[7])],
+                [InlineKeyboardButton(text="nano", url=gapps_link[6]),
+                InlineKeyboardButton(text="pico", url=gapps_link[7])],
                 ]
 
                 results.append(
