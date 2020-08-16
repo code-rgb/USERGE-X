@@ -19,7 +19,7 @@ from pyrogram import (
     Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
 from userge import userge, Message, Config, get_collection
-from userge.core.ext import RawClient
+
 _CATEGORY = {
     'admin': '👨‍✈️',
     'fun': '🎨',
@@ -54,8 +54,6 @@ REPO_X = InlineQueryResultArticle(
 
 
 
-def _parse_arg(arg: bool) -> str:
-    return "✅ Enabled" if arg else "❌ Disabled"     
 
 # Thanks boi @FLAMEPOSEIDON
 ALIVE_IMGS = ["https://i.imgur.com/TDuG6ub.jpg", "https://i.imgur.com/uzKdTXG.jpg",
@@ -424,15 +422,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="alive":
                 random_alive = random.choice(ALIVE_IMGS) 
                 buttons = [[InlineKeyboardButton("ℹ️ INFO", callback_data="info_btn"),
-                            InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
-                alive_info = f"""
-<b> <a href="https://github.com/code-rgb/USERGE-X">USERGE-X</a></b> is Up and Running 🏃
-│   
-├──👥 **Sudo** : `{_parse_arg(Config.SUDO_ENABLED)}` 
-├──🚨 **Antispam** : `{_parse_arg(Config.ANTISPAM_SENTRY)}`
-├──↕️ **Dual Mode** : `{_parse_arg(RawClient.DUAL_MODE)}`
-└──➕ **Extra Plugins** : `{_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}`
-"""
+                            InlineKeyboardButton("🔧 SETTINGS", callback_data="settings_btn")],
+                           [InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
+                alive_info = "<b><a href="https://github.com/code-rgb/USERGE-X">USERGE-X</a></b><i> is Up and Running 🏃</i>"
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url=random_alive,
