@@ -8,6 +8,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     else:
         ubot = userge
 
+       
 @ubot.on_callback_query(filters=Filters.regex(pattern=r"^secret_btn$"))
 async def alive_callback(_, callback_query: CallbackQuery):  
     sender = await userge.get_me()
