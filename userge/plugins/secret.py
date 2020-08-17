@@ -1,4 +1,4 @@
-from userge import userge, Config, get_collection
+from userge import userge, Config, get_collection, Message
 from pyrogram import Filters, CallbackQuery
 SECRET_MSG = get_collection("SECRET_MSG") 
 
