@@ -15,7 +15,7 @@ async def alive_inline(message: Message):
                                         result_id=x.results[1].id)
     await message.delete()
     await asyncio.sleep(25)
-    await userge.delete_messages(message.chat.id, y.updates[2].message.id)
+    await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
