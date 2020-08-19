@@ -22,14 +22,15 @@ from userge import userge, Message, Config, get_collection, versions, get_versio
 
 
 _CATEGORY = {
-    'admin': '👨‍✈️',
+    'admin': '👑',
     'fun': '🎨',
-    'misc': '⚙️',
+    'misc': '🧩',
     'tools': '🧰',
     'utils': '🗂',
-    'Extra': '🍑',
+    'unoffical': '➕',
     'temp': '♻️',
     'plugins': '💎'
+    'inline' : '🔰' 
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -441,8 +442,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="gapps":
-                buttons = [[InlineKeyboardButton("Open GApps", callback_data="open_gapps")],
-                           [InlineKeyboardButton("Flame GApps", callback_data="flame_gapps")],
+                buttons = [[InlineKeyboardButton("Open GApps", callback_data="open_gapps"),
+                           InlineKeyboardButton("Flame GApps", callback_data="flame_gapps")],
                            [InlineKeyboardButton("Nik GApps", callback_data="nik_gapps")]]          
                 results.append(
                         InlineQueryResultArticle(
@@ -459,6 +460,23 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
             if string =="repo":        
                 results.append(REPO_X)
+
+            if str_x[0] = "op":        
+                txt = string[3:]
+                buttons = [[
+                        InlineKeyboardButton("Yes 👍", callback_data="opinion_y"),
+                        InlineKeyboardButton("Nope 👎", callback_data="opinion_n")
+                ]]                           
+                results.append(
+                        InlineQueryResultArticle(
+                            id=uuid4(),
+                            title="Ask For Opinion",
+                            input_message_content=InputTextMessageContent(txt),
+                            description="e.g @yourbot op Are Cats Cute?",
+                            thumb_url="https://i.imgur.com/Zlc98qS.jpg",
+                            reply_markup=InlineKeyboardMarkup(buttons)
+                        )
+                )    
 
             if string =="buttonnn":          
                 async for data in BUTTON_BASE.find():

@@ -122,12 +122,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
 
-            buttons = [[InlineKeyboardButton("Open Gapps", callback_data="open_gapps")],
-                      [InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
+            buttons = [[InlineKeyboardButton("Open Gapps", callback_data="open_gapps"),
+                        InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
                       [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]
     
             await ubot.edit_inline_text(callback_query.inline_message_id,
-                "**LATEST Android 10 arm64 Gapps**",
+                "[\u200c](https://i.imgur.com/BZBMrfn.jpg) **LATEST Android 10 arm64 GApps**",
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
         else:
