@@ -464,8 +464,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if str_x[0] == "op":        
                 txt = string[3:]
                 buttons = [[
-                        InlineKeyboardButton("Yes 👍", callback_data="opinion_y"),
-                        InlineKeyboardButton("Nope 👎", callback_data="opinion_n")
+                        InlineKeyboardButton("Yes 👍", callback_data="opinion_y_"),
+                        InlineKeyboardButton("Nope 👎", callback_data="opinion_n_")
                 ]]                           
                 results.append(
                         InlineQueryResultArticle(
