@@ -19,11 +19,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         disagree_data = "Nope 👎"
         opinion_y = "opinion_y_"
         opinion_n = "opinion_n_"
-        if counter[1] == "y"
+        if counter[1] == "y":
             add = int(counter[2]) + 1
             opinion_y += str(add)
             agree_data += f" ({add})"
-        if counter[1] == "n"
+        if counter[1] == "n":
             add = int(counter[2]) + 1
             opinion_n += str(add)
             disagree_data += f" ({add})"
