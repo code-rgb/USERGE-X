@@ -19,8 +19,7 @@ from pyrogram import (
     Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
-from requests import get
-from bs4 import BeautifulSoup
+
 
 _CATEGORY = {
     'admin': '👨‍✈️',
@@ -442,39 +441,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="gapps":
-                gapps_link = []
-                sforge = "https://sourceforge.net/projects/opengapps/files/arm64/"
-                url = get(sforge)
-                if url.status_code == 404:
-                    return
-                page = BeautifulSoup(url.content, 'lxml')
-                date = page.table.tbody.tr['title']
-                varient = ["aroma", "super", "stock", "full", "mini", "micro", "nano", "pico"]
-                gapps = len(varient)
-                for i in range(gapps):
-                    link = f"{sforge}/{date}/open_gapps-arm64-10.0-{varient[i]}-{date}.zip/download"
-                    gapps_link.append(link)                
-
-                buttons = [
-                [InlineKeyboardButton(text="aroma", url=gapps_link[0]),
-                InlineKeyboardButton(text="super", url=gapps_link[1]),
-                InlineKeyboardButton(text="stock", url=gapps_link[2])],
-                [InlineKeyboardButton(text="full", url=gapps_link[3]),
-                InlineKeyboardButton(text="mini", url=gapps_link[4]),
-                InlineKeyboardButton(text="micro", url=gapps_link[5])],
-                [InlineKeyboardButton(text="nano", url=gapps_link[6]),
-                InlineKeyboardButton(text="pico", url=gapps_link[7])],
-                ]
-
+                buttons = [[InlineKeyboardButton("Open Gapps", callback_data="open_gapps")],
+                             [InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
+                             [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]
+                         
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
                             title="Gapps",
                             input_message_content=InputTextMessageContent(
-                                "**LATEST GAPPS**"
+                                "**LATEST Android 10 arm64 Gapps**"
                             ),
                             description="Get latest gapps link directly from SF",
-                            thumb_url="https://i.imgur.com/b2g1D9c.png",
+                            thumb_url="https://i.imgur.com/Npzw8Ph.png",
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
