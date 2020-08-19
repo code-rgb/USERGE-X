@@ -13,7 +13,6 @@ __all__ = ['ROOT', 'get_all_plugins']
 import sys
 from os.path import dirname
 from typing import List
-#from userge import xdef
 from userge import logging
 from userge.utils import get_import_path
 
@@ -26,6 +25,3 @@ def get_all_plugins() -> List[str]:
     plugins = get_import_path(ROOT, "/" if len(sys.argv) == 2 and sys.argv[1] == 'dev' else "/**/")
     _LOG.debug("All Available Plugins: %s", plugins)
     return list(plugins)
-
-# deEmojify = xdef.deEmojify
-# media_to_image = xdef.media_to_image

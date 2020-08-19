@@ -441,17 +441,17 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string =="gapps":
-                buttons = [[InlineKeyboardButton("Open Gapps", callback_data="open_gapps")],
-                           [InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
-                           [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]          
+                buttons = [[InlineKeyboardButton("Open GApps", callback_data="open_gapps")],
+                           [InlineKeyboardButton("Flame GApps", callback_data="flame_gapps")],
+                           [InlineKeyboardButton("Nik GApps", callback_data="nik_gapps")]]          
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
-                            title="Gapps",
+                            title="GApps",
                             input_message_content=InputTextMessageContent(
-                                "**LATEST Android 10 arm64 Gapps**"
+                                "[\u200c](https://i.imgur.com/BZBMrfn.jpg) **LATEST Android 10 arm64 GApps**" 
                             ),
-                            description="Get latest gapps link directly from SF",
+                            description="Get Latest GApps Download Links Directly from SF",
                             thumb_url="https://i.imgur.com/Npzw8Ph.png",
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
