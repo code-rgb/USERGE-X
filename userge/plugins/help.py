@@ -29,7 +29,7 @@ _CATEGORY = {
     'utils': '🗂',
     'unoffical': '➕',
     'temp': '♻️',
-    'plugins': '💎'
+    'plugins': '💎',
     'inline' : '🔰' 
 }
 # Database
