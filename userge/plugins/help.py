@@ -442,9 +442,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
             if string =="gapps":
                 buttons = [[InlineKeyboardButton("Open Gapps", callback_data="open_gapps")],
-                             [InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
-                             [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]
-                         
+                           [InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
+                           [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]          
                 results.append(
                         InlineQueryResultArticle(
                             id=uuid4(),
