@@ -270,7 +270,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             ]
         pairs += default_buttons(cur_pos)
         return pairs
-
+Í
     def main_menu_buttons():
         return parse_buttons(0, "mm",
                              lambda x: f"{_CATEGORY.get(x, '📁')} {x}",
@@ -377,8 +377,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @ubot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
-        string = inline_query.query.lower()
-        str_x = inline_query.query.split(" ", 2)
+        i_q = inline_query.query
+        string = i_q.lower()
+        str_x = i_q.split(" ", 2)
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
                         id=uuid4(),
@@ -462,7 +463,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 results.append(REPO_X)
 
             if str_x[0].lower() == "op" and len(str_x[1]) != 0:        
-                txt = str_x[1]
+                txt = i_q[3:]
                 buttons = [[
                         InlineKeyboardButton("👍", callback_data="opinion_y"),
                         InlineKeyboardButton("👎", callback_data="opinion_n")
