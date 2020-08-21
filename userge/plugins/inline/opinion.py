@@ -8,7 +8,7 @@ from pyrogram import (
 import os
 import asyncio
 
-if not os.path.exists('userge/xcache') 
+if not os.path.exists('userge/xcache'):
     os.mkdir('userge/xcache')
 PATH = "userge/xcache/emoji_data.txt"   
 
