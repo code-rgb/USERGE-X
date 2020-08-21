@@ -17,12 +17,12 @@ from pyrogram import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
     Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
-from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, UserIsBot, BadRequest, MessageEmpty
+from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 
 
 _CATEGORY = {
-    'admin': '👑',
+    'admin': '🙋🏻‍♂️',
     'fun': '🎨',
     'misc': '🧩',
     'tools': '🧰',
@@ -378,7 +378,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
         string = inline_query.query.lower()
-        str_x = string.split(" ", 2)
+        str_x = inline_query.query.split(" ", 2)
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
                         id=uuid4(),
@@ -461,11 +461,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="repo":        
                 results.append(REPO_X)
 
-            if str_x[0] == "op":        
+            if str_x[0].lower() == "op":        
                 txt = string[3:]
                 buttons = [[
-                        InlineKeyboardButton("Yes 👍", callback_data="opinion_y"),
-                        InlineKeyboardButton("Nope 👎", callback_data="opinion_n")
+                        InlineKeyboardButton("👍", callback_data="opinion_y"),
+                        InlineKeyboardButton("👎", callback_data="opinion_n")
                 ]]                           
                 results.append(
                         InlineQueryResultArticle(
@@ -504,7 +504,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                 )
                     )
            
-            if str_x[0] == "secret":
+            if str_x[0].lower() == "secret":
                 if len(str_x) == 3:
                     user_name = str_x[1]
                     msg = str_x[2]       
@@ -539,9 +539,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                     reply_markup=InlineKeyboardMarkup(buttons_h)
                                 )
                     )
-
+        
         else:
             results.append(REPO_X)
-
-        await inline_query.answer(results=results, cache_time=1)
-        return
+        try: 
+            if not len(results) == 0:
+                await inline_query.answer(results=results, cache_time=1)
+        except MessageEmpty:
+            return
+        
