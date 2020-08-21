@@ -461,8 +461,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="repo":        
                 results.append(REPO_X)
 
-            if str_x[0].lower() == "op":        
-                txt = string[3:]
+            if str_x[0].lower() == "op" and len(str_x[1]) != 0:        
+                txt = str_x[1]
                 buttons = [[
                         InlineKeyboardButton("👍", callback_data="opinion_y"),
                         InlineKeyboardButton("👎", callback_data="opinion_n")
