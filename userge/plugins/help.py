@@ -270,7 +270,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             ]
         pairs += default_buttons(cur_pos)
         return pairs
-Í
+
     def main_menu_buttons():
         return parse_buttons(0, "mm",
                              lambda x: f"{_CATEGORY.get(x, '📁')} {x}",
