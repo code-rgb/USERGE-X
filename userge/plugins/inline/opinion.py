@@ -1,3 +1,6 @@
+# Copyright (C) 2020 GitHub.com/code-rgb [TG - @deleteduser420]
+# All rights reserved.
+
 import json
 from userge import userge, Message, Config
 from pyrogram.errors.exceptions import FloodWait
