@@ -29,14 +29,14 @@
 
 ## How to Use ??
 
-1. If you already on official Userge repo just add 
-<b>UPSTREAM_REPO</b> to <b>https://github.com/code-rgb/USERGE-X</b> and update normally.
+•  If you already on official Userge repo just add 
+<b>UPSTREAM_REPO</b> to <b>https://github.com/code-rgb/USERGE-X</b> and update Alpha by <update -alpha -push -pull>.
 
 
-<p align="center">OR</p>
+<p align="center"><b>OR</b></p>
 
 
-2. First see <a href="https://github.com/code-rgb/USERGE-X#how-to-deploy">DEPLOY GUIDE</a> and add UPSTEAM_REPO var.
+•  First Deploy, <a href="https://github.com/code-rgb/USERGE-X#how-to-deploy">DEPLOY GUIDE</a> and after that add UPSTEAM_REPO var.
 <br>
 
 ## Disclaimer
@@ -73,7 +73,7 @@
 ## How To Deploy 
 
 <p align="center">
-<a href = "https://heroku.com/deploy?template=https://github.com/UsergeTeam/Userge/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
+<a href = "https://heroku.com/deploy?template=https://github.com/UsergeTeam/Userge/tree/master"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
 <br>
 
 <h3><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">HEROKU Method</a></h3>
