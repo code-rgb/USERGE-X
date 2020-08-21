@@ -87,12 +87,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             total = len(view_data[0])
             ag = view_data[1]['agree']
             disag = view_data[1]['disagree']
-            agreed = ag / disag * 100
-            disagreed = disag / ag * 100
+            agreed = round(( ag / (disag + ag) ) * 100)
+            disagreed = round(( disag / (ag + disag) ) * 100)
             msg = "**STATS**\n\n"
-            msg += f"• 👤 `{total} People voted`\n"
-            msg += f"• 👍 `{agreed}% Agreed`\n"
-            msg += f"• 👎 `{disagreed}% People Disagreed`\n"
+            msg += f"• 👤 `{total} People voted`\n\n"
+            msg += f"• 👍 `{agreed}% Agreed`\n\n"
+            msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
             os.remove(PATH) 
             await ubot.edit_inline_text(callback_query.inline_message_id,
                     msg
