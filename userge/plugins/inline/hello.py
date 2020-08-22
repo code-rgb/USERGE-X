@@ -10,7 +10,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 
    
-    @ubot.on_message(filters.private)
+    @ubot.on_message(filters=Filters.private)
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()
         master = await userge.get_me()
