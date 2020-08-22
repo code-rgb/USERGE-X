@@ -31,3 +31,17 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     )
                 ]])
             )
+
+
+
+
+    @ubot.on_message(Filters.chat("usergeot") & Filters.regex(pattern=r"^\/start@error_terrorbot$"))
+    async def start_botx(_, message: Message):
+        await ubot.send_sticker(message.chat.id, "CAADBAADkgADcqPaD44lfJwmOsyJFgQ")
+
+
+    @ubot.on_message(command("ping"))
+    async def ping(_, message: Message):
+    """Ping the assistant"""
+        await message.reply_text("🏓 Pong")
+    
