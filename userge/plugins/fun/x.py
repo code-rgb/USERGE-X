@@ -1,3 +1,8 @@
+# Source: https://gist.github.com/weihanglo/1e754ec47fdd683a42fdf6a272904535
+
+#  Author 2020 𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r <https://github.com/code-rgb>
+# For USERGE-X
+
 from PIL import Image, ImageDraw
 from userge import userge, Message, Config
 import os
