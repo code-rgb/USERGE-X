@@ -1,5 +1,6 @@
 # BY code-rgb
 """Gapps via inline bot"""
+import requests
 from requests import get
 from bs4 import BeautifulSoup
 from userge import userge, Message, Config
@@ -34,17 +35,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
             gapps_link = []
-            sforge = "https://sourceforge.net/projects/opengapps/files/arm64/"
-            url = get(sforge)
-            if url.status_code == 404:
-                return
-            page = BeautifulSoup(url.content, 'lxml')
-            date = page.table.tbody.tr['title']
+            r = requests.get('https://raw.githubusercontent.com/Pharuxtan/OpenGappsFetcher/master/gapps.json').json()
             varient = ["aroma", "super", "stock", "full", "mini", "micro", "nano", "pico"]
-            gapps = len(varient)
-            for i in range(gapps):
-                link = f"{sforge}/{date}/open_gapps-arm64-10.0-{varient[i]}-{date}.zip/download"
-                gapps_link.append(link)                
+            try:
+                for i in varient:
+                    gapps_link.append(r['arm64']['10.0']['downloads'][i]['download'])
+            except KeyError
 
             open_g = [
             [InlineKeyboardButton(text="aroma", url=gapps_link[0]),
