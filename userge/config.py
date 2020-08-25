@@ -92,14 +92,16 @@ if Config.HEROKU_API_KEY:
 
 def get_version() -> str:
     """ get userge version """
-  #  ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
-  #  if "/usergeteam/userge" in Config.UPSTREAM_REPO.lower():
-  #      diff = list(_REPO.iter_commits('v0.1.6..HEAD'))  # temp solution
-  #      if diff:
-  #          return f"{ver}-patch.{len(diff)}"
-  #  else:
-  #      diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
-  #      if diff:
-  #          return f"{ver}-custom.{len(diff)}"
-    ver = "X-1"
-    return ver
+    ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
+    if "/usergeteam/userge" in Config.UPSTREAM_REPO.lower():
+        diff = list(_REPO.iter_commits('v0.1.6..HEAD'))  # temp solution
+        if diff:
+            return f"{ver}-patch.{len(diff)}"
+    else:
+        try:
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
+            if diff:
+                return f"{ver}-custom.{len(diff)}"
+        except:
+            error = "Update repo to get version."
+            return error
