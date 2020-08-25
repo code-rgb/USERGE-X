@@ -100,7 +100,10 @@ def get_version() -> str:
         if diff:
             return f"{ver}-patch.{len(diff)}"
     else:
-        diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
-        if diff:
-            return f"{ver}-custom.{len(diff)}"
-    return ver
+        try:
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
+            if diff:
+                return f"{ver}-custom.{len(diff)}"
+        except:
+            error = "Update repo to get version."
+            return error

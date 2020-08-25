@@ -40,8 +40,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             try:
                 for i in varient:
                     gapps_link.append(r['arm64']['10.0']['downloads'][i]['download'])
-            except KeyError
-
+            except KeyError:
+                return
             open_g = [
             [InlineKeyboardButton(text="aroma", url=gapps_link[0]),
             InlineKeyboardButton(text="super", url=gapps_link[1]),
