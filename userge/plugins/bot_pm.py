@@ -32,11 +32,8 @@ Nice To Meet You! I'm **@{bot.username}**
 """
         u_n = master.username
         try:
-            if LOGO_ID:
-                await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
-            else:
-                await refresh_id()
-                await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
+            await refresh_id()
+            await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
         except (FileIdInvalid, FileReferenceEmpty, BadRequest):
             await refresh_id()
             await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
