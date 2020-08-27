@@ -7,6 +7,11 @@
 # All rights reserved.
 
 from userge import userge, Message, logging, Config, pool
+import os
+import aiohttp
+
+NEKOBIN_URL = "https://nekobin.com/"
+NEKOBIN_URL_RAW = "https://nekobin.com/raw/"
 
 _LEVELS = {
     'debug': logging.DEBUG,
@@ -18,7 +23,7 @@ _LEVELS = {
 
 
 @userge.on_cmd("logs", about={
-    'header': "check userge logs",
+    'header': "check USERGE-X logs",
     'flags': {
         '-h': "get heroku logs",
         '-l': "heroku logs lines limit : default 100"}}, allow_channels=False)
@@ -33,10 +38,23 @@ async def check_logs(message: Message):
                                           filename='userge-heroku.log',
                                           caption=f'userge-heroku.log [ {limit} lines ]')
     else:
-        await message.client.send_document(chat_id=message.chat.id,
-                                           document="logs/userge.log",
-                                           caption='userge.log')
-    await message.delete()
+        with open("logs/userge.log", 'r') as d_f:
+            text = d_f.read()
+        file_ext = '.txt'
+        async with aiohttp.ClientSession() as ses:
+            async with ses.post(NEKOBIN_URL + "api/documents", json={"content": text}) as resp:
+            if resp.status == 201:
+                response = await resp.json()
+                key = response['result']['key']
+                final_url = NEKOBIN_URL + key + file_ext
+                final_url_raw = NEKOBIN_URL_RAW + key + file_ext
+                reply_text = "**Here are USERGE-X Logs** - \n"
+                reply_text += f"• [Neko]({final_url})\n"
+                reply_text += f"• [Neko_RAW]({final_url_raw})"
+                await message.edit(reply_text, disable_web_page_preview=True)
+            else:
+                await message.err("Failed to reach Nekobin")
+        
 
 
 @userge.on_cmd("setlvl", about={
