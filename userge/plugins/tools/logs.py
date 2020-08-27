@@ -43,17 +43,17 @@ async def check_logs(message: Message):
         file_ext = '.txt'
         async with aiohttp.ClientSession() as ses:
             async with ses.post(NEKOBIN_URL + "api/documents", json={"content": text}) as resp:
-            if resp.status == 201:
-                response = await resp.json()
-                key = response['result']['key']
-                final_url = NEKOBIN_URL + key + file_ext
-                final_url_raw = NEKOBIN_URL_RAW + key + file_ext
-                reply_text = "**Here are USERGE-X Logs** - \n"
-                reply_text += f"• [Neko]({final_url})\n"
-                reply_text += f"• [Neko_RAW]({final_url_raw})"
-                await message.edit(reply_text, disable_web_page_preview=True)
-            else:
-                await message.err("Failed to reach Nekobin")
+                if resp.status == 201:
+                    response = await resp.json()
+                    key = response['result']['key']
+                    final_url = NEKOBIN_URL + key + file_ext
+                    final_url_raw = NEKOBIN_URL_RAW + key + file_ext
+                    reply_text = "**Here are USERGE-X Logs** - \n"
+                    reply_text += f"• [Neko]({final_url})\n"
+                    reply_text += f"• [Neko_RAW]({final_url_raw})"
+                    await message.edit(reply_text, disable_web_page_preview=True)
+                else:
+                    await message.err("Failed to reach Nekobin")
         
 
 
