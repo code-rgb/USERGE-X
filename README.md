@@ -29,15 +29,8 @@
 
 ## How to Use ??
 
-•  If you already on official Userge repo just add 
-<b>UPSTREAM_REPO</b> to <b>https://github.com/code-rgb/USERGE-X</b> and update Alpha by <update -alpha -push -pull>.
+TO BE CONTINUED... (not a JOJO reference)
 
-
-<p align="center"><b>OR</b></p>
-
-
-•  First Deploy, <a href="https://github.com/code-rgb/USERGE-X#how-to-deploy">DEPLOY GUIDE</a> and after that add UPSTEAM_REPO var.
-<br>
 
 ## Disclaimer
 
@@ -73,7 +66,7 @@
 ## How To Deploy 
 
 <p align="center">
-<a href = "https://heroku.com/deploy?template=https://github.com/UsergeTeam/Userge/tree/master"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
+<a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
 <br>
 
 <h3><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">HEROKU Method</a></h3>
@@ -111,6 +104,7 @@
 * [@Supun97](https://t.me/Supun97)
 * [@gotstc](https://t.me/gotstc)
 * [@BINOD](https://t.me/binod)
+* 🔥 [Pyrogram Assistant](https://github.com/pyrogram/assistant)
 
 ### Copyright & License 
 
