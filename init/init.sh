@@ -15,9 +15,9 @@
 initUserge() {
     printLogo
     assertPrerequisites
-    sendMessage "Initializing Userge ..."
+    sendMessage "Initializing USERGE-X ..."
     assertEnvironment
-    editLastMessage "Starting Userge ..."
+    editLastMessage "Starting USERGE-X  ..."
     printLine
 }
 
@@ -26,7 +26,7 @@ startUserge() {
 }
 
 stopUserge() {
-    sendMessage "Exiting Userge ..."
+    sendMessage "Exiting USERGE-X ..."
     exit 0
 }
 

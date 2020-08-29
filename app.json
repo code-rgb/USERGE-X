@@ -1,14 +1,14 @@
 {
     "name": "Userge-X",
     "description": "telegram pluggable userbot",
-    "logo": "https://imgur.com/download/Inyeb1S",
+    "logo": "https://i.imgur.com/1xsOo9o.png",
     "keywords": [
-        "userge",
+        "USERGE-X",
         "telegram",
         "pluggable",
         "userbot"
     ],
-    "repository": "https://github.com/code-rgb/Userge",
+    "repository": "https://github.com/code-rgb/USERGE-X",
     "website": "https://github.com/Userge",
     "success_url": "https://t.me/theUserge",
     "env": {

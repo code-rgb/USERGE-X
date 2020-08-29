@@ -83,9 +83,8 @@ printLogo() {
                  XXX:::::X   X:::::XXX                
                  X::::::X     X::::::X                
                  X:::::X       X:::::X                
-                  X:::::X       X:::::X               
+                 X:::::X       X:::::X               
                  XXXXXXX       XXXXXXX                
-
 '
     printLine
 }

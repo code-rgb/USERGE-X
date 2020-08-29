@@ -22,14 +22,13 @@ CHANNEL = userge.getCLogger(__name__)
     'flags': {
         '-pull': "pull updates",
         '-push': "push updates to heroku",
-        '-master': "select master branch",
-        '-beta': "select beta branch",
-        '-alpha': "select alpha branch"},
+        '-alpha': "default branch is alpha",
+        '-develop': "experimental"},
     'usage': "{tr}update : check updates from default branch\n"
              "{tr}update -[branch_name] : check updates from any branch\n"
              "add -pull if you want to pull updates\n"
              "add -push if you want to push updates to heroku",
-    'examples': "{tr}update -beta -pull -push"}, del_pre=True, allow_channels=False)
+    'examples': "{tr}update -alpha -pull -push"}, del_pre=True, allow_channels=False)
 async def check_update(message: Message):
     """ check or do updates """
     await message.edit("`Checking for updates, please wait....`")
@@ -67,7 +66,7 @@ async def check_update(message: Message):
                     f"👷 __{i.author}__\n\n")
     except GitCommandError as error:
         await message.err(error, del_in=5)
-        return
+        #return  idk lets try
     if out:
         if pull_from_repo:
             await message.edit(f'`New update found for [{branch}], Now pulling...`')
