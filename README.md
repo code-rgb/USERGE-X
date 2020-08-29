@@ -30,7 +30,7 @@
 ## How to Use ??
 
 •  If you already on official Userge repo just add 
-<b>UPSTREAM_REPO</b> to <b>https://github.com/code-rgb/USERGE-X</b> and update Alpha by <update -alpha -push -pull>.
+<b>UPSTREAM_REPO</b> to <b>https://github.com/DarkRider21/USERGE-X</b> and update Alpha by <update -alpha -push -pull>.
 
 
 <p align="center"><b>OR</b></p>
