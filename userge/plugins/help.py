@@ -387,7 +387,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         input_message_content=InputTextMessageContent(
                             " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
                         ),
-                        url="https://github.com/code-rgb/USERGE-X",
+                        url="https://github.com/DarkRider21/USERGE-X",
                         description="Userge-X Main Menu",
                         thumb_url="https://i.imgur.com/1xsOo9o.png",
                         reply_markup=InlineKeyboardMarkup(main_menu_buttons())
@@ -398,13 +398,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 owner = [[
                         InlineKeyboardButton(
                         text="Contact", 
-                        url="https://t.me/deleteduser420"
+                        url="https://t.me/DarkRider21"
                         )
                 ]]
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url="https://coverfiles.alphacoders.com/123/123388.png",
-                            caption="Hey I solved **𝚂𝚢𝚗𝚝𝚊𝚡's ░ Σrr♢r**",
+                            caption="Hey I solved **𝕯𝖆𝖗𝖐𝕽𝖎𝖉𝖊𝖗𝟐𝟏**",
                             reply_markup=InlineKeyboardMarkup(owner)
                         )
                 )
