@@ -1,8 +1,8 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/DarkRider21">𝕯𝖆𝖗𝖐𝕽𝖎𝖉𝖊𝖗𝟐𝟏</a></b></h2>
 <br>
 
 <p align="center">
-    <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
+    <a href="https://github.com/code-rgb/USERGE-X"><img src="https://telegra.ph/file/25ff8fa51dc165e69c507.png" alt="Userge-x" width=400px></a>
     <br>
     <br>
 </p>
