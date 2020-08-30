@@ -64,10 +64,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 if counter[1] == "n":
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
-                view_data[1] = {"agree": agree, "disagree": disagree}
-                json.dump(view_data, open(PATH,'w'))
                 else:
                     return
+                view_data[1] = {"agree": agree, "disagree": disagree}
+                json.dump(view_data, open(PATH,'w'))
+          
         else:
             if len(view_data) == 0:
                 if counter[1] == "y":
