@@ -101,5 +101,5 @@ def get_version() -> str:
         if diff:
             return f"{ver}-[X].{len(diff)}"
     except:
-        error = "Update repo to get version."
+        error = " Update alpha once to get version."
         return error
