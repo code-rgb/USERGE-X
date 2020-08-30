@@ -9,7 +9,9 @@
 # All rights reserved.
 
 import os
-from pyrogram import ChatPermissions
+
+from pyrogram.types import ChatPermissions
+
 from userge import userge, Message
 
 CHANNEL = userge.getCLogger(__name__)
@@ -263,7 +265,7 @@ async def view_perm(message: Message):
     permission_view_str += f"<b>ℹ Change Info:</b> {vinfo}\n"
     permission_view_str += f"<b>👥 Invite Users:</b> {vinvite}\n"
     permission_view_str += f"<b>📌 Pin Messages:</b> {vpin}\n"
-    if message.chat.photo:
+    if message.chat.photo and vmedia == "✅":
         local_chat_photo = await message.client.download_media(
             message=message.chat.photo.big_file_id)
         await message.client.send_photo(chat_id=message.chat.id,

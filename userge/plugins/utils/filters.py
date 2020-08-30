@@ -11,21 +11,21 @@
 import asyncio
 from typing import Dict
 
-from userge import userge, Message, Filters, get_collection
+from userge import userge, Message, filters, get_collection
 
 FILTERS_COLLECTION = get_collection("filters")
 CHANNEL = userge.getCLogger(__name__)
 
 FILTERS_DATA: Dict[int, Dict[str, int]] = {}
-FILTERS_CHATS = Filters.create(lambda _, query: query.chat.id in FILTERS_DATA)
+FILTERS_CHATS = filters.create(lambda _, __, query: query.chat.id in FILTERS_DATA)
 
 _SUPPORTED_TYPES = (":audio:", ":video:", ":photo:", ":document:",
-                    ":sticker:", ":animation:", ":game:", ":voice:",
-                    ":video_note:", ":media:", ":contact:", ":media_group:",
-                    ":location:", ":venue:", ":web_page:", ":poll:",
-                    ":game_high_score:", ":via_bot:", ":service:",
-                    ":mentioned:", ":edited:", ":new_chat_title:",
-                    ":new_chat_photo:", ":delete_chat_photo:", ":pinned_message:")
+                    ":sticker:", ":animation:", ":voice:", ":video_note:",
+                    ":media:", ":game:", ":contact:", ":location:",
+                    ":venue:", ":web_page:", ":poll:", ":via_bot:",
+                    ":forward_date:", ":mentioned:", ":service:",
+                    ":media_group_id:", ":game_high_score:", ":pinned_message:",
+                    ":new_chat_title:", ":new_chat_photo:", ":delete_chat_photo:")
 
 
 def _filter_updater(chat_id: int, name: str, message_id: int) -> None:
@@ -167,7 +167,7 @@ async def add_filter(message: Message) -> None:
     await message.edit(text=out, del_in=3, log=__name__)
 
 
-@userge.on_filters(~Filters.me & ~Filters.edited & FILTERS_CHATS, group=1)
+@userge.on_filters(~filters.me & ~filters.edited & FILTERS_CHATS, group=1)
 async def chat_filter(message: Message) -> None:
     """ filter handler """
     if not message.from_user:

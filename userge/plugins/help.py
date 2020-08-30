@@ -13,10 +13,11 @@ from uuid import uuid4
 import asyncio
 from typing import List, Callable, Dict, Union, Any
 from userge.utils import parse_buttons as pb
-from pyrogram import (
+from pyrogram import filters
+from pyrogram.types (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    Filters, CallbackQuery, InlineQuery, InlineQueryResultPhoto)
+    CallbackQuery, InlineQuery, InlineQueryResultPhoto)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 
@@ -140,7 +141,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     show_alert=True)
         return wrapper
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"\((.+)\)(next|prev)\((\d+)\)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"\((.+)\)(next|prev)\((\d+)\)"))
     @check_owner
     async def callback_next_prev(callback_query: CallbackQuery):
         cur_pos = str(callback_query.matches[0].group(1))
@@ -161,7 +162,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         await callback_query.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(buttons))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"back\((.+)\)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"back\((.+)\)"))
     @check_owner
     async def callback_back(callback_query: CallbackQuery):
         cur_pos = str(callback_query.matches[0].group(1))
@@ -179,7 +180,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"enter\((.+)\)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"enter\((.+)\)"))
     @check_owner
     async def callback_enter(callback_query: CallbackQuery):
         cur_pos = str(callback_query.matches[0].group(1))
@@ -193,7 +194,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"((?:un)?load|(?:en|dis)able)\((.+)\)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"((?:un)?load|(?:en|dis)able)\((.+)\)"))
     @check_owner
     async def callback_manage(callback_query: CallbackQuery):
         task = str(callback_query.matches[0].group(1))
@@ -213,13 +214,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^mm$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^mm$"))
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
         await callback_query.edit_message_text(
             " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 ", reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^chgclnt$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^chgclnt$"))
     @check_owner
     async def callback_chgclnt(callback_query: CallbackQuery):
         if Config.USE_USER_FOR_CLIENT_CHECKS:
@@ -232,7 +233,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         await callback_query.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"refresh\((.+)\)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"refresh\((.+)\)"))
     @check_owner
     async def callback_exit(callback_query: CallbackQuery):
         cur_pos = str(callback_query.matches[0].group(1))
