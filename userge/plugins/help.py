@@ -14,10 +14,10 @@ import asyncio
 from typing import List, Callable, Dict, Union, Any
 from userge.utils import parse_buttons as pb
 from pyrogram import filters
-from pyrogram.types (
-    InlineQueryResultArticle, InputTextMessageContent,
+from pyrogram.types InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    CallbackQuery, InlineQuery, InlineQueryResultPhoto)
+    CallbackQuery, InlineQuery, InlineQueryResultPhoto
+
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 
