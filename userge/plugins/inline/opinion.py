@@ -12,8 +12,6 @@ from pyrogram import filters
 import os
 import asyncio
 
-VOTED = "You Already Voted"
-
 if not os.path.exists('userge/xcache'):
     os.mkdir('userge/xcache')
 PATH = "userge/xcache/emoji_data.txt"   
@@ -37,10 +35,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if len(view_data) == 2:
             if str(ids) in view_data[0]:
                 if view_data[0][str(ids)] == "y" and counter[1] == "y":
-                    await callback_query.answer(VOTED, show_alert=False)
+                    await callback_query.answer("Already Voted for 👍", show_alert=True)
                     return
                 if view_data[0][str(ids)] == "n" and counter[1] == "n":
-                    await callback_query.answer(VOTED, show_alert=False)
+                    await callback_query.answer("Already Voted for 👎", show_alert=True)
                     return
                 if view_data[0][str(ids)] == "y" and counter[1] == "n":
                     agree = int(view_data[1]['agree']) - 1
@@ -53,7 +51,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     view_data[1] = {"agree": agree, "disagree": disagree}
                     view_data[0][str(ids)] = "y"
                 else:
-                    return
+                    await callback_query.answer("🔄 Refreshing", show_alert=True)
                 json.dump(view_data, open(PATH,'w'))
             else:
                 new_id = {ids : counter[1]}
@@ -65,18 +63,15 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
                 else:
-                    return
+                    await callback_query.answer("🔄 Refreshing", show_alert=True)
                 view_data[1] = {"agree": agree, "disagree": disagree}
                 json.dump(view_data, open(PATH,'w'))
-          
         else:
             if len(view_data) == 0:
                 if counter[1] == "y":
                     view_data = [{ids : "y"},{"agree": 1, "disagree": 0}]  
                 if counter[1] == "n":
-                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]
-                else:
-                    return 
+                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]   
                 json.dump(view_data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
@@ -121,8 +116,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer(owner, show_alert=True)
 
 @userge.on_cmd("opinion", about={
-    'header': "Ask For Opinion via Inline Bot"})
+    'header': "Ask For Opinion via Inline Bot, do .opinion to see help"})
 async def op_(message: Message):
-    text = "**IN INLINE**\n\n"
-    text += "op Are Cat Cute?"
+    text = "**IN INLINE BOT**\n\n"
+    text += "op Are Cats Cute?"
     await message.edit(text, del_in=20)

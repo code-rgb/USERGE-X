@@ -17,7 +17,7 @@ initUserge() {
     assertPrerequisites
     sendMessage "Initializing USERGE-X ..."
     assertEnvironment
-    editLastMessage "Starting USERGE-X  ..."
+    editLastMessage "Starting USERGE-X ..."
     printLine
 }
 

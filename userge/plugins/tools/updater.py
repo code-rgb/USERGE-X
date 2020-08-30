@@ -66,7 +66,7 @@ async def check_update(message: Message):
                     f"👷 __{i.author}__\n\n")
     except GitCommandError as error:
         await message.err(error, del_in=5)
-        #return  idk lets try
+        return
     if out:
         if pull_from_repo:
             await message.edit(f'`New update found for [{branch}], Now pulling...`')
