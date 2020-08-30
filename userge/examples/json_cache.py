@@ -9,9 +9,11 @@ PATH = "userge/xcache/data.txt"
 d = []
 json.dump(d, open(PATH,'w'))
 
+*************************************************** 
 # Load
 view_data = json.load(open(PATH))
 
+*************************************************** 
 # Update and Dump
 view_data[0].update(new_id)
 json.dump(view_data, open(PATH,'w'))

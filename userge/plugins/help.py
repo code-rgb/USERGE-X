@@ -9,12 +9,11 @@
 # All rights reserved.
 import random
 from math import ceil
-from uuid import uuid4
 import asyncio
 from typing import List, Callable, Dict, Union, Any
 from userge.utils import parse_buttons as pb
 from pyrogram import filters
-from pyrogram.types (
+from pyrogram.types import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, InlineQuery, InlineQueryResultPhoto)
@@ -40,22 +39,27 @@ BUTTON_BASE = get_collection("TEMP_BUTTON")
 
 
 REPO_X = InlineQueryResultArticle(
-                    id=uuid4(),
                     title="Repo",
                     input_message_content=InputTextMessageContent(
                         "**Here's how to setup USERGE-X** "),
                     url="https://github.com/code-rgb/USERGE-X",
                     description="Setup Your Own",
                     thumb_url="https://i.imgur.com/1xsOo9o.png",
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(                  
-                                    "🔥 USERGE-X Repo",
-                                    url="https://github.com/code-rgb/USERGE-X"),
-                                InlineKeyboardButton(
-                                    "🚀 Deploy USERGE-X",
-                                    url=("https://heroku.com/deploy?template="
-                                        "https://github.com/UsergeTeam/Userge/tree/master"))]]))
+                    reply_markup=InlineKeyboardMarkup(
+                        [[
+                            InlineKeyboardButton(                  
+                            "🔥 USERGE-X Repo",
+                            url="https://github.com/code-rgb/USERGE-X"),
+                            InlineKeyboardButton(
+                            "🚀 Deploy USERGE-X",
+                            url=("https://heroku.com/deploy?template="
+                            "https://github.com/code-rgb/USERGE-X/tree/alpha")
+                            )
+                        ]]
+                    )
+            )
 
-
+ 
 
 
 # Thanks boi @FLAMEPOSEIDON
@@ -171,7 +175,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("you are in main menu", show_alert=True)
             return
         if len(pos_list) == 2:
-            text = " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
+            text = " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨"
             buttons = main_menu_buttons()
         elif len(pos_list) == 3:
             text, buttons = category_data(cur_pos)
@@ -218,7 +222,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
         await callback_query.edit_message_text(
-            " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 ", reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
+            " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ", reply_markup=InlineKeyboardMarkup(main_menu_buttons()))
 
     @ubot.on_callback_query(filters.regex(pattern=r"^chgclnt$"))
     @check_owner
@@ -383,10 +387,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         str_x = i_q.split(" ", 2)
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
-                        id=uuid4(),
+                        
                         title="Main Menu",
                         input_message_content=InputTextMessageContent(
-                            " **USERGE-X** 𝐌𝐚𝐢𝐧 𝐌𝐞𝐧𝐮 "
+                            " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "
                         ),
                         url="https://github.com/code-rgb/USERGE-X",
                         description="Userge-X Main Menu",
@@ -413,16 +417,15 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if string =="rick":
                 rick = [[
                         InlineKeyboardButton(
-                        text="Go", 
+                        text="🔍", 
                         url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                         )
                 ]]                           
                 results.append(
                         InlineQueryResultArticle(
-                            id=uuid4(),
                             title="Not a Rick Roll",
                             input_message_content=InputTextMessageContent(
-                                "🔍 Search Results"
+                                "Search Results"
                             ),
                             description="Definately Not a Rick Roll",
                             thumb_url="https://i.imgur.com/hRCaKAy.png",
@@ -449,7 +452,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                            [InlineKeyboardButton("Nik GApps", callback_data="nik_gapps")]]          
                 results.append(
                         InlineQueryResultArticle(
-                            id=uuid4(),
                             title="GApps",
                             input_message_content=InputTextMessageContent(
                                 "[\u200c](https://i.imgur.com/BZBMrfn.jpg) **LATEST Android 10 arm64 GApps**" 
@@ -471,7 +473,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 ]]                           
                 results.append(
                         InlineQueryResultArticle(
-                            id=uuid4(),
+                            
                             title="Ask For Opinion",
                             input_message_content=InputTextMessageContent(txt),
                             description="e.g @yourbot op Are Cats Cute?",
@@ -499,7 +501,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 else:    
                     results.append(
                                 InlineQueryResultArticle(
-                                    id=uuid4(),
                                     title=text,
                                     input_message_content=InputTextMessageContent(text),
                                     reply_markup=buttons
@@ -521,7 +522,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 
                     results.append(
                                 InlineQueryResultArticle(
-                                    id=uuid4(),
+                                    
                                     title="Send A Secret Message",
                                     input_message_content=InputTextMessageContent(f"☣️ <b>TOPSECRET!</b> for {user_name}. Only he/she can open it."),
                                     description="secret @username you message here",
@@ -533,7 +534,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     buttons_h = [[InlineKeyboardButton("See Help", callback_data="secret_btn_help")]]
                     results.append(
                                 InlineQueryResultArticle(
-                                    id=uuid4(),
+                                    
                                     title="Send A Secret Message",
                                     input_message_content=InputTextMessageContent("@xyzbot secret @username <your message>"),
                                     description="secret @username you message here",

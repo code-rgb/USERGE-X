@@ -4,9 +4,10 @@ import requests
 from requests import get
 from bs4 import BeautifulSoup
 from userge import userge, Message, Config
-from pyrogram import (
+from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
-    Filters, CallbackQuery)
+    CallbackQuery)
+from pyrogram import filters
 
 # TODO Make Check Admin and Sudos Wrapper
 
@@ -30,7 +31,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^open_gapps$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^open_gapps$"))
     async def open_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -62,7 +63,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("Sorry You Can't Access This!\n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^flame_gapps$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^flame_gapps$"))
     async def flame_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -90,7 +91,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("Sorry You Can't Access This!\n\n  𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^nik_gapps$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^nik_gapps$"))
     async def nik_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -113,7 +114,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("Sorry You Can't Access This!\n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^back_gapps$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^back_gapps$"))
     async def back_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:

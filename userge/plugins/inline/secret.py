@@ -1,5 +1,7 @@
 from userge import userge, Config, get_collection, Message
-from pyrogram import Filters, CallbackQuery
+from pyrogram.types import CallbackQuery
+from pyrogram import filters
+
 SECRET_MSG = get_collection("SECRET_MSG") 
 
 
@@ -10,7 +12,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
        
-    @ubot.on_callback_query(filters=Filters.regex(pattern=r"^secret_btn$"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^secret_btn$"))
     async def alive_callback(_, callback_query: CallbackQuery): 
         sender = await userge.get_me()
         msg = f"🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: {sender.first_name}"
@@ -28,9 +30,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await callback_query.answer("This Message is Confidential 👽", show_alert=True)
 
 @userge.on_cmd("secret", about={
-    'header': "send secret message via inline bot"})
+    'header': "for help do .secret"})
 async def secret_(message: Message):
-    text = "**IN INLINE**\n\n"
-    text += "Do @yourbot secret @mention <Your Secret Message>"
-    await message.edit(text, del_in=10)
+    text = "**IN INLINE BOT**\n\n"
+    text += "secret [username OR userid] \"Your Secret Message\""
+    await message.edit(text, del_in=20)
     

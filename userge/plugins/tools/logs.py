@@ -11,7 +11,6 @@ import os
 import aiohttp
 
 NEKOBIN_URL = "https://nekobin.com/"
-NEKOBIN_URL_RAW = "https://nekobin.com/raw/"
 
 _LEVELS = {
     'debug': logging.DEBUG,
@@ -47,10 +46,10 @@ async def check_logs(message: Message):
                     response = await resp.json()
                     key = response['result']['key']
                     final_url = NEKOBIN_URL + key + file_ext
-                    final_url_raw = NEKOBIN_URL_RAW + key + file_ext
+                    final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
                     reply_text = "**Here are USERGE-X Logs** - \n"
-                    reply_text += f"• [Neko]({final_url})\n"
-                    reply_text += f"• [Neko_RAW]({final_url_raw})"
+                    reply_text += f"• [Nekobin]({final_url})\n"
+                    reply_text += f"• [[Raw]]({final_url_raw})"
                     await message.edit(reply_text, disable_web_page_preview=True)
                 else:
                     await message.err("Failed to reach Nekobin")

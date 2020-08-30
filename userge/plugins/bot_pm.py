@@ -1,12 +1,13 @@
 from userge import userge, Message, Config
-from pyrogram import (  
-     InlineKeyboardMarkup, InlineKeyboardButton, Filters)
-#CallbackQuery
+from pyrogram.types import (  
+     InlineKeyboardMarkup, InlineKeyboardButton) #CallbackQuery
+from pyrogram import filters
 from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 
 # https://github.com/UsergeTeam/Userge-Assistant/.../alive.py#L41
 # refresh file id and file reference from TG server
+
 LOGO_ID, LOGO_REF = None, None
 
 
@@ -17,7 +18,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
 
-    @ubot.on_message(Filters.private & Filters.command("start"))
+    @ubot.on_message(filters.private & filters.command("start"))
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()
         master = await userge.get_me()
@@ -68,4 +69,4 @@ Nice To Meet You! I'm **@{bot.username}**
 async def op_(message: Message):
     text = "**Works Only in Bot's PM**\n\n"
     text += "<code>Do /start</code>"
-    await message.edit(text, del_in=5)
+    await message.edit(text, del_in=20)
