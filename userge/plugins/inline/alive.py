@@ -36,11 +36,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         alive_settings=f"""
     🕔 Uptime : {userge.uptime}
 
-• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}
-• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}
-• ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 : {_parse_arg(RawClient.DUAL_MODE)}
-• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {dynos_saver}
-• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
+• 👥 𝗦𝘂𝗱𝗼 :         {_parse_arg(Config.SUDO_ENABLED)}
+• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 :      {_parse_arg(Config.ANTISPAM_SENTRY)}
+• ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 :    {_parse_arg(RawClient.DUAL_MODE)}
+• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :    {dynos_saver}
+• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 :   {_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
 """
         await callback_query.answer(alive_settings, show_alert=True)
 
