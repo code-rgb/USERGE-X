@@ -42,7 +42,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     return
                 # Answering Query First then moving forward
                 choice = _choice(counter[1])
-                await callback_query.answer(f"You Voted for -  {choice}", show_alert=False)
+                await callback_query.answer(f"You Choose  {choice}", show_alert=False)
                 #
                 if view_data[0][str(ids)] == "y" and counter[1] == "n":
                     agree = int(view_data[1]['agree']) - 1
@@ -58,7 +58,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             else:
                 # Answering Query First then moving forward
                 choice = _choice(counter[1])
-                await callback_query.answer(f"You Voted for - {choice}", show_alert=False)
+                await callback_query.answer(f"You Choose {choice}", show_alert=False)
                 #
                 new_id = {ids : counter[1]}
                 view_data[0].update(new_id)

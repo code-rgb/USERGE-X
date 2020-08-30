@@ -9,16 +9,16 @@ import re
 async def media_to_image(message):
     replied = message.reply_to_message
     if not (replied.photo or replied.sticker or replied.animation or replied.video):
-        await message.err("<code>Media Type Is Invalid ! See HELP.</code>")
+        await message.err("`Media Type Is Invalid ! See HELP.`")
         return
     if not os.path.isdir(Config.DOWN_PATH):
         os.makedirs(Config.DOWN_PATH)
-    await message.edit("Ah Shit, Here We Go Again...")
+    await message.edit("`Ah Shit, Here We Go Again ...`")
     dls = await message.client.download_media(
         message=message.reply_to_message,
         file_name=Config.DOWN_PATH,
         progress=progress,
-        progress_args=(message, "Trying to Posses given content")
+        progress_args=(message, "`Trying to Posses given content`")
     )
     dls_loc = os.path.join(Config.DOWN_PATH, os.path.basename(dls))
     if replied.sticker and replied.sticker.file_name.endswith(".tgs"):
@@ -39,7 +39,7 @@ async def media_to_image(message):
             return
         dls_loc = stkr_file
     elif replied.animation or replied.video:
-        await message.edit("Converting Media To Image...")
+        await message.edit("`Converting Media To Image ...`)
         jpg_file = os.path.join(Config.DOWN_PATH, "image.jpg")
         await take_screen_shot(dls_loc, 0, jpg_file)
         os.remove(dls_loc)
@@ -47,7 +47,7 @@ async def media_to_image(message):
             await message.err("This Gif is Gey (｡ì _ í｡), Task Failed Successfully !")
             return
         dls_loc = jpg_file
-    await message.edit("Almost Done...😎")
+    await message.edit("`Almost Done ...`")
     return dls_loc
 
 

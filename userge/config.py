@@ -27,13 +27,13 @@ logbot.reply_last_msg("Setting Configs ...")
 
 class Config:
     """ Configs to setup Userge """
-    API_ID = int(os.environ.get("API_ID", 0))
+    API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
-    WORKERS = int(os.environ.get("WORKERS", 0))
+    WORKERS = int(os.environ.get("WORKERS"))
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     HU_STRING_SESSION = os.environ.get("HU_STRING_SESSION", None)
     OWNER_ID = int(os.environ.get("OWNER_ID", 0))
-    LOG_CHANNEL_ID = int(os.environ.get("LOG_CHANNEL_ID", 0))
+    LOG_CHANNEL_ID = int(os.environ.get("LOG_CHANNEL_ID"))
     DB_URI = os.environ.get("DATABASE_URL")
     LANG = os.environ.get("PREFERRED_LANGUAGE")
     DOWN_PATH = os.environ.get("DOWN_PATH")
@@ -97,9 +97,16 @@ def get_version() -> str:
     """ get userge version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
-        diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
-        if diff:
-            return f"{ver}-[X].{len(diff)}"
+        if "/code-rgb/USERGE-X" in Config.UPSTREAM_REPO.lower():
+            diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
+            if diff:
+                return f"{ver}-[X].{len(diff)}"
+        else:
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
+            if diff:
+                return f"{ver}-fork-[X].{len(diff)}"
     except:
-        error = " Update alpha once to get version."
+        error = "Update Repo"
         return error
+    return ver
+        

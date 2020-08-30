@@ -24,6 +24,7 @@ _LEVELS = {
 @userge.on_cmd("logs", about={
     'header': "check USERGE-X logs",
     'flags': {
+        '-d': "get logs in document",
         '-h': "get heroku logs",
         '-l': "heroku logs lines limit : default 100"}}, allow_channels=False)
 async def check_logs(message: Message):
@@ -36,7 +37,7 @@ async def check_logs(message: Message):
                                           text=logs,
                                           filename='userge-heroku.log',
                                           caption=f'userge-heroku.log [ {limit} lines ]')
-    else:
+    elif not '-d'  in message.flags:
         with open("logs/userge.log", 'r') as d_f:
             text = d_f.read()
         file_ext = '.txt'
@@ -47,12 +48,20 @@ async def check_logs(message: Message):
                     key = response['result']['key']
                     final_url = NEKOBIN_URL + key + file_ext
                     final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
-                    reply_text = "**Here are USERGE-X Logs** - \n"
-                    reply_text += f"• [Nekobin]({final_url})\n"
-                    reply_text += f"• [[Raw]]({final_url_raw})"
+                    reply_text = "**Here Are Your USERGE-X Logs** - \n"
+                    reply_text += f"• [NEKO]({final_url})        "
+                    reply_text += f"• [RAW]({final_url_raw})"
                     await message.edit(reply_text, disable_web_page_preview=True)
                 else:
-                    await message.err("Failed to reach Nekobin")
+                    await message.edit("Failed to reach Nekobin !")
+                    await message.client.send_document(chat_id=message.chat.id,
+                                           document="logs/userge.log",
+                                           caption='**USERGE-X Logs**')
+    else:
+        await message.client.send_document(chat_id=message.chat.id,
+                                           document="logs/userge.log",
+                                           caption='**USERGE-X Logs**')
+
         
 
 

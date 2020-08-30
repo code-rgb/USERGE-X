@@ -16,7 +16,8 @@ from pyrogram import filters
 from pyrogram.types import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
-    CallbackQuery, InlineQuery, InlineQueryResultPhoto)
+    CallbackQuery, InlineQuery, InlineQueryResultPhoto,
+    InlineQueryResultAnimation)
 from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 
@@ -433,7 +434,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                 )
 
-            if string =="alive":
+            if string == "alive":
                 random_alive = random.choice(ALIVE_IMGS) 
                 buttons = [[InlineKeyboardButton("🔧 SETTINGS", callback_data="settings_btn"),
                             InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
@@ -443,6 +444,15 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             photo_url=random_alive,
                             caption=ALIVE_INFO,
                             reply_markup=InlineKeyboardMarkup(buttons)
+                        )
+                )
+
+            if string == "geass":
+                results.append(
+                        InlineQueryResultAnimation(
+                            animation_url="https://i.imgur.com/DeZHcRK.gif",
+                            caption="To defeat evil, I must become a greater evil",
+                            
                         )
                 )
 

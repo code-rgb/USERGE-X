@@ -1,5 +1,5 @@
 {
-    "name": "Userge-X",
+    "name": "USERGE-X",
     "description": "telegram pluggable userbot",
     "logo": "https://i.imgur.com/1xsOo9o.png",
     "keywords": [
@@ -9,8 +9,8 @@
         "userbot"
     ],
     "repository": "https://github.com/code-rgb/USERGE-X",
-    "website": "https://github.com/Userge",
-    "success_url": "https://t.me/theUserge",
+    "website": "https://github.com/code-rgb/USERGE-X",
+    "success_url": "https://github.com/code-rgb/USERGE-X",
     "env": {
         "API_ID": {"description": "Get this value from https://my.telegram.org"},
         "API_HASH": {"description": "Get this value from https://my.telegram.org"},
