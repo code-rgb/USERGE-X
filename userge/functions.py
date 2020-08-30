@@ -39,7 +39,7 @@ async def media_to_image(message):
             return
         dls_loc = stkr_file
     elif replied.animation or replied.video:
-        await message.edit("`Converting Media To Image ...`)
+        await message.edit("`Converting Media To Image ...`")
         jpg_file = os.path.join(Config.DOWN_PATH, "image.jpg")
         await take_screen_shot(dls_loc, 0, jpg_file)
         os.remove(dls_loc)
