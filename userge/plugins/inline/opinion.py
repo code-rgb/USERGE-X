@@ -40,6 +40,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 if view_data[0][str(ids)] == "n" and counter[1] == "n":
                     await callback_query.answer("Already Voted for 👎", show_alert=True)
                     return
+                # Answering Query First then moving forward
+                choice = _choice(counter[1])
+                await callback_query.answer(f"You Voted for -  {choice}", show_alert=False)
+                #
                 if view_data[0][str(ids)] == "y" and counter[1] == "n":
                     agree = int(view_data[1]['agree']) - 1
                     disagree = int(view_data[1]['disagree']) + 1
@@ -50,10 +54,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     disagree = view_data[1]['disagree'] - 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
                     view_data[0][str(ids)] = "y"
-                else:
-                    await callback_query.answer("🔄 Refreshing", show_alert=True)
                 json.dump(view_data, open(PATH,'w'))
             else:
+                # Answering Query First then moving forward
+                choice = _choice(counter[1])
+                await callback_query.answer(f"You Voted for - {choice}", show_alert=False)
+                #
                 new_id = {ids : counter[1]}
                 view_data[0].update(new_id)
                 if counter[1] == "y":
@@ -62,8 +68,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 if counter[1] == "n":
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
-                else:
-                    await callback_query.answer("🔄 Refreshing", show_alert=True)
                 view_data[1] = {"agree": agree, "disagree": disagree}
                 json.dump(view_data, open(PATH,'w'))
         else:
@@ -88,6 +92,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await asyncio.sleep(e.x)
         except BadRequest:
             return
+
 
     @ubot.on_callback_query(filters.regex(pattern=r"^e_result$"))
     async def choice_result_cb(_, callback_query: CallbackQuery):
@@ -115,8 +120,18 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 owner = f"Only {a.first_name} Can Access This !"
             await callback_query.answer(owner, show_alert=True)
 
+
+def _choice(res):
+    if res == "y":
+        choice = "👍"
+    else:
+        choice = "👎"
+    return choice
+    
+    
+
 @userge.on_cmd("opinion", about={
-    'header': "Ask For Opinion via Inline Bot, do .opinion to see help"})
+    'header': "Ask for Opinion via Inline Bot, do .opinion to see help"})
 async def op_(message: Message):
     text = "**IN INLINE BOT**\n\n"
     text += "op Are Cats Cute?"
