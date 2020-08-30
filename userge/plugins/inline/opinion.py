@@ -73,10 +73,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 if counter[1] == "y":
                     view_data = [{ids : "y"},{"agree": 1, "disagree": 0}]  
                 if counter[1] == "n":
-                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]   
-                json.dump(view_data, open(PATH,'w'))
+                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]
                 else:
-                    return
+                    return 
+                json.dump(view_data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
         disagree_data += f"  {view_data[1]['disagree']}" 
