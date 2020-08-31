@@ -48,9 +48,8 @@ async def check_logs(message: Message):
                     key = response['result']['key']
                     final_url = NEKOBIN_URL + key + file_ext
                     final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
-                    reply_text = "**Here Are Your USERGE-X Logs** - \n"
-                    reply_text += f"• [NEKO]({final_url})        "
-                    reply_text += f"• [RAW]({final_url_raw})"
+                    reply_text = "**Here Are Your Logs-X** : \n"
+                    reply_text += f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
                     await message.edit(reply_text, disable_web_page_preview=True)
                 else:
                     await message.edit("Failed to reach Nekobin !")
@@ -58,6 +57,7 @@ async def check_logs(message: Message):
                                            document="logs/userge.log",
                                            caption='**USERGE-X Logs**')
     else:
+        await message.delete()
         await message.client.send_document(chat_id=message.chat.id,
                                            document="logs/userge.log",
                                            caption='**USERGE-X Logs**')
