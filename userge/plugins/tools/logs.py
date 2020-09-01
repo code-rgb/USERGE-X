@@ -48,7 +48,7 @@ async def check_logs(message: Message):
                     key = response['result']['key']
                     final_url = NEKOBIN_URL + key + file_ext
                     final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
-                    reply_text = "**Here Are Your Logs-X** : \n"
+                    reply_text = "**Here Are Your Logs** :\n"
                     reply_text += f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
                     await message.edit(reply_text, disable_web_page_preview=True)
                 else:
