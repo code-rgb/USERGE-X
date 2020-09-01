@@ -74,7 +74,7 @@ ALIVE_INFO = f"""
 
  • 🐍 Python :  `v{versions.__python_version__}`
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
- • 🧬 Userge :  `v{get_version()}`
+ • 🧬 USERGE-𝑿 :  `v{get_version()}`
 """
 
 async def _init() -> None:

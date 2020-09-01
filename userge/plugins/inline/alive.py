@@ -34,7 +34,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             dynos_saver = "Not Supported"
             
         alive_settings=f"""
-    🕔 Uptime : {userge.uptime}
+    🕔 𝙐𝙥𝙩𝙞𝙢𝙚 : {userge.uptime}
 
 • 👥 𝗦𝘂𝗱𝗼 :  {_parse_arg(Config.SUDO_ENABLED)}
 • 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 :  { _parse_arg(Config.ANTISPAM_SENTRY)}
