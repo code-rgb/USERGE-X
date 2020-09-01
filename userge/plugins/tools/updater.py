@@ -22,7 +22,7 @@ CHANNEL = userge.getCLogger(__name__)
     'flags': {
         '-pull': "pull updates",
         '-push': "push updates to heroku",
-        '-branch': "e.g -alpha, -beta etc. If not given default is -alpha"}
+        '-branch': "e.g -alpha, -beta etc. If not given default is -alpha"},
     'usage': "{tr}update : check updates from default branch\n"
              "{tr}update -[branch_name] : check updates from any branch\n"
              "add -pull if you want to pull updates\n"
