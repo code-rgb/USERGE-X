@@ -552,7 +552,7 @@ async def scam_(message: Message):
 
 
 @userge.on_cmd("try", about={
-    'header': "send dart or dice randomly",
+    'header': "send dart, dice, basketball or football randomly",
     'usage': "{tr}try [send to chat or anyone]"})
 async def dice_gen(message: Message):
     """send dice"""
@@ -918,7 +918,7 @@ EMOJIS = (
     "😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕",
     "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰")
 
-DICE_EMO = ("🎯", "🎲")
+DICE_EMO = ("🎯", "🎲", "⚽️", "🏀")
 
 ZALG_LIST = (
     ("̖", " ̗", " ̘", " ̙", " ̜", " ̝", " ̞", " ̟", " ̠", " ̤", " ̥", " ̦", " ̩", " ̪", " ̫",
