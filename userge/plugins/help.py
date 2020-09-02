@@ -562,6 +562,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
+                                    input_message_content=InputTextMessageContent("Do `.help secret` for more info"),
                                     description="secret @username you message here"
                                 )
                     )
@@ -569,7 +570,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         results=results,
                         cache_time=1,
                         switch_pm_text="🔒 **SECRETS**",
-                        switch_pm_parameter="start",
+                        switch_pm_parameter="start"
                     )
                     return
         else:
