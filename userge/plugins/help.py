@@ -551,7 +551,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
-                                    input_message_content=InputTextMessageContent(f"📩 <b>TOPSECRET!</b> for <a href='tg://user?id={a.id}'>{a.first_name}</a>. Only he/she can open it."),
+                                    input_message_content=InputTextMessageContent(f"📩 <b>TOPSECRET!</b> for {user_name}. Only he/she can open it."),
                                     description=f"Send Secret Message to: {user_name}",
                                     thumb_url="https://i.imgur.com/c5pZebC.png",
                                     reply_markup=InlineKeyboardMarkup(buttons)
