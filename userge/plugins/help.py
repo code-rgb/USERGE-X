@@ -567,7 +567,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     )
                     await inline_query.answer(
                         results=results,
-                        cache_time=cache_time=1,
+                        cache_time=1,
                         switch_pm_text="🔒 **SECRETS**",
                         switch_pm_parameter="start",
                     )
