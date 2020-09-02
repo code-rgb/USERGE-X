@@ -22,7 +22,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 msg += f" {sender.last_name}\n"
             else:
                 msg += "\n"
-            data = view_data[0][c_q.inline_message_id]
+            data = view_data[c_q.inline_message_id]
             receiver =  data['user_id']
             msg += data['msg']
             u_id = c_q.from_user.id 

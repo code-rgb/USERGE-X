@@ -541,11 +541,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
                     if view_data:
                         # Uniquely identifies an inline message
-                        new_id = inline_query.id : {'user_id': user_id, 'msg': msg}
-                        view_data[0].update(new_id)
+                        new_id = {inline_query.id : {'user_id': user_id, 'msg': msg}}
+                        view_data.update(new_id)
                         json.dump(view_data, open(SECRETS,'w'))
                     else:
-                        d = [inline_query.id : {'user_id': user_id, 'msg': msg}]
+                        d = {inline_query.id : {'user_id': user_id, 'msg': msg}}
                         json.dump(d, open(SECRETS,'w'))
                     
                     buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
