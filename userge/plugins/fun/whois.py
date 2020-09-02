@@ -57,7 +57,7 @@ async def who_is(message: Message):
         message_out_str += f"<b>👁 Last Seen:</b> <code>{from_user.status}</code>\n"
         message_out_str += "<b>🔗 Permanent Link To Profile:</b> "
         message_out_str += f"<a href='tg://user?id={from_user.id}'>{from_user.first_name}</a>"
-        if message.chat.type == ("private" or "bot"):
+        if message.chat.type in ("private", "bot"):
             s_perm = True
         else:
             s_perm = message.chat.permissions.can_send_media_messages
