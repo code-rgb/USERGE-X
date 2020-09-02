@@ -45,7 +45,7 @@ Nice To Meet You! I'm **@{bot.username}**
             if not found:
                 await asyncio.gather(
                     BOT_START.insert_one(
-                        {'firstname': f_name, 'user_id': u_id, 'date': started}))
+                        {'firstname': f_name, 'user_id': u_id, 'date': str(started)}))
         try:
             if LOGO_ID:
                 await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
