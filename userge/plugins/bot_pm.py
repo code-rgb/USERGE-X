@@ -7,7 +7,6 @@ from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 from datetime import date
 import asyncio
 
-started = date.today()
 
 BOT_START = get_collection("BOT_START")
 
@@ -39,13 +38,16 @@ Nice To Meet You! I'm **@{bot.username}**
 <i>You Can Contact My Master</i> - **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
-        u_n = master.username
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
+                today = date.today()
+                d2 = today.strftime("%B %d, %Y")
+                start_date = d2.replace(',', '')
+                u_n = master.username
                 await asyncio.gather(
                     BOT_START.insert_one(
-                        {'firstname': f_name, 'user_id': u_id, 'date': str(started)}))
+                        {'firstname': f_name, 'user_id': u_id, 'date': start_date}))
         try:
             if LOGO_ID:
                 await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
@@ -77,6 +79,7 @@ Nice To Meet You! I'm **@{bot.username}**
                 ]]
             )
         )
+
 
     @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
     async def add_to_grp(_, callback_query: CallbackQuery): 
