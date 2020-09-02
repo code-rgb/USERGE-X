@@ -25,7 +25,7 @@ WHITELIST = get_collection("WHITELIST_USER")
 CHANNEL = userge.getCLogger(__name__)
 LOG = userge.getLogger(__name__)
 
-
+ 
 async def _init() -> None:
     s_o = await SAVED_SETTINGS.find_one({'_id': 'ANTISPAM_ENABLED'})
     if s_o:

@@ -1,9 +1,10 @@
-# Copyright (C) 2020 GitHub.com/code-rgb [TG - @deleteduser420]
+# Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
+
 
 import json
 from userge import userge, Message, Config
-from pyrogram.errors.exceptions import FloodWait
+from pyrogram.errors import FloodWait
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
@@ -72,10 +73,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 json.dump(view_data, open(PATH,'w'))
         else:
             if len(view_data) == 0:
+                # Answering Query First then moving forward
+                choice = _choice(counter[1])
+                await callback_query.answer(f"You Choose  {choice}", show_alert=False)
                 if counter[1] == "y":
                     view_data = [{ids : "y"},{"agree": 1, "disagree": 0}]  
                 if counter[1] == "n":
-                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]   
+                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]
                 json.dump(view_data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
@@ -127,8 +131,7 @@ def _choice(res):
     else:
         choice = "👎"
     return choice
-    
-    
+        
 
 @userge.on_cmd("opinion", about={
     'header': "Ask for Opinion via Inline Bot, do .opinion to see help"})

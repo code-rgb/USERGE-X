@@ -1,6 +1,6 @@
 from userge import userge, Message, Config
 from pyrogram.types import (  
-     InlineKeyboardMarkup, InlineKeyboardButton) #CallbackQuery
+     InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
 from pyrogram import filters
 from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest
@@ -23,7 +23,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         bot = await userge.bot.get_me()
         master = await userge.get_me()
         hello = f"""
-Hello [{message.from_user.first_name}](tg://user?id={message.from_user.id})",
+Hello [{message.from_user.first_name}](tg://user?id={message.from_user.id}),
 Nice To Meet You! I'm **@{bot.username}**
 
         A Bot Powered by **USERGE-X**
@@ -58,12 +58,30 @@ Nice To Meet You! I'm **@{bot.username}**
             caption=caption,
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
-                InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")
+                InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")],
+                [InlineKeyboardButton("➕ ADD TO GROUP", callback_data="add_to_grp")
                 ]]
             )
         )
 
+    @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
+    async def add_to_grp(_, callback_query: CallbackQuery): 
+        u_id = callback_query.from_user.id 
+        if u_id == Config.OWNER_ID:
+            botname = (await ubot.get_me()).username
+            msg = "**🤖 Add Your Bot to Group** \n\n <u>Note:</u>  <i>Admin Privilege Required !</i>"
+            add_bot = f"http://t.me/{botname}?startgroup=start"
 
+            buttons = [[InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)]]
+            await ubot.edit_inline_text(callback_query.inline_message_id,
+                    msg,
+                    reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        else:
+            await callback_query.answer("ONLY MY MASTER CAN DO THAT ! \n\n Deploy Your Own USGERGE-X", show_alert=True)
+ 
+ 
+            
 @userge.on_cmd("bot_pm", about={
     'header': "Module That Makes your bot to respond to /start"})
 async def op_(message: Message):

@@ -109,7 +109,7 @@ def get_version() -> str:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits("v0.2.1..HEAD"))
             if diff:
-                return f"{ver}-[Mystique].{len(diff)}"
+                return f"{ver}-Mystique.{len(diff)}"
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
             if diff:
