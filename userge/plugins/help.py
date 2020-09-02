@@ -530,9 +530,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     user_name = str_x[1]
                     msg = str_x[2]       
                     try:
-                        get_user = await userge.get_users(user_name)
-                        user_id = get_user.id
-                        mention = f"[{get_user.first_name}](tg://user?id={get_user.id})"
+                        a = await userge.get_users(user_name)
+                        user_id = a.id
+                        mention = f"[{a.first_name}](tg://user?id={a.id})"
                     except:
                         return
                     try:
