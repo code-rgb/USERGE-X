@@ -95,16 +95,27 @@ Nice To Meet You! I'm **@{bot.username}**
                     reply_markup=InlineKeyboardMarkup(buttons)
             )
         else:
-            await callback_query.answer("ONLY MY MASTER CAN DO THAT ! \n\n Deploy Your Own USGERGE-X", show_alert=True)
+            await callback_query.answer("ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓 !", show_alert=True)
  
  
-            
 @userge.on_cmd("bot_pm", about={
     'header': "Module That Makes your bot to respond to /start"})
 async def op_(message: Message):
     text = "**Works Only in Bot's PM**\n\n"
     text += "<code>Do /start</code>"
     await message.edit(text, del_in=20)
+
+
+@userge.on_cmd("startlist", about={
+    'header': "Get a History of Users Who started your BOT i.e /start in Bot PM",
+    'examples': "{tr}startlist"},
+    allow_channels=False)
+async def start_list(message: Message):
+    msg = ""      
+    async for c in BOT_START.find():  
+        msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n    <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
+    await message.edit_or_send_as_file(
+        f"<u><i><b>Bot PM History</b></i></u>\n\n{msg}" if msg else "`Nobody Does it Better`")
 
 
 
