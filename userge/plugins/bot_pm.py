@@ -73,7 +73,7 @@ Nice To Meet You! I'm **@{bot.username}**
             add_bot = f"http://t.me/{botname}?startgroup=start"
 
             buttons = [[InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)]]
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            await callback_query.edit_message_text(
                     msg,
                     reply_markup=InlineKeyboardMarkup(buttons)
             )

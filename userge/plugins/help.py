@@ -548,28 +548,27 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         d = {inline_query.id : {'user_id': user_id, 'msg': msg}}
                         json.dump(d, open(SECRETS,'w'))
                     
-                    buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data="secret_btn")]]
+                    buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data=f"secret_{inline_query.id}")]]
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
                                     input_message_content=InputTextMessageContent(f"☣️ <b>TOPSECRET!</b> for {user_name}. Only he/she can open it."),
-                                    description="secret @username message...",
                                     thumb_url="https://i.imgur.com/c5pZebC.png",
                                     reply_markup=InlineKeyboardMarkup(buttons)
                                 )
                     )
                 else:
-                    results.append(
+                    results = [(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
                                     input_message_content=InputTextMessageContent("Do `.help secret` for more info"),
-                                    description="secret @username you message here"
+                                    description="secret @username message ..."
                                 )
-                    )
+                    )]
                     await inline_query.answer(
                         results=results,
                         cache_time=1,
-                        switch_pm_text="🔒 **SECRETS**",
+                        switch_pm_text="🔒 SECRETS",
                         switch_pm_parameter="start"
                     )
                     return

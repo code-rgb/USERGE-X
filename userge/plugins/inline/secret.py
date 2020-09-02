@@ -14,8 +14,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
        
-    @ubot.on_callback_query(filters.regex(pattern=r"^secret_btn$"))
-    async def alive_callback(_, c_q: CallbackQuery): 
+    @ubot.on_callback_query(filters.regex(pattern=r"^secret_(.*)"))
+    async def alive_callback(_, c_q: CallbackQuery):
+        msg_id = c_q.matches[0].group(1)
         if os.path.exists(SECRETS):
             view_data = json.load(open(SECRETS))
             sender = await userge.get_me()
@@ -24,7 +25,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 msg += f" {sender.last_name}\n"
             else:
                 msg += "\n"
-            data = view_data[c_q.id]
+            data = view_data[msg_id]
             receiver =  data['user_id']
             msg += data['msg']
             u_id = c_q.from_user.id 
