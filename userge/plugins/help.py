@@ -526,13 +526,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
            
             if str_x[0].lower() == "secret":
                 if len(str_x) == 3:
-
                     user_name = str_x[1]
                     msg = str_x[2]       
                     try:
                         a = await userge.get_users(user_name)
                         user_id = a.id
-                        mention = f"[{a.first_name}](tg://user?id={a.id})"
                     except:
                         return
                     try:
@@ -553,7 +551,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
-                                    input_message_content=InputTextMessageContent(f"📩 <b>TOPSECRET!</b> for {mention}. Only he/she can open it."),
+                                    input_message_content=InputTextMessageContent(f"📩 <b>TOPSECRET!</b> for <a href='tg://user?id={a.id}'>{a.first_name}</a>. Only he/she can open it."),
                                     description=f"Send Secret Message to: {user_name}",
                                     thumb_url="https://i.imgur.com/c5pZebC.png",
                                     reply_markup=InlineKeyboardMarkup(buttons)
@@ -563,7 +561,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     results = [(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
-                                    input_message_content=InputTextMessageContent("Do `.help secret` for more info"),
+                                    input_message_content=InputTextMessageContent("Do `.secret` for more info"),
                                     description="secret @username message ..."
                                 )
                     )]
