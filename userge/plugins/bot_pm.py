@@ -1,9 +1,15 @@
-from userge import userge, Message, Config
+from userge import userge, Message, Config, get_collection
 from pyrogram.types import (  
      InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
 from pyrogram import filters
 from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest
+from datetime import date
+import asyncio
+
+started = date.today()
+
+BOT_START = get_collection("BOT_START")
 
 # https://github.com/UsergeTeam/Userge-Assistant/.../alive.py#L41
 # refresh file id and file reference from TG server
@@ -22,8 +28,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()
         master = await userge.get_me()
+        u_id = message.from_user.id
+        f_name = message.from_user.first_name
         hello = f"""
-Hello [{message.from_user.first_name}](tg://user?id={message.from_user.id}),
+Hello [{f_name}](tg://user?id={u_id}),
 Nice To Meet You! I'm **@{bot.username}**
 
         A Bot Powered by **USERGE-X**
@@ -32,6 +40,12 @@ Nice To Meet You! I'm **@{bot.username}**
 <i>And Check The Repo For More Info.</i>
 """
         u_n = master.username
+        if u_id != Config.OWNER_ID:
+            found = await BOT_START.find_one({'user_id': u_id})
+            if not found:
+                await asyncio.gather(
+                    BOT_START.insert_one(
+                        {'firstname': f_name, 'user_id': u_id, 'date': started})
         try:
             if LOGO_ID:
                 await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
@@ -88,3 +102,7 @@ async def op_(message: Message):
     text = "**Works Only in Bot's PM**\n\n"
     text += "<code>Do /start</code>"
     await message.edit(text, del_in=20)
+
+
+
+
