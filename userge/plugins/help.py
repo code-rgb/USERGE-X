@@ -530,8 +530,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     user_name = str_x[1]
                     msg = str_x[2]       
                     try:
-                        a = await userge.get_users(user_name)
-                        user_id = a.id
+                        get_user = await userge.get_user_dict(user_name)
+                        user_id = get_user.id
                     except:
                         return
                     try:
@@ -552,7 +552,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
-                                    input_message_content=InputTextMessageContent(f"☣️ <b>TOPSECRET!</b> for {user_name}. Only he/she can open it."),
+                                    input_message_content=InputTextMessageContent(f"📩 <b>TOPSECRET!</b> for {get_user.mention}. Only he/she can open it."),
+                                    description=f"Send Secret Message to: {user_name}"
                                     thumb_url="https://i.imgur.com/c5pZebC.png",
                                     reply_markup=InlineKeyboardMarkup(buttons)
                                 )
