@@ -29,6 +29,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         master = await userge.get_me()
         u_id = message.from_user.id
         f_name = message.from_user.first_name
+        u_n = master.username
         hello = f"""
 Hello [{f_name}](tg://user?id={u_id}),
 Nice To Meet You! I'm **@{bot.username}**
