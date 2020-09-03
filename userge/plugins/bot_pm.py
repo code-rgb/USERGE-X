@@ -45,7 +45,7 @@ Hello [{f_name}](tg://user?id={u_id}), Nice To Meet You!
             hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot`"
         else:
             hello += "<b><u>NOTE: </u></b> \n"
-            hello += "**Bot Forwarding is** :  ☑️ `ON`\n"
+            hello += ">> **Bot Forwarding is** :  ☑️ `ON`\n"
             hello += "<i>All your messages here will be forwared to</i> My MASTER "
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
