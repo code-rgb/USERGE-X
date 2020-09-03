@@ -31,20 +31,20 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         f_name = message.from_user.first_name
         u_n = master.username
         hello = f"""
-Hello [{f_name}](tg://user?id={u_id}),
-Nice To Meet You! I'm **@{bot.username}**
+Hello [{f_name}](tg://user?id={u_id}), Nice To Meet You!
 
-        A Bot Powered by **USERGE-X**
+        I'm **@{bot.username}**
+        **A Bot Powered by USERGE-X**
 
-<i>You Can Contact My Master</i> - **{master.first_name}**
+<i>You Can Contact My Master</i>: **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
         found = await BOT_BAN.find_one({'user_id': u_id})
         if found:
-            hello += "\n\n<b><u>NOTE: </u></b> \n\n"
-            hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot` \n"
+            hello += "<b><u>NOTE: </u></b> \n"
+            hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot`"
         else:
-            hello += "\n\n<b><u>NOTE: </u></b> \n\n"
+            hello += "<b><u>NOTE: </u></b> \n"
             hello += "**Bot Forwarding is** :  ☑️ `ON`\n"
             hello += "<i>All your messages here will be forwared to</i> My MASTER "
         if u_id != Config.OWNER_ID:
