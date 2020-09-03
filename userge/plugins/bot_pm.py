@@ -41,10 +41,10 @@ I'm **{bot.first_name}** A 🤖 Bot.
 """
         found = await BOT_BAN.find_one({'user_id': u_id})
         if found:
-            hello += "\n<b><u>NOTE: </u></b> "
+            hello += "\n<b><u>NOTE : </u></b> "
             hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot`"
         else:
-            hello += "\n<b><u>NOTE: </u></b> "
+            hello += "\n<b><u>NOTE : </u></b> "
             hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
             hello += "<i>All your messages here will be forwared to</i> My MASTER"
         if u_id != Config.OWNER_ID:
