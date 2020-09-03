@@ -4,8 +4,7 @@
 
 import json
 from userge import userge, Message, Config
-from pyrogram.errors import FloodWait
-from pyrogram.errors.exceptions.bad_request_400 import BadRequest
+from pyrogram.errors import FloodWait, BadRequest
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery)
