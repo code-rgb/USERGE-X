@@ -32,10 +32,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_n = master.username
         hello = f"""
 Hello {f_name}, Nice To Meet You!
-I'm **{bot.first_name}** A 🤖 Bot. 
-
-    <i><b>Powered by</i> USERGE-X</b>
-
+I'm **{bot.first_name}** A Hybrid 🤖 Bot. <i><b>Powered by</i> USERGE-X</b>
 <i>You Can Contact</i> My Master : **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
