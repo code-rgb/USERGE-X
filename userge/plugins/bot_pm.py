@@ -7,7 +7,7 @@ from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 from datetime import date
 import asyncio
 
-
+BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
 
 # https://github.com/UsergeTeam/Userge-Assistant/.../alive.py#L41
@@ -39,6 +39,14 @@ Nice To Meet You! I'm **@{bot.username}**
 <i>You Can Contact My Master</i> - **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
+        found = await BOT_BAN.find_one({'user_id': u_id})
+        if found:
+            hello += "\n\n<b><u>NOTE: </u></b> \n\n"
+            hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot` \n"
+        else:
+            hello += "\n\n<b><u>NOTE: </u></b> \n\n"
+            hello += "**Bot Forwarding is** :  ☑️ `ON`\n"
+            hello += "<i>All your messages here will be forwared to</i> My MASTER "
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
