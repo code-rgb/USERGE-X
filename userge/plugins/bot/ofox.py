@@ -1,7 +1,7 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-
+import pyrogram
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton)
 from userge import userge, Message
