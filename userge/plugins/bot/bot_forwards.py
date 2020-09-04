@@ -1,7 +1,7 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-#TODO: Add Toggle
+"""Bot Message forwarding"""
 
 from userge import userge, Message, Config, get_collection
 from pyrogram import filters
@@ -25,7 +25,9 @@ async def _init() -> None:
     if data:
         Config.BOT_FORWARDS = bool(data['is_active'])
 
+
 allowForwardFilter = filters.create(lambda _, __, ___: Config.BOT_FORWARDS)
+
 
 @userge.on_cmd("bot_fwd", about={'header': "enable / disable Bot Forwards"}, allow_channels=False)
 async def bot_fwd_(message: Message):
@@ -260,30 +262,32 @@ async def ungban_user(message: Message):
 @userge.on_cmd("bot_forwards", about={
     'header': "Help regarding commands for bot forwards"})
 async def bf_help(message: Message):
+    """See this For Help"""
     cmd_ = Config.CMD_TRIGGER
     bot_forwards_help = f"""
         **Available Commands**
+        
+[Toggle]
+• `{cmd_}bot_fwd` - Enable / Disable bot Forwards 
 
-<i>works **only in** bot pm</i>
+    <i>works **only in** bot pm</i>
 • `/ban` - Ban a User from Bot PM
-e.g-
+    e.g-
     /ban [reply to forwarded message with reason]
     /ban [user_id/user_name] reason
 
-• `/broadcast` - Send a Broadcast Message
-e.g-
+• `/broadcast` - Send a Broadcast Message to Users in your `{cmd_}startlist`
+    e.g-
     /broadcast [reply to a message]
 
-<i>can work outside bot pm</i>
-• `{cmd_}bblist` - Bot Ban List
-e.g-
+    <i>can work outside bot pm</i>
+• `{cmd_}bblist` - BotBanList 
+    e.g-
     {cmd_}bblist
 
-• `{cmd_}unbban` - Un Bot Ban
-e.g-
+• `{cmd_}unbban` - UnBotBan (users banned to PM you bot)
+    e.g-
     {cmd_}unbban [user_id/user_name]
     Hint: Check bblist for banned users.
-
-• `{cmd_}bot_fwd` - Enable / Disable bot Forwards
 """
-    await userge.send_message(message.chat.id, bot_forwards_help, del_in=30)
+    await userge.send_message(message.chat.id, bot_forwards_help, del_in=60)

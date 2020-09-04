@@ -45,9 +45,10 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
 <i>You Can Contact</i> My Master : **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
-        hello += "\n<b>NOTE : </b> "
-        hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
-        hello += "<i>All your messages here will be forwared to</i> My MASTER"
+        if Config.BOT_FORWARDS:          
+            hello += "\n<b>NOTE : </b> "
+            hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
+            hello += "<i>All your messages here will be forwared to</i> My MASTER"
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
