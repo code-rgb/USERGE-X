@@ -138,3 +138,4 @@ async def op_(message: Message):
     text = "**IN INLINE BOT**\n\n"
     text += "op Are Cats Cute?"
     await message.edit(text, del_in=20)
+    

@@ -31,22 +31,23 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         bot = await userge.bot.get_me()
         master = await userge.get_me()
         u_id = message.from_user.id
+        found = await BOT_BAN.find_one({'user_id': u_id})
+        if found:
+            return
         f_name = message.from_user.first_name
         u_n = master.username
         hello = f"""
-Hello {f_name}, Nice To Meet You!
-I'm **{bot.first_name}** A Hybrid 🤖 Bot. <i><b>Powered by</i> USERGE-X</b>
+Hello {f_name},
+Nice To Meet You!I'm **{bot.first_name}** A Hybrid 🤖 Bot. 
+
+        <i><b>Powered by</i> USERGE-X</b>
+
 <i>You Can Contact</i> My Master : **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
-        found = await BOT_BAN.find_one({'user_id': u_id})
-        if found:
-            hello += "\n<b><u>NOTE : </u></b> "
-            hello += "`You have been banned` <i>INDEFINITELY.</i> `from this bot`"
-        else:
-            hello += "\n<b><u>NOTE : </u></b> "
-            hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
-            hello += "<i>All your messages here will be forwared to</i> My MASTER"
+        hello += "\n<b>NOTE : </b> "
+        hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
+        hello += "<i>All your messages here will be forwared to</i> My MASTER"
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
