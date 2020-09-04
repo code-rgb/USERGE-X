@@ -76,13 +76,7 @@ ALIVE_IMGS = ["https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg", "https://i.im
 "https://telegra.ph/file/995c75983a6c0e4499b55.png",
 "https://telegra.ph/file/86cc25c78ad667ca5e691.png"]
 
-ALIVE_INFO = f"""
-  **[USERGE-X](https://github.com/code-rgb/USERGE-X) is Up and Running 🏃**
 
- • 🐍 Python :  `v{versions.__python_version__}`
- • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
- • 🧬 𝑿 :  `v{get_version()}`
-"""
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({'_id': 'CURRENT_CLIENT'})
@@ -446,10 +440,20 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 buttons = [[InlineKeyboardButton("🔧 SETTINGS", callback_data="settings_btn"),
                             InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
 
+                alive_info = f"""
+    **[USERGE-X](https://github.com/code-rgb/USERGE-X) is Up and Running**
+
+ • 🐍 Python :  `v{versions.__python_version__}`
+ • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
+ • 🧬 𝑿 :  `v{get_version()}`
+
+    🕔 Uptime : {userge.uptime}
+"""
+
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url=random_alive,
-                            caption=ALIVE_INFO,
+                            caption=alive_info,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
