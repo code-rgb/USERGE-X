@@ -4,8 +4,7 @@
 
 import json
 from userge import userge, Message, Config
-from pyrogram.errors import FloodWait
-from pyrogram.errors.exceptions.bad_request_400 import BadRequest
+from pyrogram.errors import FloodWait, BadRequest
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery)
@@ -139,3 +138,4 @@ async def op_(message: Message):
     text = "**IN INLINE BOT**\n\n"
     text += "op Are Cats Cute?"
     await message.edit(text, del_in=20)
+    

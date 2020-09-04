@@ -1,3 +1,7 @@
+# Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
+# All rights reserved.
+
+
 from userge import userge, Message, Config, get_collection
 from pyrogram.types import (  
      InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
@@ -8,12 +12,11 @@ from datetime import date
 import asyncio
 
 
+BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
-
+LOGO_ID, LOGO_REF = None, None
 # https://github.com/UsergeTeam/Userge-Assistant/.../alive.py#L41
 # refresh file id and file reference from TG server
-
-LOGO_ID, LOGO_REF = None, None
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
@@ -28,17 +31,24 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         bot = await userge.bot.get_me()
         master = await userge.get_me()
         u_id = message.from_user.id
+        found = await BOT_BAN.find_one({'user_id': u_id})
+        if found:
+            return
         f_name = message.from_user.first_name
         u_n = master.username
         hello = f"""
-Hello [{f_name}](tg://user?id={u_id}),
-Nice To Meet You! I'm **@{bot.username}**
+Hello {f_name},
+Nice To Meet You! I'm **{bot.first_name}** A Bot. 
 
-        A Bot Powered by **USERGE-X**
+        <i><b>Powered by</i> USERGE-X</b>
 
-<i>You Can Contact My Master</i> - **{master.first_name}**
+<i>You Can Contact</i> My Master : **{master.first_name}**
 <i>And Check The Repo For More Info.</i>
 """
+        if Config.BOT_FORWARDS:          
+            hello += "\n<b>NOTE : </b> "
+            hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
+            hello += "<i>All your messages here will be forwared to</i> My MASTER"
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
