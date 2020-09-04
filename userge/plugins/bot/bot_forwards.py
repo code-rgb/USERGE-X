@@ -281,11 +281,11 @@ async def bf_help(message: Message):
     /broadcast [reply to a message]
 
     <i>can work outside bot pm</i>
-• `{cmd_}bblist` - BotBanList 
+• `{cmd_}bblist` - BotBanList (Users Banned from your Bot's PM)
     e.g-
     {cmd_}bblist
 
-• `{cmd_}unbban` - UnBotBan (users banned to PM you bot)
+• `{cmd_}unbban` - UnBotBan  (Unban Users that are in BotBanList)
     e.g-
     {cmd_}unbban [user_id/user_name]
     Hint: Check bblist for banned users.
