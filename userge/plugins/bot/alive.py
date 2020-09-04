@@ -15,7 +15,7 @@ async def alive_inline(message: Message):
                                         query_id=x.query_id,
                                         result_id=x.results[1].id)
     await message.delete()
-    await asyncio.sleep(25)
+    await asyncio.sleep(35)
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
@@ -34,13 +34,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             dynos_saver = "Not Supported"
             
         alive_settings=f"""
-    🕔 𝙐𝙥𝙩𝙞𝙢𝙚 : {userge.uptime}
+🕔 Uptime : {userge.uptime}
 
-• 👥 𝗦𝘂𝗱𝗼 :  {_parse_arg(Config.SUDO_ENABLED)}
-• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 :  { _parse_arg(Config.ANTISPAM_SENTRY)}
-• ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 :  { _parse_arg(RawClient.DUAL_MODE)}
-• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  {dynos_saver}
-• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 :  { _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
+    • 👥 𝗦𝘂𝗱𝗼 :  {_parse_arg(Config.SUDO_ENABLED)}
+    • 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 :  { _parse_arg(Config.ANTISPAM_SENTRY)}
+    • ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 :  { _parse_arg(RawClient.DUAL_MODE)}
+    • ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  {dynos_saver}
+    • ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 :  { _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}
 """
         await callback_query.answer(alive_settings, show_alert=True)
 
