@@ -1,3 +1,5 @@
+"""Fun plugin"""
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from userge import userge, Message, Config
