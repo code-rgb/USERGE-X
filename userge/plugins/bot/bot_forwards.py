@@ -123,7 +123,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             return
         await asyncio.gather(
             BOT_BAN.insert_one(
-                {'firstname': firstname, 'user_id': user_id, 'reason': reason})
+                {'firstname': firstname, 'user_id': user_id, 'reason': reason}),
             await start_ban.edit(
                 r"\\**#Banned From Bot PM_User**//"
                 f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
