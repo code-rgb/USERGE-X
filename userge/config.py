@@ -80,6 +80,7 @@ class Config:
     RUN_DYNO_SAVER = False
     HEROKU_APP = None
     STATUS = None
+    BOT_FORWARDS = False
 
 
 if Config.HEROKU_API_KEY:
