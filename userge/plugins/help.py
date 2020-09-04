@@ -22,6 +22,10 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, Messa
 from userge import userge, Message, Config, get_collection, versions, get_version
 import json
 import os
+import requests
+from html_telegraph_poster import TelegraphPoster
+
+
 
 if not os.path.exists('userge/xcache'):
     os.mkdir('userge/xcache')
@@ -387,6 +391,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         i_q = inline_query.query
         string = i_q.lower()
         str_x = i_q.split(" ", 2)
+        string_split = string.split()
+
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
                         
@@ -479,6 +485,51 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             ),
                             description="Get Latest GApps Download Links Directly from SF",
                             thumb_url="https://i.imgur.com/Npzw8Ph.png",
+                            reply_markup=InlineKeyboardMarkup(buttons)
+                        )
+                )
+
+            if string_split[0] == "ofox" and len(string_split) == 2:
+                codename = string_split[1]
+                  t = TelegraphPoster(use_api=True)
+                t.create_api_token('Userge-X')
+                photo = "https://i.imgur.com/582uaSk.png" 
+                api_host = 'https://api.orangefox.download/v2/device/'
+                try:
+                    cn = requests.get(f"{api_host}{codename}")
+                    r = cn.json()
+                except ValueError:
+                    return
+                s = requests.get(f"{api_host}{codename}/releases/stable/last").json()
+                info = f"📱 **Device**: {r['fullname']}\n"
+                info += f"👤 **Maintainer**: {r['maintainer']['name']}\n\n"
+                recovery = f"🦊 <code>{s['file_name']}</code>\n"
+                recovery+= f"📅 {s['date']}\n"
+                recovery += f"ℹ️ **Version:** {s['version']}\n"
+                recovery+= f"📌 **Build Type:** {s['build_type']}\n"
+                recovery+= f"🔰 **Size:** {s['size_human']}\n\n"
+                recovery+= "📍 **Changelog:**\n"
+                recovery+= f"<code>{s['changelog']}</code>\n\n" 
+                msg = info
+                msg += recovery
+                notes_ = s.get('notes')
+                if notes_: 
+                    notes = t.post(
+                    title='READ Notes', 
+                    author="", 
+                    text=notes_
+                    )
+                    buttons = [[InlineKeyboardButton("🗒️ NOTES", url=notes['url']),
+                                InlineKeyboardButton("⬇️ DOWNLOAD", url=s['url'])]]
+                else:
+                    buttons = [[InlineKeyboardButton(text="⬇️ DOWNLOAD", url=s['url'])]]
+
+                results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=photo,
+                            title="Latest OFOX RECOVERY",
+                            description=f"For device : {codename}",
+                            caption=msg,
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )

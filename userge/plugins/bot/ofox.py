@@ -1,9 +1,6 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-import pyrogram
-from pyrogram.types import (
-    InlineKeyboardMarkup, InlineKeyboardButton)
 from userge import userge, Message
 import json
 import requests
@@ -46,38 +43,9 @@ async def ofox_(message: Message):
       author="", 
       text=notes_
     )
-    
-    button = [[
-      pyrogram.InlineKeyboardButton(
-      text="🗒️ NOTES", url=notes['url']
-      ),
-      pyrogram.InlineKeyboardButton(
-      text="⬇️ DOWNLOAD", url=s['url']
-      )     
-    ]]
-  else:
-    button = [[
-      pyrogram.InlineKeyboardButton(
-      text="⬇️ DOWNLOAD", url=s['url']
-      )     
-    ]]
-  
-    # Client Check
-  if message.client.is_bot:
-    ubot = userge.bot
-    #
-    await ubot.send_photo(
-      message.chat.id,
-      photo=photo,
-      caption=msg,
-      reply_markup=pyrogram.InlineKeyboardMarkup(button)
-    )
-    return
-  ubot = userge  
-  if notes_: 
     msg += f"🗒️ <a href={notes['url']}>NOTES</a>\n"
   msg +=f"⬇️ <a href={s['url']}>DOWNLOAD</a>"
-  await ubot.send_photo(
+  await userge.send_photo(
       message.chat.id,
       photo=photo,
       caption=msg
