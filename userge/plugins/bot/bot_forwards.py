@@ -267,7 +267,7 @@ async def bf_help(message: Message):
     bot_forwards_help = f"""
         **Available Commands**
         
-[Toggle]
+    [Toggle]
 • `{cmd_}bot_fwd` - Enable / Disable bot Forwards 
 
     <i>works **only in** bot pm</i>
