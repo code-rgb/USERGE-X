@@ -491,7 +491,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
             if string_split[0] == "ofox" and len(string_split) == 2:
                 codename = string_split[1]
-                  t = TelegraphPoster(use_api=True)
+                t = TelegraphPoster(use_api=True)
                 t.create_api_token('Userge-X')
                 photo = "https://i.imgur.com/582uaSk.png" 
                 api_host = 'https://api.orangefox.download/v2/device/'
