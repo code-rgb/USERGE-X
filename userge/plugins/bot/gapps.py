@@ -1,4 +1,7 @@
-# BY code-rgb
+# Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
+# All rights reserved.
+
+
 """Gapps via inline bot"""
 import requests
 from requests import get

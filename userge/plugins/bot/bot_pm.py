@@ -1,3 +1,7 @@
+# Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
+# All rights reserved.
+
+
 from userge import userge, Message, Config, get_collection
 from pyrogram.types import (  
      InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
@@ -7,13 +11,12 @@ from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 from datetime import date
 import asyncio
 
+
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
-
+LOGO_ID, LOGO_REF = None, None
 # https://github.com/UsergeTeam/Userge-Assistant/.../alive.py#L41
 # refresh file id and file reference from TG server
-
-LOGO_ID, LOGO_REF = None, None
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
