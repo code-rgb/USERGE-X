@@ -15,7 +15,7 @@ async def alive_inline(message: Message):
                                         query_id=x.query_id,
                                         result_id=x.results[1].id)
     await message.delete()
-    await asyncio.sleep(25)
+    await asyncio.sleep(35)
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
