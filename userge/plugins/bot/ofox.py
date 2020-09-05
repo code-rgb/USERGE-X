@@ -7,7 +7,7 @@ import requests
 from html_telegraph_poster import TelegraphPoster
 
 
-@userge.on_cmd("ofox", about={'header': "get orangefox recovery by device codename"})
+@userge.on_cmd("ofox", about={'header': "get orangefox recovery by device codename do .ofox codename (works in inline too)"})
 async def ofox_(message: Message):
   if not message.input_str:
     await message.err("Provide a device codename to search recovery", del_in=2)
