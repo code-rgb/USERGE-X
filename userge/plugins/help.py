@@ -487,7 +487,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if len(string_split) == 2:     #workaround for list index out of range
-                if string_split[0] == "ofox"  
+                if string_split[0] == "ofox":
                     codename = string_split[1]
                     t = TelegraphPoster(use_api=True)
                     t.create_api_token('Userge-X')
