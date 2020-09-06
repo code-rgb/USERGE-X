@@ -100,7 +100,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^e_result$"))
-    async def choice_result_cb(_, callback_query: CallbackQuery):
+    async def choice_result_cb(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id 
         if u_id == Config.OWNER_ID:
             view_data = json.load(open(PATH))
@@ -150,4 +150,4 @@ async def op_(message: Message):
     await userge.send_inline_bot_result(chat_id=message.chat.id,
                                             query_id=x.query_id,
                                             result_id=x.results[1].id,
-                                            reply_to_message_id=True)
+                                            reply_to_message_id=replied.message_id)
