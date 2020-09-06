@@ -11,6 +11,8 @@ from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 from datetime import date
 import asyncio
 
+LOG = userge.getLogger("Bot_PM")
+CHANNEL = userge.getCLogger("Bot_PM")
 
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
@@ -36,6 +38,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             return
         f_name = message.from_user.first_name
         u_n = master.username
+        
         hello = f"""
 Hello {f_name},
 Nice To Meet You! I'm **{bot.first_name}** A Bot. 
@@ -58,7 +61,9 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                 u_n = master.username
                 await asyncio.gather(
                     BOT_START.insert_one(
-                        {'firstname': f_name, 'user_id': u_id, 'date': start_date}))
+                        {'firstname': f_name, 'user_id': u_id, 'date': start_date}),
+                await CHANNEL.log(f"A New User Started your Bot \n\n• <i>ID</i>: `{u_id}`\n   <b>Name</b>: {f_name}")
+                )
         try:
             if LOGO_ID:
                 await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
@@ -109,24 +114,16 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             await callback_query.answer("ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓 !", show_alert=True)
  
  
-@userge.on_cmd("bot_pm", about={
-    'header': "Module That Makes your bot to respond to /start"})
-async def op_(message: Message):
-    text = "**Works Only in Bot's PM**\n\n"
-    text += "<code>Do /start</code>"
-    await message.edit(text, del_in=20)
-
-
-@userge.on_cmd("startlist", about={
-    'header': "Get a History of Users Who started your BOT i.e /start in Bot PM",
+@userge.on_cmd("bot_users", about={
+    'header': "Get a list Active Users Who started your BOT i.e /start in Bot PM",
     'examples': "{tr}startlist"},
     allow_channels=False)
-async def start_list(message: Message):
-    msg = ""      
+async def bot_users(message: Message):
+    msg = ""
     async for c in BOT_START.find():  
-        msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n    <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
+        msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n   <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
     await message.edit_or_send_as_file(
-        f"<u><i><b>Bot PM History</b></i></u>\n\n{msg}" if msg else "`Nobody Does it Better`")
+        f"<u><i><b>Bot PM Userlist</b></i></u>\n\n{msg}" if msg else "`Nobody Does it Better`")
 
 
 

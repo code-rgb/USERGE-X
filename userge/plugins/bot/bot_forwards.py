@@ -53,7 +53,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
     
     
-    @ubot.on_message(allowForwardFilter & ~filters.user(Config.OWNER_ID) & (filters.private & filters.incoming))
+    @ubot.on_message(allowForwardFilter & ~filters.user(Config.OWNER_ID) & filters.private & filters.incoming & ~filters.command("start"))
     async def forward_bot(_, message: Message):
         found = await BOT_BAN.find_one({'user_id': message.from_user.id})
         if found:
@@ -106,9 +106,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not reason:
             await ubot.send_message(message.chat.id, "Ban Aborted! provide a reason first!")
             return
-        get_mem = await ubot.get_user_dict(user_id)
-        firstname = get_mem['fname']
-        user_id = get_mem['id']
+        get_mem = await ubot.get_users(user_id)
+        firstname = get_mem.first_name
+        user_id = get_mem.id
         if user_id == Config.OWNER_ID:
             await start_ban.edit(r"I Can't Ban You My Master")
             return
@@ -123,18 +123,18 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 "**#Already_Banned From Bot PM**\n\nUser Already Exists in My Bot BAN List.\n"
                 f"**Reason For Bot BAN:** `{found['reason']}`", del_in=5)
             return
+        banned_msg = f"`You Have been Banned Forever`\n**Reason** : {reason}"
         await asyncio.gather(
             BOT_BAN.insert_one(
                 {'firstname': firstname, 'user_id': user_id, 'reason': reason}),
             await start_ban.edit(
                 r"\\**#Banned From Bot PM_User**//"
                 f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
-                f"**User ID:** `{user_id}`\n**Reason:** `{reason}`")
-                
+                f"**User ID:** `{user_id}`\n**Reason:** `{reason}`"),
+            await ubot.send_message(user_id, banned_msg)
         )
-        banned_msg = f"`You Have been Banned Forever`\n**Reason** : {reason}"
-        await ubot.send_message(user_id, banned_msg)
-
+        
+        
 
     @ubot.on_message(allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private & filters.command("broadcast"))
     async def broadcast_(_, message: Message):
@@ -142,6 +142,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not replied:
             await ubot.send_message(message.chat.id, "Reply to a message for BROADCAST")
             return
+        br_cast = await message.reply_text("`Broadcasting ...`", quote=True)
         b_msg = replied.message_id
         error = []
         async for c in BOT_START.find():
@@ -152,12 +153,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:
-                failed = f"Failed for ID : {b_id}"
-                error.append(failed)
-        if len(error) != 0:
-            await CHANNEL.log('\n'.join(map(str, error)))
+                await asyncio.gather(
+                    BOT_START.delete_one({'user_id': b_id}))
         b_info = "🔊 **Successfully Broadcasted This Message**"
-        await ubot.send_message(message.chat.id, b_info)
+        await br_cast.edit(b_info)
             
 
 async def dumper(a, b, update):
@@ -197,17 +196,11 @@ def extract_content(msg):   # Modified a bound method
             # if user id, convert it to integer
             if user.isdigit():
                 user_id = int(user)
-            elif msg.entities:
-                # Extracting text mention entity and skipping if it's @ mention.
-                for mention in msg.entities:
-                    # Catch first text mention
-                    if mention.type == "text_mention":
-                        user_id = mention.user.id
-                        break
+            
             # User @ Mention.
             if user.startswith("@"):
                 user_id = user
-        else:  
+        else:
             user_id = None  # just in case :p 
             reason = None
     return user_id, reason

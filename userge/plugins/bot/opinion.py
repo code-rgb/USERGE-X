@@ -22,63 +22,65 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     else:
         ubot = userge
     
-    @ubot.on_callback_query(filters.regex(pattern=r"opinion"))
-    async def choice_cb(_, callback_query: CallbackQuery):
-        ids = callback_query.from_user.id
+    @ubot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)"))
+    async def choice_cb(_, c_q: CallbackQuery):
         if not os.path.exists(PATH):
-            d = []
-            json.dump(d, open(PATH,'w'))
-        counter =  callback_query.data.split('_', 1)
+            await c_q.answer("𝑶𝒑𝒊𝒏𝒊𝒐𝒏 𝒅𝒂𝒕𝒂 𝒅𝒐𝒏'𝒕 𝒆𝒙𝒊𝒔𝒕 𝒂𝒏𝒚𝒎𝒐𝒓𝒆.", show_alert=True)
+            return
+        view_data = json.load(open(PATH))
+        opinion_id = c_q.matches[0].group(2)
+        ids = c_q.from_user.id
+        counter =  c_q.matches[0].group(1)
         agree_data = "👍"
         disagree_data = "👎"
-        view_data = json.load(open(PATH))
+        
         if len(view_data) == 2:
-            if str(ids) in view_data[0]:
-                if view_data[0][str(ids)] == "y" and counter[1] == "y":
-                    await callback_query.answer("Already Voted for 👍", show_alert=True)
+            if str(ids) in view_data[0][opinion_id]:
+                if view_data[0][opinion_id][str(ids)] == "y" and counter == "y":
+                    await c_q.answer("Already Voted for 👍", show_alert=True)
                     return
-                if view_data[0][str(ids)] == "n" and counter[1] == "n":
-                    await callback_query.answer("Already Voted for 👎", show_alert=True)
+                if view_data[0][opinion_id][str(ids)] == "n" and counter == "n":
+                    await c_q.answer("Already Voted for 👎", show_alert=True)
                     return
                 # Answering Query First then moving forward
-                choice = _choice(counter[1])
-                await callback_query.answer(f"You Choose  {choice}", show_alert=False)
+                choice = _choice(counter)
+                await c_q.answer(f"You Choose  {choice}", show_alert=False)
                 #
-                if view_data[0][str(ids)] == "y" and counter[1] == "n":
+                if view_data[0][opinion_id][str(ids)] == "y" and counter == "n":
                     agree = int(view_data[1]['agree']) - 1
                     disagree = int(view_data[1]['disagree']) + 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
-                    view_data[0][str(ids)] = "n"
-                if view_data[0][str(ids)] == "n" and counter[1] == "y":
+                    view_data[0][opinion_id][str(ids)] = "n"
+                if view_data[0][opinion_id][str(ids)] == "n" and counter == "y":
                     agree = int(view_data[1]['agree']) + 1
                     disagree = view_data[1]['disagree'] - 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
-                    view_data[0][str(ids)] = "y"
+                    view_data[0][opinion_id][str(ids)] = "y"
                 json.dump(view_data, open(PATH,'w'))
             else:
                 # Answering Query First then moving forward
-                choice = _choice(counter[1])
-                await callback_query.answer(f"You Choose {choice}", show_alert=False)
+                choice = _choice(counter)
+                await c_q.answer(f"You Choose {choice}", show_alert=False)
                 #
-                new_id = {ids : counter[1]}
-                view_data[0].update(new_id)
-                if counter[1] == "y":
+                new_id = {ids : counter}
+                view_data[0][opinion_id].update(new_id)
+                if counter == "y":
                     agree = view_data[1]['agree'] + 1 
                     disagree = view_data[1]['disagree']
-                if counter[1] == "n":
+                if counter == "n":
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
                 view_data[1] = {"agree": agree, "disagree": disagree}
                 json.dump(view_data, open(PATH,'w'))
         else:
-            if len(view_data) == 0:
+            if len(view_data) == 1:
                 # Answering Query First then moving forward
-                choice = _choice(counter[1])
-                await callback_query.answer(f"You Choose  {choice}", show_alert=False)
-                if counter[1] == "y":
-                    view_data = [{ids : "y"},{"agree": 1, "disagree": 0}]  
-                if counter[1] == "n":
-                    view_data = [{ids : "n"},{"agree": 0, "disagree": 1}]
+                choice = _choice(counter)
+                await c_q.answer(f"You Choose  {choice}", show_alert=False)
+                if counter == "y":
+                    view_data = [{opinion_id : {ids : "y"}}, {"agree": 1, "disagree": 0}]    #inline_id 
+                if counter == "n":
+                    view_data = [{opinion_id : {ids : "n"}}, {"agree": 0, "disagree": 1}]    #inline_id 
                 json.dump(view_data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
@@ -88,7 +90,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         InlineKeyboardButton(disagree_data, callback_data="opinion_n")],
                         [InlineKeyboardButton("📊 Stats", callback_data="e_result")]]
         try:
-            await ubot.edit_inline_reply_markup(callback_query.inline_message_id,
+            await ubot.edit_inline_reply_markup(c_q.inline_message_id,
                     reply_markup=InlineKeyboardMarkup(opinion_data)
             )
         except Floodwait as e:
@@ -99,10 +101,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     @ubot.on_callback_query(filters.regex(pattern=r"^e_result$"))
     async def choice_result_cb(_, callback_query: CallbackQuery):
-        u_id = callback_query.from_user.id 
+        u_id = c_q.from_user.id 
         if u_id == Config.OWNER_ID:
             view_data = json.load(open(PATH))
-            total = len(view_data[0])
+            total = len(view_data[0][opinion_id])
             ag = view_data[1]['agree']
             disag = view_data[1]['disagree']
             agreed = round(( ag / (disag + ag) ) * 100)
@@ -111,8 +113,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             msg += f"• 👤 `{total} People voted`\n\n"
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
-            os.remove(PATH) 
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            
+            await ubot.edit_inline_text(c_q.inline_message_id,
                     msg
             )
         else:
@@ -121,7 +123,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 owner = f"Only @{a.username} Can Access This !"
             else:
                 owner = f"Only {a.first_name} Can Access This !"
-            await callback_query.answer(owner, show_alert=True)
+            await c_q.answer(owner, show_alert=True)
 
 
 def _choice(res):
@@ -132,10 +134,20 @@ def _choice(res):
     return choice
         
 
-@userge.on_cmd("opinion", about={
-    'header': "Ask for Opinion via Inline Bot, do .opinion to see help"})
+@userge.on_cmd(
+    "opinion", about={
+        'header': "Ask for Opinion via Inline Bot",
+        'usage': "Reply {tr}opinion"
+                 "[INLINE] op Text",
+        'examples': ["{tr}opinion", "INLINE - @[your bot name] op Are Cats Cute?"]},
+    allow_channels=False, allow_via_bot=False)
 async def op_(message: Message):
-    text = "**IN INLINE BOT**\n\n"
-    text += "op Are Cats Cute?"
-    await message.edit(text, del_in=20)
-    
+    replied = message.reply_to_message
+    if not replied:
+        await message.err("Reply to a message First")
+    bot = await userge.bot.get_me()
+    x = await userge.get_inline_bot_results(bot.username, "op <i>**Do you Agree with the replied suggestion ?**</i>")
+    await userge.send_inline_bot_result(chat_id=message.chat.id,
+                                            query_id=x.query_id,
+                                            result_id=x.results[1].id,
+                                            reply_to_message_id=True)
