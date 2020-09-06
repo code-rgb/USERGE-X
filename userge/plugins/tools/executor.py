@@ -11,6 +11,7 @@
 import io
 import sys
 import asyncio
+import keyword
 import traceback
 from getpass import getuser
 from os import geteuid
@@ -23,34 +24,24 @@ from userge.utils import runcmd
 
 @userge.on_cmd("eval", about={
     'header': "run python code line | lines",
-    'flags': {
-        '-d': "debug mode (increase sensitivity)",
-        '-s': "silent mode (hide STDIN)"},
-    'usage': "{tr}eval [flag(s)] [code lines]",
+    'flags': {'-s': "silent mode (hide STDIN)"},
+    'usage': "{tr}eval [flag] [code lines]",
     'examples': [
         "{tr}eval print('Userge')", "{tr}eval -s print('Userge')",
-        "{tr}eval -d 5 + 6", "{tr}eval -s -d 5 + 6"]}, allow_channels=False)
+        "{tr}eval 5 + 6", "{tr}eval -s 5 + 6"]}, allow_channels=False)
 async def eval_(message: Message):
     """ run python code """
     cmd = await init_func(message)
     if cmd is None:
         return
-    flags = []
-    for flag in ('-s', '-d', '-s'):
-        if cmd.startswith(flag):
-            flags.append(flag)
-            cmd = cmd[2:].strip()
+    silent_mode = False
+    if cmd.startswith('-s'):
+        silent_mode = True
+        cmd = cmd[2:].strip()
     if not cmd:
         await message.err("Unable to Parse Input!")
         return
-    silent_mode, debug_mode, mode = False, False, ""
-    if '-s' in flags:
-        silent_mode = True
-        mode += "<silent> "
-    if '-d' in flags:
-        debug_mode = True
-        mode += "<debug> "
-    await message.edit(f"`Executing eval in {mode or '<normal> '}mode ...`", parse_mode='md')
+    await message.edit("`Executing eval ...`", parse_mode='md')
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -60,14 +51,13 @@ async def eval_(message: Message):
     async def aexec(code):
         head = "async def __aexec(userge, message):\n "
         if '\n' in code:
-            lines = code.split('\n')
-            body = '\n '.join(line for line in lines[:-1])
-            tail = lines[-1]
+            rest_code = '\n '.join(line for line in code.split('\n'))
+        elif any(True for k_ in keyword.kwlist
+                 if k_ not in ('True', 'False', 'None') and code.startswith(f"{k_} ")):
+            rest_code = f"\n {code}"
         else:
-            body = ""
-            tail = code
-        tail = f"\n {tail}" if "return " in tail else f"\n return {tail}"
-        exec(head + body + tail)  # nosec pylint: disable=W0122
+            rest_code = f"\n return {code}"
+        exec(head + rest_code)  # nosec pylint: disable=W0122
         return await locals()['__aexec'](userge, message)
     try:
         ret_val = await aexec(cmd)
@@ -77,15 +67,12 @@ async def eval_(message: Message):
     stderr = redirected_error.getvalue().strip()
     sys.stdout = old_stdout
     sys.stderr = old_stderr
-    evaluation = exc or stderr or stdout
+    evaluation = exc or stderr or stdout or ret_val
     output = ""
-    if debug_mode:
-        evaluation = ret_val or evaluation
     if not silent_mode:
-        output += f"**>>>** ```{cmd}```\n\n"
+        output += f"**>** ```{cmd}```\n\n"
     if evaluation:
-        output += f"**>>>** ```{evaluation}```"
-    await asyncio.sleep(1)
+        output += f"**>>** ```{evaluation}```"
     if output:
         await message.edit_or_send_as_file(text=output,
                                            parse_mode='md',
@@ -96,7 +83,7 @@ async def eval_(message: Message):
 
 
 @userge.on_cmd("exec", about={
-    'header': "rrun commands in exec",
+    'header': "run commands in exec",
     'usage': "{tr}exec [commands]",
     'examples': "{tr}exec echo \"Userge\""}, allow_channels=False)
 async def exec_(message: Message):
@@ -123,18 +110,18 @@ __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
 
 
 @userge.on_cmd("term", about={
-    'header': "run commands in shell (terminl)",
+    'header': "run commands in shell (terminal)",
     'usage': "{tr}term [commands]",
     'examples': "{tr}term echo \"Userge\""}, allow_channels=False)
 async def term_(message: Message):
-    """ run commands in shell (terminl with live update) """
+    """ run commands in shell (terminal with live update) """
     cmd = await init_func(message)
     if cmd is None:
         return
     await message.edit("`Executing terminal ...`")
     try:
         t_obj = await Term.execute(cmd)  # type: Term
-    except Exception as t_e:
+    except Exception as t_e:  # pylint: disable=broad-except
         await message.err(t_e)
         return
     curruser = getuser()
