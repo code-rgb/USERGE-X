@@ -31,7 +31,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ids = c_q.from_user.id
         counter =  c_q.matches[0].group(1)
         data = json.load(open(PATH))
-        view_data = data[int(opinion_id)]
+        view_data = data[str(opinion_id)]
         agree_data = "👍"
         disagree_data = "👎"
         
@@ -106,7 +106,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         opinion_id = c_q.matches[0].group(1)
         if u_id == Config.OWNER_ID:
             data = json.load(open(PATH))
-            view_data = data[int(opinion_id)]
+            view_data = data[str(opinion_id)]
             total = len(view_data[0])
             ag = view_data[1]['agree']
             disag = view_data[1]['disagree']
