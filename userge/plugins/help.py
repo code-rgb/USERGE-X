@@ -547,14 +547,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
                 if view_data:
                     # Uniquely identifies an inline message
-                    new_id = {inline_query.id : {}}
-                    view_data[0].update(new_id)
+                    new_id = {inline_query.id : []}
+                    view_data.update(new_id)
                     json.dump(view_data, open(opinion,'w'))
                 else:
-                    d = [{inline_query.id : {}}]
+                    d = {inline_query.id : []}
                     json.dump(d, open(opinion,'w'))
-
-
 
                 buttons = [[
                         InlineKeyboardButton("👍", callback_data=f"op_y_{inline_query.id}"),

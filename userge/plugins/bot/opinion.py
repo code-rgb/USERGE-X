@@ -27,35 +27,36 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not os.path.exists(PATH):
             await c_q.answer("𝑶𝒑𝒊𝒏𝒊𝒐𝒏 𝒅𝒂𝒕𝒂 𝒅𝒐𝒏'𝒕 𝒆𝒙𝒊𝒔𝒕 𝒂𝒏𝒚𝒎𝒐𝒓𝒆.", show_alert=True)
             return
-        view_data = json.load(open(PATH))
         opinion_id = c_q.matches[0].group(2)
         ids = c_q.from_user.id
         counter =  c_q.matches[0].group(1)
+        data = json.load(open(PATH))
+        view_data = data[opinion_id]
         agree_data = "👍"
         disagree_data = "👎"
         
         if len(view_data) == 2:
-            if str(ids) in view_data[0][opinion_id]:
-                if view_data[0][opinion_id][str(ids)] == "y" and counter == "y":
+            if str(ids) in view_data[0]:
+                if view_data[0][str(ids)] == "y" and counter == "y":
                     await c_q.answer("Already Voted for 👍", show_alert=True)
                     return
-                if view_data[0][opinion_id][str(ids)] == "n" and counter == "n":
+                if view_data[0][str(ids)] == "n" and counter == "n":
                     await c_q.answer("Already Voted for 👎", show_alert=True)
                     return
                 # Answering Query First then moving forward
                 choice = _choice(counter)
                 await c_q.answer(f"You Choose  {choice}", show_alert=False)
                 #
-                if view_data[0][opinion_id][str(ids)] == "y" and counter == "n":
+                if view_data[0][str(ids)] == "y" and counter == "n":
                     agree = int(view_data[1]['agree']) - 1
                     disagree = int(view_data[1]['disagree']) + 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
-                    view_data[0][opinion_id][str(ids)] = "n"
-                if view_data[0][opinion_id][str(ids)] == "n" and counter == "y":
+                    view_data[0][str(ids)] = "n"
+                if view_data[0][str(ids)] == "n" and counter == "y":
                     agree = int(view_data[1]['agree']) + 1
                     disagree = view_data[1]['disagree'] - 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
-                    view_data[0][opinion_id][str(ids)] = "y"
+                    view_data[0][str(ids)] = "y"
                 json.dump(view_data, open(PATH,'w'))
             else:
                 # Answering Query First then moving forward
@@ -63,7 +64,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 await c_q.answer(f"You Choose {choice}", show_alert=False)
                 #
                 new_id = {ids : counter}
-                view_data[0][opinion_id].update(new_id)
+                view_data[0].update(new_id)
                 if counter == "y":
                     agree = view_data[1]['agree'] + 1 
                     disagree = view_data[1]['disagree']
@@ -73,14 +74,14 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 view_data[1] = {"agree": agree, "disagree": disagree}
                 json.dump(view_data, open(PATH,'w'))
         else:
-            if len(view_data) == 1:
+            if len(view_data) == 0:
                 # Answering Query First then moving forward
                 choice = _choice(counter)
                 await c_q.answer(f"You Choose  {choice}", show_alert=False)
                 if counter == "y":
-                    view_data = [{opinion_id : {ids : "y"}}, {"agree": 1, "disagree": 0}]    #inline_id 
+                    view_data = [{ids : "y"}, {"agree": 1, "disagree": 0}]  
                 if counter == "n":
-                    view_data = [{opinion_id : {ids : "n"}}, {"agree": 0, "disagree": 1}]    #inline_id 
+                    view_data = [{ids : "n"}, {"agree": 0, "disagree": 1}]
                 json.dump(view_data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
@@ -93,7 +94,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await ubot.edit_inline_reply_markup(c_q.inline_message_id,
                     reply_markup=InlineKeyboardMarkup(opinion_data)
             )
-        except Floodwait as e:
+        except FloodWait as e:
             await asyncio.sleep(e.x)
         except BadRequest:
             return
@@ -104,8 +105,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         opinion_id = c_q.matches[0].group(1)
         if u_id == Config.OWNER_ID:
-            view_data = json.load(open(PATH))
-            total = len(view_data[0][opinion_id])
+            data = json.load(open(PATH))
+            view_data = data[opinion_id]
+            total = len(view_data[0])
             ag = view_data[1]['agree']
             disag = view_data[1]['disagree']
             agreed = round(( ag / (disag + ag) ) * 100)
