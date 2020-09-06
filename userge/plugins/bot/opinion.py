@@ -86,8 +86,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         agree_data += f"  {view_data[1]['agree']}"  
         disagree_data += f"  {view_data[1]['disagree']}" 
 
-        opinion_data = [[InlineKeyboardButton(agree_data, callback_data="opinion_y"),
-                        InlineKeyboardButton(disagree_data, callback_data="opinion_n")],
+        opinion_data = [[InlineKeyboardButton(agree_data, callback_data=f"op_y_{opinion_id}"),
+                        InlineKeyboardButton(disagree_data, callback_data=f"op_n_{opinion_id}")],
                         [InlineKeyboardButton("📊 Stats", callback_data="e_result")]]
         try:
             await ubot.edit_inline_reply_markup(c_q.inline_message_id,
@@ -146,8 +146,9 @@ async def op_(message: Message):
     if not replied:
         await message.err("Reply to a message First")
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, "op <i>**Do you Agree with the replied suggestion ?**</i>")
+    x = await userge.get_inline_bot_results(bot.username, "op **Do you Agree with the replied suggestion ?**")
     await userge.send_inline_bot_result(chat_id=message.chat.id,
                                             query_id=x.query_id,
                                             result_id=x.results[1].id,
                                             reply_to_message_id=replied.message_id)
+    await message.delete()
