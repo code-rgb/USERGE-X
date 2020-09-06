@@ -110,7 +110,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             disag = view_data[1]['disagree']
             agreed = round(( ag / (disag + ag) ) * 100)
             disagreed = round(( disag / (ag + disag) ) * 100)
-            msg = "**STATS**\n\n"
+            msg = "📊 **Final Stats**\n\n"
             msg += f"• 👤 `{total} People voted`\n\n"
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
