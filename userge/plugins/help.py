@@ -547,11 +547,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
                 if view_data:
                     # Uniquely identifies an inline message
-                    new_id = {inline_query.id : []}
+                    new_id = {int(inline_query.id) : [{}]}
                     view_data.update(new_id)
                     json.dump(view_data, open(opinion,'w'))
                 else:
-                    d = {inline_query.id : []}
+                    d = {int(inline_query.id) : [{}]}
                     json.dump(d, open(opinion,'w'))
 
                 buttons = [[
