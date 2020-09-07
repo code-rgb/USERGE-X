@@ -16,7 +16,7 @@ from userge import userge, Message, Config, pool
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-repo = Repo()
+
 
 @userge.on_cmd("update", about={
     'header': "Check Updates or Update USERGE-X",
@@ -32,6 +32,7 @@ repo = Repo()
 async def check_update(message: Message):
     """ check or do updates """
     await message.edit("`Checking for updates, please wait....`")
+    repo = Repo()
     try:
         repo.remote(Config.UPSTREAM_REMOTE).fetch()
     except GitCommandError as error:
@@ -114,6 +115,9 @@ async def check_update(message: Message):
 def _push_to_heroku(sent: Message, branch: str) -> None:
     start_time = time()
     edited = False
+    repo = Repo()
+    if not "heroku" in repo.remotes:
+        remote = repo.create_remote("heroku", Config.HEROKU_GIT_URL)
 
     def progress(op_code, cur_count, max_count=None, message=''):
         nonlocal start_time, edited
@@ -131,8 +135,6 @@ def _push_to_heroku(sent: Message, branch: str) -> None:
                 loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
             except TypeError:
                 pass
-    if not "heroku" in repo.remotes:
-        remote = repo.create_remote("heroku", Config.HEROKU_GIT_URL)
     cur_msg = sent.text.html
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
