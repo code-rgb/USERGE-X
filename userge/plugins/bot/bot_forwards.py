@@ -123,7 +123,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 "**#Already_Banned From Bot PM**\n\nUser Already Exists in My Bot BAN List.\n"
                 f"**Reason For Bot BAN:** `{found['reason']}`", del_in=5)
             return
-        banned_msg = f"`You Have been Banned Forever`\n**Reason** : {reason}"
+        banned_msg = f"<i>**You Have been Banned Forever**</i>\n**Reason** : {reason}"
         await asyncio.gather(
             BOT_BAN.insert_one(
                 {'firstname': firstname, 'user_id': user_id, 'reason': reason}),

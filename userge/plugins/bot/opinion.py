@@ -152,7 +152,7 @@ async def op_(message: Message):
     if not replied:
         await message.err("Reply to a message First")
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, "op **Do you Agree with the replied suggestion ?**")
+    x = await userge.get_inline_bot_results(bot.username, "op <i>**Do you Agree with the replied suggestion ?**</i>")
     await userge.send_inline_bot_result(chat_id=message.chat.id,
                                             query_id=x.query_id,
                                             result_id=x.results[1].id,

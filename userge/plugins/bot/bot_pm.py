@@ -1,6 +1,6 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
-
+"""Module that handles Bot's Pm"""
 
 from userge import userge, Message, Config, get_collection
 from pyrogram.types import (  
@@ -115,10 +115,11 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
  
  
 @userge.on_cmd("bot_users", about={
-    'header': "Get a list Active Users Who started your BOT i.e /start in Bot PM",
-    'examples': "{tr}startlist"},
+    'header': "Get a list Active Users Who started your Bot",
+    'examples': "{tr}bot_users"},
     allow_channels=False)
 async def bot_users(message: Message):
+    """Users Who Stated Your Bot by - /start"""
     msg = ""
     async for c in BOT_START.find():  
         msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n   <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
