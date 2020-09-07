@@ -132,6 +132,8 @@ def _push_to_heroku(sent: Message, branch: str) -> None:
                 loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
             except TypeError:
                 pass
+    if not "heroku" in repo.remotes:
+        remote = repo.create_remote("heroku", Config.HEROKU_GIT_URL)
     cur_msg = sent.text.html
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
