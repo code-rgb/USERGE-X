@@ -57,7 +57,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     disagree = view_data[1]['disagree'] - 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
                     view_data[0][str(ids)] = "y"
-                json.dump(view_data, open(PATH,'w'))
+                json.dump(data, open(PATH,'w'))
             else:
                 # Answering Query First then moving forward
                 choice = _choice(counter)
@@ -72,7 +72,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
                 view_data[1] = {"agree": agree, "disagree": disagree}
-                json.dump(view_data, open(PATH,'w'))
+                json.dump(data, open(PATH,'w'))
         else:
             if len(view_data) == 0:
                 # Answering Query First then moving forward
@@ -82,7 +82,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     view_data = [{ids : "y"}, {"agree": 1, "disagree": 0}]  
                 if counter == "n":
                     view_data = [{ids : "n"}, {"agree": 0, "disagree": 1}]
-                json.dump(view_data, open(PATH,'w'))
+                json.dump(data, open(PATH,'w'))
 
         agree_data += f"  {view_data[1]['agree']}"  
         disagree_data += f"  {view_data[1]['disagree']}" 
