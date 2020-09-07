@@ -7,7 +7,7 @@ from pyrogram import filters
 import json
 import os
 
-SECRETS = "userge/xcache/secrets.txt"
+SECRETS = "userge/xcache/secret.txt"
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
@@ -37,7 +37,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             else:
                 await c_q.answer("This Message is Confidential 👽", show_alert=True)
         else:
-            await c_q.answer("𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘥𝘰𝘦𝘴𝘯'𝘵 𝘦𝘹𝘪𝘴𝘵 𝘢𝘯𝘺𝘮𝘰𝘳𝘦.", show_alert=True)
+            await c_q.answer("This message doesn't exist anymore", show_alert=True)
 
 
 @userge.on_cmd("secret", about={
