@@ -74,7 +74,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 view_data[1] = {"agree": agree, "disagree": disagree}
                 json.dump(data, open(PATH,'w'))
         else:
-            if len(view_data) == 0:
+            if len(view_data) == 1:
                 # Answering Query First then moving forward
                 choice = _choice(counter)
                 await c_q.answer(f"You Choose  {choice}", show_alert=False)
