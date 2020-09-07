@@ -16,7 +16,7 @@ from userge import userge, Message, Config, pool
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-
+repo = Repo()
 
 @userge.on_cmd("update", about={
     'header': "Check Updates or Update USERGE-X",
@@ -32,7 +32,6 @@ CHANNEL = userge.getCLogger(__name__)
 async def check_update(message: Message):
     """ check or do updates """
     await message.edit("`Checking for updates, please wait....`")
-    repo = Repo()
     try:
         repo.remote(Config.UPSTREAM_REMOTE).fetch()
     except GitCommandError as error:
