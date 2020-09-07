@@ -7,11 +7,12 @@
 # All rights reserved.
 
 import asyncio
+from time import time
 
 from git import Repo
 from git.exc import GitCommandError
 
-from userge import userge, Message, Config
+from userge import userge, Message, Config, pool
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -65,33 +66,78 @@ async def check_update(message: Message):
         if pull_from_repo:
             await message.edit(f'`New update found for [{branch}], Now pulling...`')
             await asyncio.sleep(1)
-            repo.git.reset('--hard', 'FETCH_HEAD')
+            repo.git.checkout(branch, force=True)
+            repo.git.reset('--hard', branch)
+            repo.git.pull(Config.UPSTREAM_REMOTE, branch, force=True)
             await CHANNEL.log(f"**PULLED update from [{branch}]:\n\n📄 CHANGELOG 📄**\n\n{out}")
         elif not push_to_heroku:
             changelog_str = f'**New UPDATE available for [{branch}]:\n\n📄 CHANGELOG 📄**\n\n'
             await message.edit_or_send_as_file(changelog_str + out, disable_web_page_preview=True)
             return
     elif not push_to_heroku:
-        await message.edit(f'**Userge is up-to-date with [{branch}]**', del_in=5)
+        if pull_from_repo:
+            active = repo.active_branch.name
+            await message.edit(
+                f'`Moving HEAD from [{active}] >>> [{branch}] ...`', parse_mode='md')
+            await asyncio.sleep(1)
+            repo.git.checkout(branch, force=True)
+            repo.git.reset('--hard', branch)
+            await CHANNEL.log(f"`Moved HEAD from [{active}] >>> [{branch}] !`")
+            await message.edit('`Now restarting... Wait for a while!`', del_in=3)
+            asyncio.get_event_loop().create_task(userge.restart())
+        else:
+            await message.edit(f'**USERGE-X is up-to-date with [{branch}]**', del_in=5)
         return
     if not push_to_heroku:
         await message.edit(
-            '**Userge Successfully Updated!**\n'
+            '**USERGE-X Successfully Updated!**\n'
             '`Now restarting... Wait for a while!`', del_in=3)
         asyncio.get_event_loop().create_task(userge.restart(True))
         return
-    if not Config.HEROKU_GIT_URL:
-        await message.err("please set heroku things...")
+    if not Config.HEROKU_APP:
+        await message.err("HEROKU APP : could not be found !")
         return
-    await message.edit(
+    sent = await message.edit(
         f'`Now pushing updates from [{branch}] to heroku...\n'
         'this will take upto 5 min`\n\n'
         f'* **Restart** after 5 min using `{Config.CMD_TRIGGER}restart -h`\n\n'
         '* After restarted successfully, check updates again :)')
-    if "heroku" in repo.remotes:
-        remote = repo.remote("heroku")
-        remote.set_url(Config.HEROKU_GIT_URL)
+    try:
+        await _push_to_heroku(sent, branch)
+    except GitCommandError as g_e:
+        LOG.exception(g_e)
+        await sent.err(f"{g_e}, {Config.CMD_TRIGGER}restart -h and try again!")
     else:
-        remote = repo.create_remote("heroku", Config.HEROKU_GIT_URL)
-    remote.push(refspec=f'{branch}:master', force=True)
-    await message.edit(f"**HEROKU APP : {Config.HEROKU_APP.name} is up-to-date with [{branch}]**")
+        await sent.edit(f"**HEROKU APP : {Config.HEROKU_APP.name} is up-to-date with [{branch}]**")
+
+
+@pool.run_in_thread
+def _push_to_heroku(sent: Message, branch: str) -> None:
+    start_time = time()
+    edited = False
+
+    def progress(op_code, cur_count, max_count=None, message=''):
+        nonlocal start_time, edited
+        prog = f"**code:** `{op_code}` **cur:** `{cur_count}`"
+        if max_count:
+            prog += f" **max:** `{max_count}`"
+        if message:
+            prog += f" || `{message}`"
+        LOG.debug(prog)
+        now = time()
+        if not edited or (now - start_time) > 3 or message:
+            edited = True
+            start_time = now
+            try:
+                loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
+            except TypeError:
+                pass
+    cur_msg = sent.text.html
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        Repo().remote("heroku").push(refspec=f'{branch}:master',
+                                     progress=progress,
+                                     force=True)
+    finally:
+        loop.close()
