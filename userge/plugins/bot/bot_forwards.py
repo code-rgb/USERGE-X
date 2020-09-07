@@ -71,7 +71,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await dumper(msg_owner.message_id, message.from_user.id, update)
 
     
-    @ubot.on_message(allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private & filters.reply & ~filters.regex(pattern=r"\/.+")) 
+    @ubot.on_message(allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private & filters.reply & ~filters.regex(pattern=r"^\/.+")) 
     async def forward_reply(_, message: Message):
         replied = message.reply_to_message
         to_user = replied.forward_from
@@ -95,7 +95,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
-    @ubot.on_message(filters.user(Config.OWNER_ID) & filters.private & filters.incoming & filters.regex(pattern=r"\/ban(?: )(.+)"))
+    @ubot.on_message(filters.user(Config.OWNER_ID) & filters.private & filters.incoming & filters.regex(pattern=r"^\/ban(?: )(.+)"))
     async def bot_ban_(_, message: Message):
         """ ban a user from bot """
         start_ban = await ubot.send_message(message.chat.id, "`Banning...`")
@@ -227,7 +227,7 @@ async def list_bot_banned(message: Message):
     'examples': "{tr}unbban [userid]"},
     allow_channels=False, allow_bots=True)
 async def ungban_user(message: Message):
-    """ unban a user globally """
+    """ unban a user from Bot's PM"""
     await message.edit("`UN-BOT Banning ...`")
     user_id = int(message.input_str)
     if not user_id:
