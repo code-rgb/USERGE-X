@@ -39,4 +39,3 @@ youtube_dl
 jikanpy
 nekos.py
 html-telegraph-poster
-igramscraper
