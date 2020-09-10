@@ -10,8 +10,7 @@
 
 from .progress import progress  # noqa
 from .sys_tools import SafeDict, get_import_path  # noqa
-from .tools import (demojify,  # noqa
-                    get_file_id_and_ref,
+from .tools import (get_file_id_and_ref, # noqa
                     humanbytes,
                     time_formatter,
                     post_to_telegraph,
