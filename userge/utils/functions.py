@@ -1,7 +1,7 @@
 import os
-from .config import Config
-from .utils.tools import take_screen_shot, runcmd
-from .utils.progress import progress
+from ..config import Config
+from .tools import take_screen_shot, runcmd
+from .progress import progress
 import re
 
 # For Downloading & Checking Media then Converting to Image.
