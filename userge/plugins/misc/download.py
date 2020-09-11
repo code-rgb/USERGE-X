@@ -19,7 +19,7 @@ from userge.utils import progress, humanbytes
 
 LOGGER = userge.getLogger(__name__)
 
-urlx = None
+urlx = "False"
 
 @userge.on_cmd("download", about={
     'header': "Download files to server",
@@ -45,7 +45,7 @@ async def down_load_media(message: Message, urlx):
             await message.edit(f"Downloaded to `{dl_loc}` in {m_s} seconds")
     elif message.input_str or urlx:
         start_t = datetime.now()
-        if urlx:
+        if urlx != "False":
             url = urlx
         else:
             url = message.input_str
