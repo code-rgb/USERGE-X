@@ -40,4 +40,3 @@ jikanpy
 nekos.py
 html-telegraph-poster
 git+https://github.com/code-rgb/pytube3.git
-pafy

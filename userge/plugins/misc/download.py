@@ -19,14 +19,13 @@ from userge.utils import progress, humanbytes
 
 LOGGER = userge.getLogger(__name__)
 
-urlx = "False"
 
 @userge.on_cmd("download", about={
     'header': "Download files to server",
     'usage': "{tr}download [url | reply to telegram media]",
     'examples': "{tr}download https://speed.hetzner.de/100MB.bin | testing upload.bin"},
     check_downpath=True)
-async def down_load_media(message: Message, urlx):
+async def down_load_media(message: Message):
     await message.edit("`Trying to Download...`")
     if message.reply_to_message and message.reply_to_message.media:
         start_t = datetime.now()
@@ -43,12 +42,9 @@ async def down_load_media(message: Message, urlx):
             end_t = datetime.now()
             m_s = (end_t - start_t).seconds
             await message.edit(f"Downloaded to `{dl_loc}` in {m_s} seconds")
-    elif message.input_str or urlx:
+    elif message.input_str:
         start_t = datetime.now()
-        if urlx != "False":
-            url = urlx
-        else:
-            url = message.input_str
+        url = message.input_str
         custom_file_name = unquote_plus(os.path.basename(url))
         if "|" in url:
             url, custom_file_name = url.split("|")
@@ -98,13 +94,9 @@ async def down_load_media(message: Message, urlx):
                 await asyncio.sleep(1)
         except Exception as e:
             await message.err(e)
-            status = "FAILED"
-            return status
         else:
             end_t = datetime.now()
             m_s = (end_t - start_t).seconds
             await message.edit(f"Downloaded to `{download_file_path}` in {m_s} seconds")
-            status = "OK"
-            return status
     else:
         await message.edit("Please read `.help download`", del_in=5)
