@@ -1,7 +1,7 @@
 import re
 import bs4
 import requests
-#from userbot.utils import admin_cmd
+
 from userge import userge, Message
 @userge.on_cmd("giz", about={
     'header': "gizoogle the text",

@@ -17,4 +17,9 @@ from .tools import (get_file_id_and_ref,
                     runcmd,
                     take_screen_shot,
                     parse_buttons)
-from .functions import deEmojify, media_to_image
+from .functions import (deEmojify, 
+                        media_to_image,
+                        mention_markdown,
+                        mention_html,
+                        escape_markdown,
+                        cleanhtml)
