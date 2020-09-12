@@ -145,7 +145,7 @@ def _choice(res):
         'header': "Ask for Opinion via Inline Bot",
         'usage': "Reply {tr}opinion"
                  "[INLINE] op Text",
-        'examples': ["{tr}opinion", "INLINE - @[your bot name] op Are Cats Cute?"]},
+        'examples': ["{tr}opinion", "INLINE - @[your bot name] Enter your question on which you want openion from other"]},
     allow_channels=False, allow_via_bot=False)
 async def op_(message: Message):
     replied = message.reply_to_message
