@@ -44,6 +44,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     'header': "for help do .secret"})
 async def secret_(message: Message):
     text = "**IN INLINE BOT**\n\n"
-    text += "secret [username OR userid] \"Your Secret Message\"How to Use- @yourbotusername secret @username/ Note- usernane be to whom want to send secret message"""
+    text += "secret [username OR userid] \"Your Secret Message\"How to apply- @yourbotusername secret @username/ Note- usernane be to whom want to send secret message"""
     await message.edit(text, del_in=20)
     
