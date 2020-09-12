@@ -16,7 +16,7 @@ async def video_note(message: Message):
     if not (reply.video or reply.animation):
         await message.err('Only videos and gifs are Supported', del_in=10)
         return
-    process = await message.reply('`Processing ...`')
+    await message.edit('`Processing ...`')
     note = await reply.download()
     media_info = MediaInfo.parse(note)
     for track in media_info.tracks:
@@ -31,8 +31,8 @@ async def video_note(message: Message):
     else:
         os.rename(note, PATH) 
     if os.path.exists(PATH):
-        is_video = await message.reply_video_note(PATH)
+        is_video = await message.send_video_note(message.chat.id, PATH)
         if is_video.video:
             await message.reply("Media size is greater than allowed video note size")
         os.remove(PATH)
-        await process.delete()
+        await message.delete()
