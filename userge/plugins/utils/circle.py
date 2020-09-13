@@ -1,3 +1,8 @@
+"""Make a video note"""
+
+# by GitHub.com/code-rgb [TG- @DeletedUser420]
+
+
 import os
 from pymediainfo import MediaInfo
 from userge import userge, Message
@@ -31,7 +36,7 @@ async def video_note(message: Message):
     else:
         os.rename(note, PATH) 
     if os.path.exists(PATH):
-        is_video = await message.send_video_note(message.chat.id, PATH)
+        is_video = await userge.send_video_note(message.chat.id, PATH)
         if is_video.video:
             await message.reply("Media size is greater than allowed video note size")
         os.remove(PATH)
