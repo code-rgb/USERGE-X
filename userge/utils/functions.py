@@ -94,3 +94,7 @@ def mention_markdown(user_id, name):
     return u'[{}](tg://user?id={})'.format(escape_markdown(name), user_id)
 
 #------------------------
+
+def thumb_from_audio(audio_path, output):
+    os.system(f'ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}')
+    return
