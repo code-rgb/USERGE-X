@@ -13,8 +13,8 @@ CACHE = 'userge/xcache/circle'
 PATH = os.path.join(CACHE, "temp_vid.mp4")
 
 @userge.on_cmd("circle", about={
-    'header': "Convert media to video note",
-    'usage': "{tr}circle [reply to video / gif / audio]"})
+    'header': "Convert video / gif / audio to video note",
+    'usage': "{tr}circle [reply to media]"})
 async def video_note(message: Message):
     """ Covert to video note """
     reply = message.reply_to_message
@@ -41,10 +41,6 @@ async def video_note(message: Message):
             os.remove(note)
         else:
             os.rename(note, PATH) 
-        if os.path.exists(PATH):
-            is_video = await userge.send_video_note(message.chat.id, PATH)
-            
-
     else:
         thumb_loc = os.path.join(CACHE, "thumb.jpg")
         audio_loc = os.path.join(CACHE, "music.mp3")
@@ -53,13 +49,12 @@ async def video_note(message: Message):
         music = await reply.download()
         if not thumb:
             thumb = await audio_thumb(music)
-
         os.rename(thumb, thumb_loc)
         os.rename(music, audio_loc)
         os.system(f'ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale=\'iw-mod (iw,2)\':\'ih-mod(ih,2)\',format=yuv420p\" -shortest -movflags +faststart {PATH}')
-        if os.path.exists(PATH):
-            await message.reply_video_note(PATH)
-            
+
+    if os.path.exists(PATH):
+        await userge.send_video_note(message.chat.id, PATH)        
     await message.delete()
     shutil.rmtree(CACHE)
 
