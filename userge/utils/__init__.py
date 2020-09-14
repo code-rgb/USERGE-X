@@ -23,4 +23,4 @@ from .functions import (deEmojify,
                         mention_html,
                         escape_markdown,
                         cleanhtml,
-                        audio_thumb)
+                        thumb_from_audio)

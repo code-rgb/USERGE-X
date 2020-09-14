@@ -7,7 +7,7 @@ import os
 import shutil
 from pymediainfo import MediaInfo
 from userge import userge, Message
-from userge.utils import audio_thumb
+from userge.utils import thumb_from_audio
 
 CACHE = 'userge/xcache/circle'
 PATH = os.path.join(CACHE, "temp_vid.mp4")
@@ -48,7 +48,7 @@ async def video_note(message: Message):
         thumb = await userge.download_media(audio_thumb)
         music = await reply.download()
         if not thumb:
-            thumb = await audio_thumb(music)
+            thumb = await thumb_from_audio(music)
         os.rename(thumb, thumb_loc)
         os.rename(music, audio_loc)
         os.system(f'ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale=\'iw-mod (iw,2)\':\'ih-mod(ih,2)\',format=yuv420p\" -shortest -movflags +faststart {PATH}')
