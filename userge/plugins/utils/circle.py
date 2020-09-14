@@ -47,10 +47,11 @@ async def video_note(message: Message):
         audio_thumb = reply.audio.thumbs[0].file_id
         thumb = await userge.download_media(audio_thumb)
         music = await reply.download()
-        if not thumb:
-            thumb = await thumb_from_audio(music)
-        os.rename(thumb, thumb_loc)
         os.rename(music, audio_loc)
+        if thumb:
+            os.rename(thumb, thumb_loc)
+        else:
+            thumb_from_audio(audio_loc, thumb_loc)
         os.system(f'ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale=\'iw-mod (iw,2)\':\'ih-mod(ih,2)\',format=yuv420p\" -shortest -movflags +faststart {PATH}')
 
     if os.path.exists(PATH):

@@ -95,8 +95,6 @@ def mention_markdown(user_id, name):
 
 #------------------------
 
-def thumb_from_audio(audio_path):
-    thumb = 'thumb.jpg'
-    os.system(f'ffmpeg -i {audio_path} {thumb}')
-    if os.path.exists(thumb):
-        return thumb
+def thumb_from_audio(audio_path, output):
+    os.system(f'ffmpeg -i {audio_path} {output}')
+    return
