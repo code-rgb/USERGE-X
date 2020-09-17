@@ -390,8 +390,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
         telegraph = r"http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)"
         media_link = Config.ALIVE_MEDIA
-        match = re.search(imgur, media_link)
         if media_link:
+            match = re.search(imgur, media_link)
             if not match:
                 match = re.search(telegraph, media_link)
             if match:
