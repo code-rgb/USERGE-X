@@ -17,7 +17,7 @@ async def alive_inline(message: Message):
                                         query_id=x.query_id,
                                         result_id=x.results[1].id)
     await message.delete()
-    await asyncio.sleep(35)
+    await asyncio.sleep(40)
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
@@ -35,7 +35,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         else:
             dynos_saver = "Not Supported"
 
-        alive_s=f"• ⚙️ 𝗠𝗼𝗱𝗲 : {_get_mode()}\n"   
+        alive_s=f">> ⚙️ 𝗠𝗼𝗱𝗲 : {_get_mode()}\n"   
         alive_s+=f"• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s+=f"• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         alive_s+=f"• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {dynos_saver}\n"
@@ -51,7 +51,7 @@ def _parse_arg(arg: bool) -> str:
 
 def _get_mode() -> str:
     if RawClient.DUAL_MODE:
-        return " ↕️ 𝙳𝚞𝚊𝚕"
+        return " ↕️  𝗗𝗨𝗔𝗟"
     if Config.BOT_TOKEN:
-        return " 🤖 𝙱𝚘𝚝"
-    return " 🙍‍♂️ 𝚄𝚜𝚎𝚛"
+        return " 🤖 𝗕𝗢𝗧"
+    return " 🙍‍♂️ 𝗨𝗦𝗘𝗥"
