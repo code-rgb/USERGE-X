@@ -53,5 +53,5 @@ def _get_mode() -> str:
     if RawClient.DUAL_MODE:
         return " ↕️  𝗗𝗨𝗔𝗟"
     if Config.BOT_TOKEN:
-        return " 🤖 𝗕𝗢𝗧"
-    return " 🙍‍♂️ 𝗨𝗦𝗘𝗥"
+        return " 🤖  𝗕𝗢𝗧"
+    return " 🙍‍♂️  𝗨𝗦𝗘𝗥"
