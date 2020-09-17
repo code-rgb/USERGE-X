@@ -19,6 +19,7 @@
 ![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)
 ![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
+[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
 
 <br>
 
