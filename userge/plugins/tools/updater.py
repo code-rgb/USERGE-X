@@ -16,6 +16,8 @@ from userge import userge, Message, Config, pool
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
+# Temp Fix for HEROKU_GIT_URL = None
+HEROKU_GIT_URL = f"https://api:{Config.HEROKU_API_KEY}@git.heroku.com/{Config.HEROKU_APP_NAME}.git" 
 
 
 @userge.on_cmd("update", about={
@@ -141,10 +143,13 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
                 loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
             except TypeError:
                 pass
+    if not "heroku" in repo.remotes:  # fix for https://nekobin.com/riqagareso.txt
+        remote = repo.create_remote("heroku", HEROKU_GIT_URL)
     cur_msg = sent.text.html
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
+        
         repo.remote("heroku").push(refspec=f'{branch}:master',
                                    progress=progress,
                                    force=True)
