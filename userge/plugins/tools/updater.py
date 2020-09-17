@@ -16,8 +16,6 @@ from userge import userge, Message, Config, pool
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-# Temp Fix for HEROKU_GIT_URL = None
-HEROKU_GIT_URL = f"https://api:{Config.HEROKU_API_KEY}@git.heroku.com/{Config.HEROKU_APP_NAME}.git" 
 
 
 @userge.on_cmd("update", about={
@@ -63,7 +61,7 @@ async def check_update(message: Message):
             change_log = f'**New UPDATE available for [{branch}]:\n\n📄 CHANGELOG 📄**\n\n'
             await message.edit_or_send_as_file(change_log + out, disable_web_page_preview=True)
         else:
-            await message.edit(f'**Userge is up-to-date with [{branch}]**', del_in=5)
+            await message.edit(f'**USERGE-X is up-to-date with [{branch}]**', del_in=5)
         return
     if pull_from_repo:
         if out:
@@ -71,7 +69,7 @@ async def check_update(message: Message):
             await _pull_from_repo(repo, branch)
             await CHANNEL.log(f"**PULLED update from [{branch}]:\n\n📄 CHANGELOG 📄**\n\n{out}")
             if not push_to_heroku:
-                await message.edit('**Userge Successfully Updated!**\n'
+                await message.edit('**USERGE-X Successfully Updated!**\n'
                                    '`Now restarting... Wait for a while!`', del_in=3)
                 asyncio.get_event_loop().create_task(userge.restart(True))
         elif push_to_heroku:
@@ -143,13 +141,10 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
                 loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
             except TypeError:
                 pass
-    if not "heroku" in repo.remotes:  # fix for https://nekobin.com/riqagareso.txt
-        remote = repo.create_remote("heroku", HEROKU_GIT_URL)
     cur_msg = sent.text.html
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
-        
         repo.remote("heroku").push(refspec=f'{branch}:master',
                                    progress=progress,
                                    force=True)

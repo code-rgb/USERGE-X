@@ -42,6 +42,14 @@ gitClone() {
     git clone "$@" &> /dev/null
 }
 
+remoteIsExist() {
+    grep -q $1 < <(git remote)
+}
+
+addHeroku() {
+    git remote add heroku $HEROKU_GIT_URL
+}
+
 addUpstream() {
     git remote add $UPSTREAM_REMOTE ${UPSTREAM_REPO%.git}.git
 }
@@ -93,7 +101,7 @@ printLogo() {
                  X::::::X     X::::::X                
                  X:::::X       X:::::X                
                  X:::::X       X:::::X                
-                 XXXXXXX       XXXXXXX                
+                 XXXXXXX       XXXXXXX                                                         
 '
     printLine
 }
