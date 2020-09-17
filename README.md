@@ -115,4 +115,4 @@
 
 
 
-<h3 align="center"> >>><a href="https://t.me/x_xtests">  Support group  </a><<< </h3>
+<h3 align="center"> >>><a href="https://telegram.dog/x_xtests">  Support group  </a><<< </h3>
