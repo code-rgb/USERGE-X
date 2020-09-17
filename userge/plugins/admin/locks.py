@@ -238,7 +238,7 @@ async def view_perm(message: Message):
     await message.edit("`Checking group permissions... Hang on!! ⏳`")
 
     def convert_to_emoji(val: bool):
-        if val is True:
+        if val:
             return "✅"
         return "❌"
     vmsg = convert_to_emoji(message.chat.permissions.can_send_messages)

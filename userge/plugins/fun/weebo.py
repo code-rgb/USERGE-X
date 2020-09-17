@@ -66,7 +66,6 @@ async def formatJSON(outData):
     telegra_ph = t.post(title=f"{title_tele}", author='',text=f"<img src='{tele_img}'>{jsonData['description']}")
     if "errors" in res:
         msg += f"Error : {jsonData['errors'][0]['message']}"
-        return msg
     else:
         title = f"[\u200c]({telegra_ph['url']})"
         #titleL = f"{jsonData['title']['romaji']} ({jsonData['title']['native']})"
@@ -90,15 +89,16 @@ async def formatJSON(outData):
         Banner = f"[Banner]({jsonData['bannerImage']})"
         Cover = f"[Cover]({jsonData['coverImage']['extraLarge']})"
         if f"{jsonData['coverImage']['extraLarge']}" != "None" and f"{jsonData['bannerImage']}" != "None":
-             images = f"\n📷 : {Banner}, {Cover}"
-        elif f"{jsonData['coverImage']['extraLarge']}" == "None" and f"{jsonData['bannerImage']}" != "None":   
-             images = f"\n📷 : {Banner}"
-        elif f"{jsonData['coverImage']['extraLarge']}" != "None" and f"{jsonData['bannerImage']}" == "None":
-             images = f"\n📷 : {Cover}"
+            images = f"\n📷 : {Banner}, {Cover}"
+        elif f"{jsonData['bannerImage']}" != "None":   
+            images = f"\n📷 : {Banner}"
+        elif f"{jsonData['coverImage']['extraLarge']}" != "None":
+            images = f"\n📷 : {Cover}"
         else:
-             images = ""
-        msg += images 
-        return msg
+            images = ""
+        msg += images
+
+    return msg
 
 def replace_text(text):
         return text.replace("\"", "").replace("\\r", "").replace("\\n", "").replace(

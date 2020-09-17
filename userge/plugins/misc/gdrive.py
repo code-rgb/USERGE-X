@@ -329,7 +329,7 @@ class _GDrive:
             d_file_obj = MediaIoBaseDownload(d_f, request, chunksize=50*1024*1024)
             c_time = time.time()
             done = False
-            while done is False:
+            while not done:
                 status, done = d_file_obj.next_chunk(num_retries=5)
                 if self._is_canceled:
                     raise ProcessCanceled
@@ -830,7 +830,7 @@ class Worker(_GDrive):
             out = f"**ERROR** : `{self._output._get_reason()}`"  # pylint: disable=protected-access
         elif self._output is not None and not self._is_canceled:
             out = f"**Uploaded Successfully** __in {m_s} seconds__\n\n{self._output}"
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to upload.. check logs?`"
@@ -858,7 +858,7 @@ class Worker(_GDrive):
             out = f"**ERROR** : `{self._output._get_reason()}`"  # pylint: disable=protected-access
         elif self._output is not None and not self._is_canceled:
             out = f"**Downloaded Successfully** __in {m_s} seconds__\n\n`{self._output}`"
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to download.. check logs?`"
@@ -889,7 +889,7 @@ class Worker(_GDrive):
             out = f"**ERROR** : `{self._output._get_reason()}`"  # pylint: disable=protected-access
         elif self._output is not None and not self._is_canceled:
             out = f"**Copied Successfully** __in {m_s} seconds__\n\n{self._output}"
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to copy.. check logs?`"

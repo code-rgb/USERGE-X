@@ -39,12 +39,9 @@ CARBON = 'https://carbon.now.sh/?t={theme}&l={lang}&code={code}&bg={bg}'
         'solarized light', 'synthwave-84', 'twilight', 'verminal', 'vscode',
         'yeti', 'zenburn']}, del_pre=True)
 async def carbon_(message: Message):
+    replied = message.reply_to_message
     if Config.GOOGLE_CHROME_BIN is None:
-        replied = message.reply_to_message
-        if replied:
-            text = replied.text
-        else:
-            text = message.text
+        text = replied.text if replied else message.text
         if not text:
             await message.err("need input text!")
             return
@@ -73,7 +70,6 @@ async def carbon_(message: Message):
             )
     else:
         input_str = message.filtered_input_str
-        replied = message.reply_to_message
         theme = 'seti'
         lang = 'auto'
         red = message.flags.get('r', random.randint(0, 255))

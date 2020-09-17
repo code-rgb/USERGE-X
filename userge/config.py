@@ -96,8 +96,7 @@ def get_version() -> str:
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:
-                return f"{ver}-fork-[X].{len(diff)}" 
+                return f"{ver}-fork-[X].{len(diff)}"
     except:
-        error = " Idk What the F* is wrong here"
-        return error
+        return " Idk What the F* is wrong here"
     return ver
