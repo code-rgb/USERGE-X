@@ -64,10 +64,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 msg_owner = await ubot.forward_messages(Config.OWNER_ID, message.chat.id, msg_id)
             except MessageIdInvalid:
                 return
-            if not os.path.exists(PATH):
-                update = False
-            else:
-                update = True
+            update = bool(os.path.exists(PATH))
             await dumper(msg_owner.message_id, message.from_user.id, update)
 
     
@@ -163,10 +160,10 @@ async def dumper(a, b, update):
     if update:
         data = json.load(open(PATH))     # load
         data[0].update({a : b})          # Update
-        json.dump(data, open(PATH,'w'))  # Dump 
     else:
         data = [{a : b}]
-        json.dump(data, open(PATH,'w'))
+
+    json.dump(data, open(PATH,'w'))  # Dump
 
 
 def extract_content(msg):   # Modified a bound method

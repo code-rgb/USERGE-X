@@ -67,30 +67,31 @@ __{uploader}__
 async def ytDown(message: Message):
     """ download from a link """
     def __progress(data: dict):
-        if ((time() - startTime) % 4) > 3.9:
-            if data['status'] == "downloading":
-                eta = data.get('eta')
-                speed = data.get('speed')
-                if not (eta and speed):
-                    return
-                out = "**Speed** >> {}/s\n**ETA** >> {}\n".format(
-                    humanbytes(speed), time_formatter(eta))
-                out += f'**File Name** >> `{data["filename"]}`\n\n'
-                current = data.get('downloaded_bytes')
-                total = data.get("total_bytes")
-                if current and total:
-                    percentage = int(current) * 100 / int(total)
-                    out += f"Progress >> {int(percentage)}%\n"
-                    out += "[{}{}]".format(
-                        ''.join((Config.FINISHED_PROGRESS_STR
-                                 for _ in range(floor(percentage / 5)))),
-                        ''.join((Config.UNFINISHED_PROGRESS_STR
-                                 for _ in range(20 - floor(percentage / 5)))))
-                if message.text != out:
-                    try:
-                        asyncio.get_event_loop().run_until_complete(message.edit(out))
-                    except TypeError:
-                        pass
+        if (time() - startTime) % 4 <= 3.9:
+            return
+        if data['status'] == "downloading":
+            eta = data.get('eta')
+            speed = data.get('speed')
+            if not (eta and speed):
+                return
+            out = "**Speed** >> {}/s\n**ETA** >> {}\n".format(
+                humanbytes(speed), time_formatter(eta))
+            out += f'**File Name** >> `{data["filename"]}`\n\n'
+            current = data.get('downloaded_bytes')
+            total = data.get("total_bytes")
+            if current and total:
+                percentage = int(current) * 100 / int(total)
+                out += f"Progress >> {int(percentage)}%\n"
+                out += "[{}{}]".format(
+                    ''.join((Config.FINISHED_PROGRESS_STR
+                             for _ in range(floor(percentage / 5)))),
+                    ''.join((Config.UNFINISHED_PROGRESS_STR
+                             for _ in range(20 - floor(percentage / 5)))))
+            if message.text != out:
+                try:
+                    asyncio.get_event_loop().run_until_complete(message.edit(out))
+                except TypeError:
+                    pass
 
     await message.edit("Hold on \u23f3 ..")
     startTime = time()
@@ -187,11 +188,8 @@ def _yt_getInfo(link):
 @pool.run_in_thread
 def _supported(url):
     ies = ytdl.extractor.gen_extractors()
-    for ie in ies:
-        if ie.suitable(url) and ie.IE_NAME != 'generic':
             # Site has dedicated extractor
-            return True
-    return False
+    return any(ie.suitable(url) and ie.IE_NAME != 'generic' for ie in ies)
 
 
 @pool.run_in_thread

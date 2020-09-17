@@ -37,15 +37,15 @@ async def check_logs(message: Message):
                                           text=logs,
                                           filename='userge-heroku.log',
                                           caption=f'userge-heroku.log [ {limit} lines ]')
-    elif not '-d'  in message.flags:
+    elif '-d' not in message.flags:
         with open("logs/userge.log", 'r') as d_f:
             text = d_f.read()
-        file_ext = '.txt'
         async with aiohttp.ClientSession() as ses:
             async with ses.post(NEKOBIN_URL + "api/documents", json={"content": text}) as resp:
                 if resp.status == 201:
                     response = await resp.json()
                     key = response['result']['key']
+                    file_ext = '.txt'
                     final_url = NEKOBIN_URL + key + file_ext
                     final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
                     reply_text = "**Here Are Your Logs** :\n"

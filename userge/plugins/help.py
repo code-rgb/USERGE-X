@@ -387,12 +387,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     def check_url():
         global MEDIA_TYPE, MEDIA_URL
-        imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
-        telegraph = r"http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)"
         media_link = Config.ALIVE_MEDIA
         if media_link:
+            imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
             match = re.search(imgur, media_link)
             if not match:
+                telegraph = r"http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)"
                 match = re.search(telegraph, media_link)
             if match:
                 media_type = match.group(2)

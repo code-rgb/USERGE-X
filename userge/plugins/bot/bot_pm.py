@@ -38,7 +38,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             return
         f_name = message.from_user.first_name
         u_n = master.username
-        
+
         hello = f"""
 Hello {f_name},
 Nice To Meet You! I'm **{bot.first_name}** A Bot. 
@@ -65,11 +65,9 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                 await CHANNEL.log(f"A New User Started your Bot \n\n• <i>ID</i>: `{u_id}`\n   <b>Name</b>: {f_name}")
                 )
         try:
-            if LOGO_ID:
-                await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
-            else:
+            if not LOGO_ID:
                 await refresh_id()
-                await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
+            await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)
         except (FileIdInvalid, FileReferenceEmpty, BadRequest):
             await refresh_id()
             await sendit(message, LOGO_ID, LOGO_REF, hello, u_n)

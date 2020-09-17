@@ -34,7 +34,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         view_data = data[str(opinion_id)]
         agree_data = "👍"
         disagree_data = "👎"
-        
+
         if len(view_data) == 2:
             if str(ids) in view_data[0]:
                 if view_data[0][str(ids)] == "y" and counter == "y":
@@ -57,8 +57,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     disagree = view_data[1]['disagree'] - 1
                     view_data[1] = {"agree": agree, "disagree": disagree}
                     view_data[0][str(ids)] = "y"
-                data[str(opinion_id)] = view_data
-                json.dump(data, open(PATH,'w'))
             else:
                 # Answering Query First then moving forward
                 choice = _choice(counter)
@@ -73,8 +71,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     agree = view_data[1]['agree'] 
                     disagree = view_data[1]['disagree'] + 1
                 view_data[1] = {"agree": agree, "disagree": disagree}
-                data[str(opinion_id)] = view_data
-                json.dump(data, open(PATH,'w'))
+            data[str(opinion_id)] = view_data
+            json.dump(data, open(PATH,'w'))
         else:
             if len(view_data) == 1:
                 # Answering Query First then moving forward
@@ -87,7 +85,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 data[str(opinion_id)] = view_data
                 json.dump(data, open(PATH,'w'))
 
-        agree_data += f"  {view_data[1]['agree']}"  
+        agree_data += f"  {view_data[1]['agree']}"
         disagree_data += f"  {view_data[1]['disagree']}" 
 
         opinion_data = [[InlineKeyboardButton(agree_data, callback_data=f"op_y_{opinion_id}"),
@@ -133,11 +131,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 
 def _choice(res):
-    if res == "y":
-        choice = "👍"
-    else:
-        choice = "👎"
-    return choice
+    return "👍" if res == "y" else "👎"
         
 
 @userge.on_cmd(

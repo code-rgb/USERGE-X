@@ -125,8 +125,7 @@ async def weather_get(message: Message):
         return temp[0]
 
     def sun(unix):
-        xx = datetime.fromtimestamp(unix, tz=ctimezone).strftime("%I:%M %p")
-        return xx
+        return datetime.fromtimestamp(unix, tz=ctimezone).strftime("%I:%M %p")
 
     await message.edit(
         f"**Temperature:** `{celsius(curtemp)}°C | {fahrenheit(curtemp)}°F`\n"
