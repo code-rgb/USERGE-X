@@ -24,6 +24,11 @@ import json
 import os
 import requests
 from html_telegraph_poster import TelegraphPoster
+import re
+import urllib
+  
+
+MEDIA_TYPE, MEDIA_URL = None, None
 
 PATH = "userge/xcache"
 
@@ -380,7 +385,29 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         return text, buttons
 
 
-
+    def check_url():
+        global MEDIA_TYPE, MEDIA_URL
+        imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
+        telegraph = r"http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)"
+        media_link = Config.ALIVE_MEDIA
+        match = re.search(imgur, media_link)
+        if media_link:
+            if not match:
+                match = re.search(telegraph, media_link)
+            if match:
+                media_type = match.group(2)
+                link = match.group(0)
+                limit = 1 if media_type == 'gif' else 5
+                req = urllib.request.Request(link, method='HEAD')
+                f = urllib.request.urlopen(req)
+                if f.status == 200:
+                    size = '{:.2f}'.format(int(f.headers['Content-Length']) / float(1 << 20))
+                    if float(size) < limit:
+                        MEDIA_TYPE = media_type
+                        MEDIA_URL = media_link
+        
+            
+            
 
     @ubot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
@@ -439,7 +466,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 )
 
             if string == "alive":
-                random_alive = random.choice(ALIVE_IMGS) 
                 buttons = [[InlineKeyboardButton("🔧 SETTINGS", callback_data="settings_btn"),
                             InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
 
@@ -451,15 +477,39 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
  • 🧬 𝑿 :  `v{get_version()}`
 
     🕔 Uptime : {userge.uptime}
-"""
-
-                results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=random_alive,
-                            caption=alive_info,
-                            reply_markup=InlineKeyboardMarkup(buttons)
+"""  
+                if not MEDIA_URL:
+                    check_url()
+                
+                if MEDIA_URL:
+                    if MEDIA_TYPE == 'gif':
+                        results.append(
+                            InlineQueryResultAnimation(
+                                animation_url=MEDIA_URL,
+                                caption=alive_info,
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
                         )
-                )
+
+                    else:
+                        results.append(
+                            InlineQueryResultPhoto(
+                                photo_url=MEDIA_URL,
+                                caption=alive_info,
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
+                        )
+
+
+                else: #default
+                    random_alive = random.choice(ALIVE_IMGS) 
+                    results.append(
+                            InlineQueryResultPhoto(
+                                photo_url=random_alive,
+                                caption=alive_info,
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
+                    )
 
             if string == "geass":
                 results.append(
