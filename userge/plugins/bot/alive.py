@@ -35,7 +35,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         else:
             dynos_saver = "Not Supported"
 
-        alive_s=f">> ⚙️ 𝗠𝗼𝗱𝗲 : {_get_mode()}\n"   
+        alive_s=f"[>>] ⚙️ 𝗠𝗼𝗱𝗲 : {_get_mode()}\n"   
         alive_s+=f"• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s+=f"• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         alive_s+=f"• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {dynos_saver}\n"
