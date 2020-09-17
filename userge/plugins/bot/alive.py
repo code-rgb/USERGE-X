@@ -17,7 +17,7 @@ async def alive_inline(message: Message):
                                         query_id=x.query_id,
                                         result_id=x.results[1].id)
     await message.delete()
-    await asyncio.sleep(35)
+    await asyncio.sleep(40)
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
@@ -34,10 +34,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             dynos_saver = _parse_arg(Config.RUN_DYNO_SAVER)
         else:
             dynos_saver = "Not Supported"
-            
-        alive_s=f"• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
+
+        alive_s=f"⚙️ 𝗠𝗼𝗱𝗲 : {_get_mode()}\n"   
+        alive_s+=f"• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s+=f"• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
-        alive_s+=f"• ↕️ 𝗗𝘂𝗮𝗹 𝗠𝗼𝗱𝗲 : {_parse_arg(RawClient.DUAL_MODE)}\n"
         alive_s+=f"• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {dynos_saver}\n"
         alive_s+=f"• 💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
         alive_s+=f"• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {_parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)}"
@@ -47,3 +47,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
 def _parse_arg(arg: bool) -> str:
     return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"     
+
+
+def _get_mode() -> str:
+    if RawClient.DUAL_MODE:
+        return " ↕️  𝗗𝗨𝗔𝗟"
+    if Config.BOT_TOKEN:
+        return " 🤖  𝗕𝗢𝗧"
+    return " 🙍‍♂️  𝗨𝗦𝗘𝗥"

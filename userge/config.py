@@ -41,6 +41,7 @@ class Config:
     SUDO_TRIGGER = os.environ.get("SUDO_TRIGGER")
     FINISHED_PROGRESS_STR = os.environ.get("FINISHED_PROGRESS_STR")
     UNFINISHED_PROGRESS_STR = os.environ.get("UNFINISHED_PROGRESS_STR")
+    ALIVE_MEDIA = os.environ.get("ALIVE_MEDIA", None)
     CUSTOM_PACK_NAME = os.environ.get("CUSTOM_PACK_NAME")
     UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO")
     UPSTREAM_REMOTE = os.environ.get("UPSTREAM_REMOTE")
@@ -78,29 +79,10 @@ class Config:
     ALLOWED_COMMANDS: Set[str] = set()
     ANTISPAM_SENTRY = False
     RUN_DYNO_SAVER = False
-    HEROKU_APP = None
+    HEROKU_APP = heroku3.from_key(HEROKU_API_KEY).apps()[HEROKU_APP_NAME] \
+        if HEROKU_API_KEY and HEROKU_APP_NAME else None
     STATUS = None
     BOT_FORWARDS = False
-
-
-if Config.HEROKU_API_KEY:
-    logbot.reply_last_msg("Checking Heroku App...", _LOG.info)
-    for heroku_app in heroku3.from_key(Config.HEROKU_API_KEY).apps():
-        if (heroku_app and Config.HEROKU_APP_NAME
-                and heroku_app.name == Config.HEROKU_APP_NAME):
-            _LOG.info("Heroku App : %s Found...", heroku_app.name)
-            Config.HEROKU_APP = heroku_app
-            break
-    logbot.del_last_msg()
-
-
-try:
-    for ref in _REPO.remote(Config.UPSTREAM_REMOTE).refs:
-        branch = str(ref).split('/')[-1]
-        if branch not in _REPO.branches:
-            _REPO.create_head(branch, ref)
-except ValueError as v_e:
-    _LOG.error(v_e)
 
 
 def get_version() -> str:
@@ -108,15 +90,14 @@ def get_version() -> str:
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
-            diff = list(_REPO.iter_commits("v0.2.2..HEAD"))
+            diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
             if diff:
                 return f"{ver}-Mystique.{len(diff)}"
         else:
-            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
+            diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:
-                return f"{ver}-fork-[X].{len(diff)}"
+                return f"{ver}-fork-[X].{len(diff)}" 
     except:
-        error = " Undefined"
+        error = " Idk What the F* is wrong here"
         return error
     return ver
-        

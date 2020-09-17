@@ -61,7 +61,7 @@ async def check_update(message: Message):
             change_log = f'**New UPDATE available for [{branch}]:\n\n📄 CHANGELOG 📄**\n\n'
             await message.edit_or_send_as_file(change_log + out, disable_web_page_preview=True)
         else:
-            await message.edit(f'**Userge is up-to-date with [{branch}]**', del_in=5)
+            await message.edit(f'**USERGE-X is up-to-date with [{branch}]**', del_in=5)
         return
     if pull_from_repo:
         if out:
@@ -69,7 +69,7 @@ async def check_update(message: Message):
             await _pull_from_repo(repo, branch)
             await CHANNEL.log(f"**PULLED update from [{branch}]:\n\n📄 CHANGELOG 📄**\n\n{out}")
             if not push_to_heroku:
-                await message.edit('**Userge Successfully Updated!**\n'
+                await message.edit('**USERGE-X Successfully Updated!**\n'
                                    '`Now restarting... Wait for a while!`', del_in=3)
                 asyncio.get_event_loop().create_task(userge.restart(True))
         elif push_to_heroku:
@@ -101,7 +101,7 @@ def _get_updates(repo: Repo, branch: str) -> str:
 async def _pull_from_repo(repo: Repo, branch: str) -> None:
     repo.git.checkout(branch, force=True)
     repo.git.reset('--hard', branch)
-    repo.git.pull(Config.UPSTREAM_REMOTE, branch, force=True)
+    repo.remote(Config.UPSTREAM_REMOTE).pull(branch, force=True)
     await asyncio.sleep(1)
 
 
@@ -141,9 +141,6 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
                 loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
             except TypeError:
                 pass
-    repo = Repo()
-    if not "heroku" in repo.remotes:
-        remote = repo.create_remote("heroku", Config.HEROKU_GIT_URL)
     cur_msg = sent.text.html
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
