@@ -696,7 +696,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         else:
             results.append(REPO_X)
         try:
-            if not len(results) == 0:
+            if len(results) != 0:
                 await inline_query.answer(results=results, cache_time=1)
         except MessageEmpty:
             return
