@@ -1,16 +1,20 @@
 """Module to style text"""
 
+
 # https://github.com/code-rgb/OUB-X/.../userbot/modules/weebify.py
 # Inline idea by @pokurt nana-remix
 # Credits for original weebify - Saitama Bot, @kirito6969, @PhycoNinja13b
 
 # Improved version of a OUB-X module by github code-rgb TG - @DeletedUser420
 
+
 from userge import userge, Message
 import random
 
 
+
 FONT_FLAGS = ['-serif', '-sans', '-sans_i', '-serif_i', '-medi_b', '-medi', '-double', '-cursive_b', '-cursive', '-bigsmall', '-reverse', '-circle', '-circle_b', '-mono', '-square_b', '-square', '-smoth', '-goth', '-wierd_a', '-x', '-cross', '-wierd_b', '-slash', '-uline', '-doubleuline', '-wide', '-web', '-weeb', '-weeeb']
+
 
 FONTS = {
     "serif" : '𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳',
@@ -70,6 +74,7 @@ async def font_gen(type_choice, input_str):
                 '-cross', '-wierd_b', '-slash', '-uline', '-doubleuline',
                 '-wide', '-web', '-weeb', '-weeeb']
 })
+
 async def _style_text(message: Message):
     """Make text stylish"""
     reply = message.reply_to_message
