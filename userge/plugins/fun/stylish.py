@@ -2,7 +2,7 @@
 
 # Improved version of a OUB-X module 
 # https://github.com/code-rgb/OUB-X/.../userbot/modules/weebify.py
-
+# Inline idea @pokurt nana-remix
 # Credits for weebify - Saitama Bot, @kirito6969, @PhycoNinja13b
 
 from userge import userge, Message

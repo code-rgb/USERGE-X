@@ -657,12 +657,16 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         results.append(
                                     InlineQueryResultArticle(
                                         title=f_name.upper(),
-                                        input_message_content=InputTextMessageContent(styled_str)
+                                        input_message_content=InputTextMessageContent(styled_str),
+                                        description=styled_str
+
                                     )
                         )
                     await inline_query.answer(
                         results=results,
-                        cache_time=1
+                        cache_time=1,
+                        switch_pm_text="🖋 Sylish FONTS",
+                        switch_pm_parameter="start"
                     )
                     return
 
