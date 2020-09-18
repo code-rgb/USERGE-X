@@ -10,6 +10,9 @@ from userge.utils import mention_html
 from pyrogram.errors import BadRequest
 
 
+CHANNEL = userge.getCLogger(__name__)
+
+
 @userge.on_cmd("block", about={
     'header': "Blocks a User!",
     'usage': "{tr}block [ID] or [Reply To User]",
@@ -38,7 +41,8 @@ async def block_user(message: Message):
             return
         await userge.block_user(user_id)
         blocked_msg = action_msg(user, "BLOCKED")
-        await message.edit(blocked_msg)
+        await CHANNEL.log(blocked_msg)
+        await message.edit(blocked_msg, del_in=10)
         
 
 @userge.on_cmd("unblock", about={
@@ -65,7 +69,8 @@ async def unblock_user(message: Message):
             return
         await userge.unblock_user(user_id)
         unblocked_msg = action_msg(user, "UNBLOCKED")
-        await message.edit(unblocked_msg)
+        await CHANNEL.log(unblocked_msg)
+        await message.edit(unblocked_msg, del_in=10)
 
 
 def action_msg(user, action):
