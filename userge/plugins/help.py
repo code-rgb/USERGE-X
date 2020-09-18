@@ -26,9 +26,12 @@ import requests
 from html_telegraph_poster import TelegraphPoster
 import re
 import urllib
-  
+from userge.plugins.fun.stylish import font_gen
 
 MEDIA_TYPE, MEDIA_URL = None, None
+
+FONT_NAMES = ["serif", "sans", "sans_i", "serif_i", "medi_b", "medi", "double", "cursive_b", "cursive", "small", "reverse", "circle", "circle_f", "mono", "square", "square_f", "wide", "web", "weeb", "weeeb"]
+
 
 PATH = "userge/xcache"
 
@@ -413,9 +416,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
         i_q = inline_query.query
-        string = i_q.lower()
-        str_x = i_q.split(" ", 2)
-        string_split = string.split()
+        string = i_q.lower() # All lower
+        str_x = i_q.split(" ", 2) # trigger @username Text
+        str_y = i_q.split(" ", 1) # trigger and Text
+        string_split = string.split() # All lower and Split each word
 
         if inline_query.from_user and inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
             MAIN_MENU = InlineQueryResultArticle(
@@ -643,6 +647,25 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                     reply_markup=buttons
                                 )
                     )
+
+            if str_y[0].lower() == "stylish":
+                if len(str_y) == 2:
+                    results = []
+                    input_text = str_y[1]
+                    for f_name in FONT_NAMES:
+                        styled_str = await font_gen(f_name, input_text)
+                        results.append(
+                                    InlineQueryResultArticle(
+                                        title=f_name.upper(),
+                                        input_message_content=InputTextMessageContent(styled_str)
+                                    )
+                        )
+                    await inline_query.answer(
+                        results=results,
+                        cache_time=1
+                    )
+                    return
+
            
             if str_x[0].lower() == "secret":
                 if len(str_x) == 3:
