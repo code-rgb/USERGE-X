@@ -30,7 +30,8 @@ from userge.plugins.fun.stylish import font_gen
 
 MEDIA_TYPE, MEDIA_URL = None, None
 
-FONT_NAMES = ["serif", "sans", "sans_i", "serif_i", "medi_b", "medi", "double", "cursive_b", "cursive", "small", "reverse", "circle", "circle_f", "mono", "square", "square_f", "wide", "web", "weeb", "weeeb"]
+
+FONT_NAMES = ['serif', 'sans', 'sans_i', 'serif_i', 'medi_b', 'medi', 'double', 'cursive_b', 'cursive', 'bigsmall', 'reverse', 'circle', 'circle_b', 'mono', 'square_b', 'square', 'smoth', 'goth', 'wierd_a', 'x', 'cross', 'wierd_b', 'slash', 'uline', 'doubleuline', 'wide', 'web', 'weeb', 'weeeb']
 
 
 PATH = "userge/xcache"
