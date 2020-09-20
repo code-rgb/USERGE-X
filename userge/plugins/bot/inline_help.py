@@ -40,7 +40,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             b.append(
                InlineKeyboardButton(name, callback_data=call_back)
             )
-            if len(b) == 3:
+            if len(b) == 2:
                 btn.append(b)
                 b = []
         return btn
