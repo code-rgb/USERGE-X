@@ -19,7 +19,7 @@ COMMANDS = {
             "gapps" : { 'help_txt' : '**Lastest arm64 Gapps**\n\n`Choose from Niksgapps, Opengapps and Flamegapps`', 'i_q' : 'gapps'},
             "ofox" : { 'help_txt' : '**Lastest Ofox Recovery**\n\n`ofox <device codename>`', 'i_q' : 'ofox whyred'},
             "rick" : { 'help_txt' : '**Useless Rick Roll**\n\n`rick`', 'i_q' : 'rick'},
-            "help" : { 'help_txt' : '**Help For All Uerbot plugins**', 'i_q' : ''},
+            "help" : { 'help_txt' : '**Help For All Userbot plugins**', 'i_q' : ''},
             "stylish" : { 'help_txt' : '**Write it in Style**\n\n`stylish [text]`', 'i_q' : 'stylish USERGE-X'}
             }
 
@@ -51,10 +51,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     BACK_BTN = InlineKeyboardButton("◀️  Back", callback_data="backbtn_ihelp")
 
-    inline_help_txt ="<u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and click **📕  EXAMPLE** to know the use.",
+    inline_help_txt ="<u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and click **📕  EXAMPLE** to know the use."
             
 
-    @ubot.on_message(filters.private & filters.command("inline"))
+    @ubot.on_message(filters.private & (filters.command("inline") | filters.regex(pattern=r"^/start inline$")))
     async def inline_help(_, message: Message):
         await ubot.send_message(
             chat_id=message.chat.id,
