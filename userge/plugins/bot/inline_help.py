@@ -38,7 +38,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             reply_markup=InlineKeyboardMarkup(HELP_BUTTONS)
         )
     @ubot.on_callback_query(filters.regex(pattern=r"^help_backbtn$"))
-    async def (_, c_q: CallbackQuery): 
+    async def back_btn(_, c_q: CallbackQuery): 
         await c_q.edit_message_text(
             text="<u><b>INLINE COMMANDS</b></u>",
             reply_markup=InlineKeyboardMarkup(HELP_BUTTONS)
