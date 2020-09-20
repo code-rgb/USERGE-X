@@ -99,7 +99,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         )
 
 
-    @ubot.on_callback_query(filters.regex(filters.user(PRIV_USERS) & pattern=r"^backbtn_ihelp$"))
+    @ubot.on_callback_query(filters.user(PRIV_USERS) & filters.regex(pattern=r"^backbtn_ihelp$"))
     async def back_btn(_, c_q: CallbackQuery): 
         await c_q.edit_message_text(
             text=inline_help_txt,
