@@ -47,7 +47,7 @@ _CATEGORY = {
     'unofficial': '➕',
     'temp': '♻️',
     'plugins': '💎',
-    'bot' : '🔰' 
+    'bot' : '💠' 
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -650,7 +650,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     await inline_query.answer(
                         results=results,
                         cache_time=1,
-                        switch_pm_text="🔰 Available Commands",
+                        switch_pm_text="Available Commands",
                         switch_pm_parameter="inline"
                     )
                     return
@@ -680,7 +680,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         d = {str(inline_query.id) : {'user_id': user_id, 'msg': msg}}
                         json.dump(d, open(secret,'w'))
                     
-                    buttons = [[InlineKeyboardButton("🔐 REVEAL", callback_data=f"secret_{inline_query.id}")]]
+                    buttons = [[InlineKeyboardButton("🔐  SHOW", callback_data=f"secret_{inline_query.id}")]]
                     results.append(
                                 InlineQueryResultArticle(
                                     title="Send A Secret Message",
@@ -703,7 +703,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 await inline_query.answer(
                     results=results, 
                     cache_time=1,
-                    switch_pm_text="🔰 Available Commands",
+                    switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
                 )
         else:
