@@ -112,7 +112,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         command_name = c_q.matches[0].group(1)
         msg = COMMANDS[command_name]['help_txt']
         switch_i_q = COMMANDS[command_name]['i_q']
-        buttons = [[InlineKeyboardButton(BACK_BTN, " 📕  EXAMPLE ", switch_inline_query_current_chat=switch_i_q)]]
+        buttons = [[BACK_BTN, InlineKeyboardButton(" 📕  EXAMPLE ", switch_inline_query_current_chat=switch_i_q)]]
         await c_q.edit_message_text(
                 msg,
                 reply_markup=InlineKeyboardMarkup(buttons)
