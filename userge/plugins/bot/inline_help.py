@@ -29,8 +29,23 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge.bot
     else:
         ubot = userge
+
+
+    def help_btn_generator():
+        btn = []
+        b = []
+        for cmd in list(COMMANDS.keys()):
+            name = cmd.capitalize()
+            call_back = f"ihelp_{cmd}"
+            b.append(
+               InlineKeyboardButton(name, callback_data=call_back)
+            )
+            if len(b) == 3:
+                btn.append(b)
+                b = []
+        return btn
    
-   
+
     if not HELP_BUTTONS:
         HELP_BUTTONS = help_btn_generator()
 
@@ -64,18 +79,3 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 msg,
                 reply_markup=InlineKeyboardMarkup(buttons)
         )
-
-
-def help_btn_generator():
-    btn = []
-    b = []
-    for cmd in list(COMMANDS.keys()):
-        name = cmd.capitalize()
-        call_back = f"ihelp_{cmd}"
-        b.append(
-            InlineKeyboardButton(name, callback_data=call_back)
-        )
-        if len(b) == 3:
-            btn.append(b)
-            b = []
-    return btn
