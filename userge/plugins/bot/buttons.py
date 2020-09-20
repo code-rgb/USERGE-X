@@ -111,5 +111,4 @@ async def down_image(message):
         message=message.reply_to_message,
         file_name=Config.DOWN_PATH
     )
-    dls_loc = os.path.join(Config.DOWN_PATH, os.path.basename(dls))
-    return dls_loc
+    return os.path.join(Config.DOWN_PATH, os.path.basename(dls))

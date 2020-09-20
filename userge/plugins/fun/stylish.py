@@ -44,7 +44,7 @@ NORMAL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
 
 async def font_gen(type_choice, input_str):
-    if not type_choice in FONTS:
+    if type_choice not in FONTS:
         return False
     font_type = list(FONTS[type_choice])
     for i in input_str:
@@ -75,7 +75,7 @@ async def _style_text(message: Message):
     if message.flags:
         flag_choice = list(message.flags.keys())[0]
         input_str = message.filtered_input_str if message.filtered_input_str else reply.text
-        if not flag_choice in FONT_FLAGS:
+        if flag_choice not in FONT_FLAGS:
             await message.err('Flag is Invalid', del_in=5)
             return
     else:
