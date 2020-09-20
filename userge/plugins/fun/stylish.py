@@ -13,8 +13,7 @@ import random
 
 
 
-FONT_FLAGS = ['-serif', '-sans', '-sans_i', '-serif_i', '-medi_b', '-medi', '-double', '-cursive_b', '-cursive', '-bigsmall', '-reverse', '-circle', '-circle_b', '-mono', '-square_b', '-square', '-smoth', '-goth', '-wierd_a', '-x', '-cross', '-wierd_b', '-slash', '-uline', '-doubleuline', '-wide', '-web', '-weeb', '-weeeb']
-
+FONT_FLAGS = ['-serif', '-sans', '-sans_i', '-serif_i', '-medi_b', '-medi', '-double', '-cursive_b', '-cursive', '-bigsmall', '-reverse', '-circle', '-circle_b', '-mono', '-square_b', '-square', '-smoth', '-goth', '-wide', '-web', '-weeb', '-weeeb']
 
 FONTS = {
     "serif" : '𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳',
@@ -35,14 +34,6 @@ FONTS = {
     "square" : '🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉',
     "smoth" : 'ᗩᗷᑢᕲᘿᖴᘜᕼᓰᒚᖽᐸᒪᘻᘉᓍᕵᕴᖇSᖶᑘᐺᘺ᙭ᖻᗱᗩᗷᑢᕲᘿᖴᘜᕼᓰᒚᖽᐸᒪᘻᘉᓍᕵᕴᖇSᖶᑘᐺᘺ᙭ᖻᗱ',
     "goth" : 'ᗩᗷᑕᗪEᖴGᕼIᒍKᒪᗰᑎOᑭᑫᖇᔕTᑌᐯᗯ᙭YᘔᗩᗷᑕᗪEᖴGᕼIᒍKᒪᗰᑎOᑭᑫᖇᔕTᑌᐯᗯ᙭Yᘔ',
-    "wierd_a" : 'Ⱥβ↻ᎠƐƑƓǶįلҠꝈⱮហටφҨའϚͲԱỼచჯӋɀąҍçժҽƒցհìʝҟӀʍղօքզɾʂէմѵա×վՀ',
-    "x" : 'A͓̽B͓̽C͓̽D͓̽E͓̽F͓̽G͓̽H͓̽I͓̽J͓̽K͓̽L͓̽M͓̽N͓̽O͓̽P͓̽Q͓̽R͓̽S͓̽T͓̽U͓̽V͓̽W͓̽X͓̽Y͓̽Z͓̽a͓̽b͓̽c͓̽d͓̽e͓̽f͓̽g͓̽h͓̽i͓̽j͓̽k͓̽l͓̽m͓̽n͓̽o͓̽p͓̽q͓̽r͓̽s͓̽t͓̽u͓̽v͓̽w͓̽x͓̽y͓̽z͓̽',
-    "cross" : 'A̶B̶C̶D̶E̶F̶G̶H̶I̶J̶K̶L̶M̶N̶O̶P̶Q̶R̶S̶T̶U̶V̶W̶X̶Y̶Z̶a̶b̶c̶d̶e̶f̶g̶h̶i̶j̶k̶l̶m̶n̶o̶p̶q̶r̶s̶t̶u̶v̶w̶x̶y̶z̶',
-    "wierd_b" : 'A̴B̴C̴D̴E̴F̴G̴H̴I̴J̴K̴L̴M̴N̴O̴P̴Q̴R̴S̴T̴U̴V̴W̴X̴Y̴Z̴a̴b̴c̴d̴e̴f̴g̴h̴i̴j̴k̴l̴m̴n̴o̴p̴q̴r̴s̴t̴u̴v̴w̴x̴y̴z̴',
-    "slash" : 'A̷B̷C̷D̷E̷F̷G̷H̷I̷J̷K̷L̷M̷N̷O̷P̷Q̷R̷S̷T̷U̷V̷W̷X̷Y̷Z̷a̷b̷c̷d̷e̷f̷g̷h̷i̷j̷k̷l̷m̷n̷o̷p̷q̷r̷s̷t̷u̷v̷w̷x̷y̷z̷',
-    "uline" : 'A̲B̲C̲D̲E̲F̲G̲H̲I̲J̲K̲L̲M̲N̲O̲P̲Q̲R̲S̲T̲U̲V̲W̲X̲Y̲Z̲a̲b̲c̲d̲e̲f̲g̲h̲i̲j̲k̲l̲m̲n̲o̲p̲q̲r̲s̲t̲u̲v̲w̲x̲y̲z̲',
-    "doubleuline" : 'A̳B̳C̳D̳E̳F̳G̳H̳I̳J̳K̳L̳M̳N̳O̳P̳Q̳R̳S̳T̳U̳V̳W̳X̳Y̳Z̳a̳b̳c̳d̳e̳f̳g̳h̳i̳j̳k̳l̳m̳n̳o̳p̳q̳r̳s̳t̳u̳v̳w̳x̳y̳z̳',
-    "wierd_a" : 'A̾B̾C̾D̾E̾F̾G̾H̾I̾J̾K̾L̾M̾N̾O̾P̾Q̾R̾S̾T̾U̾V̾W̾X̾Y̾Z̾a̾b̾c̾d̾e̾f̾g̾h̾i̾j̾k̾l̾m̾n̾o̾p̾q̾r̾s̾t̾u̾v̾w̾x̾y̾z̾',
     "wide" : 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ',
     "web" : '卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙卂乃匚ᗪ乇千Ꮆ卄丨ﾌҜㄥ爪几ㄖ卩Ɋ尺丂ㄒㄩᐯ山乂ㄚ乙',
     "weeb" : 'ﾑ乃ᄃり乇ｷムんﾉﾌズﾚﾶ刀のｱゐ尺丂ｲひ√Ｗﾒﾘ乙ﾑ乃ᄃり乇ｷムんﾉﾌズﾚﾶ刀のｱゐ尺丂ｲひ√Ｗﾒﾘ乙',
@@ -53,7 +44,7 @@ NORMAL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
 
 async def font_gen(type_choice, input_str):
-    if not type_choice in FONTS:
+    if type_choice not in FONTS:
         return False
     font_type = list(FONTS[type_choice])
     for i in input_str:
@@ -67,14 +58,12 @@ async def font_gen(type_choice, input_str):
     'header': "Make Font stylish",
     'description': "create text in style",
     'usage': "{tr}style -sans [text | reply]",
-    'themes' : ['-serif', '-sans', '-sans_i', '-serif_i',
-                '-medi_b', '-medi', '-double', '-cursive_b', '-cursive',
-                '-bigsmall', '-reverse', '-circle', '-circle_b', '-mono',
-                '-square_b', '-square', '-smoth', '-goth', '-wierd_a', '-x',
-                '-cross', '-wierd_b', '-slash', '-uline', '-doubleuline',
-                '-wide', '-web', '-weeb', '-weeeb']
-})
-
+    'themes' : ['-serif', '-sans', '-sans_i', '-serif_i', '-medi_b',
+                 '-medi', '-double', '-cursive_b', '-wide',
+                '-cursive', '-bigsmall', '-reverse', '-circle', 
+                '-circle_b', '-mono', '-square_b', '-square', 
+                '-smoth', '-goth', '-web', '-weeb', '-weeeb']
+    })
 async def _style_text(message: Message):
     """Make text stylish"""
     reply = message.reply_to_message
@@ -86,7 +75,7 @@ async def _style_text(message: Message):
     if message.flags:
         flag_choice = list(message.flags.keys())[0]
         input_str = message.filtered_input_str if message.filtered_input_str else reply.text
-        if not flag_choice in FONT_FLAGS:
+        if flag_choice not in FONT_FLAGS:
             await message.err('Flag is Invalid', del_in=5)
             return
     else:

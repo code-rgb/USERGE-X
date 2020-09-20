@@ -1,7 +1,7 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-from userge import userge, Config, get_collection, Message
+from userge import userge, Config, Message
 from pyrogram.types import CallbackQuery
 from pyrogram import filters
 import json
@@ -32,15 +32,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if u_id in [Config.OWNER_ID, receiver]:
                 await c_q.answer(msg, show_alert=True)
             else:
-                await c_q.answer("This Message is Confidential 👽", show_alert=True)
+                await c_q.answer("This Message is Confidential", show_alert=True)
         else:
             await c_q.answer("This message doesn't exist anymore", show_alert=True)
 
-
-@userge.on_cmd("secret", about={
-    'header': "for help do .secret"})
-async def secret_(message: Message):
-    text = "**IN INLINE BOT**\n\n"
-    text += "secret [username OR userid] \"Your Secret Message\""
-    await message.edit(text, del_in=20)
-    

@@ -6,10 +6,10 @@ from userge import userge, Message, Config, get_collection
 from pyrogram.types import (  
      InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
 from pyrogram import filters
-from pyrogram.errors.exceptions import FileIdInvalid, FileReferenceEmpty
-from pyrogram.errors.exceptions.bad_request_400 import BadRequest
+from pyrogram.errors import FileIdInvalid, FileReferenceEmpty, BadRequest
 from datetime import date
 import asyncio
+
 
 LOG = userge.getLogger("Bot_PM")
 CHANNEL = userge.getCLogger("Bot_PM")
@@ -28,7 +28,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
 
-    @ubot.on_message(filters.private & filters.command("start"))
+    @ubot.on_message(filters.private & filters.regex(pattern=r"^/start$"))
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()
         master = await userge.get_me()
