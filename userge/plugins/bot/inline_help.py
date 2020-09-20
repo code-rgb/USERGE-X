@@ -12,15 +12,15 @@ HELP_BUTTONS = None
 
 
 COMMANDS = {
-            "secret" : { 'help_txt' : 'Send a secret message\n\n`secret @username [text]`', 'i_q' : 'secret @DeletedUser420 This is a secret message'},
-            "alive" : { 'help_txt' : 'Alive Command for USERGE-X', 'i_q' : 'alive'},
-            "opinion" : { 'help_txt' : 'Ask for opinion via inline\n\n`op Your Question`', 'i_q' : 'op Are Cats Cute ?'},
-            "repo" : { 'help_txt' : 'Your USERGE-X Github repo', 'i_q' : 'repo'},
-            "gapps" : { 'help_txt' : 'Lastest arm64 Gapps', 'i_q' : 'gapps'},
-            "ofox" : { 'help_txt' : 'Lastest Ofox Recovery\n\n`ofox <device codename>`', 'i_q' : 'ofox whyred'},
-            "rick" : { 'help_txt' : 'Useless Rick Roll', 'i_q' : 'rick'},
-            "help" : { 'help_txt' : 'Help For All Bot plugins', 'i_q' : ''},
-            "stylish" : { 'help_txt' : 'Write it in Style\n\n`stylish [text]`', 'i_q' : 'stylish USERGE-X'}
+            "secret" : { 'help_txt' : '**Send a secret message to a user**\n (only the entered user and you can view  the message)\n\n`secret @username [text]`', 'i_q' : 'secret @DeletedUser420 This is a secret message'},
+            "alive" : { 'help_txt' : '**Alive Command for USERGE-X**', 'i_q' : 'alive'},
+            "opinion" : { 'help_txt' : '**Ask for opinion via inline**\n\n`op [Question / Statement]`', 'i_q' : 'op Are Cats Cute ?'},
+            "repo" : { 'help_txt' : '**Your USERGE-X Github repo**', 'i_q' : 'repo'},
+            "gapps" : { 'help_txt' : '**Lastest arm64 Gapps**\n\n`Choose from Niksgapps, Opengapps and Flamegapps`', 'i_q' : 'gapps'},
+            "ofox" : { 'help_txt' : '**Lastest Ofox Recovery**\n\n`ofox <device codename>`', 'i_q' : 'ofox whyred'},
+            "rick" : { 'help_txt' : '**Useless Rick Roll**\n\n`rick`', 'i_q' : 'rick'},
+            "help" : { 'help_txt' : '**Help For All Uerbot plugins**', 'i_q' : ''},
+            "stylish" : { 'help_txt' : '**Write it in Style**\n\n`stylish [text]`', 'i_q' : 'stylish USERGE-X'}
             }
 
 
@@ -49,14 +49,16 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     if not HELP_BUTTONS:
         HELP_BUTTONS = help_btn_generator()
 
-    BACK_BTN = InlineKeyboardButton("◀️ BACK", callback_data="backbtn_ihelp")
+    BACK_BTN = InlineKeyboardButton("◀️  Back", callback_data="backbtn_ihelp")
 
+    inline_help_txt ="<u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and click **📕  EXAMPLE** to know the use.",
+            
 
     @ubot.on_message(filters.private & filters.command("inline"))
     async def inline_help(_, message: Message):
         await ubot.send_message(
             chat_id=message.chat.id,
-            text="<u><b>INLINE COMMANDS</b></u>",
+            text=inline_help_txt,
             reply_markup=InlineKeyboardMarkup(HELP_BUTTONS)
         )
 
@@ -64,7 +66,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @ubot.on_callback_query(filters.regex(pattern=r"^backbtn_ihelp$"))
     async def back_btn(_, c_q: CallbackQuery): 
         await c_q.edit_message_text(
-            text="<u><b>INLINE COMMANDS</b></u>",
+            text=inline_help_txt,
             reply_markup=InlineKeyboardMarkup(HELP_BUTTONS)
         )
 
@@ -74,7 +76,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         command_name = c_q.matches[0].group(1)
         msg = COMMANDS[command_name]['help_txt']
         switch_i_q = COMMANDS[command_name]['i_q']
-        buttons = [[BACK_BTN, InlineKeyboardButton("📕 Example", switch_inline_query_current_chat=switch_i_q)]]
+        buttons = [[InlineKeyboardButton("📕  EXAMPLE", switch_inline_query_current_chat=switch_i_q)], [BACK_BTN]]
         await c_q.edit_message_text(
                 msg,
                 reply_markup=InlineKeyboardMarkup(buttons)
