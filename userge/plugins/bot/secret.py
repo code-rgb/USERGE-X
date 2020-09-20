@@ -1,7 +1,7 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-from userge import userge, Config, get_collection, Message
+from userge import userge, Config, Message
 from pyrogram.types import CallbackQuery
 from pyrogram import filters
 import json

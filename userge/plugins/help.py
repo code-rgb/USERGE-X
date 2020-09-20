@@ -31,10 +31,7 @@ from pymediainfo import MediaInfo
 
 MEDIA_TYPE, MEDIA_URL = None, None
 
-FONT_NAMES = ['serif', 'sans', 'sans_i', 'serif_i', 'medi_b', 'medi',
-            'double', 'cursive_b', 'cursive', 'bigsmall', 'reverse', 'circle',
-            'circle_b', 'mono', 'square_b', 'square', 'smoth', 'goth', 'wide',
-            'web', 'weeb', 'weeeb']
+
 
 PATH = "userge/xcache"
 
@@ -394,7 +391,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
             match = re.search(imgur, media_link)
             if not match:
-                telegraph = r"http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)"
+                telegraph = r"^http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)$"
                 match = re.search(telegraph, media_link)
             if match:
                 media_type = match.group(2)
@@ -419,15 +416,6 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         string_split = string.split() # All lower and Split each word
 
         if inline_query.from_user.id == Config.OWNER_ID or inline_query.from_user.id in Config.SUDO_USERS:
-            MAIN_MENU = InlineQueryResultArticle(
-                        title="Main Menu",
-                        input_message_content=InputTextMessageContent(" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
-                        url="https://github.com/code-rgb/USERGE-X",
-                        description="Userge-X Main Menu",
-                        thumb_url="https://i.imgur.com/1xsOo9o.png",
-                        reply_markup=InlineKeyboardMarkup(main_menu_buttons())
-                    )           
-            results.append(MAIN_MENU)             
         
             if string == "syntax":
                 owner = [[
@@ -468,7 +456,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO)]]
 
                 alive_info = f"""
-    **[USERGE-X](https://github.com/code-rgb/USERGE-X) is Up and Running**
+    **[USERGE-X](https://telegram.dog/x_xtests) is Up and Running**
 
  • 🐍 Python :  `v{versions.__python_version__}`
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
@@ -645,7 +633,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 if len(str_y) == 2:
                     results = []
                     input_text = str_y[1]
-                    for f_name in FONT_NAMES:
+                    font_names = ['serif', 'sans', 'sans_i', 'serif_i', 'medi_b', 'medi',
+                                'double', 'cursive_b', 'cursive', 'bigsmall', 'reverse', 'circle',
+                                'circle_b', 'mono', 'square_b', 'square', 'smoth', 'goth', 'wide',
+                                'web', 'weeb', 'weeeb']
+                    for f_name in font_names:
                         styled_str = await font_gen(f_name, input_text)
                         results.append(
                                     InlineQueryResultArticle(
@@ -658,7 +650,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     await inline_query.answer(
                         results=results,
                         cache_time=1,
-                        switch_pm_text="ℹ️  Inline Help",
+                        switch_pm_text="🔰 Available Commands",
                         switch_pm_parameter="inline"
                     )
                     return
@@ -698,12 +690,20 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                                     reply_markup=InlineKeyboardMarkup(buttons)
                                 )
                     )
-                
+            MAIN_MENU = InlineQueryResultArticle(
+                        title="Main Menu",
+                        input_message_content=InputTextMessageContent(" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
+                        url="https://github.com/code-rgb/USERGE-X",
+                        description="Userge-X Main Menu",
+                        thumb_url="https://i.imgur.com/1xsOo9o.png",
+                        reply_markup=InlineKeyboardMarkup(main_menu_buttons())
+                    )           
+            results.append(MAIN_MENU) 
             if len(results) != 0:
                 await inline_query.answer(
                     results=results, 
                     cache_time=1,
-                    switch_pm_text="ℹ️  Inline Help",
+                    switch_pm_text="🔰 Available Commands",
                     switch_pm_parameter="inline"
                 )
         else:
@@ -712,7 +712,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             await inline_query.answer(
                         results=results, 
                         cache_time=1,
-                        switch_pm_text=f"Sorry !, This Bot is for {owner_name} only",
+                        switch_pm_text=f"This bot is only for {owner_name}",
                         switch_pm_parameter="start"
                     )
 

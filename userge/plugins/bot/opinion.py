@@ -149,6 +149,6 @@ async def op_(message: Message):
     x = await userge.get_inline_bot_results(bot.username, "op <i>**Do you Agree with the replied suggestion ?**</i>")
     await userge.send_inline_bot_result(chat_id=message.chat.id,
                                             query_id=x.query_id,
-                                            result_id=x.results[1].id,
+                                            result_id=x.results[0].id,
                                             reply_to_message_id=replied.message_id)
     await message.delete()
