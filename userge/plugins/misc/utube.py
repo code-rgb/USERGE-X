@@ -10,7 +10,6 @@
 
 import os
 import glob
-import asyncio
 from pathlib import Path
 from time import time
 from math import floor
@@ -66,10 +65,15 @@ __{uploader}__
                                            'the mp3 as a document']}, del_pre=True)
 async def ytDown(message: Message):
     """ download from a link """
+    edited = False
+    startTime = c_time = time()
+
     def __progress(data: dict):
-        if (time() - startTime) % 4 <= 3.9:
-            return
-        if data['status'] == "downloading":
+        nonlocal edited, c_time
+        diff = time() - c_time
+        if data['status'] == "downloading" and (not edited or diff >= Config.EDIT_SLEEP_TIMEOUT):
+            c_time = time()
+            edited = True
             eta = data.get('eta')
             speed = data.get('speed')
             if not (eta and speed):
@@ -87,14 +91,9 @@ async def ytDown(message: Message):
                              for _ in range(floor(percentage / 5)))),
                     ''.join((Config.UNFINISHED_PROGRESS_STR
                              for _ in range(20 - floor(percentage / 5)))))
-            if message.text != out:
-                try:
-                    asyncio.get_event_loop().run_until_complete(message.edit(out))
-                except TypeError:
-                    pass
+            userge.loop.create_task(message.edit(out))
 
     await message.edit("Hold on \u23f3 ..")
-    startTime = time()
     if bool(message.flags):
         desiredFormat1 = str(message.flags.get('a', ''))
         desiredFormat2 = str(message.flags.get('v', ''))
@@ -110,7 +109,7 @@ async def ytDown(message: Message):
             retcode = await _tubeDl(
                 [message.filtered_input_str], __progress, startTime, desiredFormat)
         elif 'v' in message.flags:
-            desiredFormat = desiredFormat2+'+bestaudio'
+            desiredFormat = desiredFormat2 + '+bestaudio'
             retcode = await _tubeDl(
                 [message.filtered_input_str], __progress, startTime, desiredFormat)
         else:
@@ -122,10 +121,10 @@ async def ytDown(message: Message):
     if retcode == 0:
         _fpath = ''
         for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), '*')):
-            if not _path.endswith((".jpg", ".png", ".webp")):
+            if not _path.lower().endswith((".jpg", ".png", ".webp")):
                 _fpath = _path
         if not _fpath:
-            await message.err("nothing found")
+            await message.err("nothing found !")
             return
         await message.edit(f"**YTDL completed in {round(time() - startTime)} seconds**\n`{_fpath}`")
         if 't' in message.flags:
@@ -188,7 +187,6 @@ def _yt_getInfo(link):
 @pool.run_in_thread
 def _supported(url):
     ies = ytdl.extractor.gen_extractors()
-            # Site has dedicated extractor
     return any(ie.suitable(url) and ie.IE_NAME != 'generic' for ie in ies)
 
 
@@ -198,12 +196,11 @@ def _tubeDl(url: list, prog, starttime, uid=None):
                                      '%(title)s-%(format)s.%(ext)s'),
              'logger': LOGGER,
              'writethumbnail': True,
+             'prefer_ffmpeg': True,
              'postprocessors': [
                  {'key': 'FFmpegMetadata'}]}
     _quality = {'format': 'bestvideo+bestaudio/best' if not uid else str(uid)}
     _opts.update(_quality)
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
     try:
         x = ytdl.YoutubeDL(_opts)
         x.add_progress_hook(prog)
@@ -213,8 +210,6 @@ def _tubeDl(url: list, prog, starttime, uid=None):
         return y_e
     else:
         return dloader
-    finally:
-        loop.close()
 
 
 @pool.run_in_thread
@@ -232,8 +227,6 @@ def _mp3Dl(url, prog, starttime):
                  },
                  # {'key': 'EmbedThumbnail'},  ERROR: Conversion failed!
                  {'key': 'FFmpegMetadata'}]}
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
     try:
         x = ytdl.YoutubeDL(_opts)
         x.add_progress_hook(prog)
@@ -243,5 +236,3 @@ def _mp3Dl(url, prog, starttime):
         return y_e
     else:
         return dloader
-    finally:
-        loop.close()
