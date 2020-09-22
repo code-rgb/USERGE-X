@@ -15,15 +15,15 @@ PRIV_USERS.append(Config.OWNER_ID)
 
 
 COMMANDS = {
-            "secret" : { 'help_txt' : '**Send a secret message to a user**\n (only the entered user and you can view  the message)\n\n`secret @username [text]`', 'i_q' : 'secret @DeletedUser420 This is a secret message'},
-            "alive" : { 'help_txt' : '**Alive Command for USERGE-X**\n\nThis You can view Uptime, Setting and Versions of your bot and when you change settings they are updayted in Real-time UwU', 'i_q' : 'alive'},
-            "opinion" : { 'help_txt' : '**Ask for opinion via inline**\n\nYou can now send multple opinion messages at once\n**Note: **All button data is cleared as soon as you restart or update bot\n`op [Question or Statement]`', 'i_q' : 'op Are Cats Cute ?'},
-            "repo" : { 'help_txt' : '**Your USERGE-X Github repo**\n\nwith direct deploy button', 'i_q' : 'repo'},
-            "gapps" : { 'help_txt' : '**Lastest arm64 Gapps for <u>Android 10 Only !</u>**\n\n`Choose from Niksgapps, Opengapps and Flamegapps`', 'i_q' : 'gapps'},
-            "ofox" : { 'help_txt' : '**Lastest Ofox Recovery for supported device, Powered By offcial Ofox API v2**\n\n`ofox <device codename>`', 'i_q' : 'ofox whyred'},
-            "rick" : { 'help_txt' : '**Useless Rick Roll**\n\nBasically a wierd looking button with rickroll link xD\n`rick`', 'i_q' : 'rick'},
-            "help" : { 'help_txt' : '**Help For All Userbot plugins**\n\n**Note:** `You can load and unload a plugin`', 'i_q' : ''},
-            "stylish" : { 'help_txt' : '**Write it in Style**\n\nplugin to decorate text with unicode fonts.\n`stylish [text]`', 'i_q' : 'stylish USERGE-X'}
+            "secret" : { 'help_txt' : '**Send a secret message to a user**\n (only the entered user and you can view  the message)\n\n>>>  `secret @username [text]`', 'i_q' : 'secret @DeletedUser420 This is a secret message'},
+            "alive" : { 'help_txt' : '**Alive Command for USERGE-X**\n\nThis You can view Uptime, Setting and Versions of your bot and when you change settings they are updayted in Real-time UwU\n>>>  `alive`', 'i_q' : 'alive'},
+            "opinion" : { 'help_txt' : '**Ask for opinion via inline**\n\nYou can now send multple opinion messages at once\n**Note: **All button data is cleared as soon as you restart or update bot\n>>>  `op [Question or Statement]`', 'i_q' : 'op Are Cats Cute ?'},
+            "repo" : { 'help_txt' : '**Your USERGE-X Github repo**\n\nwith direct deploy button\n>>>  `repo`', 'i_q' : 'repo'},
+            "gapps" : { 'help_txt' : '**Lastest arm64 Gapps for <u>Android 10 Only !</u>**\n\nChoose from Niksgapps, Opengapps and Flamegapps\n>>>  `gapps`', 'i_q' : 'gapps'},
+            "ofox" : { 'help_txt' : '**Lastest Ofox Recovery for supported device, Powered By offcial Ofox API v2**\n\n>>>  `ofox <device codename>`', 'i_q' : 'ofox whyred'},
+            "rick" : { 'help_txt' : '**Useless Rick Roll**\n\nBasically a wierd looking button with rickroll link xD\n>>> `rick`', 'i_q' : 'rick'},
+            "help" : { 'help_txt' : '**Help For All Userbot plugins**\n\n**Note:** `You can also load and unload a plugin, and which chat types the commands is permitted`', 'i_q' : ''},
+            "stylish" : { 'help_txt' : '**Write it in Style**\n\nplugin to decorate text with unicode fonts.\n>>>  `stylish [text]`', 'i_q' : 'stylish USERGE-X'}
             }
 
 
@@ -56,7 +56,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     BACK_BTN = InlineKeyboardButton(" ◀️  Back ", callback_data="backbtn_ihelp")
 
-    inline_help_txt ="◼️ <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
+    inline_help_txt =" <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
             
 
     @ubot.on_message(filters.user(PRIV_USERS) & filters.private & (filters.command("inline") | filters.regex(pattern=r"^/start inline$")))
