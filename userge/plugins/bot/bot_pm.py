@@ -37,6 +37,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if found:
             return
         f_name = message.from_user.first_name
+        f_username = message.from_user.username
         u_n = master.username
 
         hello = f"""
@@ -61,7 +62,9 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                 u_n = master.username
                 BOT_START.insert_one({'firstname': f_name, 'user_id': u_id, 'date': start_date})
                 await asyncio.sleep(5)
-                await CHANNEL.log(f"A New User Started your Bot \n\n• <i>ID</i>: `{u_id}`\n   <b>Name</b>: {f_name}")
+                log_msg = f"A New User Started your Bot \n\n• <i>ID</i>: `{u_id}`\n   👤 : "
+                log_msg += f"@{f_username}" if f_username else f_name 
+                await CHANNEL.log(log_msg)
                 
         try:
             if not LOGO_ID:
