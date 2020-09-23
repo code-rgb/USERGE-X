@@ -15,15 +15,12 @@ NON_NSFW = ['baka', 'smug', 'hug', 'fox_girl', 'cuddle', 'neko',
             'feed', 'tickle', 'ngif', 'wallpaper', 'poke']
 
 
-neko_help = """<b>NSFW</b>:  <code>feet  yuri  trap  futanari  hololewd  lewdkemo  holoero  solog  feetg
-cum  erokemo  les  lewdk  lewd  eroyuri  eron  cum_jpg  bj  nsfw_neko_gif  
-solo  kemonomimi  nsfw_avatar  gasm  anal  hentai  erofeet  keta  blowjob  
-pussy  tits  pussy_jpg  pwankg  classic  kuni  femdom  spank  erok  boobs  
-random_hentai_gif  smallboobs  ero  smug</code>
-
-<b>SFW</b>:  <code>baka  smug  hug  fox_girl  cuddle  neko  pat  waifu  kiss
-holo  avatar  slap  gecg  feed  tickle  ngif  wallpaper  poke</code>
-"""
+neko_help = "<b>NSFW</b> :  "
+for i in NSFW:
+    neko_help += f"<code>{i}</code>  "
+neko_help += "\n\n<b>SFW</b> :  "
+for m in NON_NSFW:
+    neko_help += f"<code>{m}</code>  "
 
 
 @userge.on_cmd("nekos", about={
