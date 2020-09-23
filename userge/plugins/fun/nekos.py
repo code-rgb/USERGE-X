@@ -60,3 +60,4 @@ async def neko_life(message: Message):
             photo=link,
             reply_to_message_id=reply_id
         )
+    await message.delete()
