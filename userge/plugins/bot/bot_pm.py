@@ -80,7 +80,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             await _refresh_id(message)
             await _send_botstart(message, LOGO_ID, LOGO_REF, hello, u_n)
 
-
+ 
     async def _refresh_id(message: Message) -> None:
         global _LOGO_ID, _LOGO_REF  # pylint: disable=global-statement
         try:
@@ -91,7 +91,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
         else:
             _LOGO_ID, _LOGO_REF = get_file_id_and_ref(media)
 
- 
+
     def _set_data(errored: bool = False) -> None:
         global _CHAT, _MSG_ID, _DEFAULT  # pylint: disable=global-statement
         pattern = r"^(http(?:s?):\/\/)?(www\.)?(t.me)(\/c\/(\d+)|:?\/(\w+))?\/(\d+)$"
@@ -117,19 +117,18 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
     async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n):
         if not (_LOGO_ID and _LOGO_REF):
             await _refresh_id(message)
-        try:
-            await ubot.send_cached_media(
-                chat_id=message.chat.id,
-                file_id=_LOGO_ID, 
-                file_ref=_LOGO_REF,
-                caption=caption_text,
-                reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
-                    InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")],
-                    [InlineKeyboardButton("➕ ADD TO GROUP", callback_data="add_to_grp")
-                    ]]
-                )
+        await ubot.send_cached_media(
+            chat_id=message.chat.id,
+            file_id=_LOGO_ID, 
+            file_ref=_LOGO_REF,
+            caption=caption_text,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
+                InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")],
+                [InlineKeyboardButton("➕ ADD TO GROUP", callback_data="add_to_grp")
+                ]]
             )
+        )
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
@@ -146,7 +145,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             )
         else:
             await callback_query.answer("ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓 !", show_alert=True)
- 
+
 
 @userge.on_cmd("bot_users", about={
     'header': "Get a list Active Users Who started your Bot",
