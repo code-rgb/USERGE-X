@@ -16,12 +16,7 @@ NON_NSFW = ['baka', 'smug', 'hug', 'fox_girl', 'cuddle', 'neko',
             'feed', 'tickle', 'ngif', 'wallpaper', 'poke']
 
 
-@userge.on_cmd("nekos", about={
-    'header': "Get NSFW / SFW stuff from nekos.life",
-    'flags': {"nsfw": "For random NSFW"},
-    'usage': "{tr}nekos\n{tr}nekos -nsfw\n{tr}nekos [Choice]",
-    'examples': """
-<b><i><u>Choice</b></i></u> =
+neko_help = """<b><i><u>Choice</b></i></u>
 
 **NSFW**: <code>feet  yuri  trap  futanari  hololewd  lewdkemo  holoero  solog  feetg
 cum  erokemo  les  lewdk  lewd  eroyuri  eron  cum_jpg  bj  nsfw_neko_gif  
@@ -31,7 +26,14 @@ random_hentai_gif  smallboobs  ero  smug</code>
 
 **SFW**: <code>baka  smug  hug  fox_girl  cuddle  neko  pat  waifu  kiss
 holo  avatar  slap  gecg  feed  tickle  ngif  wallpaper  poke</code>
-"""})
+"""
+
+
+@userge.on_cmd("nekos", about={
+    'header': "Get NSFW / SFW stuff from nekos.life",
+    'flags': {"nsfw": "For random NSFW"},
+    'usage': "{tr}nekos\n{tr}nekos -nsfw\n{tr}nekos [Choice]",
+    'Choice': neko_help})
 async def neko_life(message: Message):
     choice = message.input_str
     if '-nsfw' in message.flags:

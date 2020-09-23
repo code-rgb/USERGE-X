@@ -34,8 +34,8 @@ _INIT_TASKS: List[asyncio.Task] = []
 _START_TIME = time.time()
 
 
-def _shutdown():
-    _LOG.info(_LOG_STR, 'received stop signal, cancelling tasks...')
+def _shutdown() -> None:
+    _LOG.info(_LOG_STR, 'received stop signal, cancelling tasks ...')
     for task in asyncio.all_tasks():
         task.cancel()
     _LOG.info(_LOG_STR, 'all tasks cancelled !')
@@ -54,7 +54,9 @@ class _AbstractUserge(Methods, RawClient):
         """ returns client is bot or not """
         if self._bot is not None:
             return hasattr(self, 'ubot')
-        return bool(Config.BOT_TOKEN)
+        if Config.BOT_TOKEN:
+            return True
+        return False
 
     @property
     def uptime(self) -> str:
@@ -174,21 +176,26 @@ class Userge(_AbstractUserge):
         loop.add_signal_handler(signal.SIGHUP, _shutdown)
         loop.add_signal_handler(signal.SIGTERM, _shutdown)
         run = loop.run_until_complete
-        run(self.start())
-        running_tasks: List[asyncio.Task] = []
-        for task in self._tasks:
-            running_tasks.append(loop.create_task(task()))
-        if coro:
-            _LOG.info(_LOG_STR, "Running Coroutine")
-            run(coro)
-        else:
-            _LOG.info(_LOG_STR, "Idling Userge")
-            logbot.edit_last_msg("Userge has Started Successfully !")
-            logbot.end()
-            idle()
-        _LOG.info(_LOG_STR, "Exiting Userge")
-        for task in running_tasks:
-            task.cancel()
-        run(self.stop())
-        run(loop.shutdown_asyncgens())
-        loop.close()
+        try:
+            run(self.start())
+            running_tasks: List[asyncio.Task] = []
+            for task in self._tasks:
+                running_tasks.append(loop.create_task(task()))
+            if coro:
+                _LOG.info(_LOG_STR, "Running Coroutine")
+                run(coro)
+            else:
+                _LOG.info(_LOG_STR, "Idling Userge")
+                logbot.edit_last_msg("Userge has Started Successfully !")
+                logbot.end()
+                idle()
+            _LOG.info(_LOG_STR, "Exiting Userge")
+            for task in running_tasks:
+                task.cancel()
+            run(self.stop())
+            run(loop.shutdown_asyncgens())
+        except asyncio.exceptions.CancelledError:
+            pass
+        finally:
+            if not loop.is_running():
+                loop.close()
