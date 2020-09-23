@@ -99,5 +99,5 @@ def get_version() -> str:
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except:
-        return " Idk What the F* is wrong here"
+        return "Error ! see -> [Fix](https://github.com/code-rgb/USERGE-X/issues/17)"
     return ver
