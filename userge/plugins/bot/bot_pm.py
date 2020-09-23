@@ -7,7 +7,7 @@ from userge.utils import get_file_id_and_ref
 from pyrogram.types import (  
      InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery )
 from pyrogram import filters
-from pyrogram.errors import FileIdInvalid, FileReferenceEmpty, BadRequest, ChannelInvalid
+from pyrogram.errors import FileIdInvalid, FileReferenceEmpty, BadRequest, ChannelInvalid, MediaEmpty
 from datetime import date
 import asyncio
 
@@ -114,21 +114,31 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             _MSG_ID = int(match.group(7))
     
 
-    async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n):
+    async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n, recurs_count: int = 0): -> None:
         if not (_LOGO_ID and _LOGO_REF):
             await _refresh_id(message)
-        await ubot.send_cached_media(
-            chat_id=message.chat.id,
-            file_id=_LOGO_ID, 
-            file_ref=_LOGO_REF,
-            caption=caption_text,
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
-                InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")],
-                [InlineKeyboardButton("➕ ADD TO GROUP", callback_data="add_to_grp")
-                ]]
+        try:
+            await ubot.send_cached_media(
+                chat_id=message.chat.id,
+                file_id=_LOGO_ID, 
+                file_ref=_LOGO_REF,
+                caption=caption_text,
+                reply_markup=InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
+                    InlineKeyboardButton("REPO", url="https://github.com/code-rgb/USERGE-X")],
+                    [InlineKeyboardButton("➕ ADD TO GROUP", callback_data="add_to_grp")
+                    ]]
+                )
             )
-        )
+        except MediaEmpty:
+            if recurs_count >= 2:
+                return
+            await _refresh_id(message)
+            hello = 'text 1 '
+            u_n = 'text 2'
+            return await _send_alive(message, LOGO_ID, LOGO_REF, hello, u_n, recurs_count + 1)
+           
+
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
