@@ -56,7 +56,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 
     BACK_BTN = InlineKeyboardButton(" ◀️  Back ", callback_data="backbtn_ihelp")
 
-    inline_help_txt ="◼️ <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
+    inline_help_txt =" <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
             
 
     @ubot.on_message(filters.user(PRIV_USERS) & filters.private & (filters.command("inline") | filters.regex(pattern=r"^/start inline$")))
