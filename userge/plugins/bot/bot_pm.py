@@ -75,10 +75,10 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                                 f"trying again... ERROR:: {set_err} ::")
                 _set_data(True)
         try:
-            await _send_botstart(message, LOGO_ID, LOGO_REF, hello, u_n)
+            await _send_botstart(message, hello, u_n)
         except (FileIdInvalid, FileReferenceEmpty, BadRequest):
             await _refresh_id(message)
-            await _send_botstart(message, LOGO_ID, LOGO_REF, hello, u_n)
+            await _send_botstart(message, hello, u_n)
 
  
     async def _refresh_id(message: Message) -> None:
@@ -89,7 +89,6 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             _set_data(True)
             return await _refresh_id(message)
         LOGO_ID, LOGO_REF = get_file_id_and_ref(media)
-     
 
 
     def _set_data(errored: bool = False) -> None:
@@ -114,7 +113,10 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             _MSG_ID = int(match.group(7))
     
 
-    async def _send_botstart(message, LOGO_ID, LOGO_REF, caption_text, u_n, recurs_count: int = 0) -> None:
+    async def _send_botstart(message: Message,
+                            caption_text: str,
+                            u_n: str,
+                            recurs_count: int = 0) -> None:
         if not (LOGO_ID and LOGO_REF):
             await _refresh_id(message)
         try:
@@ -136,9 +138,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             await _refresh_id(message)
             hello = 'text 1 '
             u_n = 'text 2'
-            return await _send_alive(message, LOGO_ID, LOGO_REF, hello, u_n, recurs_count + 1)
-           
-
+            return await _send_alive(message, hello, u_n, recurs_count + 1)
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
