@@ -4,6 +4,7 @@ from .tools import take_screen_shot, runcmd
 from .progress import progress
 import re
 import html
+import random
 
 
 # For Downloading & Checking Media then Converting to Image.
@@ -98,3 +99,8 @@ def mention_markdown(user_id, name):
 def thumb_from_audio(audio_path, output):
     os.system(f'ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}')
     return
+
+
+def rand_array(array):
+    random_num = random.choice(array) 
+    return (str(random_num))

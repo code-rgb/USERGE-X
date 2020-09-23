@@ -23,4 +23,5 @@ from .functions import (deEmojify,
                         mention_html,
                         escape_markdown,
                         cleanhtml,
-                        thumb_from_audio)
+                        thumb_from_audio,
+                        rand_array)

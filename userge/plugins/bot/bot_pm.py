@@ -18,7 +18,7 @@ BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
 LOGO_ID, LOGO_REF = None, None
 _CHAT, _MSG_ID = None, None
-_DEFAULT = "https://t.me/useless_x/4"
+_DEFAULT = "https://t.me/useless_x/2"
 
 # refresh file id and file reference from TG server
 
@@ -43,17 +43,17 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_n = master.username
         hello = f"""
 Hello {f_name},
-Nice To Meet You! I'm **{bot.first_name}** A Bot. 
+Nice To Meet You! I'm **{bot.first_name}** A Bot.
 
-        <i><b>Powered by</i> USERGE-X</b>
+        <i><b>Powered by</i> [USERGE-X](https://t.me/x_xtests)</b>
 
-<i>You Can Contact</i> My Master : **{master.first_name}**
-<i>And Check The Repo For More Info.</i>
+<b>My Master is: {master.first_name}</b>
+<i>You can contact my <b>Master</b> and checkout the <b>Repo</b> For more info.</i>
 """
         if Config.BOT_FORWARDS:          
-            hello += "\n<b>NOTE : </b> "
+            hello += "\n<b>NOTE: </b> "
             hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
-            hello += "<i>All your messages here will be forwared to</i> My MASTER"
+            hello += "All your messages here will be forwared to my **MASTER**"
         if u_id != Config.OWNER_ID:
             found = await BOT_START.find_one({'user_id': u_id})
             if not found:
@@ -136,9 +136,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             if recurs_count >= 2:
                 return
             await _refresh_id(message)
-            hello = 'text 1 '
-            u_n = 'text 2'
-            return await _send_alive(message, hello, u_n, recurs_count + 1)
+            return await _send_botstart(message, caption_text, u_n, recurs_count + 1)
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))

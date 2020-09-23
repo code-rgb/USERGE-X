@@ -1,50 +1,62 @@
 import nekos
 import asyncio
 from userge import userge, Message
+from userge.utils import rand_array
 
 
-@userge.on_cmd("(neko|lewd|smug|tits|trap|anal|cuddle|hug|goose|waifu|gasm|slap|spank|feet|woof|baka)$", about={
-    'header': "For pics",
-    'usage': "{tr}neko or {tr}lewd etc.",
-    'examples': "neko, lewd, smug, tits, trap, anal, cuddle, hug, goose, waifu, gasm, slap, spank, feet, woof, baka"},name="neko_pic")
-async def neko_choices_(message: Message):
-    """Gets you a pic"""
-    neko_choice = message.matches[0].group(1).lower()
-    edit_m = "<code>Getting you some pics for: </code>"
-    edit_m += neko_choice
-    await message.edit(edit_m, parse_mode='html')
-    await asyncio.sleep(1)
-    path = nekos.img(neko_choice)
-    chat_id = message.chat.id
-    message_id = None
-    if message.reply_to_message:
-        message_id = message.reply_to_message.message_id
-    await message.delete()
-    await message.client.send_photo(chat_id=chat_id,
-                                    photo=path,
-                                    reply_to_message_id=message_id)
+NSFW = ['feet', 'yuri', 'trap', 'futanari', 'hololewd', 'lewdkemo', 'holoero',
+        'solog', 'feetg', 'cum', 'erokemo', 'les', 'lewdk', 'lewd','eroyuri', 'eron',
+        'cum_jpg', 'bj', 'nsfw_neko_gif', 'solo', 'kemonomimi', 'nsfw_avatar',
+        'gasm', 'anal', 'hentai','erofeet', 'keta', 'blowjob', 'pussy', 'tits',
+        'pussy_jpg', 'pwankg', 'classic', 'kuni', 'femdom', 'spank', 'erok', 'boobs', 
+        'random_hentai_gif', 'smallboobs','ero', 'smug']
 
-@userge.on_cmd("(random_hentai_gif|solog|feetg|cum|les|ngif|tickle|feed|bj|nsfw_neko_gif|poke|anal|pussy|pwankg|classic|kuni|kiss|spank|cuddle|baka|hug)$", about={
-    'header': "For gifs",
-    'usage': "{tr}random_hentai_gif or {tr}poke etc.",
-    'examples': "random_hentai_gif, solog, feetg, cum, les, ngif, tickle, feed, bj, nsfw_neko_gif, poke, anal, pussy, pwankg, classic, kuni, kiss, spank, cuddle, baka, hug"}, name="neko_gif")
-async def neko_gif_(message: Message):
-    """Gets you a gif"""
-    neko_gchoice = message.matches[0].group(1).lower()
-    edit_m = "<code>Getting you some Gif for: </code>"
-    edit_m += neko_gchoice
-    await message.edit(edit_m, parse_mode='html')
-    await asyncio.sleep(1)
-    path = nekos.img(neko_gchoice)
-    chat_id = message.chat.id
-    message_id = None
-    if message.reply_to_message:
-        message_id = message.reply_to_message.message_id
-    await message.delete()
-    await message.client.send_animation(chat_id=chat_id,
-                                    animation=path,
-                                    reply_to_message_id=message_id)
+NON_NSFW = ['baka', 'smug', 'hug', 'fox_girl', 'cuddle', 'neko',
+            'pat', 'waifu', 'kiss', 'holo', 'avatar', 'slap', 'gecg', 
+            'feed', 'tickle', 'ngif', 'wallpaper', 'poke']
 
 
+@userge.on_cmd("nekos", about={
+    'header': "Get NSFW / SFW stuff from nekos.life",
+    'flags': {"nsfw": "For random NSFW"},
+    'usage': "{tr}nekos\n{tr}nekos -nsfw\n{tr}nekos [Choice]",
+    'examples': """
+<b><i><u>Choice</b></i></u> =
 
+**NSFW**: <code>feet  yuri  trap  futanari  hololewd  lewdkemo  holoero  solog  feetg
+cum  erokemo  les  lewdk  lewd  eroyuri  eron  cum_jpg  bj  nsfw_neko_gif  
+solo  kemonomimi  nsfw_avatar  gasm  anal  hentai  erofeet  keta  blowjob  
+pussy  tits  pussy_jpg  pwankg  classic  kuni  femdom  spank  erok  boobs  
+random_hentai_gif  smallboobs  ero  smug</code>
 
+**SFW**: <code>baka  smug  hug  fox_girl  cuddle  neko  pat  waifu  kiss
+holo  avatar  slap  gecg  feed  tickle  ngif  wallpaper  poke</code>
+"""})
+async def neko_life(message: Message):
+    choice = message.input_str
+    if '-nsfw' in message.flags:
+        choosen_ = rand_array(NSFW)
+    elif choice:
+        neko_all = NON_NSFW + NSFW
+        choosen_ = (choice.split())[0]
+        if choosen_ not in neko_all:
+            await message.err('Choose a valid Input !, See Help for more info.', del_in=5)
+            return
+    else:
+        choosen_ = rand_array(NON_NSFW)
+    link = nekos.img(choosen_)
+    reply = message.reply_to_message
+    reply_id = reply.message_id if reply else None
+    if link.endwith('.gif'):
+        await message.client.send_animation(
+            chat_id=message.chat.id,
+            animation=link,
+            unsave=True,
+            reply_to_message_id=reply_id
+        )
+    else:
+        await message.client.send_photo(
+            chat_id=message.chat.id,
+            photo=link,
+            reply_to_message_id=reply_id
+        )
