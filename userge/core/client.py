@@ -154,19 +154,19 @@ class Userge(_AbstractUserge):
     async def start(self) -> None:
         """ start client and bot """
         pool._start()  # pylint: disable=protected-access
-        _LOG.info(_LOG_STR, "Starting Userge")
+        _LOG.info(_LOG_STR, "Starting USERGE-X")
         await super().start()
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Starting UsergeBot")
+            _LOG.info(_LOG_STR, "Starting USERGE-X Bot")
             await self._bot.start()
         await self._load_plugins()
 
     async def stop(self) -> None:  # pylint: disable=arguments-differ
         """ stop client and bot """
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Stopping UsergeBot")
+            _LOG.info(_LOG_STR, "Stopping USERGE-X Bot")
             await self._bot.stop()
-        _LOG.info(_LOG_STR, "Stopping Userge")
+        _LOG.info(_LOG_STR, "Stopping USERGE-X")
         await super().stop()
         await pool._stop()  # pylint: disable=protected-access
 
@@ -185,11 +185,11 @@ class Userge(_AbstractUserge):
                 _LOG.info(_LOG_STR, "Running Coroutine")
                 run(coro)
             else:
-                _LOG.info(_LOG_STR, "Idling Userge")
-                logbot.edit_last_msg("Userge has Started Successfully !")
+                _LOG.info(_LOG_STR, "Idling USERGE-X")
+                logbot.edit_last_msg("USERGE-X has Started Successfully !")
                 logbot.end()
                 idle()
-            _LOG.info(_LOG_STR, "Exiting Userge")
+            _LOG.info(_LOG_STR, "Exiting USERGE-X")
             for task in running_tasks:
                 task.cancel()
             run(self.stop())
