@@ -113,7 +113,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             match = re.search(pattern, _DEFAULT)
             _CHAT = match.group(6)
             _MSG_ID = int(match.group(7))
-        await userge.send_message(-1001433065654, f'{_MSG_ID}\n\n{_CHAT}')  # DEBUGMODE
+        userge.send_message(-1001433065654, f'{_MSG_ID}\n\n{_CHAT}')  # DEBUGMODE
     
 
     async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n, recurs_count: int = 0) -> None:
