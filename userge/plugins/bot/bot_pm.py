@@ -84,7 +84,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
     async def _refresh_id(message: Message) -> None:
         global _LOGO_ID, _LOGO_REF  # pylint: disable=global-statement
         try:
-            media = await ubot.get_messages(_CHAT, _MSG_ID)
+            media = await userge.get_messages(_CHAT, _MSG_ID)
         except ChannelInvalid:
             _set_data(True)
             return await _refresh_id(message)
