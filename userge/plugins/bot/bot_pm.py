@@ -114,7 +114,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             _MSG_ID = int(match.group(7))
     
 
-    async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n, recurs_count: int = 0): -> None:
+    async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n, recurs_count: int = 0) -> None:
         if not (_LOGO_ID and _LOGO_REF):
             await _refresh_id(message)
         try:
