@@ -15,8 +15,7 @@ NON_NSFW = ['baka', 'smug', 'hug', 'fox_girl', 'cuddle', 'neko',
             'feed', 'tickle', 'ngif', 'wallpaper', 'poke']
 
 
-neko_help = """
-<b>NSFW</b>:  <code>feet  yuri  trap  futanari  hololewd  lewdkemo  holoero  solog  feetg
+neko_help = """<b>NSFW</b>:  <code>feet  yuri  trap  futanari  hololewd  lewdkemo  holoero  solog  feetg
 cum  erokemo  les  lewdk  lewd  eroyuri  eron  cum_jpg  bj  nsfw_neko_gif  
 solo  kemonomimi  nsfw_avatar  gasm  anal  hentai  erofeet  keta  blowjob  
 pussy  tits  pussy_jpg  pwankg  classic  kuni  femdom  spank  erok  boobs  
@@ -47,6 +46,7 @@ async def neko_life(message: Message):
     link = nekos.img(choosen_)
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
+    await message.delete()
     if link.endswith('.gif'):
         await message.client.send_animation(
             chat_id=message.chat.id,
@@ -60,4 +60,4 @@ async def neko_life(message: Message):
             photo=link,
             reply_to_message_id=reply_id
         )
-    await message.delete()
+    

@@ -121,7 +121,7 @@ def _format_about(about: Union[str, Dict[str, Union[str, List[str], Dict[str, st
             del about['others']
         if about:
             for t_n, t_d in about.items():
-                tmp_chelp += f"\n\n⚙ <u><b>{t_n.title()}</b></u> :\n"
+                tmp_chelp += f"\n\n⚙ <u><b>{t_n.title()}</b></u> :"
                 if isinstance(t_d, dict):
                     for o_n, o_d in t_d.items():
                         tmp_chelp += f"\n    ▫ <code>{o_n}</code> : <i>{o_d.lower()}</i>"
