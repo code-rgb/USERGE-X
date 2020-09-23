@@ -85,10 +85,12 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
         global _LOGO_ID, _LOGO_REF  # pylint: disable=global-statement
         try:
             media = await ubot.get_messages(_CHAT, _MSG_ID)
+            await message.reply(f'MEDIA - {media}')       # DEBUGMODE
         except ChannelInvalid:
             _set_data(True)
             return await _refresh_id(message)
         _LOGO_ID, _LOGO_REF = get_file_id_and_ref(media)
+        await message.reply(f'{_LOGO_ID}\n\n{_LOGO_REF}')  # DEBUGMODE
 
 
     def _set_data(errored: bool = False) -> None:
@@ -111,11 +113,13 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             match = re.search(pattern, _DEFAULT)
             _CHAT = match.group(6)
             _MSG_ID = int(match.group(7))
+        await message.reply(f'{_MSG_ID}\n\n{_CHAT}')  # DEBUGMODE
     
 
     async def _send_botstart(message, _LOGO_ID, _LOGO_REF, caption_text, u_n, recurs_count: int = 0) -> None:
         if not (_LOGO_ID and _LOGO_REF):
             await _refresh_id(message)
+        await message.reply(f'IN BOTSTART \n{_LOGO_ID}\n\n{_LOGO_REF}')  # DEBUGMODE
         try:
             await ubot.send_cached_media(
                 chat_id=message.chat.id,
