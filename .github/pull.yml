@@ -1,6 +1,6 @@
 version: "1"
 rules:
   - base: alpha
-    upstream: UsergeTeam:alpha
+    upstream: code-rgb:alpha
     mergeMethod: rebase
     mergeUnstable: false

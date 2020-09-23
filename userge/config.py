@@ -62,6 +62,7 @@ class Config:
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
+    BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
@@ -98,5 +99,5 @@ def get_version() -> str:
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except:
-        return " Idk What the F* is wrong here"
+        return "Error ! see -> [Fix](https://github.com/code-rgb/USERGE-X/issues/17)"
     return ver
