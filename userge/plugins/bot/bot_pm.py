@@ -13,7 +13,7 @@ import asyncio
 
 
 CHANNEL = userge.getCLogger(__name__)
-_LOG = logging.getCLogger(__name__)
+_LOG = logging.getLogger(__name__)
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
 LOGO_ID, LOGO_REF = None, None
