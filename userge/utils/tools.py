@@ -21,27 +21,9 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import userge
 
 _LOG = userge.logging.getLogger(__name__)
-_EMOJI_PATTERN = re.compile(
-    "["
-    "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-    "\U0001F300-\U0001F5FF"  # symbols & pictographs
-    "\U0001F600-\U0001F64F"  # emoticons
-    "\U0001F680-\U0001F6FF"  # transport & map symbols
-    "\U0001F700-\U0001F77F"  # alchemical symbols
-    "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
-    "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
-    "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
-    "\U0001FA00-\U0001FA6F"  # Chess Symbols
-    "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
-    "\U00002702-\U000027B0"  # Dingbats
-    "]+")
+
 _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\[buttonurl:(?:/{0,2})(.+?)(:same)?\])")
 
-
-# https://github.com/UsergeTeam/Userge-Plugins/blob/master/plugins/tweet.py
-def demojify(string: str) -> str:
-    """ Remove emojis and other non-safe characters from string """
-    return re.sub(_EMOJI_PATTERN, '', string)
 
 
 def get_file_id_and_ref(message: 'userge.Message') -> Tuple[Optional[str], Optional[str]]:
@@ -83,12 +65,12 @@ def time_formatter(seconds: float) -> str:
 def post_to_telegraph(a_title: str, content: str) -> str:
     """ Create a Telegram Post using HTML Content """
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "@theUserge"
+    auth_name = ">- X -<"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/theUserge",
+        author_url="https://t.me/x_xtests",
         text=content
     )
     return post_page['url']
