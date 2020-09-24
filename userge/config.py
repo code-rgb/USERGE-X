@@ -63,19 +63,10 @@ class Config:
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
     SPOTIFY_MODE = bool(os.environ.get('SPOTIFY_MODE', False))
-    CLIENT_ID = os.environ.get('CLIENT_ID', None)
-    CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
-    INITIAL_TOKEN = os.environ.get('INITIAL_TOKEN', None)
-    INITIAL_BIO = os.environ.get('INITIAL_BIO', None)
-    KEY = os.environ.get('KEY', '🎶')
-    BIOS = [KEY + ' Vibing ; {interpret} - {title} {progress}/{duration}',
-            KEY + ' Vibing : {interpret} - {title}',
-            KEY + ' : {interpret} - {title}',
-            KEY + ' Vibing : {title}',
-            KEY + ' : {title}']
-    OFFSET = 1
-    # reduce the OFFSET from our actual 70 character limit
-    LIMIT = 70 - OFFSET
+    SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
+    SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
+    SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
+    SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
     BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
