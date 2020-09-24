@@ -17,10 +17,10 @@ NON_NSFW = ['baka', 'smug', 'hug', 'fox_girl', 'cuddle', 'neko',
 
 neko_help = "<b>NSFW</b> :  "
 for i in NSFW:
-    neko_help += f"<code>{i}</code>  "
+    neko_help += f"<code>{i}</code>   "
 neko_help += "\n\n<b>SFW</b> :  "
 for m in NON_NSFW:
-    neko_help += f"<code>{m}</code>  "
+    neko_help += f"<code>{m}</code>   "
 
 
 @userge.on_cmd("nekos", about={
@@ -57,4 +57,3 @@ async def neko_life(message: Message):
             photo=link,
             reply_to_message_id=reply_id
         )
-    
