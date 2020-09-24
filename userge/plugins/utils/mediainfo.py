@@ -46,7 +46,7 @@ async def mediainfo(message: Message):
                             InlineKeyboardButton(text=X_MEDIA.upper(), url=link)
                             ]])
             await process.edit_text(
-                text="ℹ️  <b>MEDIA INFO</b>",
+                "ℹ️  <b>MEDIA INFO</b>",
                 reply_markup=markup
             )
 
