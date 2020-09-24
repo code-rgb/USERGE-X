@@ -22,7 +22,7 @@ async def mediainfo(message: Message):
     if not reply:
         await message.err('reply to media first', del_in=5)
         return
-    await message.edit('`Processing ...`')
+    process = await message.edit('`Processing ...`')
     for media_type in TYPES:
         if reply[media_type]:
             X_MEDIA = media_type
@@ -45,12 +45,9 @@ async def mediainfo(message: Message):
             markup = InlineKeyboardMarkup([[
                             InlineKeyboardButton(text=X_MEDIA.upper(), url=link)
                             ]])
-            
-            await message.client.send_message(
-                chat_id=message.chat.id,
+            await process.edit_text(
                 text="ℹ️  <b>MEDIA INFO</b>",
-                reply_markup=markup,
-                reply_to_message_id=reply.message_id
+                reply_markup=markup
             )
 
         else:
