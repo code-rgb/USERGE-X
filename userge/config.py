@@ -62,7 +62,6 @@ class Config:
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
-    SPOTIFY_MODE = bool(os.environ.get('SPOTIFY_MODE', False))
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
     SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
@@ -89,6 +88,7 @@ class Config:
         if HEROKU_API_KEY and HEROKU_APP_NAME else None
     STATUS = None
     BOT_FORWARDS = False
+    SPOTIFY_MODE = False
 
 
 def get_version() -> str:
@@ -104,5 +104,5 @@ def get_version() -> str:
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
     except:
-        return "Error ! see -> [Fix](https://github.com/code-rgb/USERGE-X/issues/17)"
+        return "Error ! -> https://github.com/code-rgb/USERGE-X/issues/17 for FIX"
     return ver
