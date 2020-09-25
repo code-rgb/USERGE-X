@@ -5,15 +5,14 @@
 
 from userge import userge, Message, Config, get_collection
 from pyrogram import filters
-from pyrogram.errors.exceptions import MessageIdInvalid
-from pyrogram.errors import FloodWait, BadRequest
+from pyrogram.errors import FloodWait, BadRequest, MessageIdInvalid
 import json
 import os
 import asyncio
 
 
-LOG = userge.getLogger("Bot_Forwards")
-CHANNEL = userge.getCLogger("Bot_Forwards")
+LOG = userge.getLogger(__name__)
+CHANNEL = userge.getCLogger(__name__)
 
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
