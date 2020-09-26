@@ -47,6 +47,7 @@ async def _init() -> None:
 async def spotify_bio_(message: Message):
 	if Config.SPOTIFY_MODE:
 		Config.SPOTIFY_MODE = False
+		await userge.update_profile(bio=Config.SPOTIFY_INITIAL_BIO)
 		await message.edit("`Spotify Bio disabled !`", del_in=3)
 	else:
 		await message.edit("`Spotify Bio enabled` \nCurrent Spotify playback will update in bio", del_in=5)
@@ -175,7 +176,7 @@ async def spotify_biox():
 		# 429 means flood limit, we need to wait
 		elif r.status_code == 429:
 			to_wait = r.headers['Retry-After']
-			logger.error(f"Spotify, have to wait for {str(to_wait)}")
+			LOG.error(f"Spotify, have to wait for {str(to_wait)}")
 			await ubot.send_message(Config.OWNER_ID, f'**[WARNING]**\n\nI caught a spotify api limit. I shall sleep for '
 										f'{str(to_wait)} seconds until I refresh again')
 			skip = True

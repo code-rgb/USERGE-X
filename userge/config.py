@@ -65,10 +65,8 @@ class Config:
     ### Spotify
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
-    SPOTIFY_REDIRECT_URI = os.environ.get('SPOTIPY_CLIENT_URI', "https://example.com/callback")
     SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
-    #SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
-    SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME', None)
+    SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
     SPOTIFY_MODE = False
     ###
     BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
@@ -95,17 +93,22 @@ class Config:
     BOT_FORWARDS = False
 
     # Check if initial token exists and CLIENT_ID_SPOTIFY given
-    if not os.path.exists("./userge/xcache/spotify_database.json") and SPOTIFY_CLIENT_ID:
-        INITIAL_BIO = ""
+    if not os.path.exists("./userge/xcache/spotify_database.json"):
+
         body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
                 "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
                 "code": SPOTIFY_INITIAL_TOKEN}
         r = requests.post("https://accounts.spotify.com/api/token", data=body)
         save = r.json()
-        to_create = {'bio': INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
-                        'telegram_spam': False, 'spotify_spam': False}
-        with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
-            json.dump(to_create, outfile, indent=4, sort_keys=True)
+        try:
+            to_create = {'bio': SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+                            'telegram_spam': False, 'spotify_spam': False}
+            with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
+                json.dump(to_create, outfile, indent=4, sort_keys=True)
+        except KeyError:
+            _LOG.error('SPOTIFY_INITIAL_TOKEN expired recreate one')
+        except FileNotFoundError:
+            _LOG.error('Database not found')
 
 
 
