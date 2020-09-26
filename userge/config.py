@@ -65,9 +65,9 @@ class Config:
     ### Spotify
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
-    SPOTIPY_REDIRECT_URI = os.environ.get('SPOTIPY_CLIENT_URI', "https://example.com/callback")
+    SPOTIFY_REDIRECT_URI = os.environ.get('SPOTIPY_CLIENT_URI', "https://example.com/callback")
     SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
-    SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
+    #SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
     SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME', None)
     SPOTIFY_MODE = False
     ###
@@ -97,9 +97,9 @@ class Config:
     # Check if initial token exists and CLIENT_ID_SPOTIFY given
     if not os.path.exists("./userge/xcache/database.json") and SPOTIPY_CLIENT_ID:
         INITIAL_BIO = ""
-        body = {"client_id": SPOTIPY_CLIENT_ID, "client_secret": SPOTIPY_CLIENT_SECRET,
+        body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
                 "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
-                "code": SPOTIPY_INITIAL_TOKEN}
+                "code": SPOTIFY_INITIAL_TOKEN}
         r = requests.post("https://accounts.spotify.com/api/token", data=body)
         save = r.json()
         to_create = {'bio': INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
