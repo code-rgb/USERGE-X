@@ -6,7 +6,7 @@ from userge import userge, Message, Config
 
 
 @userge.on_cmd("spotify_db", about={'header': "ADD initial Token"})
-async def webss(message: Message):
+async def spotify_db_(message: Message):
     if not message.input_str:
         return await message.err('Input Token Not Found', del_in=5)
     spotify_intial_token = message.input_str.split()[0]
