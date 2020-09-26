@@ -244,12 +244,12 @@ async def spotify_biox():
 				interpret = to_insert["interpret"]
 				progress = to_insert["progress"]
 				duration = to_insert["duration"]
-				work.interpret = to_insert["interpret"]
-				work.progress = to_insert["progress"]
-				work.duration = to_insert["duration"]
-				work.title = to_insert["title"]
-				work.link = to_insert["link"]
-				work.image = to_insert["image"]
+				spotify_biox.interpret = to_insert["interpret"]
+				spotify_biox.progress = to_insert["progress"]
+				spotify_biox.duration = to_insert["duration"]
+				spotify_biox.title = to_insert["title"]
+				spotify_biox.link = to_insert["link"]
+				spotify_biox.image = to_insert["image"]
 				# we need this variable to see if actually one of the BIOS is below the character limit
 				new_bio = ""
 				for bio in BIOS:
@@ -272,7 +272,7 @@ async def spotify_biox():
 					if not new_bio == bio:
 						try:
 							await userge.update_profile(bio=new_bio)
-							work.lrt = time.time()
+							spotify_biox.lrt = time.time()
 						
 							if save_spam("telegram", False):
 								stringy = "**[INFO]**\n\nEverything returned back to normal, the previous telegram " \
