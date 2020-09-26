@@ -64,7 +64,7 @@ class Config:
     HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
-    SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
+    #SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
     SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
     BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
