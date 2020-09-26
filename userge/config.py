@@ -12,7 +12,7 @@ __all__ = ['Config', 'get_version']
 
 import os
 from typing import Set
-
+import json
 import heroku3
 from git import Repo
 from pyrogram import filters
@@ -62,10 +62,15 @@ class Config:
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
+    ### Spotify
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
-    #SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
+    SPOTIPY_REDIRECT_URI = os.environ.get('SPOTIPY_CLIENT_URI', "https://example.com/callback")
+    SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
     SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
+    SPOTIFY_USERNAME = os.environ.get('SPOTIFY_USERNAME', None)
+    SPOTIFY_MODE = False
+    ###
     BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
@@ -88,7 +93,22 @@ class Config:
         if HEROKU_API_KEY and HEROKU_APP_NAME else None
     STATUS = None
     BOT_FORWARDS = False
-    SPOTIFY_MODE = False
+
+    # Check if initial token exists and CLIENT_ID_SPOTIFY given
+    if not os.path.exists("./userge/xcache/database.json") and SPOTIPY_CLIENT_ID:
+        INITIAL_BIO = ""
+        body = {"client_id": SPOTIPY_CLIENT_ID, "client_secret": SPOTIPY_CLIENT_SECRET,
+                "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
+                "code": SPOTIPY_INITIAL_TOKEN}
+        r = requests.post("https://accounts.spotify.com/api/token", data=body)
+        save = r.json()
+        to_create = {'bio': INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+                        'telegram_spam': False, 'spotify_spam': False}
+        with open('./userge/xcache/database.json', 'w+') as outfile:
+            json.dump(to_create, outfile, indent=4, sort_keys=True)
+
+
+
 
 
 def get_version() -> str:
