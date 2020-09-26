@@ -95,7 +95,7 @@ class Config:
     BOT_FORWARDS = False
 
     # Check if initial token exists and CLIENT_ID_SPOTIFY given
-    if not os.path.exists("./userge/xcache/database.json") and SPOTIFY_CLIENT_ID:
+    if not os.path.exists("./userge/xcache/spotify_database.json") and SPOTIFY_CLIENT_ID:
         INITIAL_BIO = ""
         body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
                 "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
@@ -104,7 +104,7 @@ class Config:
         save = r.json()
         to_create = {'bio': INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
                         'telegram_spam': False, 'spotify_spam': False}
-        with open('./userge/xcache/database.json', 'w+') as outfile:
+        with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
             json.dump(to_create, outfile, indent=4, sort_keys=True)
 
 

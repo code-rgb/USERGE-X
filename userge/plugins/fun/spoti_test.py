@@ -75,7 +75,7 @@ def ms_converter(millis):
 class Database:
 	def __init__(self):
 		try:
-			self.db = json.load(open("./database.json"))
+			self.db = json.load(open("./userge/xcache/spotify_database.json"))
 		except FileNotFoundError:
 			print("You need to run generate.py first, please read the Readme.")
 			
@@ -108,7 +108,7 @@ class Database:
 		return self.db[which + "_spam"]
 
 	def save(self):
-		with open('./database.json', 'w') as outfile:
+		with open('./userge/xcache/spotify_database.json', 'w') as outfile:
 			json.dump(self.db, outfile, indent=4, sort_keys=True)
 
 
