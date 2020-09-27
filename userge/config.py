@@ -96,11 +96,11 @@ class Config:
 
     # Check if initial token exists and CLIENT_ID_SPOTIFY given
     if not os.path.exists("./userge/xcache/spotify_database.json"):
-        sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
+        sdb = SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
         if sdb:
             sdb_msgid = s_db['database_id']
-            sdb_get = await userge.get_messages(LOG_CHANNEL_ID, sdb_msgid)
-            name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
+            sdb_get = userge.get_messages(LOG_CHANNEL_ID, sdb_msgid)
+            name = sdb_get.download(file_name="userge/xcache/spotify_database.json")
         else:
             body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
                     "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
@@ -117,13 +117,13 @@ class Config:
             except FileNotFoundError:
                 _LOG.error('Database not found')
             else:
-                s_database = await userge.send_document(
+                s_database = userge.send_document(
                                 LOG_CHANNEL_ID,
                                 'userge/xcache/spotify_database.json',
                                 disable_notification=True,
                                 caption="#SPOTIFY_DB Don't Delete"
                 )
-                await SPOTIFY_DB.update_one(
+                SPOTIFY_DB.update_one(
                         {'_id': 'SPOTIFY_DB'}, {"$set": {'database_id': s_database.message_id}}, upsert=True)
 
 
