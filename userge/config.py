@@ -17,7 +17,8 @@ import heroku3
 from git import Repo
 from pyrogram import filters
 import requests
-from userge import logging, logbot, get_collection, userge
+from userge import logging, logbot, userge # might have to change it to Client
+from core.database import get_collection
 from . import versions
 
 _REPO = Repo()
