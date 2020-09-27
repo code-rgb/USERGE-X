@@ -7,9 +7,8 @@ import math
 async def progresss(message):
     x = datetime.datetime.now()
     day = int(x.strftime("%j"))
-    
-    percent = math.trunc( day / 366 * 100 )
-    #366 days cuz leap year xD
+    total_days = 365 if x.year % 4 != 0 else 366  # Haha Yes Finally
+    percent = math.trunc( day / total_days * 100 )
     num = round(percent/5)
     
     progress = [
@@ -36,7 +35,5 @@ async def progresss(message):
     "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
     ]
 
-    message_out  =   "<b>Year Progress</b>\n"
-    message_out  += f"<code>{progress[num]} {percent}</code>"
-    message_out  +=  "`%`"
+    message_out  = f"<b>Year Progress</b>\n<code>{progress[num]} {percent}%</code>"
     await message.edit(message_out)
