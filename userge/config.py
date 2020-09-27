@@ -17,13 +17,14 @@ import heroku3
 from git import Repo
 from pyrogram import filters
 import requests
-from userge import logging, logbot
+from userge import logging, logbot, get_collection, userge
 from . import versions
 
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
 logbot.reply_last_msg("Setting Configs ...")
-
+SPOTIFY_DB = get_collection("SPOTIFY_DB")
+CHANNEL = userge.getCLogger("SPOTIFY_DB")
 
 class Config:
     """ Configs to setup Userge """
@@ -92,25 +93,38 @@ class Config:
     STATUS = None
     BOT_FORWARDS = False
 
+
     # Check if initial token exists and CLIENT_ID_SPOTIFY given
     if not os.path.exists("./userge/xcache/spotify_database.json"):
-
-        body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
-                "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
-                "code": SPOTIFY_INITIAL_TOKEN}
-        r = requests.post("https://accounts.spotify.com/api/token", data=body)
-        save = r.json()
-        try:
-            to_create = {'bio': SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
-                            'telegram_spam': False, 'spotify_spam': False}
-            with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
-                json.dump(to_create, outfile, indent=4, sort_keys=True)
-        except KeyError:
-            _LOG.error('SPOTIFY_INITIAL_TOKEN expired recreate one')
-        except FileNotFoundError:
-            _LOG.error('Database not found')
-
-
+        sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
+        if sdb:
+            sdb_msgid = s_db['database_id']
+            sdb_get = await userge.get_messages(LOG_CHANNEL_ID, sdb_msgid)
+            name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
+        else:
+            body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
+                    "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
+                    "code": SPOTIFY_INITIAL_TOKEN}
+            r = requests.post("https://accounts.spotify.com/api/token", data=body)
+            save = r.json()
+            try:
+                to_create = {'bio': SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+                                'telegram_spam': False, 'spotify_spam': False}
+                with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
+                    json.dump(to_create, outfile, indent=4, sort_keys=True)
+            except KeyError:
+                _LOG.error('SPOTIFY_INITIAL_TOKEN expired recreate one')
+            except FileNotFoundError:
+                _LOG.error('Database not found')
+            else:
+                s_database = await userge.send_document(
+                                LOG_CHANNEL_ID,
+                                'userge/xcache/spotify_database.json',
+                                disable_notification=True,
+                                caption="#SPOTIFY_DB Don't Delete"
+                )
+                await SPOTIFY_DB.update_one(
+                        {'_id': 'SPOTIFY_DB'}, {"$set": {'database_id': s_database.message_id}}, upsert=True)
 
 
 
@@ -126,6 +140,7 @@ def get_version() -> str:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:
                 return f"{ver}-fork-[X].{len(diff)}"
-    except:
-        return "Error ! -> https://github.com/code-rgb/USERGE-X/issues/17 for FIX"
+    except Exception as e:
+        _LOG.error(e)
+        return "For Fix See -> https://github.com/code-rgb/USERGE-X/issues/17"
     return ver
