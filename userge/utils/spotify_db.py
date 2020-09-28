@@ -1,8 +1,8 @@
 import os
 import json
 import requests
-import userge
 from userge import logging
+from ..core.ext.raw_client import RawClient
 from ..config import Config
 from ..core.database import get_collection
 
@@ -16,7 +16,7 @@ async def spotify_db_loader():
         sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
         if sdb:
             sdb_msgid = sdb['database_id']
-            sdb_get = await userge.get_messages(Config.LOG_CHANNEL_ID, sdb_msgid)
+            sdb_get = await RawClient.get_messages(Config.LOG_CHANNEL_ID, sdb_msgid)
             name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
         else:
             body = {"client_id": Config.SPOTIFY_CLIENT_ID, "client_secret": Config.SPOTIFY_CLIENT_SECRET,
@@ -34,7 +34,7 @@ async def spotify_db_loader():
             except FileNotFoundError:
                 _LOG.error('Database not found')
             else:
-                s_database = await userge.send_document(
+                s_database = await RawClient.send_document(
                                 Config.LOG_CHANNEL_ID,
                                 'userge/xcache/spotify_database.json',
                                 disable_notification=True,
