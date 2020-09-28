@@ -25,3 +25,4 @@ from .functions import (deEmojify,
                         cleanhtml,
                         thumb_from_audio,
                         rand_array)
+from .spotify_db import spotify_db_loader

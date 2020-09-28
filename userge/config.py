@@ -12,21 +12,18 @@ __all__ = ['Config', 'get_version']
 
 import os
 from typing import Set
-import json
+
 import heroku3
 from git import Repo
 from pyrogram import filters
-import requests
-import userge
+
 from userge import logging, logbot
-from .core.database import get_collection
 from . import versions
 
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
 logbot.reply_last_msg("Setting Configs ...")
-SPOTIFY_DB = get_collection("SPOTIFY_DB")
-#CHANNEL = userge.getCLogger("SPOTIFY_DB")
+
 
 class Config:
     """ Configs to setup Userge """
@@ -46,6 +43,8 @@ class Config:
     UNFINISHED_PROGRESS_STR = os.environ.get("UNFINISHED_PROGRESS_STR")
     ALIVE_MEDIA = os.environ.get("ALIVE_MEDIA", None)
     CUSTOM_PACK_NAME = os.environ.get("CUSTOM_PACK_NAME")
+    INSTA_ID = os.environ.get("INSTA_ID")
+    INSTA_PASS = os.environ.get("INSTA_PASS")
     UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO")
     UPSTREAM_REMOTE = os.environ.get("UPSTREAM_REMOTE")
     SCREENSHOT_API = os.environ.get("SCREENSHOT_API", None)
@@ -64,15 +63,6 @@ class Config:
     GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", None)
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
-    HEROKU_GIT_URL = os.environ.get("HEROKU_GIT_URL", None)
-    ### Spotify
-    SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
-    SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
-    SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
-    SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
-    SPOTIFY_MODE = False
-    ###
-    BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
@@ -94,40 +84,14 @@ class Config:
         if HEROKU_API_KEY and HEROKU_APP_NAME else None
     STATUS = None
     BOT_FORWARDS = False
-
-
-    # Check if initial token exists and CLIENT_ID_SPOTIFY given
-    if not os.path.exists("./userge/xcache/spotify_database.json"):
-        sdb = SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
-        if sdb:
-            sdb_msgid = s_db['database_id']
-            sdb_get = userge.get_messages(LOG_CHANNEL_ID, sdb_msgid)
-            name = sdb_get.download(file_name="userge/xcache/spotify_database.json")
-        else:
-            body = {"client_id": SPOTIFY_CLIENT_ID, "client_secret": SPOTIFY_CLIENT_SECRET,
-                    "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
-                    "code": SPOTIFY_INITIAL_TOKEN}
-            r = requests.post("https://accounts.spotify.com/api/token", data=body)
-            save = r.json()
-            try:
-                to_create = {'bio': SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
-                                'telegram_spam': False, 'spotify_spam': False}
-                with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
-                    json.dump(to_create, outfile, indent=4, sort_keys=True)
-            except KeyError:
-                _LOG.error('SPOTIFY_INITIAL_TOKEN expired recreate one')
-            except FileNotFoundError:
-                _LOG.error('Database not found')
-            else:
-                s_database = userge.send_document(
-                                LOG_CHANNEL_ID,
-                                'userge/xcache/spotify_database.json',
-                                disable_notification=True,
-                                caption="#SPOTIFY_DB Don't Delete"
-                )
-                SPOTIFY_DB.update_one(
-                        {'_id': 'SPOTIFY_DB'}, {"$set": {'database_id': s_database.message_id}}, upsert=True)
-
+    BOT_MEDIA = os.environ.get("BOT_MEDIA", None)
+    ### Spotify
+    SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID', None)
+    SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
+    SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
+    SPOTIFY_INITIAL_BIO = os.environ.get('SPOTIFY_INITIAL_BIO', None)
+    SPOTIFY_MODE = False
+    ###
 
 
 def get_version() -> str:

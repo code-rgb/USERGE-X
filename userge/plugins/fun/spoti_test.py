@@ -10,6 +10,7 @@ from pyrogram.errors import FloodWait, AboutTooLong
 #from importlib import import_module
 import os
 from userge import userge, Message, Config, get_collection
+from userge.utils import spotify_db_loader
 from pyrogram import filters
 
 device_model = "spotify_bot"
@@ -36,6 +37,8 @@ LIMIT = 70 - OFFSET
 
 
 async def _init() -> None:
+	if not os.path.exists("./userge/xcache/spotify_database.json"):
+	    await spotify_db_loader()
     data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
     if data:
         Config.SPOTIFY_MODE = bool(data['is_active'])
