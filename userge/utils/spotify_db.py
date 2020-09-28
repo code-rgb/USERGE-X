@@ -4,7 +4,7 @@ import requests
 import userge
 from userge import logging
 from ..config import Config
-from .core.database import get_collection
+from ..core.database import get_collection
 
 
 _LOG = logging.getLogger(__name__)
