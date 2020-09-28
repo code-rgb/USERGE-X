@@ -17,7 +17,8 @@ import heroku3
 from git import Repo
 from pyrogram import filters
 import requests
-from userge import logging, logbot, userge # might have to change it to Client
+import userge
+from userge import logging, logbot
 from .core.database import get_collection
 from . import versions
 
@@ -25,7 +26,7 @@ _REPO = Repo()
 _LOG = logging.getLogger(__name__)
 logbot.reply_last_msg("Setting Configs ...")
 SPOTIFY_DB = get_collection("SPOTIFY_DB")
-CHANNEL = userge.getCLogger("SPOTIFY_DB")
+#CHANNEL = userge.getCLogger("SPOTIFY_DB")
 
 class Config:
     """ Configs to setup Userge """
