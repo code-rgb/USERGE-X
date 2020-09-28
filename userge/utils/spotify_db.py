@@ -16,7 +16,10 @@ async def spotify_db_loader():
         sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
         if sdb:
             sdb_msgid = sdb['database_id']
-            sdb_get = await RawClient.get_messages(Config.LOG_CHANNEL_ID, sdb_msgid)
+            try:
+                sdb_get = await RawClient.get_messages(Config.LOG_CHANNEL_ID, 8359) #sdb_msgid)
+            except ValueError as ve:
+                _LOG.error(ve)
             name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
         else:
             body = {"client_id": Config.SPOTIFY_CLIENT_ID, "client_secret": Config.SPOTIFY_CLIENT_SECRET,
