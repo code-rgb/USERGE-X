@@ -3,13 +3,16 @@ import time
 #import readable_time
 from datetime import datetime
 
+
+import requests
+
 import json
 
 import requests
 from pyrogram.errors import FloodWait, AboutTooLong
 #from importlib import import_module
 import os
-from userge import userge, Message, Config, get_collection
+from userge import userge, Message, Config, get_collection, logging
 from userge.utils import spotify_db_loader
 from pyrogram import filters
 
@@ -19,7 +22,8 @@ system_version, app_version = version, version
 
 StartTime = time.time()
 
-
+_LOG = logging.getLogger(__name__)
+SPOTIFY_DB = get_collection("SPOTIFY_DB")
 SAVED_SETTINGS = get_collection("CONFIGS")
 LOG = userge.getLogger(__name__)
 ubot = userge.bot
@@ -76,6 +80,8 @@ def ms_converter(millis):
 
 class Database:
 	def __init__(self):
+		if not os.path.exists("./userge/xcache/spotify_database.json"):
+		    spotify_db_loader()
 		try:
 			self.db = json.load(open("./userge/xcache/spotify_database.json"))
 		except FileNotFoundError:
@@ -324,3 +330,48 @@ async def spotify_biox():
 		# skip means a flood error stopped the whole program, no need to wait another 30 seconds after that
 		if not skip:
 			await asyncio.sleep(30)
+
+
+
+
+
+async def spotify_db_loader():
+	sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
+	if sdb:
+		sdb_msgid = sdb['database_id']
+		print(f"{Config.LOG_CHANNEL_ID}\n\n{sdb_msgid}")
+		sdb_get = await userge.get_messages(Config.LOG_CHANNEL_ID, int(sdb_msgid))
+		_LOG.error(f"sdb_get = {sdb_get}")
+		await userge.download_media(
+			sdb_get.document,
+			file_name="userge/xcache/spotify_database.json")
+	else:
+		body = {"client_id": Config.SPOTIFY_CLIENT_ID, "client_secret": Config.SPOTIFY_CLIENT_SECRET,
+				"grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
+				"code": Config.SPOTIFY_INITIAL_TOKEN}
+		r = requests.post("https://accounts.spotify.com/api/token", data=body)
+		save = r.json()
+		try:
+			to_create = {'bio': Config.SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+							'telegram_spam': False, 'spotify_spam': False}
+			with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
+				json.dump(to_create, outfile, indent=4, sort_keys=True)
+		except KeyError:
+			_LOG.error('SPOTIFY_INITIAL_TOKEN expired recreate one')
+		except FileNotFoundError:
+			_LOG.error('Database not found')
+		else:
+			s_database = await userge.send_document(
+							Config.LOG_CHANNEL_ID,
+							'userge/xcache/spotify_database.json',
+							disable_notification=True,
+							caption="#SPOTIFY_DB Don't Delete"
+			)
+			await SPOTIFY_DB.update_one(
+					{'_id': 'SPOTIFY_DB'}, {"$set": {'database_id': s_database.message_id}}, upsert=True)
+
+
+
+
+
+
