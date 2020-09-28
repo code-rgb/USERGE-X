@@ -37,13 +37,11 @@ LIMIT = 70 - OFFSET
 
 
 async def _init() -> None:
+	data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
+	if data:
+		Config.SPOTIFY_MODE = bool(data['is_active'])
 	if not os.path.exists("./userge/xcache/spotify_database.json"):
-	    await spotify_db_loader()
-    data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
-    if data:
-        Config.SPOTIFY_MODE = bool(data['is_active'])
-
-
+		await spotify_db_loader()
 
 
 @userge.on_cmd("spotify_bio", about={'header': "enable / disable Spotify Bio"}, allow_channels=False)

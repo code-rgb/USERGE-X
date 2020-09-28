@@ -42,11 +42,11 @@ async def mentionadmins(message: Message):
                     mentions += f" `{u_id}`"
             elif status == "administrator":
                 if men_admins:
-                    mentions += f"\n ⚜ [{full_name}](tg://user?id={u_id})"
+                    mentions += f"\n >> [{full_name}](tg://user?id={u_id})"
                 elif username:
-                    mentions += f"\n ⚜ [{full_name}](https://t.me/{username})"
+                    mentions += f"\n >> [{full_name}](https://t.me/{username})"
                 else:
-                    mentions += f"\n ⚜ {full_name}"
+                    mentions += f"\n >> {full_name}"
                 if show_id:
                     mentions += f" `{u_id}`"
     except Exception as e:
