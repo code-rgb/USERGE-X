@@ -20,7 +20,9 @@ async def spotify_db_loader():
                 sdb_get = await RawClient.get_messages(Config.LOG_CHANNEL_ID, 8359) #sdb_msgid)
             except ValueError as ve:
                 _LOG.error(ve)
-            name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
+            await RawClient.download_media(
+                sdb_get.document,
+                file_name="userge/xcache/spotify_database.json")
         else:
             body = {"client_id": Config.SPOTIFY_CLIENT_ID, "client_secret": Config.SPOTIFY_CLIENT_SECRET,
                     "grant_type": "authorization_code", "redirect_uri": "https://example.com/callback",
