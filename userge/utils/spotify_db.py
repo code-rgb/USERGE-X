@@ -21,7 +21,7 @@ async def spotify_db_loader():
         
             _LOG.error(f"sdb_get = {sdb_get}")
             await RawClient.download_media(
-                sdb_get.document,
+                sdb_get,
                 file_name="userge/xcache/spotify_database.json")
         else:
             body = {"client_id": Config.SPOTIFY_CLIENT_ID, "client_secret": Config.SPOTIFY_CLIENT_SECRET,
