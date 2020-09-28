@@ -15,7 +15,7 @@ async def spotify_db_loader():
     if not os.path.exists("./userge/xcache/spotify_database.json"):
         sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
         if sdb:
-            sdb_msgid = s_db['database_id']
+            sdb_msgid = sdb['database_id']
             sdb_get = await userge.get_messages(Config.LOG_CHANNEL_ID, sdb_msgid)
             name = await sdb_get.download(file_name="userge/xcache/spotify_database.json")
         else:
