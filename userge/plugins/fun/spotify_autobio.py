@@ -48,15 +48,16 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
 
-async def _init() -> None:
-	global database
-	data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
-	if data:
-		Config.SPOTIFY_MODE = bool(data['is_active'])
-	if not os.path.exists("./userge/xcache/spotify_database.json"):
-		await spotify_db_loader()
-		await asyncio.sleep(5)
-		database = Database()
+if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY_INITIAL_TOKEN):
+	async def _init() -> None:
+		global database
+		data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
+		if data:
+			Config.SPOTIFY_MODE = bool(data['is_active'])
+		if not os.path.exists("./userge/xcache/spotify_database.json"):
+			await spotify_db_loader()
+			await asyncio.sleep(5)
+			database = Database()
 
 
 @userge.on_cmd("spotify_bio", about={'header': "enable / disable Spotify Bio"}, allow_channels=False)
@@ -90,8 +91,6 @@ def ms_converter(millis):
 
 
 async def spotify_db_loader():
-	if not (Config.SPOTIFY_CLIENT_ID or Config.SPOTIFY_CLIENT_SECRET or Config.SPOTIFY_INITIAL_TOKEN):
-		return
 	sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
 	if sdb:
 		sdb_msgid = sdb['database_id']
