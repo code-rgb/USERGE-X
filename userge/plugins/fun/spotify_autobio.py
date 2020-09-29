@@ -107,7 +107,7 @@ async def spotify_db_loader():
 		r = requests.post("https://accounts.spotify.com/api/token", data=body)
 		save = r.json()
 		try:
-			to_create = {'bio': Config.SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+			to_create = {'bio': "", 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
 							'telegram_spam': False, 'spotify_spam': False}
 			with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
 				json.dump(to_create, outfile, indent=4, sort_keys=True)
