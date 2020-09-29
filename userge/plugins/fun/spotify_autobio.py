@@ -1,6 +1,8 @@
 """Module to display Currenty Playing Spotify Songs in your bio"""
 
 
+
+
 #  CREDITS:
 # [Poolitzer](https://t.me/poolitzer)  (for creating spotify bio plugin)
 #
@@ -9,7 +11,6 @@
 #
 #  Github.com/code-rgb [ TG - @DetetedUser420 ]
 #  Ported it to Pyrogram and improved Heroku compatible
-
 
 import asyncio
 import time
@@ -42,10 +43,7 @@ LIMIT = 70 - OFFSET
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
+    ubot = userge.bot if Config.HU_STRING_SESSION else userge
 
 
 if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY_INITIAL_TOKEN):
