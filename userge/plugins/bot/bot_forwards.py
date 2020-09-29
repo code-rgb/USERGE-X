@@ -5,15 +5,14 @@
 
 from userge import userge, Message, Config, get_collection
 from pyrogram import filters
-from pyrogram.errors.exceptions import MessageIdInvalid
-from pyrogram.errors import FloodWait, BadRequest
+from pyrogram.errors import FloodWait, BadRequest, MessageIdInvalid
 import json
 import os
 import asyncio
 
 
-LOG = userge.getLogger("Bot_Forwards")
-CHANNEL = userge.getCLogger("Bot_Forwards")
+LOG = userge.getLogger(__name__)
+CHANNEL = userge.getCLogger(__name__)
 
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
@@ -78,7 +77,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 try:
                     data = json.load(open(PATH))
                     user_id = data[0][str(replied.message_id)]
-                    await ubot.forward_messages(user_id, message.chat.id, msg_id)
+                    await ubot.forward_messages(user_id, message.chat.id, msg_id, as_copy=True)
                 except BadRequest:
                     return
                 except:
@@ -146,7 +145,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             try:
                 b_id = c['user_id']
                 await ubot.send_message(b_id, "🔊 You received a **new** Broadcast.")
-                await ubot.forward_messages(b_id, message.chat.id, b_msg)
+                await ubot.forward_messages(b_id, message.chat.id, b_msg, as_copy=True)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:

@@ -40,3 +40,4 @@ jikanpy
 nekos.py
 html-telegraph-poster
 pymediainfo
+nest_asyncio
