@@ -1,4 +1,4 @@
-"""Module Based on Spotify API to get Currenty Playing Songs in your bio"""
+"""Module to display Currenty Playing Spotify Songs in your bio"""
 
 
 #  CREDITS:
