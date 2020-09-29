@@ -25,3 +25,4 @@ from .functions import (deEmojify,
                         cleanhtml,
                         thumb_from_audio,
                         rand_array)
+from .test_class import Database
