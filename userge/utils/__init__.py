@@ -23,6 +23,4 @@ from .functions import (deEmojify,
                         mention_html,
                         escape_markdown,
                         cleanhtml,
-                        thumb_from_audio,
-                        rand_array)
-from .spotify_db_class import Database
+                        thumb_from_audio)
