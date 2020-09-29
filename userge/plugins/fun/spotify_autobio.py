@@ -67,7 +67,7 @@ async def spotify_bio_(message: Message):
 		if USER_INITIAL_BIO:
 			await userge.update_profile(bio=USER_INITIAL_BIO['bio'])
 			USER_INITIAL_BIO.clear()
-		await message.edit("`Spotify Bio disabled !`", del_in=3)
+		await message.edit(" `Spotify Bio disabled !`", del_in=3)
 	else:
 		await message.edit("✅ `Spotify Bio enabled` \nCurrent Spotify playback will updated in BIO", del_in=5)
 		USER_INITIAL_BIO['bio'] = (await userge.get_chat(Config.OWNER_ID)).description or ""
