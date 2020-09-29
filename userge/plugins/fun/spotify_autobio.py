@@ -90,6 +90,8 @@ def ms_converter(millis):
 
 
 async def spotify_db_loader():
+	if not (Config.SPOTIFY_CLIENT_ID or Config.SPOTIFY_CLIENT_SECRET or Config.SPOTIFY_INITIAL_TOKEN):
+		return
 	sdb = await SPOTIFY_DB.find_one({'_id': 'SPOTIFY_DB'})
 	if sdb:
 		sdb_msgid = sdb['database_id']
