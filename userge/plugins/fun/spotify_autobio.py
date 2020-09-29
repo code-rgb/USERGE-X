@@ -53,7 +53,7 @@ if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY
 		global database
 		data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
 		if data:
-			Config.SPOTIFY_MODE = bool(data['is_active'])
+			Config.SPOTIFY_MODE = bool(data['is_active']) 
 		if not os.path.exists("./userge/xcache/spotify_database.json"):
 			await spotify_db_loader()
 			await asyncio.sleep(5)
@@ -106,7 +106,7 @@ async def spotify_db_loader():
 		r = requests.post("https://accounts.spotify.com/api/token", data=body)
 		save = r.json()
 		try:
-			to_create = {'bio': Config.SPOTIFY_INITIAL_BIO, 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
+			to_create = {'bio': "", 'access_token': save['access_token'], 'refresh_token': save['refresh_token'],
 							'telegram_spam': False, 'spotify_spam': False}
 			with open('./userge/xcache/spotify_database.json', 'w+') as outfile:
 				json.dump(to_create, outfile, indent=4, sort_keys=True)
