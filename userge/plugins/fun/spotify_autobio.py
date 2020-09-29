@@ -48,13 +48,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
 
-
-async def _init() -> None:
-	global database
-	data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
-	if data:
-		Config.SPOTIFY_MODE = bool(data['is_active'])
-	if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY_INITIAL_TOKEN):
+if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY_INITIAL_TOKEN):
+	async def _init() -> None:
+		global database
+		data = await SAVED_SETTINGS.find_one({'_id': 'SPOTIFY_MODE'})
+		if data:
+			Config.SPOTIFY_MODE = bool(data['is_active']) 
 		if not os.path.exists("./userge/xcache/spotify_database.json"):
 			await spotify_db_loader()
 			await asyncio.sleep(5)
