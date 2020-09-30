@@ -388,10 +388,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         global MEDIA_TYPE, MEDIA_URL
         media_link = Config.ALIVE_MEDIA
         if media_link:
-            imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png)$"
+            imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png|jpeg)$"
             match = re.search(imgur, media_link)
             if not match:
-                telegraph = r"^http[s]?://telegra\.ph/file/(\w+)\.(jpg|png)$"
+                telegraph = r"^http[s]?://telegra\.ph/file/(\w+)\.(jpg|png|jpeg)$"
                 match = re.search(telegraph, media_link)
             if match:
                 media_type = match.group(2)
@@ -431,6 +431,75 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             reply_markup=InlineKeyboardMarkup(owner)
                         )
                 )
+
+            if str_y[0] == "reddit":
+                reddit_api = "https://meme-api.herokuapp.com/gimme/"
+                if len(str_y) == 2:
+                    subreddit_regex  =  r"^([a-zA-Z]+)\.$"
+                    match = re.search(subreddit_regex, str_y[1])
+                    if match:
+                        subreddit = match.group(1)
+                        reddit_api += f"{subreddit}/20"
+                    else:
+                        return
+
+                else:
+                    reddit_api += "20"
+
+                cn = requests.get(reddit_api)
+                r = cn.json()
+                if "code" in r:
+                    bool_gallery = False
+                    code = r['code']
+                    code_message = r['message']
+                    results.append(
+                        InlineQueryResultArticle(
+                            title=code,
+                            input_message_content=InputTextMessageContent(
+                                f"**Error Code: {code}**\n`{code_message}`"
+                            ),
+                            description="Enter A Valid Subreddit Name !",
+                            thumb_url="https://i.imgur.com/7a7aPVa.png"
+                        )
+                    )
+                else:
+                    bool_gallery = True
+                    for post in r['memes']:
+                        if hasattr(post, 'url'):
+                            postlink = post['postLink']
+                            subreddit = post['subreddit']
+                            title = post['title']
+                            image = post['url']
+                            author = post['author']
+                            upvote = post['ups']
+                            caption = f"<b>{title}</b>\n"
+                            caption += f"`Posted by u/{author}`\n"
+                            caption += f"↕️ <code>{upvote}</code>\n"
+                            if post['spoiler']:
+                                caption += "⚠️ Post marked as SPOILER\n"
+                            if post['nsfw']:
+                                caption += "🔞 Post marked Adult \n"
+                            buttons = [[
+                                InlineKeyboardButton(f"Source: r/{subreddit}", url=postlink)
+                            ]]
+                            results.append(
+                                    InlineQueryResultPhoto(
+                                        photo_url=image,
+                                        caption=caption,
+                                        reply_markup=InlineKeyboardMarkup(buttons)
+                                    )
+                            )
+                await inline_query.answer(
+                    results=results,
+                    cache_time=1,
+                    is_gallery=bool_gallery,
+                    switch_pm_text="Available Commands",
+                    switch_pm_parameter="inline"
+                )
+                return
+
+
+
 
             if string =="rick":
                 rick = [[
