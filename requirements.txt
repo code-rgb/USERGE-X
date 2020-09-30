@@ -12,11 +12,16 @@ googletrans
 hachoir
 heroku3
 html-telegraph-poster
+instaloader
+jikanpy
 motor
+natsort
+nekos.py
 oauth2client
 Pillow==7.1.0
 psutil
 pybase64
+pymediainfo
 pyrogram>=1.0.7
 pySmartDL
 python-dotenv
@@ -36,7 +41,3 @@ urbandict==0.5
 wget
 wikipedia
 youtube_dl
-jikanpy
-nekos.py
-html-telegraph-poster
-pymediainfo

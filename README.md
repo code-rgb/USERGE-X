@@ -87,6 +87,22 @@
 <h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
 
 
+### Run on Docker 🐳 
+
+1. Install Docker ( [Guide](https://docs.docker.com/engine/install/ubuntu/) )
+2. Clone the repo
+    `git clone https://github.com/code-rgb/USERGE-X.git`
+3. `cd USERGE-X`
+4. Create the docker image
+    `docker build -t userge .`
+5. `cd ..`
+6. `wget https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/config.env.sample -O config.env`
+7. Edit the file with your text editor
+    `vi config.env`
+8. Finally run the container
+    `docker run -dv "$(pwd)/config.env:/app/config.env" USERGE-X`
+
+
 <h2>Guide to Upstream Forked Repo</h2>
 <a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
 <br>
