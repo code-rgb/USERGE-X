@@ -438,8 +438,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     subreddit_regex  =  r"^([a-zA-Z]+)\.$"
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
-                        subreddit = match.group(1)
-                        reddit_api += f"{subreddit}/20"
+                        subreddit_name = match.group(1)
+                        reddit_api += f"{subreddit_name}/20"
                     else:
                         return
 
@@ -491,7 +491,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             )
                 await inline_query.answer(
                     results=results,
-                    cache_time=1,
+                    cache_time=5,
                     is_gallery=bool_gallery,
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
