@@ -102,7 +102,7 @@ class ChannelLogger:
         return msg.message_id
 
     async def fwd_msg(self,
-                      message: '_message.Message',
+                      message: Union['_message.Message', 'RawMessage'],
                       name: str = '',
                       as_copy: bool = True,
                       remove_caption: bool = False) -> None:
@@ -136,11 +136,11 @@ class ChannelLogger:
             if message.media:
                 asyncio.get_event_loop().create_task(self.log("**Forwarding Message...**", name))
                 try:
-                    await self._client.forward_messages(chat_id=self._id,
-                                                        from_chat_id=message.chat.id,
-                                                        message_ids=message.message_id,
-                                                        as_copy=as_copy,
-                                                        remove_caption=remove_caption)
+                    await message._client.forward_messages(chat_id=self._id,  # pylint: disable=protected-access
+                                                           from_chat_id=message.chat.id,
+                                                           message_ids=message.message_id,
+                                                           as_copy=as_copy,
+                                                           remove_caption=remove_caption)
                 except ValueError:
                     pass
             else:
@@ -211,39 +211,40 @@ class ChannelLogger:
         Returns:
             None
         """
-        if message_id and isinstance(message_id, int):
-            message = await client.get_messages(chat_id=self._id,
-                                                message_ids=message_id)
-            caption = ''
-            file_id = file_ref = None
-            if message.caption:
-                caption = message.caption.html.split('\n\n', maxsplit=1)[-1]
-            elif message.text:
-                caption = message.text.html.split('\n\n', maxsplit=1)[-1]
-            if caption:
-                u_dict = await client.get_user_dict(user_id)
-                chat = await client.get_chat(chat_id)
-                u_dict.update({
-                    'chat': chat.title if chat.title else "this group",
-                    'count': chat.members_count})
-                caption = caption.format_map(SafeDict(**u_dict))
-            file_id, file_ref = get_file_id_and_ref(message)
-            caption, buttons = parse_buttons(caption)
-            if message.media and file_id and file_ref:
-                msg = await client.send_cached_media(
-                    chat_id=chat_id,
-                    file_id=file_id,
-                    file_ref=file_ref,
-                    caption=caption,
-                    reply_to_message_id=reply_to_message_id,
-                    reply_markup=buttons if client.is_bot and buttons else None)
-            else:
-                msg = await client.send_message(
-                    chat_id=chat_id,
-                    text=caption,
-                    reply_to_message_id=reply_to_message_id,
-                    disable_web_page_preview=True,
-                    reply_markup=buttons if client.is_bot and buttons else None)
-            if del_in and msg:
-                await asyncio.sleep(del_in)
-                await msg.delete()
+        if not message_id or not isinstance(message_id, int):
+            return
+        message = await client.get_messages(chat_id=self._id,
+                                            message_ids=message_id)
+        caption = ''
+        file_id = file_ref = None
+        if message.caption:
+            caption = message.caption.html.split('\n\n', maxsplit=1)[-1]
+        elif message.text:
+            caption = message.text.html.split('\n\n', maxsplit=1)[-1]
+        if caption:
+            u_dict = await client.get_user_dict(user_id)
+            chat = await client.get_chat(chat_id)
+            u_dict.update({
+                'chat': chat.title if chat.title else "this group",
+                'count': chat.members_count})
+            caption = caption.format_map(SafeDict(**u_dict))
+        file_id, file_ref = get_file_id_and_ref(message)
+        caption, buttons = parse_buttons(caption)
+        if message.media and file_id and file_ref:
+            msg = await client.send_cached_media(
+                chat_id=chat_id,
+                file_id=file_id,
+                file_ref=file_ref,
+                caption=caption,
+                reply_to_message_id=reply_to_message_id,
+                reply_markup=buttons if client.is_bot and buttons else None)
+        else:
+            msg = await client.send_message(
+                chat_id=chat_id,
+                text=caption,
+                reply_to_message_id=reply_to_message_id,
+                disable_web_page_preview=True,
+                reply_markup=buttons if client.is_bot and buttons else None)
+        if del_in and msg:
+            await asyncio.sleep(del_in)
+            await msg.delete()
