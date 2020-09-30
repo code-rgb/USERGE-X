@@ -41,13 +41,6 @@ OFFSET = 1
 LIMIT = 70 - OFFSET
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
 if (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET and Config.SPOTIFY_INITIAL_TOKEN):
 	async def _init() -> None:
 		global database
@@ -176,20 +169,20 @@ async def spotify_biox():
 				if save_spam("spotify", False):
 					stringy = "**[INFO]**\n\nEverything returned back to normal, the previous spotify issue has been " \
 							"resolved."
-					await ubot.send_message(Config.OWNER_ID, stringy)
+					await CHANNEL.log(stringy)
 				
 			else:
 				if save_spam("spotify", True):
 					# currently item is not passed when the user plays a podcast
 					string = f"**[INFO]**\n\nThe playback {received['currently_playing_type']} didn't gave me any " \
 						f"additional information, so I skipped updating the bio."
-					await ubot.send_message(Config.OWNER_ID, string)
+					await CHANNEL.log(string)
 	
 		# 429 means flood limit, we need to wait
 		elif r.status_code == 429:
 			to_wait = r.headers['Retry-After']
 			LOG.error(f"Spotify, have to wait for {str(to_wait)}")
-			await ubot.send_message(Config.OWNER_ID, f'**[WARNING]**\n\nI caught a spotify api limit. I shall sleep for '
+			await CHANNEL.log(f'**[WARNING]**\n\nI caught a spotify api limit. I shall sleep for '
 										f'{str(to_wait)} seconds until I refresh again')
 			skip = True
 			await asyncio.sleep(int(to_wait))
@@ -198,7 +191,7 @@ async def spotify_biox():
 			if save_spam("spotify", False):
 				stringy = "**[INFO]**\n\nEverything returned back to normal, the previous spotify issue has been " \
 						"resolved."
-				await ubot.send_message(Config.OWNER_ID, stringy)
+				await CHANNEL.log(stringy)
 			pass
 		# 401 means our access token is expired, so we need to refresh it
 		elif r.status_code == 401:
@@ -222,7 +215,7 @@ async def spotify_biox():
 			if save_spam("spotify", True):
 				string = f"**[WARNING]**\n\nSpotify returned a Bad gateway, which means they have a problem on their " \
 					f"servers. The bot will continue to run but may not update the bio for a short time."
-				await ubot.send_message(Config.OWNER_ID, string)
+				await CHANNEL.log(string)
 		# 503 means service unavailable, its an issue on spotify site which we can do nothing about. 30 seconds wait
 		# shouldn't put too much pressure on the spotify server, so we are just going to notify the user once
 		elif r.status_code == 503:
@@ -230,16 +223,16 @@ async def spotify_biox():
 				string = f"**[WARNING]**\n\nSpotify said that the service is unavailable, which means they have a " \
 						f"problem on their servers. The bot will continue to run but may not update the bio for a " \
 						f"short time."
-				await ubot.send_message(Config.OWNER_ID, string)
+				await CHANNEL.log(string)
 		# 404 is a spotify error which isn't supposed to happen (since our URL is correct). Track the issue here:
 		# https://github.com/spotify/web-api/issues/1280
 		elif r.status_code == 404:
 			if save_spam("spotify", True):
 				string = f"**[INFO]**\n\nSpotify returned a 404 error, which is a bug on their side."
-				await ubot.send_message(Config.OWNER_ID, string)
+				await CHANNEL.log(string)
 		# catch anything else
 		else:
-			await ubot.send_message(Config.OWNER_ID, '**[ERROR]**\n\nOK, so something went reeeally wrong with spotify. The bot '
+			await CHANNEL.log('**[ERROR]**\n\nOK, so something went reeeally wrong with spotify. The bot '
 										'was stopped.\nStatus code: ' + str(r.status_code) + '\n\nText: ' + r.text)
 			LOG.error(f"Spotify, error {str(r.status_code)}, text: {r.text}")
 			# stop the whole program since I dont know what happens here and this is the safest thing we can do
@@ -290,7 +283,7 @@ async def spotify_biox():
 							if save_spam("telegram", False):
 								stringy = "**[INFO]**\n\nEverything returned back to normal, the previous telegram " \
 										"issue has been resolved."
-								await ubot.send_message(Config.OWNER_ID, stringy)
+								await CHANNEL.log(stringy)
 						# this can happen if our LIMIT check failed because telegram counts emojis twice and python
 						# doesnt. Refer to the constants file to learn more about this
 						except AboutTooLong:
@@ -298,19 +291,19 @@ async def spotify_biox():
 								stringy = f'**[WARNING]**\n\nThe biography I tried to insert was too long. In order ' \
 									f'to not let that happen again in the future, please read the part about OFFSET ' \
 									f'in the constants. Anyway, here is the bio I tried to insert:\n\n{new_bio}'
-								await ubot.send_message(Config.OWNER_ID, stringy)
+								await CHANNEL.log(stringy)
 				# if we dont have a bio, everything was too long, so we tell the user that
 				if not new_bio:
 					if save_spam("telegram", True):
 						to_send = f"**[INFO]**\n\nThe current track exceeded the character limit, so the bio wasn't " \
 							f"updated.\n\n Track: {title}\nInterpret: {interpret}"
-						await ubot.send_message(Config.OWNER_ID, to_send)
+						await CHANNEL.log(to_send)
 			# not to_insert means no playback
 			else:
 				if save_spam("telegram", False):
 					stringy = "**[INFO]**\n\nEverything returned back to normal, the previous telegram issue has " \
 							"been resolved."
-					await ubot.send_message(Config.OWNER_ID, stringy)
+					await CHANNEL.log(stringy)
 				old_bio = database.return_bio()
 				# this means the bio is blank, so we save that as the new one
 				if not bio:
@@ -328,7 +321,7 @@ async def spotify_biox():
 		except FloodWait as e:
 			to_wait = e.seconds
 			LOG.error(f"to wait for {str(to_wait)}")
-			await ubot.send_message(Config.OWNER_ID, f'**[WARNING]**\n\nI caught a telegram api limit. I shall sleep '
+			await CHANNEL.log(f'**[WARNING]**\n\nI caught a telegram api limit. I shall sleep '
 										f'{str(to_wait)} seconds until I refresh again')
 			skip = True
 			await asyncio.sleep(int(to_wait))
@@ -414,10 +407,13 @@ async def sp_profile_(message: Message):
 	me = requests.get('https://api.spotify.com/v1/me', headers=oauth)
 	a_me = me.json()
 	name = a_me['display_name']
-	country = a_me['country'] if hasattr(a_me, 'country') else "Not Available"
+	country = a_me['country'] if hasattr(a_me, 'country') else ""
 	me_img = a_me['images'][0]['url'] if hasattr(a_me, 'images') else ""
 	me_url = a_me['external_urls']['spotify']
-	await message.edit(f"**Spotify name**: [{name}]({me_img})\n**Profile link:** [here]({me_url})\n**Country:** {country.upper()}")
+	profile_text = f"**Spotify name**: [{name}]({me_img})\n**Profile link:** [here]({me_url})"
+	if country:
+		profile_text += f"\n**Country:** {country}"
+	await message.edit(profile_text)
 
 
 @userge.on_cmd("sp_recents", about={'header': "Get Recently Played Spotify Songs"})
@@ -434,11 +430,11 @@ async def sp_recents_(message: Message):
 		get_name = track['name']
 		ex_link = track['external_urls']
 		get_link = ex_link['spotify']
-		f = open("recent_played_song.txt", "a")
+		f = open("userge/xcache/recent_played_song.txt", "a")
 		f.write('• [' + get_name + ']'+ '(' + get_link + ')'+ "\n")
 		f.close()
 	await message.edit("`Getting recent played songs...`")
-	f = open("recent_played_song.txt", "r+")
+	f = open("userge/xcache/recent_played_song.txt", "r+")
 	recent = f.read()
 	f.truncate(0) 
 	await message.edit("🎵 **Recently played songs:**\n" + recent, disable_web_page_preview=True)
