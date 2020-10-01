@@ -435,21 +435,21 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if str_y[0] == "reddit":
                 reddit_api = "https://meme-api.herokuapp.com/gimme/"
                 if len(str_y) == 2:
-                    subreddit_regex  =  r"([a-zA-Z]+)\.$"
+                    subreddit_regex  =  r"^([a-zA-Z]+)\.$"
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/10"
+                        reddit_api += f"{subreddit_name}/15"
                     else:
                         return
 
                 else:
-                    reddit_api += "10"
+                    reddit_api += "15"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()
                 if "code" in r:
-                    bool_gallery = False
+                    bool_is_gallery = False
                     code = r['code']
                     code_message = r['message']
                     results.append(
@@ -463,9 +463,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                     )
                 else:
-                   
+                    bool_is_gallery = True
                     for post in r['memes']:
-                        if hasattr(post, 'url'):
+                        if 'url' in post:
                             postlink = post['postLink']
                             subreddit = post['subreddit']
                             title = post['title']
@@ -492,7 +492,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 await inline_query.answer(
                     results=results,
                     cache_time=1,
-                   
+                    is_gallery=bool_is_gallery,
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
                 )
