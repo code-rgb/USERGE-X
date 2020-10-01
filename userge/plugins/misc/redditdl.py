@@ -64,7 +64,7 @@ async def reddit_fetch(message: Message):
         )
     else:
         await message.delete()
-        caption += f"Source: [r/{subreddit}]({postlink})"
+        captionx += f"Source: [r/{subreddit}]({postlink})"
         await userge.send_photo(
             chat_id=message.chat.id,
             photo=image,
