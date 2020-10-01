@@ -3,7 +3,7 @@
 # Copyright (C) 2020 By - USERGE-X
 # All rights reserved.
 # Author - @iTz_Black007 // blacky 
-# Impoved by - Github/code-rgb
+# Co Author - Github/code-rgb
 
 
 import asyncio
@@ -34,22 +34,18 @@ async def gen_meme(message: Message):
         return await message.edit('First get `IMGFLIP_ID` and `IMGFLIP_ID` via **https://imgflip.com/**')
     text = message.filtered_input_str
     if not text:
-        await message.err("No input found!", del_in=5)
-        return
+        return await message.err("No input found!", del_in=5)
     if ";" in text:
         text1, text2 = text.split(";", 1)
     else: 
-        await message.err("Invalid Input! Check help for more info!", del_in=5)
-        return
+        return await message.err("Invalid Input! Check help for more info!", del_in=5)
     view_data = json.load(open(PATH))
     if '-m' in message.flags:
         meme_choice = view_data[int(message.flags['-m'])]
-        choice_id  = meme_choice['id']
     else:
         meme_choice = eval(rand_array(view_data))
-        choice_id = meme_choice['id']
+    choice_id = meme_choice['id']
     await message.edit(f"<code>Generating a meme for ...</code>\n{meme_choice['name']}")
-    await asyncio.sleep(3)
     username = Config.IMGFLIP_ID
     password = Config.IMGFLIP_PASS
     reply = message.reply_to_message
@@ -62,6 +58,7 @@ async def gen_meme(message: Message):
             'text1': text2
             }
     response = requests.request('POST',URL,params=params).json()
+    await asyncio.sleep(2)
     meme_image = response['data']['url']
     if not response['success']:
         return await message.err(f"<code>{response['error_message']}</code>", del_in=5)
