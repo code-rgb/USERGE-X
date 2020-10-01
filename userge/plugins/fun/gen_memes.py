@@ -31,7 +31,7 @@ PATH = 'resources/meme_data.txt'
 async def gen_meme(message: Message):
     """ Memesss Generator """
     if not (Config.IMGFLIP_ID or Config.IMGFLIP_PASS):
-        return await message.edit('First get `IMGFLIP_ID` and `IMGFLIP_ID` via **https://imgflip.com/**')
+        return await message.edit('First get `IMGFLIP_ID` = username and `IMGFLIP_PASS` = password via **https://imgflip.com/**')
     text = message.filtered_input_str
     if not text:
         return await message.err("No input found!", del_in=5)
