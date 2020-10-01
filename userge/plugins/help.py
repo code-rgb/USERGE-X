@@ -439,12 +439,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/15"
+                        reddit_api += f"{subreddit_name}/30"
                     else:
                         return
 
                 else:
-                    reddit_api += "15"
+                    reddit_api += "30"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()
@@ -454,7 +454,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     code_message = r['message']
                     results.append(
                         InlineQueryResultArticle(
-                            title=code,
+                            title=str(code),
                             input_message_content=InputTextMessageContent(
                                 f"**Error Code: {code}**\n`{code_message}`"
                             ),
