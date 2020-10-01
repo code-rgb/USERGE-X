@@ -68,6 +68,6 @@ async def reddit_fetch(message: Message):
         await userge.send_photo(
             chat_id=message.chat.id,
             photo=image,
-            caption=caption,
+            caption=captionx,
             reply_to_message_id=reply_id,
         )
