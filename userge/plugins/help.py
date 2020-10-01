@@ -439,22 +439,22 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/20"
+                        reddit_api += f"{subreddit_name}/30"
                     else:
                         return
 
                 else:
-                    reddit_api += "20"
+                    reddit_api += "30"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()
                 if "code" in r:
-                    bool_gallery = False
+                    bool_is_gallery = False
                     code = r['code']
                     code_message = r['message']
                     results.append(
                         InlineQueryResultArticle(
-                            title=code,
+                            title=str(code),
                             input_message_content=InputTextMessageContent(
                                 f"**Error Code: {code}**\n`{code_message}`"
                             ),
@@ -463,36 +463,36 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                     )
                 else:
-                    bool_gallery = True
+                    bool_is_gallery = True
                     for post in r['memes']:
-                        if hasattr(post, 'url'):
+                        if 'url' in post:
                             postlink = post['postLink']
                             subreddit = post['subreddit']
                             title = post['title']
                             image = post['url']
                             author = post['author']
                             upvote = post['ups']
-                            caption = f"<b>{title}</b>\n"
-                            caption += f"`Posted by u/{author}`\n"
-                            caption += f"↕️ <code>{upvote}</code>\n"
+                            captionx = f"<b>{title}</b>\n"
+                            captionx += f"`Posted by u/{author}`\n"
+                            captionx += f"↕️ <code>{upvote}</code>\n"
                             if post['spoiler']:
-                                caption += "⚠️ Post marked as SPOILER\n"
+                                captionx += "⚠️ Post marked as SPOILER\n"
                             if post['nsfw']:
-                                caption += "🔞 Post marked Adult \n"
+                                captionx += "🔞 Post marked Adult \n"
                             buttons = [[
                                 InlineKeyboardButton(f"Source: r/{subreddit}", url=postlink)
                             ]]
                             results.append(
                                     InlineQueryResultPhoto(
                                         photo_url=image,
-                                        caption=caption,
+                                        caption=captionx,
                                         reply_markup=InlineKeyboardMarkup(buttons)
                                     )
                             )
                 await inline_query.answer(
                     results=results,
-                    cache_time=5,
-                    is_gallery=bool_gallery,
+                    cache_time=1,
+                    is_gallery=bool_is_gallery,
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
                 )
