@@ -5,7 +5,6 @@
 # All rights reserved.
 
 
-import json
 import requests
 from userge import userge, Message
 from pyrogram.types import (
