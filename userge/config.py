@@ -90,7 +90,9 @@ class Config:
     SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET', None)
     SPOTIFY_INITIAL_TOKEN = os.environ.get('SPOTIFY_INITIAL_TOKEN', None)
     SPOTIFY_MODE = False
-    ###
+    ### MEME Generator 
+    IMGFLIP_ID = os.environ.get('IMGFLIP_ID', None)
+    IMGFLIP_PASS = os.environ.get('IMGFLIP_PASS', None)
 
 
 def get_version() -> str:
