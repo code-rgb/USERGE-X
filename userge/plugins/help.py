@@ -435,16 +435,16 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if str_y[0] == "reddit":
                 reddit_api = "https://meme-api.herokuapp.com/gimme/"
                 if len(str_y) == 2:
-                    subreddit_regex  =  r"^([a-zA-Z]+)\.$"
+                    subreddit_regex  =  r"([a-zA-Z]+)\.$"
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/20"
+                        reddit_api += f"{subreddit_name}/2"
                     else:
                         return
 
                 else:
-                    reddit_api += "20"
+                    reddit_api += "2"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()
@@ -472,26 +472,26 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             image = post['url']
                             author = post['author']
                             upvote = post['ups']
-                            caption = f"<b>{title}</b>\n"
-                            caption += f"`Posted by u/{author}`\n"
-                            caption += f"↕️ <code>{upvote}</code>\n"
+                            captionx = f"<b>{title}</b>\n"
+                            captionx += f"`Posted by u/{author}`\n"
+                            captionx += f"↕️ <code>{upvote}</code>\n"
                             if post['spoiler']:
-                                caption += "⚠️ Post marked as SPOILER\n"
+                                captionx += "⚠️ Post marked as SPOILER\n"
                             if post['nsfw']:
-                                caption += "🔞 Post marked Adult \n"
+                                captionx += "🔞 Post marked Adult \n"
                             buttons = [[
                                 InlineKeyboardButton(f"Source: r/{subreddit}", url=postlink)
                             ]]
                             results.append(
                                     InlineQueryResultPhoto(
                                         photo_url=image,
-                                        caption=caption,
+                                        caption=captionx,
                                         reply_markup=InlineKeyboardMarkup(buttons)
                                     )
                             )
                 await inline_query.answer(
                     results=results,
-                    cache_time=5,
+                    cache_time=1,
                     is_gallery=bool_gallery,
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
