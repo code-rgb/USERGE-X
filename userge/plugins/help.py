@@ -439,12 +439,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/2"
+                        reddit_api += f"{subreddit_name}/10"
                     else:
                         return
 
                 else:
-                    reddit_api += "2"
+                    reddit_api += "10"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()
@@ -463,7 +463,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         )
                     )
                 else:
-                    bool_gallery = True
+                   
                     for post in r['memes']:
                         if hasattr(post, 'url'):
                             postlink = post['postLink']
@@ -492,7 +492,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 await inline_query.answer(
                     results=results,
                     cache_time=1,
-                    is_gallery=bool_gallery,
+                   
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
                 )
