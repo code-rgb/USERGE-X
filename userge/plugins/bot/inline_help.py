@@ -22,6 +22,7 @@ COMMANDS = {
             "gapps" : { 'help_txt' : '**Lastest arm64 Gapps for <u>Android 10 Only !</u>**\n\nChoose from Niksgapps, Opengapps and Flamegapps\n>>>  `gapps`', 'i_q' : 'gapps'},
             "ofox" : { 'help_txt' : '**Lastest Ofox Recovery for supported device, Powered By offcial Ofox API v2**\n\n>>>  `ofox <device codename>`', 'i_q' : 'ofox whyred'},
             "rick" : { 'help_txt' : '**Useless Rick Roll**\n\nBasically a wierd looking button with rickroll link xD\n>>> `rick`', 'i_q' : 'rick'},
+            "reddit" : { 'help_txt' : '**Get Reddit Image post**\n\nGet Random Reddit meme or a post from specific subreddit, if you want post from specific subreddit do \"reddit [subreddit].\"\n>>> `reddit  or  reddit dankmemes.`', 'i_q' : 'reddit nextfuckinglevel.'},
             "help" : { 'help_txt' : '**Help For All Userbot plugins**\n\n**Note:** `You can also load and unload a plugin, and which chat types the commands is permitted`', 'i_q' : ''},
             "stylish" : { 'help_txt' : '**Write it in Style**\n\nplugin to decorate text with unicode fonts.\n>>>  `stylish [text]`', 'i_q' : 'stylish USERGE-X'}
             }
