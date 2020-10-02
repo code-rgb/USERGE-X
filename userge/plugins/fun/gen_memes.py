@@ -13,6 +13,7 @@ from userge import userge, Message, Config
 from userge.utils import rand_array
 
 
+CHANNEL = userge.getCLogger(__name__)
 URL = 'https://api.imgflip.com/caption_image'
 PATH = 'resources/meme_data.txt'
 
@@ -26,7 +27,7 @@ PATH = 'resources/meme_data.txt'
              "{tr}gm text1 ; text2",
     'examples': [
         "{tr}gm Hi ; Hello",
-        "{tr}gm [flags] Hi ; Hello"],
+        "{tr}gm -m32 Hi ; Hello"],
     'Memes': "<a href='https://telegra.ph/Meme-Choices-10-01'><b>See MEME List</b></a>"})
 async def gen_meme(message: Message):
     """ Memesss Generator """
@@ -41,11 +42,16 @@ async def gen_meme(message: Message):
         return await message.err("Invalid Input! Check help for more info!", del_in=5)
     view_data = json.load(open(PATH))
     if '-m' in message.flags:
-        meme_choice = view_data[int(message.flags['-m'])]
+        numb = int(message.flags['-m'])
+        if numb in range(0, 93):
+            meme_choice = view_data[numb]
+        else:
+            return await message.err("Choose a number between (0 - 93) only !", del_in=5)
     else:
         meme_choice = eval(rand_array(view_data))
     choice_id = meme_choice['id']
     await message.edit(f"<code>Generating a meme for ...</code>\n{meme_choice['name']}")
+    
     username = Config.IMGFLIP_ID
     password = Config.IMGFLIP_PASS
     reply = message.reply_to_message
@@ -68,3 +74,4 @@ async def gen_meme(message: Message):
         photo=meme_image,
         reply_to_message_id=reply_id
     )
+    await CHANNEL.log("**name** : {}\n**image** : {}".format(meme_choice['name'], meme_image))
