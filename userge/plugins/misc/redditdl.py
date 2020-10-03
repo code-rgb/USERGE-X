@@ -65,6 +65,7 @@ async def reddit_fetch(message: Message):
             animation=media_url,
             caption=captionx,
             reply_to_message_id=reply_id,
+            reply_markup=buttons
             )
         else:
             await message.client.send_photo(
