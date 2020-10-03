@@ -1,7 +1,7 @@
 import nekos
-from userge import userge, Message
+from userge import userge, Message, Config
 from userge.utils import rand_array
-
+from .nsfw import age_verification
 
 NSFW = ['feet', 'yuri', 'trap', 'futanari', 'hololewd', 'lewdkemo', 'holoero',
         'solog', 'feetg', 'cum', 'erokemo', 'les', 'lewdk', 'lewd','eroyuri', 'eron',
@@ -29,6 +29,9 @@ for m in NON_NSFW:
     'usage': "{tr}nekos\n{tr}nekos -nsfw\n{tr}nekos [Choice]",
     'Choice': neko_help})
 async def neko_life(message: Message):
+    if not Config.ALLOW_NSFW:
+        await age_verification(message)
+        return 
     choice = message.input_str
     if '-nsfw' in message.flags:
         choosen_ = rand_array(NSFW)

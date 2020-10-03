@@ -93,6 +93,7 @@ class Config:
     ### MEME Generator 
     IMGFLIP_ID = os.environ.get('IMGFLIP_ID', None)
     IMGFLIP_PASS = os.environ.get('IMGFLIP_PASS', None)
+    ALLOW_NSFW = False
 
 
 def get_version() -> str:
@@ -102,7 +103,7 @@ def get_version() -> str:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
             if diff:
-                return f"{ver}-Storm.{len(diff)}"
+                return f"{ver}-STORM.{len(diff)}"
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
             if diff:

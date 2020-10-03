@@ -431,6 +431,25 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             reply_markup=InlineKeyboardMarkup(owner)
                         )
                 )
+            
+            if string == "age_verification_alert":
+                buttons = [[
+                        InlineKeyboardButton(
+                        text="Yes I'm 18+", 
+                        callback_data="age_verification_true"
+                        ),
+                        InlineKeyboardButton(
+                        text="No I'm Not", 
+                        callback_data="age_verification_false"
+                        )
+                ]]
+                results.append(
+                        InlineQueryResultPhoto(
+                            photo_url="https://i.imgur.com/Zg58iXc.jpg",
+                            caption = "**ARE YOU OLD ENOUGH FOR THIS ?**"
+                            reply_markup=InlineKeyboardMarkup(buttons)
+                        )
+                )
 
             if str_y[0] == "reddit":
                 reddit_api = "https://meme-api.herokuapp.com/gimme/"
