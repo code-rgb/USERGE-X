@@ -469,7 +469,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             postlink = post['postLink']
                             subreddit = post['subreddit']
                             title = post['title']
-                            image = post['url']
+                            media_url = post['url']
                             author = post['author']
                             upvote = post['ups']
                             captionx = f"<b>{title}</b>\n"
@@ -482,13 +482,22 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             buttons = [[
                                 InlineKeyboardButton(f"Source: r/{subreddit}", url=postlink)
                             ]]
-                            results.append(
-                                    InlineQueryResultPhoto(
-                                        photo_url=image,
-                                        caption=captionx,
-                                        reply_markup=InlineKeyboardMarkup(buttons)
-                                    )
-                            )
+                            if media_url.endswith(".gif"):
+                                results.append(
+                                        InlineQueryResultAnimation(
+                                            animation_url=media_url,
+                                            caption=captionx,
+                                            reply_markup=InlineKeyboardMarkup(buttons)
+                                        )
+                                )
+                            else:
+                                results.append(
+                                        InlineQueryResultPhoto(
+                                            photo_url=media_url,
+                                            caption=captionx,
+                                            reply_markup=InlineKeyboardMarkup(buttons)
+                                        )
+                                )
                 await inline_query.answer(
                     results=results,
                     cache_time=1,
