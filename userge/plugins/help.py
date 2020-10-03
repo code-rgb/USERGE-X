@@ -446,7 +446,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 results.append(
                         InlineQueryResultPhoto(
                             photo_url="https://i.imgur.com/Zg58iXc.jpg",
-                            caption = "**ARE YOU OLD ENOUGH FOR THIS ?**"
+                            caption = "**ARE YOU OLD ENOUGH FOR THIS ?**",
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
