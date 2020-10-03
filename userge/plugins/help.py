@@ -505,6 +505,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     switch_pm_text="Available Commands",
                     switch_pm_parameter="inline"
                 )
+                return
 
 
             if string =="rick":
