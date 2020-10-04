@@ -458,12 +458,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     match = re.search(subreddit_regex, str_y[1])
                     if match:
                         subreddit_name = match.group(1)
-                        reddit_api += f"{subreddit_name}/30"
+                        reddit_api += f"{subreddit_name}/15"
                     else:
                         return
 
                 else:
-                    reddit_api += "30"
+                    reddit_api += "15"
 
                 cn = requests.get(reddit_api)
                 r = cn.json()

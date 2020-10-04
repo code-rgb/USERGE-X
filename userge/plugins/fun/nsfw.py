@@ -4,12 +4,11 @@ import requests
 import asyncio
 from asyncio import sleep
 from userge import userge , Message, Config
-from pyrogram.types import CallbackQuery, InputMediaPhoto
+from pyrogram.types import CallbackQuery, InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram import filters
 from userge.utils import get_file_id_and_ref
 
-
-
+ 
 async def age_verification(msg):
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "age_verification_alert")
@@ -39,6 +38,7 @@ async def boobs(message: Message):
     await message.client.send_photo(message.chat.id, photo=pic_loc)
     os.remove(pic_loc)
     await message.delete()
+
 
 @userge.on_cmd("butts", about={
     'header': "Find some Butts",
@@ -72,15 +72,22 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
         msg = await ubot.get_messages('useless_x' , 19)
         f_id, f_ref = get_file_id_and_ref(msg)
+        buttons = [[
+            InlineKeyboardButton(
+            text="Unsure / Change of Decision ❔", 
+            callback_data="chg_of_decision_"
+            )
+        ]]
         await c_q.edit_message_media(
             media=InputMediaPhoto(
                         media=f_id,
                         file_ref=f_ref,
                         caption="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
-                    )
+                    ),
+            reply_markup=InlineKeyboardMarkup(buttons)
         )
 
     @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
@@ -88,15 +95,50 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
-        msg = await ubot.get_messages('useless_x' , 18)
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
+        msg = await ubot.get_messages('useless_x' , 20)
         f_id, f_ref = get_file_id_and_ref(msg)
-        img_text="Samuel L. Jackson Says GO AWAY KID !"
+        img_text="GO AWAY KID !"
+        buttons = [[
+            InlineKeyboardButton(
+            text="Unsure / Change of Decision ❔", 
+            callback_data="chg_of_decision_"
+            )
+        ]]
         await c_q.edit_message_media(
             media=InputMediaPhoto(
                         media=f_id,
                         file_ref=f_ref,
                         caption=img_text
-                    )
+                    ),
+            reply_markup=InlineKeyboardMarkup(buttons)
         )
-        
+
+
+    @ubot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
+    async def alive_callback(_, c_q: CallbackQuery):
+        u_id = c_q.from_user.id
+        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+            return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
+        msg = await ubot.get_messages(-1001378211961, 6671)
+        f_id, f_ref = get_file_id_and_ref(msg)
+        img_text="**ARE YOU OLD ENOUGH FOR THIS ?**"
+        buttons = [[
+                        InlineKeyboardButton(
+                        text="Yes I'm 18+", 
+                        callback_data="age_verification_true"
+                        ),
+                        InlineKeyboardButton(
+                        text="No I'm Not", 
+                        callback_data="age_verification_false"
+                        )
+                ]]
+        await c_q.edit_message_media(
+            media=InputMediaPhoto(
+                        media=f_id,
+                        file_ref=f_ref,
+                        caption=img_text
+                    ),
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
