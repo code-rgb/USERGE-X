@@ -4,17 +4,19 @@ import requests
 import asyncio
 from asyncio import sleep
 from userge import userge , Message, Config
-from pyrogram.types import CallbackQuery
+from pyrogram.types import CallbackQuery, InputMedia
 from pyrogram import filters
 
 
 async def age_verification(msg):
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "age_verification_alert")
-    await userge.send_inline_bot_result(chat_id=msg.chat.id,
-                                            query_id=x.query_id,
-                                            result_id=x.results[0].id,
-                                            reply_to_message_id=msg.message_id)
+    await mesg.delete()
+    await userge.send_inline_bot_result(
+        chat_id=msg.chat.id,
+        query_id=x.query_id,
+        result_id=x.results[0].id
+    )
 
 
 @userge.on_cmd("boobs", about={
@@ -54,13 +56,6 @@ async def butts(message: Message):
     await message.client.send_photo(message.chat.id, photo=pic_loc)
     os.remove(pic_loc)
     await message.delete()
-
-
-
-
-
-
-
 
 
 if Config.BOT_TOKEN and Config.OWNER_ID:
