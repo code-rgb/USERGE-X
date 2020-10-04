@@ -2,11 +2,11 @@ import os
 import urllib
 import requests
 import asyncio
-from asyncio import sleep
 from userge import userge , Message, Config
 from pyrogram.types import CallbackQuery, InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram import filters
 from userge.utils import get_file_id_and_ref
+from pyrogram.errors import MessageNotModified
 
  
 async def age_verification(msg):
@@ -82,14 +82,17 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             callback_data="chg_of_decision_"
             )
         ]]
-        await c_q.edit_message_media(
-            media=InputMediaPhoto(
-                        media=f_id,
-                        file_ref=f_ref,
-                        caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin"
-                    ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        try:
+            await c_q.edit_message_media(
+                media=InputMediaPhoto(
+                            media=f_id,
+                            file_ref=f_ref,
+                            caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin"
+                        ),
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        except MessageNotModified:
+            return
 
     @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def alive_callback(_, c_q: CallbackQuery):
@@ -106,14 +109,18 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             callback_data="chg_of_decision_"
             )
         ]]
-        await c_q.edit_message_media(
-            media=InputMediaPhoto(
-                        media=f_id,
-                        file_ref=f_ref,
-                        caption=img_text
-                    ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        try:
+            await c_q.edit_message_media(
+                media=InputMediaPhoto(
+                            media=f_id,
+                            file_ref=f_ref,
+                            caption=img_text
+                        ),
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        except MessageNotModified:
+            return
+        
 
 
     @ubot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
@@ -135,11 +142,14 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                         callback_data="age_verification_false"
                         )
                 ]]
-        await c_q.edit_message_media(
-            media=InputMediaPhoto(
-                        media=f_id,
-                        file_ref=f_ref,
-                        caption=img_text
-                    ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        try:
+            await c_q.edit_message_media(
+                media=InputMediaPhoto(
+                            media=f_id,
+                            file_ref=f_ref,
+                            caption=img_text
+                        ),
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        except MessageNotModified:
+            return
