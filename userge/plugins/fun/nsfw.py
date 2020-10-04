@@ -4,7 +4,8 @@ import requests
 import asyncio
 from asyncio import sleep
 from userge import userge , Message, Config
-
+from pyrogram.types import CallbackQuery
+from pyrogram import filters
 
 
 async def age_verification(msg):
@@ -59,3 +60,32 @@ async def butts(message: Message):
 
 
 
+
+
+
+if Config.BOT_TOKEN and Config.OWNER_ID:
+    if Config.HU_STRING_SESSION:
+        ubot = userge.bot
+    else:
+        ubot = userge
+
+       
+    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_(.*)"))
+    async def alive_callback(_, c_q: CallbackQuery):
+        choice = c_q.matches[0].group(1)
+        u_id = c_q.from_user.id
+        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+            return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
+        if choice == "true":
+            image="resources/samelljackson.jpg"
+            img_text="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
+        else:
+            image="resources/go_away_kid.jpg"
+            img_text="Samuel L. Jackson Says GO AWAY KID !"
+        await c_q.edit_message_media(
+            InputMedia(
+                media=image,
+                caption=img_text
+            )
+        )
