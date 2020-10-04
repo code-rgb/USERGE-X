@@ -10,6 +10,8 @@ from userge.utils import get_file_id_and_ref
 
  
 async def age_verification(msg):
+    if Config.ALLOW_NSFW in ["true", "TRUE" , "True"]:
+        return False
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "age_verification_alert")
     await msg.delete()
@@ -18,14 +20,14 @@ async def age_verification(msg):
         query_id=x.query_id,
         result_id=x.results[0].id
     )
+    return True
 
 
 @userge.on_cmd("boobs", about={
     'header': "Find some Bob",
     'usage': "{tr}boobs"})
 async def boobs(message: Message):
-    if not Config.ALLOW_NSFW:
-        await age_verification(message)
+    if await age_verification(message):
         return
     if not os.path.isdir(Config.DOWN_PATH):
         os.makedirs(Config.DOWN_PATH)
@@ -44,8 +46,7 @@ async def boobs(message: Message):
     'header': "Find some Butts",
     'usage': "{tr}butts"})
 async def butts(message: Message):
-    if not Config.ALLOW_NSFW:
-        await age_verification(message)
+    if await age_verification(message):
         return
     if not os.path.isdir(Config.DOWN_PATH):
         os.makedirs(Config.DOWN_PATH)
@@ -72,7 +73,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
+        await c_q.answer("Yes I\'m 18+", show_alert=False)
         msg = await ubot.get_messages('useless_x' , 19)
         f_id, f_ref = get_file_id_and_ref(msg)
         buttons = [[
@@ -85,7 +86,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             media=InputMediaPhoto(
                         media=f_id,
                         file_ref=f_ref,
-                        caption="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
+                        caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin"
                     ),
             reply_markup=InlineKeyboardMarkup(buttons)
         )
@@ -95,7 +96,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
+        await c_q.answer("No I'm Not", show_alert=False)
         msg = await ubot.get_messages('useless_x' , 20)
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text="GO AWAY KID !"
@@ -120,8 +121,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
-        msg = await ubot.get_messages(-1001378211961, 6671)
+        await c_q.answer("Unsure", show_alert=False)
+        msg = await ubot.get_messages(useless_x, 21)
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text="**ARE YOU OLD ENOUGH FOR THIS ?**"
         buttons = [[
