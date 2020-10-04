@@ -10,7 +10,7 @@ from userge import userge, Message
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
 )
-
+from ..fun.nsfw import age_verification
 
 CHANNEL = userge.getCLogger(__name__)
 API = "https://meme-api.herokuapp.com/gimme"
@@ -51,6 +51,9 @@ async def reddit_fetch(message: Message):
             captionx += "⚠️ Post marked as SPOILER\n"
         if r['nsfw']:
             captionx += "🔞 Post marked Adult \n"
+
+            if await age_verification(message):
+                return
 
         if message.client.is_bot:
             buttons = InlineKeyboardMarkup([[InlineKeyboardButton(text=f"Source: r/{subreddit}", url=postlink)]])

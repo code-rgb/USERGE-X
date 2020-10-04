@@ -1,5 +1,5 @@
 import nekos
-from userge import userge, Message, Config
+from userge import userge, Message
 from userge.utils import rand_array
 from .nsfw import age_verification
 
@@ -29,9 +29,8 @@ for m in NON_NSFW:
     'usage': "{tr}nekos\n{tr}nekos -nsfw\n{tr}nekos [Choice]",
     'Choice': neko_help})
 async def neko_life(message: Message):
-    if not Config.ALLOW_NSFW:
-        await age_verification(message)
-        return 
+    if await age_verification(message):
+        return
     choice = message.input_str
     if '-nsfw' in message.flags:
         choosen_ = rand_array(NSFW)
