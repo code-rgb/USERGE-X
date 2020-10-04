@@ -10,7 +10,7 @@ from pyrogram.errors import MessageNotModified
 
  
 async def age_verification(msg):
-    if Config.ALLOW_NSFW in ["true", "TRUE" , "True"]:
+    if Config.ALLOW_NSFW.lower() == "true":
         return False
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "age_verification_alert")
