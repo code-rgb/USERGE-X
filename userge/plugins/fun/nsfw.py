@@ -4,14 +4,14 @@ import requests
 import asyncio
 from asyncio import sleep
 from userge import userge , Message, Config
-from pyrogram.types import CallbackQuery, InputMedia
+from pyrogram.types import CallbackQuery, InputMedia, InputMediaPhoto
 from pyrogram import filters
 
 
 async def age_verification(msg):
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "age_verification_alert")
-    await mesg.delete()
+    await msg.delete()
     await userge.send_inline_bot_result(
         chat_id=msg.chat.id,
         query_id=x.query_id,
@@ -65,22 +65,32 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         ubot = userge
 
        
-    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_(.*)"))
+    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
     async def alive_callback(_, c_q: CallbackQuery):
-        choice = c_q.matches[0].group(1)
         u_id = c_q.from_user.id
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
-        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=True)
-        if choice == "true":
-            image="resources/samelljackson.jpg"
-            img_text="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
-        else:
-            image="resources/go_away_kid.jpg"
-            img_text="Samuel L. Jackson Says GO AWAY KID !"
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
+        image="resources/samelljackson.jpg"
         await c_q.edit_message_media(
-            InputMedia(
-                media=image,
-                caption=img_text
-            )
+            media=InputMediaPhoto(
+                        media=image,
+                        caption="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
+                    )
         )
+
+    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
+    async def alive_callback(_, c_q: CallbackQuery):
+        u_id = c_q.from_user.id
+        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+            return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
+        await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
+        image="resources/go_away_kid.jpg"
+        img_text="Samuel L. Jackson Says GO AWAY KID !"
+        await c_q.edit_message_media(
+            media=InputMediaPhoto(
+                        media=image,
+                        caption=img_text
+                    )
+        )
+        
