@@ -4,8 +4,10 @@ import requests
 import asyncio
 from asyncio import sleep
 from userge import userge , Message, Config
-from pyrogram.types import CallbackQuery, InputMedia, InputMediaPhoto
+from pyrogram.types import CallbackQuery, InputMediaPhoto
 from pyrogram import filters
+from userge.utils import get_file_id_and_ref
+
 
 
 async def age_verification(msg):
@@ -71,10 +73,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
-        image="/app/resources/samelljackson.jpg"
+        msg = await ubot.get_messages('useless_x' , 19)
+        f_id, f_ref = get_file_id_and_ref(msg)
         await c_q.edit_message_media(
             media=InputMediaPhoto(
-                        media=image,
+                        media=f_id,
+                        file_ref=f_ref,
                         caption="Set <code>ALLOW_NSFW</code> = true in Heroku Vars"
                     )
         )
@@ -85,11 +89,13 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
-        image="/app/resources/go_away_kid.jpg"
+        msg = await ubot.get_messages('useless_x' , 18)
+        f_id, f_ref = get_file_id_and_ref(msg)
         img_text="Samuel L. Jackson Says GO AWAY KID !"
         await c_q.edit_message_media(
             media=InputMediaPhoto(
-                        media=image,
+                        media=f_id,
+                        file_ref=f_ref,
                         caption=img_text
                     )
         )
