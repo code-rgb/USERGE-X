@@ -122,7 +122,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("Unsure", show_alert=False)
-        msg = await ubot.get_messages(useless_x, 21)
+        msg = await ubot.get_messages('useless_x', 21)
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text="**ARE YOU OLD ENOUGH FOR THIS ?**"
         buttons = [[
