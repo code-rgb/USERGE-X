@@ -71,7 +71,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
-        image="resources/samelljackson.jpg"
+        image="/app/resources/samelljackson.jpg"
         await c_q.edit_message_media(
             media=InputMediaPhoto(
                         media=image,
@@ -85,7 +85,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("I Have Had It With These Motherf*Cking Snakes On This Motherf*Cking Plane!", show_alert=False)
-        image="resources/go_away_kid.jpg"
+        image="/app/resources/go_away_kid.jpg"
         img_text="Samuel L. Jackson Says GO AWAY KID !"
         await c_q.edit_message_media(
             media=InputMediaPhoto(
