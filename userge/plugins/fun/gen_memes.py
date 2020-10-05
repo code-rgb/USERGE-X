@@ -43,7 +43,7 @@ async def gen_meme(message: Message):
     view_data = json.load(open(PATH))
     if '-m' in message.flags:
         numb = int(message.flags['-m'])
-        if numb in range(0, 93):
+        if numb in range(93):
             meme_choice = view_data[numb]
         else:
             return await message.err("Choose a number between (0 - 93) only !", del_in=5)
@@ -51,7 +51,7 @@ async def gen_meme(message: Message):
         meme_choice = eval(rand_array(view_data))
     choice_id = meme_choice['id']
     await message.edit(f"<code>Generating a meme for ...</code>\n{meme_choice['name']}")
-    
+
     username = Config.IMGFLIP_ID
     password = Config.IMGFLIP_PASS
     reply = message.reply_to_message
