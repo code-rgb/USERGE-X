@@ -20,6 +20,7 @@
 ![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
+[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
 [![Telegram](https://img.shields.io/badge/Support%20Group-Telegram-blue)](https://telegram.dog/x_xtests)
 
 <br>
@@ -85,22 +86,6 @@
   > Finally turn on the app and check the logs (settings -> view logs) :)
 
 <h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
-
-
-### Run on Docker 🐳 
-
-1. Install Docker ( [Guide](https://docs.docker.com/engine/install/ubuntu/) )
-2. Clone the repo
-    `git clone https://github.com/code-rgb/USERGE-X.git`
-3. `cd USERGE-X`
-4. Create the docker image
-    `docker build -t userge .`
-5. `cd ..`
-6. `wget https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/config.env.sample -O config.env`
-7. Edit the file with your text editor
-    `vi config.env`
-8. Finally run the container
-    `docker run -dv "$(pwd)/config.env:/app/config.env" USERGE-X`
 
 
 <h2>Guide to Upstream Forked Repo</h2>
