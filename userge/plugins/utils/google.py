@@ -6,7 +6,7 @@
 #
 # All rights reserved.
 
-from search_engine_parser import GoogleSearch
+from search_engine_parser.core.engines.google import Search as GoogleSearch
 
 from userge import userge, Message
 
