@@ -71,7 +71,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("Yes I\'m 18+", show_alert=False)
         msg = await ubot.get_messages('useless_x' , 19)
@@ -97,7 +97,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("No I'm Not", show_alert=False)
         msg = await ubot.get_messages('useless_x' , 20)
@@ -126,7 +126,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
     @ubot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("Unsure", show_alert=False)
         msg = await ubot.get_messages('useless_x', 21)
