@@ -29,7 +29,7 @@ async def _list_all_snips_(message: Message)-> None:
             'usage': "$[snip]\ngetsnip [snip]"},
         name="get_snip",
         trigger='',
-        filter_me=False,
+        filter_me=True,
         check_client=True)
 async def get_snip(message: Message)-> None:
     """get a snip"""
