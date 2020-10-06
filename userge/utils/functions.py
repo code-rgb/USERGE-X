@@ -5,6 +5,7 @@ from .progress import progress
 import re
 import html
 import random
+from pySmartDL import SmartDL
 
 
 # For Downloading & Checking Media then Converting to Image.
@@ -104,3 +105,10 @@ def thumb_from_audio(audio_path, output):
 def rand_array(array):
     random_num = random.choice(array) 
     return (str(random_num))
+
+
+async def download_link(url):
+    dest = Config.DOWN_PATH
+    obj = SmartDL(url, dest)
+    path = obj.get_dest()
+    return path

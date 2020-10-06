@@ -24,4 +24,5 @@ from .functions import (deEmojify,
                         escape_markdown,
                         cleanhtml,
                         thumb_from_audio,
-                        rand_array)
+                        rand_array,
+                        download_link)

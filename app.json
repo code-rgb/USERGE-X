@@ -16,6 +16,8 @@
         "API_HASH": {"description": "Get this value from https://my.telegram.org"},
         "DATABASE_URL": {"description": "Mongodb url from https://cloud.mongodb.com/"},
         "LOG_CHANNEL_ID": {"description": "Telegram Log Channel ID"},
+        "HEROKU_API_KEY": {"description": "Get a Heroku API key from http://dashboard.heroku.com/account"},
+        "HEROKU_APP_NAME": {"description": "Given app name to the Heroku App"},
         "HU_STRING_SESSION": {
             "description": "[USER MODE] - Get this using 'https://GenUserGeString.usergeuserbot.repl.run' or `bash genStr`",
             "required": false},
