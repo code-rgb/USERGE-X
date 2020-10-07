@@ -13,12 +13,12 @@ _checkBashReq() {
     command -v jq &> /dev/null || quit "Required command : jq : could not be found !"
 }
 
-#_checkPythonVersion() {
-#    log "Checking Python Version ..."
-#    ( test -z $pVer || test $(sed 's/\.//g' <<< $pVer) -lt 390 ) \
-#        && quit "You MUST have a python version of at least 3.9.0 !"
-#    log "\tFound PYTHON - v$pVer ..."
-#}
+_checkPythonVersion() {
+    log "Checking Python Version ..."
+    ( test -z $pVer || test $(sed 's/\.//g' <<< $pVer) -lt 380 ) \
+        && quit "You MUST have a python version of at least 3.8.0 !"
+    log "\tFound PYTHON - v$pVer ..."
+}
 
 _checkConfigFile() {
     log "Checking Config File ..."
