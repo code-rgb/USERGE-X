@@ -80,7 +80,7 @@ async def reddit_fetch(message: Message):
             )
 
             
-def thumb_link(preview, thumb=None):
+def reddit_thumb_link(preview, thumb=None):
     for i in preview:
         if "width=216" in i:
             thumb = i
