@@ -78,3 +78,13 @@ async def reddit_fetch(message: Message):
                 reply_to_message_id=reply_id,
                 reply_markup=buttons
             )
+
+            
+def reddit_thumb_link(preview, thumb=None):
+    for i in preview:
+        if "width=216" in i:
+            thumb = i
+            break
+    if not thumb:
+        thumb = preview.pop()
+    return thumb.replace("\u0026", "&")            
