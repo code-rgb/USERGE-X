@@ -29,7 +29,7 @@ from userge.plugins.fun.stylish import font_gen
 from pymediainfo import MediaInfo
 from .misc.redditdl import reddit_thumb_link
 import youtube_dl as ytdl
-from .bot.utube_inline import get_ytcode, ytdl_btn_generator
+from .bot.utube_inline import ytdl_btn_generator, get_ytthumb
 
 
 
@@ -428,16 +428,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if str_y[0] == "ytdl":
                 link = str_y[1]
                 x = ytdl.YoutubeDL(
-                        {'no-playlist': True}
-                    ).extract_info(link, download=False)
+                            {'no-playlist': True}
+                        ).extract_info(link, download=False)
                 formats = x.get('formats', [x])
-                ytlink_code = get_ytcode(link)
+                ytlink_code = x.get('id', None)
+                uploader = x.get('uploader_id', None)
+                channel_id = x.get('channel_id', None)
+                upload_date = x.get('upload_date', None)
+                vid_thumb = get_ytthumb(x.get('thumbnails', None))
                 buttons = ytdl_btn_generator(formats, ytlink_code)
                 results.append(
                         InlineQueryResultPhoto(
-                            photo_url=f"https://i.ytimg.com/vi/{ytlink_code}/mqdefault.jpg",
-                            thumb_url="https://i.imgur.com/4LwPLai.png",
-                            caption=f"<b>{x.get('title', None)}</b>\n\n📹 <b>Channel</b> : {x.get('uploader_id', None)}\n\n⬇️  <b>DOWNLOAD</b>",
+                            photo_url=vid_thumb,
+                            caption=f"<b>{x.get('title', None)}</b>\n📅  {upload_date}\n📹  [<b>{uploader}</b>]({channel_id})\n\n⬇️  <b>DOWNLOAD</b>",
                             reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )

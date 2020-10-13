@@ -8,13 +8,12 @@ from userge import userge, Config
 
 # LOGGER = userge.getLogger(__name__)
 
-
-def get_ytcode(link):
-    if not "v=" in link:
-        return "invalid"
-    code = (link.split("v=", 1))[1][:11]
-    return code
-
+def get_ytthumb(thumb_array):
+    thumb_link = (thumb_array.pop())['url']
+    if "?" in thumb_link:
+        thumb_link = thumb_link.split("?", 1)[0]
+    return thumb_link
+    
 
 def ytdl_btn_generator(array, code):
         btn = []
