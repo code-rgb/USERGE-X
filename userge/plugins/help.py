@@ -18,7 +18,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, InlineQuery, InlineQueryResultPhoto,
     InlineQueryResultAnimation)
-from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, MessageIdInvalid, MessageEmpty
+from pyrogram.errors import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 import json
 import os
@@ -28,6 +28,9 @@ import re
 from userge.plugins.fun.stylish import font_gen
 from pymediainfo import MediaInfo
 from .misc.redditdl import reddit_thumb_link
+import youtube_dl as ytdl
+from bot.utube_inline import get_ytcode, ytdl_btn_generator
+
 
 
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -419,6 +422,23 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             photo_url="https://coverfiles.alphacoders.com/123/123388.png",
                             caption="Hey I solved **𝚂𝚢𝚗𝚝𝚊𝚡's ░ Σrr♢r**",
                             reply_markup=InlineKeyboardMarkup(owner)
+                        )
+                )
+
+            if str_y[0] == "ytdl":
+                link = str_y[1]
+                x = ytdl.YoutubeDL(
+                        {'no-playlist': True}
+                    ).extract_info(link, download=False)
+                formats = x.get('formats', [x])
+                ytlink_code = get_ytcode(link)
+                buttons = ytdl_btn_generator(formats, ytlink_code)
+                results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=f"https://i.ytimg.com/vi/{ytlink_code}/mqdefault.jpg",
+                            thumb_url="https://i.imgur.com/4LwPLai.png",
+                            caption=f"<b>{x.get('title', None)}</b>\n\n📹 <b>Channel</b> : {x.get('uploader_id', None)}\n\n⬇️  <b>DOWNLOAD</b>",
+                            reply_markup=InlineKeyboardMarkup(buttons)
                         )
                 )
             
