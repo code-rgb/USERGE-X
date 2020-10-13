@@ -443,7 +443,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
 ▶️  <b>{vid_title}</b>
 
 🔗  [<b>LINK</b>]({link})
-📅  Uploaded Date : {upload_date}
+📅  Upload Date : {upload_date}
 📹  Channel : [<b>{uploader}</b>]({channel_url})
 ⬇️  <b>DOWNLOAD</b>
 Choose Download Quality from Below
