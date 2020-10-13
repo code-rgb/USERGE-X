@@ -29,7 +29,7 @@ from userge.plugins.fun.stylish import font_gen
 from pymediainfo import MediaInfo
 from .misc.redditdl import reddit_thumb_link
 import youtube_dl as ytdl
-from bot.utube_inline import get_ytcode, ytdl_btn_generator
+from .bot.utube_inline import get_ytcode, ytdl_btn_generator
 
 
 
