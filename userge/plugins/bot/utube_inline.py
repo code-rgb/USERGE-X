@@ -1,6 +1,6 @@
 
 
-
+import datetime
 import youtube_dl as ytdl
 from pyrogram.types import InlineKeyboardButton, CallbackQuery
 from pyrogram import filters
@@ -32,6 +32,12 @@ def ytdl_btn_generator(array, code):
         return btn
 
 
+def date_formatter(date_):
+    year, day, month = date_[:4], date_[4:6], date_[6:]
+    x = datetime.datetime(int(year), int(month), int(day))
+    return str(x.strftime('%d-%b-%Y'))
+
+
 if Config.BOT_TOKEN and Config.OWNER_ID:
     if Config.HU_STRING_SESSION:
         ubot = userge.bot
@@ -51,3 +57,5 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             caption=f"Youtube Link : https://www.youtube.com/watch?v={yt_code}\n\nFormat Code : {choice_id}",
             reply_markup=None
         )
+
+
