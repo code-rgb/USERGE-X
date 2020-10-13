@@ -47,7 +47,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             return await c_q.answer("𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
         await c_q.answer("Message Will be Edited Shortly", show_alert=True)
         yt_code = c_q.matches[0].group(1)
-        choice_id = c_q.matches[0].group(1)
+        choice_id = c_q.matches[0].group(2)
         await c_q.edit_message_caption(
             caption=f"Youtube Link : https://www.youtube.com/watch?v={yt_code}\n\nFormat Code : {choice_id}",
             reply_markup=None
