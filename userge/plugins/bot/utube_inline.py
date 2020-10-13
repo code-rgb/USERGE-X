@@ -33,6 +33,8 @@ def ytdl_btn_generator(array, code):
 
 
 def date_formatter(date_):
+    if len(date_) != 8:
+        return date_
     year, day, month = date_[:4], date_[4:6], date_[6:]
     x = datetime.datetime(int(year), int(month), int(day))
     return str(x.strftime('%d-%b-%Y'))

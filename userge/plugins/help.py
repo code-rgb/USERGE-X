@@ -439,12 +439,21 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     upload_date = date_formatter(str(x.get('upload_date', None)))
                     vid_thumb = get_ytthumb(x.get('thumbnails', None))
                     buttons = ytdl_btn_generator(formats, ytlink_code)
+                    caption_text = f"""
+▶️  <b>{vid_title}</b>
+
+🔗  [<b>LINK</b>]({link})
+📅  Uploaded Date : {upload_date}
+📹  Channel : [<b>{uploader}</b>]({channel_url})
+⬇️  <b>DOWNLOAD</b>
+Choose Download Quality from Below
+"""
                     results.append(
                             InlineQueryResultPhoto(
                                 photo_url=vid_thumb,
                                 title=vid_title,
-                                description=link,
-                                caption=f"[<b>{vid_title}</b>]({link})\n📅  {upload_date}\n📹  [<b>{uploader}</b>]({channel_url})\n\n⬇️  <b>DOWNLOAD</b>\nChoose Download Quality",
+                                description="⬇️ Click to Download",
+                                caption=caption_text,
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                     )
