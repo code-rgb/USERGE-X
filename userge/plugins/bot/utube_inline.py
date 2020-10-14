@@ -72,15 +72,15 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             callback_continue,
             show_alert=True
         )
-        yt_code = c_q.matches[0].group(1)
-        yt_url = f"https://www.youtube.com/watch?v={yt_code}"
-        await c_q.edit_message_caption(
-            caption=f"Downloading Video ! For progress see LOG CHANNEL \n\n🔗  [**Link**]({yt_url}\n🆔  **Format Code** : {yt_code}",
-            reply_markup=None
-        )
         upload_msg = await userge.send_message(
             Config.LOG_CHANNEL_ID,
             "Uploading..."
+        )
+        yt_code = c_q.matches[0].group(1)
+        yt_url = f"https://www.youtube.com/watch?v={yt_code}"
+        await c_q.edit_message_caption(
+            caption=f"Video is now Downloading, for progress see [LOG CHANNEL]({upload_msg.link})\n\n🔗  [**Link**]({yt_url})\n🆔  **Format Code** : {yt_code}",
+            reply_markup=None
         )
         retcode = await _tubeDl(
                         yt_url,
