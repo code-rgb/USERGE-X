@@ -439,7 +439,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     upload_date = date_formatter(str(x.get('upload_date', None)))
                     vid_thumb = get_ytthumb(x.get('thumbnails', None))
                     buttons = ytdl_btn_generator(formats, ytlink_code)
-                    caption_text = f"""
+                    caption_text = """
 ▶️  <b>{vid_title}</b>
 
 🔗  [<b>LINK</b>]({link})
@@ -454,7 +454,7 @@ Choose Download Quality from Below
                                 photo_url=vid_thumb,
                                 title=vid_title,
                                 description="⬇️ Click to Download",
-                                caption=caption_text,
+                                caption=f"▶️  <b>{vid_title}</b>",
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                     )
