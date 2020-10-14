@@ -1,5 +1,6 @@
 import datetime
 import glob
+import requests
 import os
 from pathlib import Path
 from time import time
@@ -16,10 +17,16 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 
 
-def get_ytthumb(thumb_array):
-    thumb_link = (thumb_array.pop())['url']
-    if "?" in thumb_link:
-        thumb_link = thumb_link.split("?", 1)[0]
+def get_ytthumb(videoid):
+    thumb_quality =  ['maxresdefault.jpg', 'hqdefault.jpg', 'sddefault.jpg',
+                      'mqdefault.jpg', 'default.jpg']
+    thumb_link = "https://i.imgur.com/4LwPLai.png"
+    for qualiy in thumb_qualiy:
+        link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
+        r = requests.get(link)
+        if r.status_code == 200:
+            thumb_link = link
+            break
     return thumb_link
 
 
@@ -79,7 +86,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         yt_code = c_q.matches[0].group(1)
         yt_url = f"https://www.youtube.com/watch?v={yt_code}"
         await c_q.edit_message_caption(
-            caption=f"Video is now Downloading, for progress see [LOG CHANNEL]({upload_msg.link})\n\n🔗  [**Link**]({yt_url})\n🆔  **Format Code** : {yt_code}",
+            caption=f"Video is now Downloading, for progress see [LOG CHANNEL]({upload_msg.link})\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}",
             reply_markup=None
         )
         retcode = await _tubeDl(
@@ -107,9 +114,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         )
         f_id, f_ref = get_file_id_and_ref(refresh_vid)
         if hasattr(refresh_vid.video, "thumbs"):
-            video_thumb = await ubot.download_media(
-                refresh_vid.video.thumbs[0].file_id
-            )
+            try:
+                video_thumb = await ubot.download_media(
+                    refresh_vid.video.thumbs[0].file_id
+                )
+            except TypeError:
+                video_thumb = None
         else:
             video_thumb = None
         await c_q.edit_message_media(

@@ -433,11 +433,11 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                             ).extract_info(link, download=False)
                     formats = x.get('formats', [x])
                     ytlink_code = x.get('id', None)
-                    uploader = x.get('uploader', None)
-                    channel_url = x.get('channel_url', None)
+                    #uploader = x.get('uploader', None)
+                    #channel_url = x.get('channel_url', None)
                     vid_title = x.get('title', None)
-                    upload_date = date_formatter(str(x.get('upload_date', None)))
-                    vid_thumb = get_ytthumb(x.get('thumbnails', None))
+                    #upload_date = date_formatter(str(x.get('upload_date', None)))
+                    vid_thumb = get_ytthumb(ytlink_code)
                     buttons = ytdl_btn_generator(formats, ytlink_code)
                     caption_text = f"**{vid_title}**"
                     #caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
