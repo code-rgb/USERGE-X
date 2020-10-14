@@ -440,8 +440,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                     vid_thumb = get_ytthumb(x.get('thumbnails', None))
                     buttons = ytdl_btn_generator(formats, ytlink_code)
                     caption_text = f"**{vid_title}**"
-                    caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
-                    caption_text += f"📹 : [{uploader}]({channel_url})"
+                    #caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
+                    #caption_text += f"📹 : [{uploader}]({channel_url})"
 
                     results.append(
                             InlineQueryResultPhoto(
