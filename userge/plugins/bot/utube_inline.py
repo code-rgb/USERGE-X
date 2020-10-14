@@ -72,7 +72,7 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
         )
         retcode = await _tubeDl(
                         yt_url,
-                        starttime,
+                        startTime,
                         choice_id
                     )
         if retcode == 0:
