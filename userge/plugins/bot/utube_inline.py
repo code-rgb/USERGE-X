@@ -66,14 +66,18 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 show_alert=True
             )
         choice_id = c_q.matches[0].group(2)
-        callback_continue = "Message Will be Edited Shortly\n\nDownloading..."
-        callback_continue += f"\nFormat Code : {choice_id}"
+        callback_continue = "Downloading Video Please Wait..."
+        callback_continue += f"\n\nFormat Code : {choice_id}"
         await c_q.answer(
             callback_continue,
             show_alert=True
         )
-        yt_code = c_q.matches[0].group(1)
         yt_url = f"https://www.youtube.com/watch?v={yt_code}"
+        yt_code = c_q.matches[0].group(1)
+        await c_q.edit_message_caption(
+            caption=f"Downloading Video ! For progress see LOG CHANNEL \n\n🔗  [**Link**]({yt_url}\n🆔  **Format Code** : {yt_code}",
+            reply_markup=None
+        )
         upload_msg = await userge.send_message(
             Config.LOG_CHANNEL_ID,
             "Uploading..."
@@ -102,9 +106,12 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             uploaded_vid.message_id
         )
         f_id, f_ref = get_file_id_and_ref(refresh_vid)
-        video_thumb = await ubot.download_media(
-            refresh_vid.video.thumbs[0].file_id
-        )
+        if hasattr(refresh_vid.video, "thumbs"):
+            video_thumb = await ubot.download_media(
+                refresh_vid.video.thumbs[0].file_id
+            )
+        else:
+            video_thumb = None
         await c_q.edit_message_media(
             media=InputMediaVideo(
                 media=f_id,
