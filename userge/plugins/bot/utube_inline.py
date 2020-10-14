@@ -104,7 +104,7 @@ def _tubeDl(url: list, starttime, uid):
     'outtmpl': os.path.join(Config.DOWN_PATH, str(starttime),
                                      '%(title)s-%(format)s.%(ext)s'),
     'logger': LOGGER,
-    'format': str(uid),
+    'format': f"{uid}+bestaudio",
     'writethumbnail': True,
     'prefer_ffmpeg': True,
     'postprocessors': [
