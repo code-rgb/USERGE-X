@@ -72,8 +72,8 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             callback_continue,
             show_alert=True
         )
-        yt_url = f"https://www.youtube.com/watch?v={yt_code}"
         yt_code = c_q.matches[0].group(1)
+        yt_url = f"https://www.youtube.com/watch?v={yt_code}"
         await c_q.edit_message_caption(
             caption=f"Downloading Video ! For progress see LOG CHANNEL \n\n🔗  [**Link**]({yt_url}\n🆔  **Format Code** : {yt_code}",
             reply_markup=None
