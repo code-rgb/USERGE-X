@@ -1,12 +1,15 @@
 
 import os
+import glob
+from pathlib import Path
 import datetime
 import youtube_dl
-from pyrogram.types import InlineKeyboardButton, CallbackQuery
+from pyrogram.types import InlineKeyboardButton, CallbackQuery, InputMediaVideo
 from pyrogram import filters
 from userge import userge, Config, pool
 from ..misc.upload import upload
 from time import time
+from userge.utils import get_file_id_and_ref
 
 
 LOGGER = userge.getLogger(__name__)
@@ -43,14 +46,14 @@ def date_formatter(date_):
     x = datetime.datetime(int(year), int(month), int(day))
     return str(x.strftime('%d-%b-%Y'))
 
-"""
+
 if Config.BOT_TOKEN and Config.OWNER_ID:
     if Config.HU_STRING_SESSION:
         ubot = userge.bot
     else:
         ubot = userge
 
-       
+
     @ubot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
         startTime = time()
@@ -66,10 +69,10 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             "Uploading..."
         )
         retcode = await _tubeDl(
-            yt_url,
-            starttime,
-            choice_id
-            )
+                        yt_url,
+                        starttime,
+                        choice_id
+                    )
         if retcode == 0:
             _fpath = ''
             for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), '*')):
@@ -78,20 +81,19 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             if not _fpath:
                 await upload_msg.err("nothing found !")
                 return
-            await upload(upload_msg, Path(_fpath))
+            uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))        
-
-
-
-
-        await c_q.edit_message_caption(
-            caption=f"Youtube Link : \n\nFormat Code : {choice_id}",
+        f_id, f_ref = get_file_id_and_ref(uploaded_vid)
+        await c_q.edit_message_media(
+            media=InputMediaVideo(
+                            media=f_id,
+                            file_ref=f_ref,
+                            caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                            supports_streaming=True
+                        ),
             reply_markup=None
         )
-
-
-
 
 
 @pool.run_in_thread
@@ -109,11 +111,3 @@ def _tubeDl(url: list, starttime, uid):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         x = ydl.download([url])
     return x
-        
-
-xa = await _tubeDl(
-    "http://www.youtube.com/watch?v=gl1aHhXnN1k",
-    "399"
-)
-print(xa)
-"""
