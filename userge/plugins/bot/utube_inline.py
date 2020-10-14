@@ -43,6 +43,8 @@ def date_formatter(date_):
     if len(date_) != 8: # TODO change it according to the input
         return date_
     year, day, month = date_[:4], date_[4:6], date_[6:]
+    if int(month) > 12:
+        return date_
     x = datetime.datetime(int(year), int(month), int(day))
     return str(x.strftime('%d-%b-%Y'))
 
