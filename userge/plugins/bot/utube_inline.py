@@ -85,8 +85,9 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
                 return
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
-            return await upload_msg.edit(str(retcode))        
-        f_id, f_ref = get_file_id_and_ref(uploaded_vid)
+            return await upload_msg.edit(str(retcode))
+        refresh_vid = await userge.get_messages(Config.LOG_CHANNEL_ID, uploaded_vid.message_id)
+        f_id, f_ref = get_file_id_and_ref(refresh_vid)
         await c_q.edit_message_media(
             media=InputMediaVideo(
                             media=f_id,
