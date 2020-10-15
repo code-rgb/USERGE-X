@@ -21,7 +21,7 @@ def get_ytthumb(videoid):
     thumb_quality =  ['maxresdefault.jpg', 'hqdefault.jpg', 'sddefault.jpg',
                       'mqdefault.jpg', 'default.jpg']
     thumb_link = "https://i.imgur.com/4LwPLai.png"
-    for qualiy in thumb_qualiy:
+    for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
         r = requests.get(link)
         if r.status_code == 200:
