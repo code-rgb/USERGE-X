@@ -30,7 +30,8 @@ async def _list_all_snips_(message: Message)-> None:
         name="get_snip",
         trigger='',
         filter_me=True,
-        check_client=True)
+        check_client=True,
+        allow_channels=False)
 async def get_snip(message: Message)-> None:
     """get a snip"""
     reply = message.reply_to_message
