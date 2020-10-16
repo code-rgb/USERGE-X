@@ -12,6 +12,7 @@
 <br>
 <br>
 
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
 ![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)
 ![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)
 ![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)
@@ -21,7 +22,14 @@
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
 [![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
-[![Telegram](https://img.shields.io/badge/Support%20Group-Telegram-blue)](https://telegram.dog/x_xtests)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
+[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/code-rgb/userge-x)
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
 
 <br>
 
@@ -29,12 +37,6 @@
 <br>
 
 <br>
-
-## How to Use ??
-
-* [Heroku Vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25)
-* See [Deploy Guide](https://github.com/code-rgb/USERGE-X#how-to-deploy)
-
 
 ## Disclaimer
 
@@ -68,24 +70,51 @@
 * MongoDB [Database URL](https://cloud.mongodb.com/)
 
 ## How To Deploy 
+* With Heroku:
 
 <p align="center">
 <a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
 <br>
 
-<h3>HEROKU Method</h3>
+  > **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
+  * First click The Button Above.
+  * Fill `API_ID`, `API_HASH`, `DATABASE_URL` and `LOG_CHANNEL_ID` and `HEROKU_APP_NAME` (**required**)
+  * Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
+  * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
+  * Finally **hit deploy** button
 
-<b>First click the BUTTON ABOVE</b> 
+* With Docker 🐳 
+    - [**See Detailed Guide**](resources/readmeDocker.md)
 
-  > If you don't have HU_STRING_SESSION just ignore it. 
-  
-  > After Deployed to Heroku first turn off the app (resources -> turn off) and run `bash genStr` in console (more -> run console). 
-  
-  > After that copy the string session and past it in Config Vars (settings -> reveal config vars). 
-  
-  > Finally turn on the app and check the logs (settings -> view logs) :)
+* With Git, Python and pip 🔧
+  ```bash
+  # clone the repo
+  git clone https://github.com/code-rgb/userge-x.git
+  cd userge-x
+
+  # create virtualenv
+  virtualenv -p /usr/bin/python3 venv
+  . ./venv/bin/activate
+
+  # install requirements
+  pip install -r requirements.txt
+
+  # Create config.env as given config.env.sample and fill that
+  cp config.env.sample config.env
+
+  # get string session and add it to config.env
+  bash genStr
+
+  # finally run the Userge ;)
+  bash run
+  ```
 
 <h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
+
+
+# More
+<details>
+  <summary>Click to expand!! </summary>
 
 
 <h2>Guide to Upstream Forked Repo</h2>
@@ -96,6 +125,55 @@
 <h3 align="center">Youtube Tutorial<h3>
 <p align="center"><a href="https://youtu.be/M4T_BJvFqkc"><img src="https://i.imgur.com/VVgSk2m.png" width=250px></a>
 </p>
+
+
+## Features 
+
+* Powerful and Very Useful **built-in** Plugins
+  * gdrive [ upload / download / etc ] ( Team Drives Supported! ) 
+  * zip / tar / unzip / untar / unrar
+  * telegram upload / download
+  * pmpermit / afk
+  * notes / filters
+  * split / combine
+  * gadmin
+  * plugin manager
+  * ...and more
+* Channel & Group log support
+* Database support
+* Build-in help support
+* Easy to Setup & Use
+* Easy to add / port Plugins
+* Easy to write modules with the modified client
+
+## Example Plugin 
+
+```python
+from userge import userge, Message, filters
+
+LOG = userge.getLogger(__name__)  # logger object
+CHANNEL = userge.getCLogger(__name__)  # channel logger object
+
+# add command handler
+@userge.on_cmd("test", about="help text to this command")
+async def test_cmd(message: Message):
+   LOG.info("starting test command...")  # log to console
+   # some other stuff
+   await message.edit("testing...", del_in=5)  # this will be automatically deleted after 5 sec
+   # some other stuff
+   await CHANNEL.log("testing completed!")  # log to channel
+
+# add filters handler
+@userge.on_filters(filters.me & filters.private)  # filter my private messages
+async def test_filter(message: Message):
+   LOG.info("starting filter command...")
+   # some other stuff
+   await message.reply(f"you typed - {message.text}", del_in=5)
+   # some other stuff
+   await CHANNEL.log("filter executed!")
+```
+
+</details> 
 
 ### Project Credits 
 
