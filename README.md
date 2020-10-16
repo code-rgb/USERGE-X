@@ -29,12 +29,11 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
 [![Telegram](https://img.shields.io/badge/Support%20Group-USERGE--X-blue?&logo=telegram&style=social)](https://telegram.dog/x_xtests)
 <br>
-
 <br>
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
-
+<br>
 
 ## Disclaimer
 
@@ -81,8 +80,10 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
+
+## Read more
 <details>
-  <summary><b>More Details and Guide</b></summary>
+  <summary><b>Details and Guides</b></summary>
 
 
 ## Other Ways
@@ -181,4 +182,4 @@ async def test_filter(message: Message):
 
 ### Copyright & License 
 
-* [GNU General Public License v3.0](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)
+[GNU General Public License v3.0](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)
