@@ -15,7 +15,8 @@
 <br>
 <br>
 
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/code-rgb/userge-x)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source-150x25.png?v=103)](https://github.com/code-rgb/userge-x)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?&style=flat-square)](https://github.com/code-rgb/USERGE-X/tree/dev#copyright--license)
 [![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/stargazers)
 [![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/network/members)
 [![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/issues)
@@ -25,10 +26,11 @@
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X?&style=flat-square)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen?&style=flat-square)](https://sourcery.ai)
 [![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge?&style=flat-square)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
-[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?&logo=telegram&style=flat-square)](https://telegram.dog/x_xtests)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
+[![Telegram](https://img.shields.io/badge/Support%20Group-USERGE--X-blue?&logo=telegram&style=social)](https://telegram.dog/x_xtests)
 <br>
-?style=flat-square
+
+<br>
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
 
@@ -178,4 +180,4 @@ async def test_filter(message: Message):
 
 ### Copyright & License 
 
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
+* [GNU General Public License v3.0](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)
