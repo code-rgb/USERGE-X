@@ -1,4 +1,4 @@
-# Docker Guide For userge-x 🐳 #
+# Docker Guide For USERGE-X 🐳 #
 
 ## Install docker ##
 - Follow the official docker [installation guide](https://docs.docker.com/engine/install/ubuntu/)
@@ -8,7 +8,7 @@
 ```sudo pip install docker-compose```
 - Also you can check other official methods of installing docker-compose [here](https://docs.docker.com/compose/install/)
 
-## Run userge-x ##
+## Run USERGE-X ##
 - We dont need to clone the repo (yeah Docker-compose does that for us)
 - Setup configs
     - Download the sample config file <br>
