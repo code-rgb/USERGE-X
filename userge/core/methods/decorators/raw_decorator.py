@@ -197,8 +197,10 @@ async def _both_have_perm(flt: Union['types.raw.Command', 'types.raw.Filter'],
     if flt.check_invite_perm and not (
             (user.can_all or user.can_invite_users) and bot.can_invite_users):
         return False
-    return bool(not flt.check_pin_perm or (
-            (user.can_all or user.can_pin_messages) and bot.can_pin_messages))
+    if flt.check_pin_perm and not (
+            (user.can_all or user.can_pin_messages) and bot.can_pin_messages):
+        return False
+    return True
 
 
 class RawDecorator(RawClient):
@@ -291,13 +293,15 @@ class RawDecorator(RawClient):
                 if flt.check_downpath and not os.path.isdir(Config.DOWN_PATH):
                     os.makedirs(Config.DOWN_PATH)
                 try:
-                    await func(types.bound.Message(r_c, r_m, **kwargs))
+                    await func(types.bound.Message.parse(
+                        r_c, r_m, module=func.__module__, **kwargs))
                 except (StopPropagation, ContinuePropagation):  # pylint: disable=W0706
                     raise
                 except Exception as f_e:  # pylint: disable=broad-except
                     _LOG.exception(_LOG_STR, f_e)
                     await self._channel.log(f"**PLUGIN** : `{func.__module__}`\n"
                                             f"**FUNCTION** : `{func.__name__}`\n"
+                                            f"**ERROR** : `{f_e or None}`\n"
                                             f"\n```{format_exc().strip()}```",
                                             "TRACEBACK")
                     await _raise(f"`{f_e}`\n__see logs for more info__")

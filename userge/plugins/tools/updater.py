@@ -1,11 +1,3 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
-
 import asyncio
 from time import time
 
@@ -137,16 +129,7 @@ def _heroku_helper(sent: Message, repo: Repo, branch: str) -> None:
         if not edited or (now - start_time) > 3 or message:
             edited = True
             start_time = now
-            try:
-                loop.run_until_complete(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
-            except TypeError:
-                pass
+            userge.loop.create_task(sent.try_to_edit(f"{cur_msg}\n\n{prog}"))
+
     cur_msg = sent.text.html
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        repo.remote("heroku").push(refspec=f'{branch}:master',
-                                   progress=progress,
-                                   force=True)
-    finally:
-        loop.close()
+    repo.remote("heroku").push(refspec=f'{branch}:master', progress=progress, force=True)

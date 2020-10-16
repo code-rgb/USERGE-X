@@ -1,5 +1,8 @@
 <h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
+
+
 <br>
+
 
 <p align="center">
     <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
@@ -12,29 +15,25 @@
 <br>
 <br>
 
-![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)
-![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)
-![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)
-![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X)
-![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)
-![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
-![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
-[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
-[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
-[![Telegram](https://img.shields.io/badge/Support%20Group-Telegram-blue)](https://telegram.dog/x_xtests)
-
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/code-rgb/userge-x)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?&style=flat-square)](https://github.com/code-rgb/USERGE-X/tree/dev#copyright--license)
+[![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/stargazers)
+[![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/network/members)
+[![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/issues)
+![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X?&style=flat-square)
+[![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/pulls)
+![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X?&style=flat-square)
+![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X?&style=flat-square)
+[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen?&style=flat-square)](https://sourcery.ai)
+[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge?&style=flat-square)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
+[![Vercel](https://img.shields.io/badge/Vercel-click%20to%20open-black?&logo=vercel&style=flat-square)](http://userge-x.vercel.app/)
+[![Telegram](https://img.shields.io/badge/Support%20Group-USERGE--X-blue?&logo=telegram&style=social)](https://telegram.dog/x_xtests)
 <br>
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
-
 <br>
-
-## How to Use ??
-
-* [Heroku Vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25)
-* See [Deploy Guide](https://github.com/code-rgb/USERGE-X#how-to-deploy)
-
 
 ## Disclaimer
 
@@ -67,27 +66,55 @@
 * Google Drive [API Keys](https://console.developers.google.com/)
 * MongoDB [Database URL](https://cloud.mongodb.com/)
 
+
 ## How To Deploy 
+* With Heroku:
 
 <p align="center">
 <a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
 <br>
 
-<h3>HEROKU Method</h3>
+  > **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
+  * First click The Button Above.
+  * Fill `API_ID`, `API_HASH`, `DATABASE_URL` and `LOG_CHANNEL_ID` and `HEROKU_APP_NAME` (**required**)
+  * Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
+  * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
+  * Finally **hit deploy** button
 
-<b>First click the BUTTON ABOVE</b> 
 
-  > If you don't have HU_STRING_SESSION just ignore it. 
+## Read more
+<details>
+  <summary><b>Details and Guides</b></summary>
+
+## Other Ways
+
+* With Docker 🐳 
+    <a href="https://github.com/code-rgb/USERGE-X/blob/dev/resources/readmeDocker.md"><b>See Detailed Guide</b></a>
+
+* With Git, Python and pip 🔧
+  ```bash
+  # clone the repo
+  git clone https://github.com/code-rgb/userge-x.git
+  cd userge-x
+
+  # create virtualenv
+  virtualenv -p /usr/bin/python3 venv
+  . ./venv/bin/activate
+
+  # install requirements
+  pip install -r requirements.txt
+
+  # Create config.env as given config.env.sample and fill that
+  cp config.env.sample config.env
+
+  # get string session and add it to config.env
+  bash genStr
+
+  # finally run the Userge ;)
+  bash run
+  ```
+
   
-  > After Deployed to Heroku first turn off the app (resources -> turn off) and run `bash genStr` in console (more -> run console). 
-  
-  > After that copy the string session and past it in Config Vars (settings -> reveal config vars). 
-  
-  > Finally turn on the app and check the logs (settings -> view logs) :)
-
-<h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
-
-
 <h2>Guide to Upstream Forked Repo</h2>
 <a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
 <br>
@@ -97,6 +124,56 @@
 <p align="center"><a href="https://youtu.be/M4T_BJvFqkc"><img src="https://i.imgur.com/VVgSk2m.png" width=250px></a>
 </p>
 
+
+## Features 
+
+* Powerful and Very Useful **built-in** Plugins
+  * gdrive [ upload / download / etc ] ( Team Drives Supported! ) 
+  * zip / tar / unzip / untar / unrar
+  * telegram upload / download
+  * pmpermit / afk
+  * notes / filters
+  * split / combine
+  * gadmin
+  * plugin manager
+  * ...and more
+* Channel & Group log support
+* Database support
+* Build-in help support
+* Easy to Setup & Use
+* Easy to add / port Plugins
+* Easy to write modules with the modified client
+
+## Example Plugin 
+
+```python
+from userge import userge, Message, filters
+
+LOG = userge.getLogger(__name__)  # logger object
+CHANNEL = userge.getCLogger(__name__)  # channel logger object
+
+# add command handler
+@userge.on_cmd("test", about="help text to this command")
+async def test_cmd(message: Message):
+   LOG.info("starting test command...")  # log to console
+   # some other stuff
+   await message.edit("testing...", del_in=5)  # this will be automatically deleted after 5 sec
+   # some other stuff
+   await CHANNEL.log("testing completed!")  # log to channel
+
+# add filters handler
+@userge.on_filters(filters.me & filters.private)  # filter my private messages
+async def test_filter(message: Message):
+   LOG.info("starting filter command...")
+   # some other stuff
+   await message.reply(f"you typed - {message.text}", del_in=5)
+   # some other stuff
+   await CHANNEL.log("filter executed!")
+```
+
+</details> 
+
+
 ### Project Credits 
 
 * [Pyrogram Assistant](https://github.com/pyrogram/assistant)
@@ -104,7 +181,7 @@
 * [PaperPlane](https://github.com/RaphielGang/Telegram-Paperplane)
 * [Uniborg](https://github.com/SpEcHiDe/UniBorg)
 
+
 ### Copyright & License 
 
-* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/code-rgb/USERGE-X/blob/master/LICENSE)
-
+[**GNU General Public License v3.0**](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)

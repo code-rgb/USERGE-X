@@ -195,7 +195,7 @@ async def upload_path(message: Message, path: Path, del_path):
 async def upload(message: Message, path: Path, del_path: bool = False, extra: str = ''):
     if path.name.lower().endswith(
             (".mkv", ".mp4", ".webm")) and ('d' not in message.flags):
-        await vid_upload(message, path, del_path, extra)
+        return await vid_upload(message, path, del_path, extra)
     elif path.name.lower().endswith(
             (".mp3", ".flac", ".wav", ".m4a")) and ('d' not in message.flags):
         await audio_upload(message, path, del_path, extra)
@@ -272,6 +272,7 @@ async def vid_upload(message: Message, path, del_path: bool = False, extra: str 
     finally:
         if os.path.exists(str(path)) and del_path:
             os.remove(str(path))
+    return msg
 
 
 async def audio_upload(message: Message, path, del_path: bool = False, extra: str = ''):

@@ -47,12 +47,19 @@ async def neko_life(message: Message):
     reply_id = reply.message_id if reply else None
     await message.delete()
     if link.endswith('.gif'):
-        await message.client.send_animation(
-            chat_id=message.chat.id,
-            animation=link,
-            unsave=True,
-            reply_to_message_id=reply_id
-        )
+        if message.client.is_bot:  #  Bots can't use "unsave=True"
+            await userge.bot.send_animation(
+                chat_id=message.chat.id,
+                animation=link,
+                reply_to_message_id=reply_id
+            )
+        else:
+            await userge.send_animation(
+                chat_id=message.chat.id,
+                animation=link,
+                unsave=True,
+                reply_to_message_id=reply_id
+            )
     else:
         await message.client.send_photo(
             chat_id=message.chat.id,
