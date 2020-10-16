@@ -89,7 +89,7 @@
 ## Other Ways
 
 * With Docker 🐳 
-    <a href="https://github.com/code-rgb/USERGE-X/blob/dev/resources/readmeDocker.md"><b>See Detailed Guide</b></a>
+    <a href="https://github.com/code-rgb/USERGE-X/blob/alpha/resources/readmeDocker.md"><b>See Detailed Guide</b></a>
 
 * With Git, Python and pip 🔧
   ```bash
