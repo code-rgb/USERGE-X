@@ -25,19 +25,11 @@
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
 [![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
+[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?&logo=telegram)](https://telegram.dog/x_xtests)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
 <br>
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
-<br>
-<br>
-
-
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
-[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
-
-<br>
 <br>
 
 
