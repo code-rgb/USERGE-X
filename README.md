@@ -57,7 +57,6 @@
 /**
 ```
 
-<br>
 
 ## Requirements 
 
@@ -66,10 +65,9 @@
 * Google Drive [API Keys](https://console.developers.google.com/)
 * MongoDB [Database URL](https://cloud.mongodb.com/)
 
-<br>
 
 ## How To Deploy 
-<b> With Heroku:</b>
+* With Heroku:
 
 <p align="center">
 <a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
@@ -82,7 +80,6 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
-<br>
 
 ## Read more
 <details>
@@ -175,7 +172,6 @@ async def test_filter(message: Message):
 
 </details> 
 
-<br>
 
 ### Project Credits 
 
@@ -184,7 +180,6 @@ async def test_filter(message: Message):
 * [PaperPlane](https://github.com/RaphielGang/Telegram-Paperplane)
 * [Uniborg](https://github.com/SpEcHiDe/UniBorg)
 
-<br>
 
 ### Copyright & License 
 
