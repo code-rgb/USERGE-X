@@ -1,9 +1,8 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b>
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
 
-[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
 
-</h2>
 <br>
+
 
 <p align="center">
     <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
@@ -31,13 +30,16 @@
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
+<br>
 
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
+[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
 
 <br>
+<br>
+
 
 ## Disclaimer
 
@@ -84,11 +86,14 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
-## Other Methods
+## More Details and Guide
 <details>
   <summary>Click to expand!! </summary>
+
+## Other Ways
+
 * With Docker 🐳 
-    - [**See Detailed Guide**](resources/readmeDocker.md)
+    <a href="https://github.com/code-rgb/USERGE-X/blob/dev/resources/readmeDocker.md"><b>See Detailed Guide</b></a>
 
 * With Git, Python and pip 🔧
   ```bash
@@ -112,11 +117,8 @@
   # finally run the Userge ;)
   bash run
   ```
-</details> 
 
-## More Info
-<details>
-  <summary>Click to expand!! </summary>
+  
 <h2>Guide to Upstream Forked Repo</h2>
 <a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
 <br>
@@ -184,5 +186,4 @@ async def test_filter(message: Message):
 
 ### Copyright & License 
 
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
-
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
