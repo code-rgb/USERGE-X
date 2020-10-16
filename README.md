@@ -1,4 +1,8 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b>
+
+[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
+
+</h2>
 <br>
 
 <p align="center">
@@ -12,29 +16,26 @@
 <br>
 <br>
 
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
-![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)
-![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)
-![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/code-rgb/userge-x)
+[![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/stargazers)
+[![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/network/members)
+[![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/issues)
 ![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X)
-![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)
+[![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/pulls)
 ![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
 [![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
-[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?style=for-the-badge&logo=telegram)](https://telegram.dog/x_xtests)
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/code-rgb/userge-x)
-
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
-
 <br>
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
+
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/contains-cat-gifs.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
 
 <br>
 
@@ -83,6 +84,9 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
+## Other Methods
+<details>
+  <summary>Click to expand!! </summary>
 * With Docker 🐳 
     - [**See Detailed Guide**](resources/readmeDocker.md)
 
@@ -108,15 +112,11 @@
   # finally run the Userge ;)
   bash run
   ```
+</details> 
 
-<h3><a href="https://telegra.ph/Other-Method-08-10">Other Methods</a></h3>
-
-
-# More
+## More Info
 <details>
   <summary>Click to expand!! </summary>
-
-
 <h2>Guide to Upstream Forked Repo</h2>
 <a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
 <br>
@@ -184,5 +184,5 @@ async def test_filter(message: Message):
 
 ### Copyright & License 
 
-* Licensed under the terms of the [GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007](https://github.com/code-rgb/USERGE-X/blob/master/LICENSE)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://raw.githubusercontent.com/code-rgb/USERGE-X/alpha/LICENSE)
 
