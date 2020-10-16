@@ -31,6 +31,7 @@
 <br>
 
 <br>
+
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
 
@@ -80,9 +81,9 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
-## More Details and Guide
 <details>
-  <summary>Click to expand!! </summary>
+  <summary><h2>More Details and Guide</h2></summary>
+
 
 ## Other Ways
 
