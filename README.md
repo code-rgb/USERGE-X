@@ -16,19 +16,19 @@
 <br>
 
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/code-rgb/userge-x)
-[![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/stargazers)
-[![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/network/members)
-[![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/issues)
-![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X)
-[![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X)](https://github.com/code-rgb/USERGE-X/pulls)
-![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X)
-![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X)
-[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
-[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
-[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?&logo=telegram)](https://telegram.dog/x_xtests)
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
+[![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X&style=flat-square)](https://github.com/code-rgb/USERGE-X/stargazers)
+[![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X&style=flat-square)](https://github.com/code-rgb/USERGE-X/network/members)
+[![Issues Open](https://img.shields.io/github/issues/code-rgb/USERGE-X&style=flat-square)](https://github.com/code-rgb/USERGE-X/issues)
+![Issues Closed](https://img.shields.io/github/issues-closed/code-rgb/USERGE-X&style=flat-square)
+[![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X&style=flat-square)](https://github.com/code-rgb/USERGE-X/pulls)
+![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X&style=flat-square)
+![Repo Size](https://img.shields.io/github/repo-size/code-rgb/USERGE-X&style=flat-square)
+[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen&style=flat-square)](https://sourcery.ai)
+[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge&style=flat-square)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
+[![Telegram](https://img.shields.io/badge/Support%20group-Telegram-blue?&logo=telegram&style=flat-square)](https://telegram.dog/x_xtests)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
 <br>
-
+?style=flat-square
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
 
