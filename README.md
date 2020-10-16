@@ -15,7 +15,7 @@
 <br>
 <br>
 
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source-150x25.png?v=103)](https://github.com/code-rgb/userge-x)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/code-rgb/userge-x)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?&style=flat-square)](https://github.com/code-rgb/USERGE-X/tree/dev#copyright--license)
 [![Stars](https://img.shields.io/github/stars/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/stargazers)
 [![Forks](https://img.shields.io/github/forks/code-rgb/USERGE-X?&style=flat-square)](https://github.com/code-rgb/USERGE-X/network/members)
@@ -82,7 +82,7 @@
   * Finally **hit deploy** button
 
 <details>
-  <summary><h2>More Details and Guide</h2></summary>
+  <summary><b>More Details and Guide</b></summary>
 
 
 ## Other Ways
