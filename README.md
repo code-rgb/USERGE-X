@@ -29,7 +29,6 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
 [![Telegram](https://img.shields.io/badge/Support%20Group-USERGE--X-blue?&logo=telegram&style=social)](https://telegram.dog/x_xtests)
 <br>
-<br>
 
  **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
@@ -58,6 +57,7 @@
 /**
 ```
 
+<br>
 
 ## Requirements 
 
@@ -66,8 +66,10 @@
 * Google Drive [API Keys](https://console.developers.google.com/)
 * MongoDB [Database URL](https://cloud.mongodb.com/)
 
+<br>
+
 ## How To Deploy 
-* With Heroku:
+<b> With Heroku:</b>
 
 <p align="center">
 <a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
@@ -80,11 +82,11 @@
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
 
+<br>
 
 ## Read more
 <details>
   <summary><b>Details and Guides</b></summary>
-
 
 ## Other Ways
 
@@ -173,6 +175,8 @@ async def test_filter(message: Message):
 
 </details> 
 
+<br>
+
 ### Project Credits 
 
 * [Pyrogram Assistant](https://github.com/pyrogram/assistant)
@@ -180,6 +184,8 @@ async def test_filter(message: Message):
 * [PaperPlane](https://github.com/RaphielGang/Telegram-Paperplane)
 * [Uniborg](https://github.com/SpEcHiDe/UniBorg)
 
+<br>
+
 ### Copyright & License 
 
-[GNU General Public License v3.0](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)
+[**GNU General Public License v3.0**](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)
