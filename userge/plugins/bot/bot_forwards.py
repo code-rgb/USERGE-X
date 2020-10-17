@@ -150,8 +150,8 @@ if userge.has_bot:
                 del_in=5
             )
             return
-        banned_msg = "<i>**You Have been Banned Forever**" \
-                     f"</i>\n**Reason** : {reason}"
+        banned_msg = ("<i>**You Have been Banned Forever**"
+                     f"</i>\n**Reason** : {reason}")
         await asyncio.gather(
             BOT_BAN.insert_one(
                 {
