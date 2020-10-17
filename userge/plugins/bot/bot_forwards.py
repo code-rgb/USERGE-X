@@ -27,7 +27,11 @@ async def _init() -> None:
 allowForwardFilter = filters.create(lambda _, __, ___: Config.BOT_FORWARDS)
 
 
-@userge.on_cmd("bot_fwd", about={'header': "enable / disable Bot Forwards"}, allow_channels=False)
+@userge.on_cmd(
+    "bot_fwd",
+    about={'header': "enable / disable Bot Forwards"},
+    allow_channels=False
+)
 async def bot_fwd_(message: Message):
     """ enable / disable Bot Forwards """
     if Config.BOT_FORWARDS:
@@ -37,7 +41,10 @@ async def bot_fwd_(message: Message):
         Config.BOT_FORWARDS = True
         await message.edit("`Bot Forwards enabled !`", del_in=3)
     await SAVED_SETTINGS.update_one(
-        {'_id': 'BOT_FORWARDS'}, {"$set": {'is_active': Config.BOT_FORWARDS}}, upsert=True)
+        {'_id': 'BOT_FORWARDS'},
+        {"$set": {'is_active': Config.BOT_FORWARDS}},
+        upsert=True
+    )
 
 
 if not os.path.exists('userge/xcache'):
@@ -46,7 +53,10 @@ PATH = "userge/xcache/bot_forward.txt"
 
 
 if userge.has_bot:
-    @ubot.on_message(allowForwardFilter & ~filters.user(Config.OWNER_ID) & filters.private & filters.incoming & ~filters.command("start"))
+    @ubot.on_message(
+        allowForwardFilter & ~filters.user(Config.OWNER_ID) & filters.private &
+        filters.incoming & ~filters.command("start")
+    )
     async def forward_bot(_, message: Message):
         found = await BOT_BAN.find_one({'user_id': message.from_user.id})
         if found:
@@ -54,14 +64,20 @@ if userge.has_bot:
         else:
             msg_id = message.message_id
             try:
-                msg_owner = await ubot.forward_messages(Config.OWNER_ID, message.chat.id, msg_id)
+                msg_owner = await ubot.forward_messages(
+                                Config.OWNER_ID,
+                                message.chat.id,
+                                msg_id
+                            )
             except MessageIdInvalid:
                 return
             update = bool(os.path.exists(PATH))
             await dumper(msg_owner.message_id, message.from_user.id, update)
 
-    
-    @ubot.on_message(allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private & filters.reply & ~filters.regex(pattern=r"^\/.+")) 
+    @ubot.on_message(
+        allowForwardFilter & filters.user(Config.OWNER_ID) &
+        filters.private & filters.reply & ~filters.regex(pattern=r"^\/.+")
+    )
     async def forward_reply(_, message: Message):
         replied = message.reply_to_message
         to_user = replied.forward_from
@@ -71,11 +87,20 @@ if userge.has_bot:
                 try:
                     data = json.load(open(PATH))
                     user_id = data[0][str(replied.message_id)]
-                    await ubot.forward_messages(user_id, message.chat.id, msg_id, as_copy=True)
+                    await ubot.forward_messages(
+                        user_id, message.chat.id,
+                        msg_id,
+                        as_copy=True
+                    )
                 except BadRequest:
                     return
                 except:
-                    await ubot.send_message(message.chat.id, "`You can't reply to old messages with if user's forward privacy is enabled`", del_in=10)
+                    await ubot.send_message(
+                        message.chat.id,
+                        "`You can't reply to old messages with if user's"
+                        "forward privacy is enabled`",
+                        del_in=10
+                    )
                     return
             else:
                 return
@@ -85,16 +110,22 @@ if userge.has_bot:
 
 # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
-    @ubot.on_message(filters.user(Config.OWNER_ID) & filters.private & filters.incoming & filters.regex(pattern=r"^\/ban(?: )(.+)"))
+    @ubot.on_message(
+        filters.user(Config.OWNER_ID) & filters.private & filters.incoming &
+        filters.regex(pattern=r"^\/ban(?: )(.+)")
+    )
     async def bot_ban_(_, message: Message):
         """ ban a user from bot """
         start_ban = await ubot.send_message(message.chat.id, "`Banning...`")
-        user_id, reason = extract_content(message)     # Ban by giving ID and Reason
+        user_id, reason = extract_content(message)  # Ban by giving ID & Reason
         if not user_id:
             await start_ban.edit("User ID Not found", del_in=10)
             return
         if not reason:
-            await ubot.send_message(message.chat.id, "Ban Aborted! provide a reason first!")
+            await ubot.send_message(
+                message.chat.id,
+                "Ban Aborted! provide a reason first!"
+            )
             return
         get_mem = await ubot.get_users(user_id)
         firstname = get_mem.first_name
@@ -104,33 +135,49 @@ if userge.has_bot:
             return
         if user_id in Config.SUDO_USERS:
             await start_ban.edit(
-                "That user is in my Sudo List, Hence I can't ban him from bot\n\n"
-                "**Tip:** Remove them from Sudo List and try again.", del_in=5)
+                "That user is in my Sudo List,"
+                "Hence I can't ban him from bot\n"
+                "\n**Tip:** Remove them from Sudo List and try again.",
+                del_in=5
+                )
             return
         found = await BOT_BAN.find_one({'user_id': user_id})
         if found:
             await start_ban.edit(
-                "**#Already_Banned From Bot PM**\n\nUser Already Exists in My Bot BAN List.\n"
-                f"**Reason For Bot BAN:** `{found['reason']}`", del_in=5)
+                "**#Already_Banned From Bot PM**\n\n"
+                "User Already Exists in My Bot BAN List.\n"
+                f"**Reason For Bot BAN:** `{found['reason']}`",
+                del_in=5
+            )
             return
-        banned_msg = f"<i>**You Have been Banned Forever**</i>\n**Reason** : {reason}"
+        banned_msg = "<i>**You Have been Banned Forever**" \
+                     f"</i>\n**Reason** : {reason}"
         await asyncio.gather(
             BOT_BAN.insert_one(
-                {'firstname': firstname, 'user_id': user_id, 'reason': reason}),
+                {
+                    'firstname': firstname,
+                    'user_id': user_id,
+                    'reason': reason
+                }
+            ),
             await start_ban.edit(
                 r"\\**#Banned From Bot PM_User**//"
                 f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
                 f"**User ID:** `{user_id}`\n**Reason:** `{reason}`"),
             await ubot.send_message(user_id, banned_msg)
         )
-        
-        
 
-    @ubot.on_message(allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private & filters.command("broadcast"))
+    @ubot.on_message(
+        allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private &
+        filters.command("broadcast")
+    )
     async def broadcast_(_, message: Message):
         replied = message.reply_to_message
         if not replied:
-            await ubot.send_message(message.chat.id, "Reply to a message for BROADCAST")
+            await ubot.send_message(
+                message.chat.id,
+                "Reply to a message for BROADCAST"
+            )
             return
         br_cast = await message.reply_text("`Broadcasting ...`", quote=True)
         b_msg = replied.message_id
@@ -138,8 +185,16 @@ if userge.has_bot:
         async for c in BOT_START.find():
             try:
                 b_id = c['user_id']
-                await ubot.send_message(b_id, "🔊 You received a **new** Broadcast.")
-                await ubot.forward_messages(b_id, message.chat.id, b_msg, as_copy=True)
+                await ubot.send_message(
+                    b_id,
+                    "🔊 You received a **new** Broadcast."
+                )
+                await ubot.forward_messages(
+                    b_id,
+                    message.chat.id,
+                    b_msg,
+                    as_copy=True
+                )
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:
@@ -147,16 +202,16 @@ if userge.has_bot:
                     BOT_START.delete_one({'user_id': b_id}))
         b_info = "🔊 **Successfully Broadcasted This Message**"
         await br_cast.edit(b_info)
-            
+
 
 async def dumper(a, b, update):
     if update:
         data = json.load(open(PATH))     # load
-        data[0].update({a : b})          # Update
+        data[0].update({a: b})          # Update
     else:
-        data = [{a : b}]
+        data = [{a: b}]
 
-    json.dump(data, open(PATH,'w'))  # Dump
+    json.dump(data, open(PATH, 'w'))  # Dump
 
 
 def extract_content(msg):   # Modified a bound method
@@ -186,12 +241,12 @@ def extract_content(msg):   # Modified a bound method
             # if user id, convert it to integer
             if user.isdigit():
                 user_id = int(user)
-            
+
             # User @ Mention.
             if user.startswith("@"):
                 user_id = user
         else:
-            user_id = None  # just in case :p 
+            user_id = None  # just in case :p
             reason = None
     return user_id, reason
 
@@ -205,10 +260,15 @@ async def list_bot_banned(message: Message):
     """ view Bot Banned users """
     msg = ''
     async for c in BOT_BAN.find():
-        msg += ("**User** : " + str(c['firstname']) + "-> with **User ID** -> "
-                + str(c['user_id']) + " is **Bot Banned for** : " + str(c['reason']) + "\n\n")
+        msg += (
+            "**User** : " + str(c['firstname']) +
+            "-> with **User ID** -> " +
+            str(c['user_id']) + " is **Bot Banned for** : " +
+            str(c['reason']) + "\n\n"
+        )
     await message.edit_or_send_as_file(
-        f"**--Bot Banned Users List--**\n\n{msg}" if msg else "`bblist empty!`")
+        f"**--Bot Banned Users List--**\n\n{msg}" if msg else "`bblist empty!`"
+    )
 
 
 @userge.on_cmd("unbban", about={
@@ -240,7 +300,7 @@ async def ungban_user(message: Message):
             r"\\**#UnBotbanned_User**//"
             f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
             f"**User ID:** `{user_id}`"))
-    
+
 
 @userge.on_cmd("bot_forwards", about={
     'header': "Help regarding commands for bot forwards"})
@@ -249,9 +309,9 @@ async def bf_help(message: Message):
     cmd_ = Config.CMD_TRIGGER
     bot_forwards_help = f"""
         **Available Commands**
-        
+
     [Toggle]
-• `{cmd_}bot_fwd` - Enable / Disable bot Forwards 
+• `{cmd_}bot_fwd` - Enable / Disable bot Forwards
 
     <i>works **only in** bot pm</i>
 • `/ban` - Ban a User from Bot PM
