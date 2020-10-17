@@ -26,9 +26,8 @@ async def gapps_inline(message: Message):
     await message.delete()
 
 
-
 if userge.has_bot:
-    @ubot.on_callback_query(filters.regex(pattern=r"^open_gapps$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^open_gapps$"))
     async def open_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -52,7 +51,7 @@ if userge.has_bot:
             [InlineKeyboardButton(text="⏪  BACK", callback_data="back_gapps")]
             ]
 
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            await userge.bot.edit_inline_text(callback_query.inline_message_id,
                 "[\u200c](https://i.imgur.com/4iwrOZ7.jpg) **OPEN GAPPS**",
                 reply_markup=InlineKeyboardMarkup(open_g)
             )
@@ -60,7 +59,7 @@ if userge.has_bot:
             await callback_query.answer("Sorry You Can't Access This!\n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^flame_gapps$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^flame_gapps$"))
     async def flame_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -80,7 +79,7 @@ if userge.has_bot:
                     InlineKeyboardButton(text="BASIC", url=basic)],
                     [InlineKeyboardButton(text="⏪  BACK", callback_data="back_gapps")]]
 
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            await userge.bot.edit_inline_text(callback_query.inline_message_id,
                 "[\u200c](https://telegra.ph/file/c3cdea0642e1723f3304c.jpg)**FLAME GAPPS**",
                 reply_markup=InlineKeyboardMarkup(flame_g)
             )
@@ -88,7 +87,7 @@ if userge.has_bot:
             await callback_query.answer("Sorry You Can't Access This!\n\n  𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^nik_gapps$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^nik_gapps$"))
     async def nik_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -103,7 +102,7 @@ if userge.has_bot:
             nik_g = [[InlineKeyboardButton(text="Lastest", url=latest_niks)],
                     [InlineKeyboardButton(text="⏪  BACK", callback_data="back_gapps")]]
 
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            await userge.bot.edit_inline_text(callback_query.inline_message_id,
                 "[\u200c](https://i.imgur.com/Iv9ZTDW.jpg) **NIK GAPPS**",
                 reply_markup=InlineKeyboardMarkup(nik_g)
             )
@@ -111,7 +110,7 @@ if userge.has_bot:
             await callback_query.answer("Sorry You Can't Access This!\n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙔𝙤𝙪𝙧 𝙊𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^back_gapps$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^back_gapps$"))
     async def back_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS:
@@ -120,7 +119,7 @@ if userge.has_bot:
                         InlineKeyboardButton("Flame Gapps", callback_data="flame_gapps")],
                       [InlineKeyboardButton("Nik Gapps", callback_data="nik_gapps")]]
     
-            await ubot.edit_inline_text(callback_query.inline_message_id,
+            await userge.bot.edit_inline_text(callback_query.inline_message_id,
                 "[\u200c](https://i.imgur.com/BZBMrfn.jpg) **LATEST Android 10 arm64 GApps**",
                 reply_markup=InlineKeyboardMarkup(buttons)
             )

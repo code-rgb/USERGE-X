@@ -23,7 +23,7 @@ async def alive_inline(message: Message):
 
 
 if userge.has_bot:
-    @ubot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
         if Config.HEROKU_APP:
             dynos_saver = _parse_arg(Config.RUN_DYNO_SAVER)

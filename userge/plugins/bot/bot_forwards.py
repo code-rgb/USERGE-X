@@ -36,10 +36,10 @@ async def bot_fwd_(message: Message):
     """ enable / disable Bot Forwards """
     if Config.BOT_FORWARDS:
         Config.BOT_FORWARDS = False
-        await message.edit("`Bot Forwards disabled !`", del_in=3)
+        await message.edit("`Bot Forwards disabled !`", del_in=3, log=__name__)
     else:
         Config.BOT_FORWARDS = True
-        await message.edit("`Bot Forwards enabled !`", del_in=3)
+        await message.edit("`Bot Forwards enabled !`", del_in=3, log=__name__)
     await SAVED_SETTINGS.update_one(
         {'_id': 'BOT_FORWARDS'},
         {"$set": {'is_active': Config.BOT_FORWARDS}},
@@ -53,7 +53,7 @@ PATH = "userge/xcache/bot_forward.txt"
 
 
 if userge.has_bot:
-    @ubot.on_message(
+    @userge.bot.on_message(
         allowForwardFilter & ~filters.user(Config.OWNER_ID) & filters.private &
         filters.incoming & ~filters.command("start")
     )
@@ -64,7 +64,7 @@ if userge.has_bot:
         else:
             msg_id = message.message_id
             try:
-                msg_owner = await ubot.forward_messages(
+                msg_owner = await userge.bot.forward_messages(
                                 Config.OWNER_ID,
                                 message.chat.id,
                                 msg_id
@@ -74,7 +74,7 @@ if userge.has_bot:
             update = bool(os.path.exists(PATH))
             await dumper(msg_owner.message_id, message.from_user.id, update)
 
-    @ubot.on_message(
+    @userge.bot.on_message(
         allowForwardFilter & filters.user(Config.OWNER_ID) &
         filters.private & filters.reply & ~filters.regex(pattern=r"^\/.+")
     )
@@ -87,7 +87,7 @@ if userge.has_bot:
                 try:
                     data = json.load(open(PATH))
                     user_id = data[0][str(replied.message_id)]
-                    await ubot.forward_messages(
+                    await userge.bot.forward_messages(
                         user_id, message.chat.id,
                         msg_id,
                         as_copy=True
@@ -95,7 +95,7 @@ if userge.has_bot:
                 except BadRequest:
                     return
                 except:
-                    await ubot.send_message(
+                    await userge.bot.send_message(
                         message.chat.id,
                         "`You can't reply to old messages with if user's"
                         "forward privacy is enabled`",
@@ -106,28 +106,28 @@ if userge.has_bot:
                 return
         else:
             to_id = to_user.id
-            await ubot.forward_messages(to_id, message.chat.id, msg_id)
+            await userge.bot.forward_messages(to_id, message.chat.id, msg_id)
 
 # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
-    @ubot.on_message(
+    @userge.bot.on_message(
         filters.user(Config.OWNER_ID) & filters.private & filters.incoming &
         filters.regex(pattern=r"^\/ban(?: )(.+)")
     )
     async def bot_ban_(_, message: Message):
         """ ban a user from bot """
-        start_ban = await ubot.send_message(message.chat.id, "`Banning...`")
+        start_ban = await userge.bot.send_message(message.chat.id, "`Banning...`")
         user_id, reason = extract_content(message)  # Ban by giving ID & Reason
         if not user_id:
             await start_ban.edit("User ID Not found", del_in=10)
             return
         if not reason:
-            await ubot.send_message(
+            await userge.bot.send_message(
                 message.chat.id,
                 "Ban Aborted! provide a reason first!"
             )
             return
-        get_mem = await ubot.get_users(user_id)
+        get_mem = await userge.bot.get_users(user_id)
         firstname = get_mem.first_name
         user_id = get_mem.id
         if user_id == Config.OWNER_ID:
@@ -164,17 +164,17 @@ if userge.has_bot:
                 r"\\**#Banned From Bot PM_User**//"
                 f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
                 f"**User ID:** `{user_id}`\n**Reason:** `{reason}`"),
-            await ubot.send_message(user_id, banned_msg)
+            await userge.bot.send_message(user_id, banned_msg)
         )
 
-    @ubot.on_message(
+    @userge.bot.on_message(
         allowForwardFilter & filters.user(Config.OWNER_ID) & filters.private &
         filters.command("broadcast")
     )
     async def broadcast_(_, message: Message):
         replied = message.reply_to_message
         if not replied:
-            await ubot.send_message(
+            await userge.bot.send_message(
                 message.chat.id,
                 "Reply to a message for BROADCAST"
             )
@@ -185,11 +185,11 @@ if userge.has_bot:
         async for c in BOT_START.find():
             try:
                 b_id = c['user_id']
-                await ubot.send_message(
+                await userge.bot.send_message(
                     b_id,
                     "🔊 You received a **new** Broadcast."
                 )
-                await ubot.forward_messages(
+                await userge.bot.forward_messages(
                     b_id,
                     message.chat.id,
                     b_msg,

@@ -62,13 +62,13 @@ async def butts(message: Message):
 
 
 if userge.has_bot:       
-    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("Yes I\'m 18+", show_alert=False)
-        msg = await ubot.get_messages('useless_x' , 19)
+        msg = await userge.bot.get_messages('useless_x' , 19)
         f_id, f_ref = get_file_id_and_ref(msg)
         buttons = [[
             InlineKeyboardButton(
@@ -88,13 +88,13 @@ if userge.has_bot:
         except MessageNotModified:
             return
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("No I'm Not", show_alert=False)
-        msg = await ubot.get_messages('useless_x' , 20)
+        msg = await userge.bot.get_messages('useless_x' , 20)
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text="GO AWAY KID !"
         buttons = [[
@@ -117,13 +117,13 @@ if userge.has_bot:
         
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("Given That It\'s A Stupid-Ass Decision, I\'ve Elected To Ignore It.", show_alert=True)
         await c_q.answer("Unsure", show_alert=False)
-        msg = await ubot.get_messages('useless_x', 21)
+        msg = await userge.bot.get_messages('useless_x', 21)
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text="**ARE YOU OLD ENOUGH FOR THIS ?**"
         buttons = [[

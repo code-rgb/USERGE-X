@@ -18,7 +18,7 @@ PATH = "userge/xcache/emoji_data.txt"
 
 
 if userge.has_bot:
-    @ubot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)$"))
     async def choice_cb(_, c_q: CallbackQuery):
         if not os.path.exists(PATH):
             await c_q.answer("𝑶𝒑𝒊𝒏𝒊𝒐𝒏 𝒅𝒂𝒕𝒂 𝒅𝒐𝒏'𝒕 𝒆𝒙𝒊𝒔𝒕 𝒂𝒏𝒚𝒎𝒐𝒓𝒆.", show_alert=True)
@@ -88,7 +88,7 @@ if userge.has_bot:
                         InlineKeyboardButton(disagree_data, callback_data=f"op_n_{opinion_id}")],
                         [InlineKeyboardButton("📊 Stats", callback_data=f"opresult_{opinion_id}")]]
         try:
-            await ubot.edit_inline_reply_markup(c_q.inline_message_id,
+            await userge.bot.edit_inline_reply_markup(c_q.inline_message_id,
                     reply_markup=InlineKeyboardMarkup(opinion_data)
             )
         except FloodWait as e:
@@ -97,7 +97,7 @@ if userge.has_bot:
             return
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^opresult_(\d+)$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^opresult_(\d+)$"))
     async def choice_result_cb(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         opinion_id = c_q.matches[0].group(1)
@@ -114,7 +114,7 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
             
-            await ubot.edit_inline_text(c_q.inline_message_id,
+            await userge.bot.edit_inline_text(c_q.inline_message_id,
                     msg
             )
         else:

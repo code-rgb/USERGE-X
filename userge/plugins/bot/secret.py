@@ -12,7 +12,7 @@ SECRETS = "userge/xcache/secret.txt"
 
 
 if userge.has_bot:
-    @ubot.on_callback_query(filters.regex(pattern=r"^secret_(.*)"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^secret_(.*)"))
     async def alive_callback(_, c_q: CallbackQuery):
         msg_id = c_q.matches[0].group(1)
         if os.path.exists(SECRETS):

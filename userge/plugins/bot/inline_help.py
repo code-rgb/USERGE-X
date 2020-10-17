@@ -86,16 +86,16 @@ if userge.has_bot:
     inline_help_txt =" <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
             
 
-    @ubot.on_message(filters.user(Config.OWNER_ID) & filters.private & (filters.command("inline") | filters.regex(pattern=r"^/start inline$")))
+    @userge.bot.on_message(filters.user(Config.OWNER_ID) & filters.private & (filters.command("inline") | filters.regex(pattern=r"^/start inline$")))
     async def inline_help(_, message: Message):
-        await ubot.send_message(
+        await userge.bot.send_message(
             chat_id=message.chat.id,
             text=inline_help_txt,
             reply_markup=InlineKeyboardMarkup(HELP_BUTTONS)
         )
 
 
-    @ubot.on_callback_query(filters.user(Config.OWNER_ID) & filters.regex(pattern=r"^backbtn_ihelp$"))
+    @userge.bot.on_callback_query(filters.user(Config.OWNER_ID) & filters.regex(pattern=r"^backbtn_ihelp$"))
     async def back_btn(_, c_q: CallbackQuery): 
         await c_q.edit_message_text(
             text=inline_help_txt,
@@ -103,7 +103,7 @@ if userge.has_bot:
         )
 
 
-    @ubot.on_callback_query(filters.user(Config.OWNER_ID) & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$"))
+    @userge.bot.on_callback_query(filters.user(Config.OWNER_ID) & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$"))
     async def help_query(_, c_q: CallbackQuery): 
         command_name = c_q.matches[0].group(1)
         msg = COMMANDS[command_name]['help_txt']
