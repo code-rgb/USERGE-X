@@ -122,11 +122,7 @@ async def helpme(message: Message) -> None:  # pylint: disable=missing-function-
                 out_str = f"<i>No Module or Command Found for</i>: <code>{message.input_str}</code>"
     await message.edit(out_str, del_in=0, parse_mode='html', disable_web_page_preview=True)
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
+if userge.has_bot:
 
     def check_owner(func):
         async def wrapper(_, c_q: CallbackQuery):

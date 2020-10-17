@@ -57,12 +57,7 @@ def date_formatter(date_):
     return str(x.strftime('%d-%b-%Y'))
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
+if userge.has_bot:
     @ubot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
         startTime = time()

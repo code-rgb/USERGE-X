@@ -16,12 +16,8 @@ if not os.path.exists('userge/xcache'):
     os.mkdir('userge/xcache')
 PATH = "userge/xcache/emoji_data.txt"   
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-    
+
+if userge.has_bot:
     @ubot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)$"))
     async def choice_cb(_, c_q: CallbackQuery):
         if not os.path.exists(PATH):

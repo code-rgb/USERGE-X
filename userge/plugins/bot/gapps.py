@@ -27,13 +27,7 @@ async def gapps_inline(message: Message):
 
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
+if userge.has_bot:
     @ubot.on_callback_query(filters.regex(pattern=r"^open_gapps$"))
     async def open_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id 

@@ -60,13 +60,7 @@ COMMANDS = {
 }
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
+if userge.has_bot:
     def help_btn_generator():
         btn = []
         b = []

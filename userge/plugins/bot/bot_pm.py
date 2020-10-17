@@ -23,13 +23,7 @@ _DEFAULT = "https://t.me/useless_x/2"
 # refresh file id and file reference from TG server
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
+if userge.has_bot:
     @ubot.on_message(filters.private & filters.regex(pattern=r"^/start$"))
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()

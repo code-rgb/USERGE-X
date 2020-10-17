@@ -21,13 +21,7 @@ async def alive_inline(message: Message):
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
+if userge.has_bot:
     @ubot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
         if Config.HEROKU_APP:

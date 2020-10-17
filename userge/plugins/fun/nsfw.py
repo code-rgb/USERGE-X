@@ -61,13 +61,7 @@ async def butts(message: Message):
     await message.delete()
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-       
+if userge.has_bot:       
     @ubot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
     async def alive_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id

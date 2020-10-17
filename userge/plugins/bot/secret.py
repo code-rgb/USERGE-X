@@ -10,13 +10,7 @@ import os
 SECRETS = "userge/xcache/secret.txt"
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-       
+if userge.has_bot:
     @ubot.on_callback_query(filters.regex(pattern=r"^secret_(.*)"))
     async def alive_callback(_, c_q: CallbackQuery):
         msg_id = c_q.matches[0].group(1)

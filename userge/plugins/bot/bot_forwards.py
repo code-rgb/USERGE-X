@@ -44,13 +44,8 @@ if not os.path.exists('userge/xcache'):
     os.mkdir('userge/xcache')
 PATH = "userge/xcache/bot_forward.txt"
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-    
-    
+
+if userge.has_bot:
     @ubot.on_message(allowForwardFilter & ~filters.user(Config.OWNER_ID) & filters.private & filters.incoming & ~filters.command("start"))
     async def forward_bot(_, message: Message):
         found = await BOT_BAN.find_one({'user_id': message.from_user.id})
