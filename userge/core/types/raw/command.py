@@ -52,6 +52,7 @@ class Command(Filter):
             outgoing_flt = filters.create(
                 lambda _, __, m:
                 m.via_bot is None
+                and not (m.forward_sender_name or m.forward_from)
                 and not (m.from_user and m.from_user.is_bot)
                 and (m.outgoing or (m.from_user and m.from_user.is_self))
                 and not (m.chat and m.chat.type == "channel" and m.edit_date)
@@ -59,6 +60,7 @@ class Command(Filter):
             incoming_flt = filters.create(
                 lambda _, __, m:
                 m.via_bot is None
+                and not (m.forward_sender_name or m.forward_from)
                 and not m.outgoing
                 and trigger
                 and m.from_user and m.text
