@@ -144,7 +144,7 @@ async def pm_logger(_, message: Message):
 @userge.on_cmd("pmlog", about={
     'header': "Enable / Disable PM Logging For a specific User",
     'description': "Stop logging incomming pms from a user"
-                   "USERGE-X will not interfere or handle such private chats",
+                   " USERGE-X will not interfere or handle such private chats",
     'usage': "{tr}pmlog [username | userID]\nreply {tr}pmlog to a message,"
              " do {tr}pmlog in the private chat"},
              allow_channels=False, allow_via_bot=False)
