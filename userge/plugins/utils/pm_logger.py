@@ -9,7 +9,7 @@ import asyncio
 from userge.utils import mention_html
 from userge import userge, Message, Config, get_collection
 from pyrogram import filters
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, MessageIdInvalid
 
 
 # CHANNEL = userge.getCLogger(__name__)
@@ -109,6 +109,7 @@ async def pm_logger(_, message: Message):
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x)
+                
             PM_LOGGER_CACHE.clear()
             await asyncio.sleep(2)
             try:
@@ -136,6 +137,8 @@ async def pm_logger(_, message: Message):
         )
     except FloodWait as e:
         await asyncio.sleep(e.x)
+    except MessageIdInvalid:
+        pass
 
 
 @userge.on_cmd("pmlog", about={
