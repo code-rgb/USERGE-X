@@ -138,14 +138,14 @@ async def pm_logger(_, message: Message):
         await asyncio.sleep(e.x)
 
 
-@userge.on_cmd("nopmlog", about={
+@userge.on_cmd("pmlog", about={
     'header': "Enable / Disable PM Logging For a specific User",
     'description': "Stop logging incomming pms from a user"
                    "USERGE-X will not interfere or handle such private chats",
-    'usage': "{tr}nopmlog [username | userID]\nreply {tr}nopmlog to a message,"
-             " do {tr}nopmlog in the private chat"},
+    'usage': "{tr}pmlog [username | userID]\nreply {tr}pmlog to a message,"
+             " do {tr}pmlog in the private chat"},
              allow_channels=False, allow_via_bot=False)
-async def no_log_(message: Message):
+async def pm_user_log_(message: Message):
     """ disable pm logger for a user """
     user_id = await get_id(message)
     if not user_id:
