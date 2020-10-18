@@ -209,7 +209,7 @@ async def view_current_blockPM_msg(message: Message):
 async def uninvitedPmHandler(message: Message):
     """ pm message handler """
     user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({'chat': message.chat.title if message.chat.title else "this group"})
+    user_dict.update({'chat': message.chat.title or "this group"})
     if message.from_user.is_verified:
         return
     if message.from_user.id in pmCounter:

@@ -80,9 +80,6 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
         os.remove(filename)
         module = inspect.currentframe().f_back.f_globals['__name__']
         if log:
-            if isinstance(log, bool):
-                args = (msg, module)
-            else:
-                args = (msg, log)
+            args = (msg, module) if isinstance(log, bool) else (msg, log)
             await self._channel.fwd_msg(*args)
         return types.bound.Message.parse(self, msg, module=module)

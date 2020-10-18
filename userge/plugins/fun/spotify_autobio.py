@@ -370,23 +370,20 @@ async def now_playing_(message: Message):
 		for for_rec in get_rec:
 			track = for_rec['track']
 			get_name = track['name']
-			sf = open("status_recent_played_song.txt", "a")
-			sf.write('• __' + get_name +'__' + "\n")
-			sf.close()
+			with open("status_recent_played_song.txt", "a") as sf:
+				sf.write('• __' + get_name +'__' + "\n")
 		f = open("status_recent_played_song.txt", "r+")
 		recent_p = f.read()
 		f.truncate(0)
-		
+
 		device_info = device.json()
 		g_dlist = device_info["devices"][0]
 		device_name = g_dlist['name']
 		device_type = g_dlist['type']
 		device_vol = g_dlist['volume_percent']
-
 	#==================PLAYING_SONGS_INFO=======================================#
 		currently_playing_song = f"{spotify_biox.title} - {spotify_biox.interpret}"
 		currently_playing_song_dur = f"{spotify_biox.progress}/{spotify_biox.duration}"
-
 	#==================ASSINGING_VAR_VLAUE=======================================#
 		status_pn = f"""
 	**Device name:** {device_name} ({device_type}) 
@@ -394,7 +391,7 @@ async def now_playing_(message: Message):
 	**Currently playing song:** {currently_playing_song} 
 	**Duration:** {currently_playing_song_dur} 
 	**Recently played songs:** \n{recent_p}"""
-				
+
 	await message.edit(status_pn)
 
 
@@ -430,11 +427,10 @@ async def sp_recents_(message: Message):
 		get_name = track['name']
 		ex_link = track['external_urls']
 		get_link = ex_link['spotify']
-		f = open("userge/xcache/recent_played_song.txt", "a")
-		f.write('• [' + get_name + ']'+ '(' + get_link + ')'+ "\n")
-		f.close()
+		with open("userge/xcache/recent_played_song.txt", "a") as f:
+			f.write('• [' + get_name + ']'+ '(' + get_link + ')'+ "\n")
 	await message.edit("`Getting recent played songs...`")
 	f = open("userge/xcache/recent_played_song.txt", "r+")
 	recent = f.read()
-	f.truncate(0) 
+	f.truncate(0)
 	await message.edit("🎵 **Recently played songs:**\n" + recent, disable_web_page_preview=True)

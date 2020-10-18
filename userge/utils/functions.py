@@ -110,5 +110,4 @@ def rand_array(array):
 async def download_link(url):
     dest = Config.DOWN_PATH
     obj = SmartDL(url, dest)
-    path = obj.get_dest()
-    return path
+    return obj.get_dest()
