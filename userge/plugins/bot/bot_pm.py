@@ -23,14 +23,8 @@ _DEFAULT = "https://t.me/useless_x/2"
 # refresh file id and file reference from TG server
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-
-    @ubot.on_message(filters.private & filters.regex(pattern=r"^/start$"))
+if userge.has_bot:
+    @userge.bot.on_message(filters.private & filters.regex(pattern=r"^/start$"))
     async def start_bot(_, message: Message):
         bot = await userge.bot.get_me()
         master = await userge.get_me()
@@ -84,7 +78,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
     async def _refresh_id(message: Message) -> None:
         global LOGO_ID, LOGO_REF  # pylint: disable=global-statement
         try:
-            media = await ubot.get_messages(_CHAT, _MSG_ID)
+            media = await userge.bot.get_messages(_CHAT, _MSG_ID)
         except ChannelInvalid:
             _set_data(True)
             return await _refresh_id(message)
@@ -120,7 +114,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
         if not (LOGO_ID and LOGO_REF):
             await _refresh_id(message)
         try:
-            await ubot.send_cached_media(
+            await userge.bot.send_cached_media(
                 chat_id=message.chat.id,
                 file_id=LOGO_ID, 
                 file_ref=LOGO_REF,
@@ -139,11 +133,11 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             return await _send_botstart(message, caption_text, u_n, recurs_count + 1)
 
 
-    @ubot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
     async def add_to_grp(_, callback_query: CallbackQuery): 
         u_id = callback_query.from_user.id 
         if u_id == Config.OWNER_ID:
-            botname = (await ubot.get_me()).username
+            botname = (await userge.bot.get_me()).username
             msg = "**🤖 Add Your Bot to Group** \n\n <u>Note:</u>  <i>Admin Privilege Required !</i>"
             add_bot = f"http://t.me/{botname}?startgroup=start"
             buttons = [[InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)]]

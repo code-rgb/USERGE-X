@@ -57,13 +57,8 @@ def date_formatter(date_):
     return str(x.strftime('%d-%b-%Y'))
 
 
-if Config.BOT_TOKEN and Config.OWNER_ID:
-    if Config.HU_STRING_SESSION:
-        ubot = userge.bot
-    else:
-        ubot = userge
-
-    @ubot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
+if userge.has_bot:
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
         startTime = time()
         u_id = c_q.from_user.id
@@ -108,14 +103,14 @@ if Config.BOT_TOKEN and Config.OWNER_ID:
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))
-        refresh_vid = await ubot.get_messages(
+        refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID,
             uploaded_vid.message_id
         )
         f_id, f_ref = get_file_id_and_ref(refresh_vid)
         if hasattr(refresh_vid.video, "thumbs"):
             try:
-                video_thumb = await ubot.download_media(
+                video_thumb = await userge.bot.download_media(
                     refresh_vid.video.thumbs[0].file_id
                 )
             except TypeError:
