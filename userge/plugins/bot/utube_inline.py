@@ -62,7 +62,7 @@ if userge.has_bot:
     async def ytdl_callback(_, c_q: CallbackQuery):
         startTime = time()
         u_id = c_q.from_user.id
-        if not (u_id == Config.OWNER_ID or u_id in Config.SUDO_USERS):
+        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
                 show_alert=True

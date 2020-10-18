@@ -74,7 +74,7 @@ async def _style_text(message: Message):
     await message.edit('🧙‍♂️ `Doing some magik ...`')
     if message.flags:
         flag_choice = list(message.flags.keys())[0]
-        input_str = message.filtered_input_str if message.filtered_input_str else reply.text
+        input_str = message.filtered_input_str or reply.text
         if flag_choice not in FONT_FLAGS:
             await message.err('Flag is Invalid', del_in=5)
             return

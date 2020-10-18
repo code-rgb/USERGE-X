@@ -20,13 +20,13 @@ async def usx_(message: Message):
     replied = message.reply_to_message
     await message.edit("𝐗")
     a = []
-    for i in range(2):
+    for _ in range(2):
         r = random.randint(0,255)
         g = random.randint(0,255)
         b = random.randint(0,255)
         rgb = (r,g,b)
         a.append(rgb)
-        
+
     im = Image.open(path)
     gradient = Image.new('RGBA', im.size, color=0)
     draw = ImageDraw.Draw(gradient)
@@ -37,7 +37,7 @@ async def usx_(message: Message):
     for i, color in enumerate(interpolate(f_co, t_co, im.width * 2)):
         draw.line([(i, 0), (0, i)], tuple(color), width=1)
 
-    gradient = gradient.resize(im.size) 
+    gradient = gradient.resize(im.size)
     im_composite = Image.alpha_composite(gradient, im)
     image_name = "grad_x.webp"
     webp_file = os.path.join(Config.DOWN_PATH, image_name)

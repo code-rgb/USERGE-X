@@ -82,10 +82,7 @@ async def kang_(message: Message):
             emoji_ = "🤔"
 
         u_name = user.username
-        if u_name:
-            u_name = "@" + u_name
-        else:
-            u_name = user.first_name or user.id
+        u_name = "@" + u_name if u_name else user.first_name or user.id
         packname = f"a{user.id}_by_userge_{pack}"
         custom_packnick = Config.CUSTOM_PACK_NAME or f"{u_name}'s kang pack"
         packnick = f"{custom_packnick} Vol.{pack}"

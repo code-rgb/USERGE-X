@@ -90,10 +90,7 @@ class EditMessageText(RawClient):  # pylint: disable=missing-class-docstring
                                               reply_markup=reply_markup)
         module = inspect.currentframe().f_back.f_globals['__name__']
         if log:
-            if isinstance(log, bool):
-                args = (msg, module)
-            else:
-                args = (msg, log)
+            args = (msg, module) if isinstance(log, bool) else (msg, log)
             await self._channel.fwd_msg(*args)
         del_in = del_in or Config.MSG_DELETE_TIMEOUT
         if del_in > 0:

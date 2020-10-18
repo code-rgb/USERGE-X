@@ -764,7 +764,7 @@ class Worker(_GDrive):
                     if self._message.process_is_canceled:
                         downloader.stop()
                         raise Exception('Process Canceled!')
-                    total_length = downloader.filesize if downloader.filesize else 0
+                    total_length = downloader.filesize or 0
                     downloaded = downloader.get_dl_size()
                     percentage = downloader.get_progress() * 100
                     speed = downloader.get_speed(human=True)
@@ -801,7 +801,7 @@ class Worker(_GDrive):
             except Exception as d_e:
                 await self._message.err(d_e)
                 return
-        file_path = dl_loc if dl_loc else self._message.input_str
+        file_path = dl_loc or self._message.input_str
         if not os.path.exists(file_path):
             await self._message.err("invalid file path provided?")
             return
