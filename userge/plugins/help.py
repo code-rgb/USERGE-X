@@ -579,7 +579,7 @@ if userge.has_bot:
 
 
                 if MEDIA_URL:
-                    if MEDIA_TYPE == 'url_gif' 
+                    if MEDIA_TYPE == 'url_gif':
                         results.append(
                             InlineQueryResultAnimation(
                                 animation_url=MEDIA_URL,
