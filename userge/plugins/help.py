@@ -607,11 +607,11 @@ if userge.has_bot:
                     else:
                         results.append(
                             InlineQueryResultCachedDocument(
-                                title="This is Title",
+                                title="USERGE-X",
                                 file_id=MEDIA_URL[0],
                                 file_ref=MEDIA_URL[1],
                                 caption=alive_info,
-                                description="this is description",
+                                description="ALIVE",
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                         )
