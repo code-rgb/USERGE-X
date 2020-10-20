@@ -1,36 +1,27 @@
-# pylint: disable=missing-module-docstring
-#
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 import random
 from math import ceil
 import asyncio
 from typing import List, Callable, Dict, Union, Any
-from userge.utils import parse_buttons as pb
+from userge.utils import get_file_id_and_ref, parse_buttons as pb
 from pyrogram import filters
 from pyrogram.types import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, InlineQuery, InlineQueryResultPhoto,
-    InlineQueryResultAnimation)
-from pyrogram.errors import MessageNotModified, MessageIdInvalid, MessageEmpty
+    InlineQueryResultAnimation, InlineQueryResultCachedDocument, InlineQueryResultCachedPhoto)
+from pyrogram.errors import MessageNotModified, MessageIdInvalid, MessageEmpty, BadRequest
 from userge import userge, Message, Config, get_collection, versions, get_version
 import json
 import os
 import requests
 from html_telegraph_poster import TelegraphPoster
 import re
-from userge.plugins.fun.stylish import font_gen
+from .fun.stylish import font_gen
 from pymediainfo import MediaInfo
 from .misc.redditdl import reddit_thumb_link
 import youtube_dl as ytdl
 from .bot.utube_inline import ytdl_btn_generator, get_ytthumb, date_formatter
-
+from .bot.alive import check_media_link
 
 
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -373,26 +364,29 @@ if userge.has_bot:
         return text, buttons
 
 
-    def check_url():
+    async def get_alive_():
         global MEDIA_TYPE, MEDIA_URL
-        media_link = Config.ALIVE_MEDIA
-        if media_link:
-            imgur = r"^http[s]?://i\.imgur\.com/(\w+)\.(gif|jpg|png|jpeg)$"
-            match = re.search(imgur, media_link)
-            if not match:
-                telegraph = r"^http[s]?://telegra\.ph/file/(\w+)\.(jpg|png|jpeg)$"
-                match = re.search(telegraph, media_link)
-            if match:
-                media_type = match.group(2)
-                link = match.group(0)
-                limit = 1 if media_type == 'gif' else 5
-                media_info = MediaInfo.parse(media_link)
-                for track in media_info.tracks:
-                    if track.track_type == 'General':
-                        media_size = (track.file_size / 1000000)
-                if media_size < limit:
-                    MEDIA_TYPE = media_type
-                    MEDIA_URL = media_link
+        type_, media_ = await check_media_link(Config.ALIVE_MEDIA)
+        if not media_:
+            return
+        MEDIA_TYPE = type_
+        if type(media_) == str:
+            limit = 1 if type_ == 'url_gif' else 5
+            media_info = MediaInfo.parse(media_)
+            for track in media_info.tracks:
+                if track.track_type == 'General':
+                    media_size = (track.file_size / 1000000)
+            if media_size < limit:
+                MEDIA_URL = media_
+        else:
+            try:
+                msg = await userge.bot.get_messages(media_[0], media_[1])
+                f_id, f_ref = get_file_id_and_ref(msg)
+                if msg.photo:
+                    MEDIA_TYPE = "tg_image"
+            except BadRequest:
+                return
+            MEDIA_URL = [f_id, f_ref]
         
 
     @userge.bot.on_inline_query()
@@ -578,12 +572,14 @@ if userge.has_bot:
  • 🧬 𝑿 :  `v{get_version()}`
 
     🕔 Uptime : {userge.uptime}
-"""  
+"""
+
                 if not MEDIA_URL:
-                    check_url()
-                
+                    await get_alive_()
+
+
                 if MEDIA_URL:
-                    if MEDIA_TYPE == 'gif':
+                    if MEDIA_TYPE == 'url_gif':
                         results.append(
                             InlineQueryResultAnimation(
                                 animation_url=MEDIA_URL,
@@ -591,8 +587,7 @@ if userge.has_bot:
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                         )
-
-                    else:
+                    elif MEDIA_TYPE == 'url_image':
                         results.append(
                             InlineQueryResultPhoto(
                                 photo_url=MEDIA_URL,
@@ -600,8 +595,26 @@ if userge.has_bot:
                                 reply_markup=InlineKeyboardMarkup(buttons)
                             )
                         )
-
-
+                    elif MEDIA_TYPE == 'tg_image':
+                        results.append(
+                            InlineQueryResultCachedPhoto(
+                                file_id=MEDIA_URL[0],
+                                file_ref=MEDIA_URL[1],
+                                caption=alive_info,
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
+                        )
+                    else:
+                        results.append(
+                            InlineQueryResultCachedDocument(
+                                title="USERGE-X",
+                                file_id=MEDIA_URL[0],
+                                file_ref=MEDIA_URL[1],
+                                caption=alive_info,
+                                description="ALIVE",
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
+                        )
                 else: #default
                     random_alive = random.choice(ALIVE_IMGS) 
                     results.append(
@@ -830,4 +843,4 @@ if userge.has_bot:
                         switch_pm_text=f"This bot is only for {owner_name}",
                         switch_pm_parameter="start"
                     )
-                            
+                  
