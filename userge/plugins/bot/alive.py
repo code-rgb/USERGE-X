@@ -1,5 +1,6 @@
 """Fun plugin"""
 
+from re import search
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from userge import userge, Message, Config
@@ -50,3 +51,26 @@ def _get_mode() -> str:
     if Config.BOT_TOKEN:
         return " 🤖  𝗕𝗢𝗧"
     return " 🙍‍♂️  𝗨𝗦𝗘𝗥"
+
+
+async def check_media_link(media_link: str):
+    alive_regex_ = r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
+    match = search(alive_regex_, media_link)
+    if not match:
+        return None, None
+    if match.group(1) == "i.imgur.com":
+        link = match.group(0)
+        link_type = "url_gif" if match.group(3) == "gif" else "url_image"
+    elif match.group(1) == "telegra.ph/file":
+        link = match.group(0)
+        link_type = "url_image"
+    else:
+        link_type = "tg_media"
+        if match.group(2) == "c":
+            chat_id = int("-100" + str(match.group(3)))
+            message_id = match.group(4)
+        else:
+            chat_id = match.group(2)
+            message_id = match.group(3)
+        link = [chat_id, int(message_id)]
+    return link_type, link
