@@ -11,13 +11,13 @@ import random
 from math import ceil
 import asyncio
 from typing import List, Callable, Dict, Union, Any
-from userge.utils import parse_buttons as pb
+from userge.utils import get_file_id_and_ref, parse_buttons as pb
 from pyrogram import filters
 from pyrogram.types import (
     InlineQueryResultArticle, InputTextMessageContent,
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, InlineQuery, InlineQueryResultPhoto,
-    InlineQueryResultAnimation)
+    InlineQueryResultAnimation, InlineQueryResultCachedDocument)
 from pyrogram.errors import MessageNotModified, MessageIdInvalid, MessageEmpty
 from userge import userge, Message, Config, get_collection, versions, get_version
 import json
@@ -830,4 +830,4 @@ if userge.has_bot:
                         switch_pm_text=f"This bot is only for {owner_name}",
                         switch_pm_parameter="start"
                     )
-                            
+                  
