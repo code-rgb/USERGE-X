@@ -574,7 +574,7 @@ if userge.has_bot:
     🕔 Uptime : {userge.uptime}
 """
 
-                if not MEDIA_URL:
+                if not MEDIA_URL and Config.ALIVE_MEDIA:
                     await get_alive_()
 
 
