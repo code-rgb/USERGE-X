@@ -44,8 +44,11 @@ async def video_note(message: Message):
     else:
         thumb_loc = os.path.join(CACHE, "thumb.jpg")
         audio_loc = os.path.join(CACHE, "music.mp3")
-        audio_thumb = reply.audio.thumbs[0].file_id
-        thumb = await userge.download_media(audio_thumb)
+        if reply.audio.thumbs:
+            audio_thumb = reply.audio.thumbs[0].file_id
+            thumb = await userge.download_media(audio_thumb)
+        else:
+            thumb = None
         music = await reply.download()
         os.rename(music, audio_loc)
         if thumb:
@@ -53,13 +56,7 @@ async def video_note(message: Message):
         else:
             thumb_from_audio(audio_loc, thumb_loc)
         os.system(f'ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale=\'iw-mod (iw,2)\':\'ih-mod(ih,2)\',format=yuv420p\" -shortest -movflags +faststart {PATH}')
-
     if os.path.exists(PATH):
         await userge.send_video_note(message.chat.id, PATH)
     await message.delete()
     shutil.rmtree(CACHE)
-
-
-
-
-
