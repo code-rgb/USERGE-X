@@ -10,14 +10,18 @@ from urllib.error import HTTPError
 
 import urbandict
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd("ud", about={
-    'header': "Searches Urban Dictionary for the query",
-    'flags': {'-l': "limit : defaults to 1"},
-    'usage': "{tr}ud [flag] [query]",
-    'examples': ["{tr}ud userge", "{tr}ud -l3 userge"]})
+@userge.on_cmd(
+    "ud",
+    about={
+        "header": "Searches Urban Dictionary for the query",
+        "flags": {"-l": "limit : defaults to 1"},
+        "usage": "{tr}ud [flag] [query]",
+        "examples": ["{tr}ud userge", "{tr}ud -l3 userge"],
+    },
+)
 async def urban_dict(message: Message):
     await message.edit("Processing...")
     query = message.filtered_input_str
@@ -29,11 +33,13 @@ async def urban_dict(message: Message):
     except HTTPError:
         await message.err(text=f"Sorry, couldn't find any results for: `{query}``")
         return
-    output = ''
-    limit = int(message.flags.get('-l', 1))
+    output = ""
+    limit = int(message.flags.get("-l", 1))
     for i, mean_ in enumerate(mean, start=1):
-        output += f"{i}. **{mean_['def']}**\n" + \
-            f"  Examples:\n  * `{mean_['example'] or 'not found'}`\n\n"
+        output += (
+            f"{i}. **{mean_['def']}**\n"
+            + f"  Examples:\n  * `{mean_['example'] or 'not found'}`\n\n"
+        )
         if limit <= i:
             break
     if not output:

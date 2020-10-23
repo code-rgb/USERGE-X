@@ -6,19 +6,21 @@
 #
 # All rights reserved.
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd("s", about={
-    'header': "search commands in USERGE",
-    'examples': "{tr}s wel"}, allow_channels=False)
+@userge.on_cmd(
+    "s",
+    about={"header": "search commands in USERGE", "examples": "{tr}s wel"},
+    allow_channels=False,
+)
 async def search(message: Message):
     cmd = message.input_str
     if not cmd:
         await message.err(text="Enter any keyword to search in commands")
         return
     found = [i for i in sorted(list(userge.manager.enabled_commands)) if cmd in i]
-    out_str = '    '.join(found)
+    out_str = "    ".join(found)
     if found:
         out = f"**--I found ({len(found)}) commands for-- : `{cmd}`**\n\n`{out_str}`"
     else:
