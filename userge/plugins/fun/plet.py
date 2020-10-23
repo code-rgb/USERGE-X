@@ -1,5 +1,5 @@
-import os
 import io
+import os
 import textwrap
 
 from PIL import Image, ImageDraw, ImageFont
