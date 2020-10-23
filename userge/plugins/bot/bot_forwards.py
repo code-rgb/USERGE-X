@@ -64,16 +64,15 @@ if userge.has_bot:
         found = await BOT_BAN.find_one({"user_id": message.from_user.id})
         if found:
             return
-        else:
-            msg_id = message.message_id
-            try:
-                msg_owner = await userge.bot.forward_messages(
-                    Config.OWNER_ID, message.chat.id, msg_id
-                )
-            except MessageIdInvalid:
-                return
-            update = bool(os.path.exists(PATH))
-            await dumper(msg_owner.message_id, message.from_user.id, update)
+        msg_id = message.message_id
+        try:
+            msg_owner = await userge.bot.forward_messages(
+                Config.OWNER_ID, message.chat.id, msg_id
+            )
+        except MessageIdInvalid:
+            return
+        update = bool(os.path.exists(PATH))
+        await dumper(msg_owner.message_id, message.from_user.id, update)
 
     @userge.bot.on_message(
         allowForwardFilter
