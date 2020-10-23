@@ -81,7 +81,15 @@
   * Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
   * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
   * Finally **hit deploy** button
+  
+  
+## String Session
+### HEROKU 
+  [open your app](https://dashboard.heroku.com/apps/) then goto **more** -> run console and paste the command below and **run**.
+  >> command: `bash genStr`
 
+### REPL
+[**Generate on REPL**](https://stringsessiongen.leorio.repl.run/)
 
 ## Read more
 <details>
