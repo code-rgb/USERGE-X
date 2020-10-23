@@ -39,7 +39,8 @@ async def mediainfo(message: Message):
     if not X_MEDIA:
         return await message.err("Reply To a Vaild Media Format", del_in=5)
     file_path = await reply.download()
-    out, err, ret, pid = await runcmd(f"mediainfo {file_path}")
+    output_ = await runcmd(f"mediainfo {file_path}")
+    out = output_[0] if len(output_) != 0 else None
     if not out:
         out = "Not Supported"
     body_text = f"""<br>
