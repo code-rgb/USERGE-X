@@ -8,24 +8,28 @@
 #
 # All rights reserved.
 
+import asyncio
 import os
 import time
-import asyncio
 from asyncio import sleep
-from re import sub
 from collections import deque
 from random import choice, getrandbits, randint
+from re import sub
 
-import wget
 import requests
+import wget
 from cowpy import cow
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd(r"(?::/)$",
-               about={'header': "Check yourself, hint: `:/`"}, name='Kek',
-               trigger='', allow_via_bot=False)
+@userge.on_cmd(
+    r"(?::/)$",
+    about={"header": "Check yourself, hint: `:/`"},
+    name="Kek",
+    trigger="",
+    allow_via_bot=False,
+)
 async def kek_(message: Message):
     """kek"""
     kek = ["/", "\\"]
@@ -34,9 +38,13 @@ async def kek_(message: Message):
         await message.try_to_edit(":" + kek[i % 2])
 
 
-@userge.on_cmd(r"(?:-_-)$",
-               about={'header': "Check yourself, hint: `-_-`"}, name='Lol',
-               trigger='', allow_via_bot=False)
+@userge.on_cmd(
+    r"(?:-_-)$",
+    about={"header": "Check yourself, hint: `-_-`"},
+    name="Lol",
+    trigger="",
+    allow_via_bot=False,
+)
 async def lol_(message: Message):
     """lol"""
     lol = "-_ "
@@ -47,9 +55,13 @@ async def lol_(message: Message):
         await message.try_to_edit(lol, parse_mode="html")
 
 
-@userge.on_cmd(r"(?:;_;)$",
-               about={'header': "Check yourself, hint: `;_;`"}, name="Fun",
-               trigger='', allow_via_bot=False)
+@userge.on_cmd(
+    r"(?:;_;)$",
+    about={"header": "Check yourself, hint: `;_;`"},
+    name="Fun",
+    trigger="",
+    allow_via_bot=False,
+)
 async def fun_(message: Message):
     """fun"""
     fun = ";_ "
@@ -60,8 +72,7 @@ async def fun_(message: Message):
         await message.try_to_edit(fun, parse_mode="html")
 
 
-@userge.on_cmd("Oof$", about={'header': "Ooooof"},
-               trigger='', allow_via_bot=False)
+@userge.on_cmd("Oof$", about={"header": "Ooooof"}, trigger="", allow_via_bot=False)
 async def Oof_(message: Message):
     """Oof"""
     Oof = "Oo "
@@ -70,8 +81,7 @@ async def Oof_(message: Message):
         await message.try_to_edit(Oof)
 
 
-@userge.on_cmd("Hmm$", about={'header': "Hmmmmm"},
-               trigger='', allow_via_bot=False)
+@userge.on_cmd("Hmm$", about={"header": "Hmmmmm"}, trigger="", allow_via_bot=False)
 async def Hmm_(message: Message):
     """Hmm"""
     Hmm = "Hm "
@@ -83,35 +93,36 @@ async def Hmm_(message: Message):
 async def check_and_send(message: Message, *args, **kwargs):
     replied = message.reply_to_message
     if replied:
-        await asyncio.gather(
-            message.delete(),
-            replied.reply(*args, **kwargs)
-        )
+        await asyncio.gather(message.delete(), replied.reply(*args, **kwargs))
     else:
         await message.edit(*args, **kwargs)
 
 
-@userge.on_cmd("fp$", about={'header': "Facepalm :P"})
+@userge.on_cmd("fp$", about={"header": "Facepalm :P"})
 async def facepalm_(message: Message):
     """facepalm_"""
     await check_and_send(message, "🤦‍♂")
 
 
-@userge.on_cmd("cry$", about={'header': "y u du dis, i cri"})
+@userge.on_cmd("cry$", about={"header": "y u du dis, i cri"})
 async def cry_(message: Message):
     """cry"""
     await check_and_send(message, choice(CRI), parse_mode="html")
 
 
-@userge.on_cmd("insult$", about={'header': "Check yourself ;)"})
+@userge.on_cmd("insult$", about={"header": "Check yourself ;)"})
 async def insult_(message: Message):
     """insult"""
     await check_and_send(message, choice(INSULT_STRINGS), parse_mode="html")
 
 
-@userge.on_cmd("hi", about={
-    'header': "Greet everyone!",
-    'usage': "{tr}hi\n{tr}hi [emoji | character]\n{tr}hi [emoji | character] [emoji | character]"})
+@userge.on_cmd(
+    "hi",
+    about={
+        "header": "Greet everyone!",
+        "usage": "{tr}hi\n{tr}hi [emoji | character]\n{tr}hi [emoji | character] [emoji | character]",
+    },
+)
 async def hi_(message: Message):
     """hi"""
     input_str = message.input_str
@@ -136,15 +147,30 @@ async def hi_(message: Message):
             paytext * 2 + filler * 4 + paytext * 2 + filler * 2 + paytext * 2,
             paytext * 2 + filler * 4 + paytext * 2 + filler * 2 + paytext * 2,
             paytext * 2 + filler * 4 + paytext * 2 + filler * 2 + paytext * 2,
-            paytext * 2 + filler * 4 + paytext * 2 + filler * 2 + paytext * 2)
+            paytext * 2 + filler * 4 + paytext * 2 + filler * 2 + paytext * 2,
+        )
         await message.edit(pay)
 
 
-@userge.on_cmd("react", about={
-    'header': "Make your userbot react to everything",
-    'types': ['happy', 'thinking', 'waving', 'wtf', 'love', 'confused', 'dead', 'sad', 'dog'],
-    'usage': "{tr}react [type]",
-    'examples': ["{tr}react", "{tr}react dead"]})
+@userge.on_cmd(
+    "react",
+    about={
+        "header": "Make your userbot react to everything",
+        "types": [
+            "happy",
+            "thinking",
+            "waving",
+            "wtf",
+            "love",
+            "confused",
+            "dead",
+            "sad",
+            "dog",
+        ],
+        "usage": "{tr}react [type]",
+        "examples": ["{tr}react", "{tr}react dead"],
+    },
+)
 async def react_(message: Message):
     """react"""
     type_ = message.input_str
@@ -171,37 +197,37 @@ async def react_(message: Message):
     await check_and_send(message, out, parse_mode="html")
 
 
-@userge.on_cmd("shg$", about={'header': "Shrug at it !!"})
+@userge.on_cmd("shg$", about={"header": "Shrug at it !!"})
 async def shrugger(message: Message):
     """shrugger"""
     await check_and_send(message, choice(SHGS), parse_mode="html")
 
 
-@userge.on_cmd("chase$", about={'header': "You better start running"})
+@userge.on_cmd("chase$", about={"header": "You better start running"})
 async def chase_(message: Message):
     """chase"""
     await check_and_send(message, choice(CHASE_STR), parse_mode="html")
 
 
-@userge.on_cmd("run$", about={'header': "Let Me Run, run, RUNNN!"})
+@userge.on_cmd("run$", about={"header": "Let Me Run, run, RUNNN!"})
 async def run_(message: Message):
     """run"""
     await check_and_send(message, choice(RUNS_STR), parse_mode="html")
 
 
-@userge.on_cmd("metoo$", about={'header': "Haha yes"})
+@userge.on_cmd("metoo$", about={"header": "Haha yes"})
 async def metoo_(message: Message):
     """metoo"""
     await check_and_send(message, choice(METOOSTR), parse_mode="html")
 
 
-@userge.on_cmd("10iq$", about={'header': "You retard !!"}, name="10iq")
+@userge.on_cmd("10iq$", about={"header": "You retard !!"}, name="10iq")
 async def iqless(message: Message):
     """iqless"""
     await check_and_send(message, "♿")
 
 
-@userge.on_cmd("moon$", about={'header': "kensar moon animation"})
+@userge.on_cmd("moon$", about={"header": "kensar moon animation"})
 async def moon_(message: Message):
     """moon"""
     deq = deque(list("🌗🌘🌑🌒🌓🌔🌕🌖"))
@@ -214,7 +240,7 @@ async def moon_(message: Message):
         await message.delete()
 
 
-@userge.on_cmd("clock$", about={'header': "kensar clock animation"})
+@userge.on_cmd("clock$", about={"header": "kensar clock animation"})
 async def clock_(message: Message):
     """clock"""
     deq = deque(list("🕚🕙🕘🕗🕖🕕🕔🕓🕒🕑🕐🕛"))
@@ -227,33 +253,49 @@ async def clock_(message: Message):
         await message.delete()
 
 
-@userge.on_cmd("bt$", about={
-    'header': "Believe me, you will find this useful",
-    'usage': "{tr}bt [reply to msg]"})
+@userge.on_cmd(
+    "bt$",
+    about={
+        "header": "Believe me, you will find this useful",
+        "usage": "{tr}bt [reply to msg]",
+    },
+)
 async def bluetext(message: Message):
     """bluetext"""
     if message.reply_to_message:
         await message.edit(
             "/BLUETEXT /MUST /CLICK.\n"
-            "/ARE /YOU /A /STUPID /ANIMAL /WHICH /IS /ATTRACTED /TO /COLOURS?")
+            "/ARE /YOU /A /STUPID /ANIMAL /WHICH /IS /ATTRACTED /TO /COLOURS?"
+        )
 
 
-@userge.on_cmd("f (.+)", about={
-    'header': "Pay Respects",
-    'usage': "{tr}f [emoji | character]"})
+@userge.on_cmd(
+    "f (.+)", about={"header": "Pay Respects", "usage": "{tr}f [emoji | character]"}
+)
 async def payf_(message: Message):
     """payf"""
     paytext = message.input_str
     pay = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(
-        paytext * 8, paytext * 8, paytext * 2, paytext * 2, paytext * 2,
-        paytext * 6, paytext * 6, paytext * 2, paytext * 2, paytext * 2,
-        paytext * 2, paytext * 2)
+        paytext * 8,
+        paytext * 8,
+        paytext * 2,
+        paytext * 2,
+        paytext * 2,
+        paytext * 6,
+        paytext * 6,
+        paytext * 2,
+        paytext * 2,
+        paytext * 2,
+        paytext * 2,
+        paytext * 2,
+    )
     await message.edit(pay)
 
 
-@userge.on_cmd("clap", about={
-    'header': "Praise people!",
-    'usage': "{tr}clap [input | reply to msg]"})
+@userge.on_cmd(
+    "clap",
+    about={"header": "Praise people!", "usage": "{tr}clap [input | reply to msg]"},
+)
 async def clap_(message: Message):
     """clap"""
     input_str = message.input_or_reply_str
@@ -266,10 +308,15 @@ async def clap_(message: Message):
     await message.edit(reply_text)
 
 
-@userge.on_cmd("(\\w+)say (.+)", about={
-    'header': "cow which says things",
-    'usage': "{tr}[any cowacter]say [text]",
-    'cowacters': f"`{'`,    `'.join(cow.COWACTERS)}`"}, name="cowsay")
+@userge.on_cmd(
+    "(\\w+)say (.+)",
+    about={
+        "header": "cow which says things",
+        "usage": "{tr}[any cowacter]say [text]",
+        "cowacters": f"`{'`,    `'.join(cow.COWACTERS)}`",
+    },
+    name="cowsay",
+)
 async def cowsay_(message: Message):
     """cowsay"""
     arg = message.matches[0].group(1).lower()
@@ -284,9 +331,10 @@ async def cowsay_(message: Message):
     await message.edit(f"`{cheese.milk(text).replace('`', '´')}`")
 
 
-@userge.on_cmd("coinflip", about={
-    'header': "Flip a coin !!",
-    'usage': "{tr}coinflip [heads | tails]"})
+@userge.on_cmd(
+    "coinflip",
+    about={"header": "Flip a coin !!", "usage": "{tr}coinflip [heads | tails]"},
+)
 async def coin_(message: Message):
     """coin"""
     r = choice(["heads", "tails"])
@@ -296,27 +344,32 @@ async def coin_(message: Message):
     input_str = input_str.lower()
     if r == "heads":
         if input_str == "heads":
-            await message.edit(
-                "The coin landed on: **Heads**.\nYou were correct.")
+            await message.edit("The coin landed on: **Heads**.\nYou were correct.")
         elif input_str == "tails":
             await message.edit(
-                "The coin landed on: **Heads**.\nYou weren't correct, try again ...")
+                "The coin landed on: **Heads**.\nYou weren't correct, try again ..."
+            )
         else:
             await message.edit("The coin landed on: **Heads**.")
     elif r == "tails":
         if input_str == "tails":
-            await message.edit(
-                "The coin landed on: **Tails**.\nYou were correct.")
+            await message.edit("The coin landed on: **Tails**.\nYou were correct.")
         elif input_str == "heads":
             await message.edit(
-                "The coin landed on: **Tails**.\nYou weren't correct, try again ...")
+                "The coin landed on: **Tails**.\nYou weren't correct, try again ..."
+            )
         else:
             await message.edit("The coin landed on: **Tails**.")
 
 
-@userge.on_cmd("slap", about={
-    'header': "reply to slap them with random objects !!",
-    'usage': "{tr}slap [input | reply to msg]"}, allow_channels=False)
+@userge.on_cmd(
+    "slap",
+    about={
+        "header": "reply to slap them with random objects !!",
+        "usage": "{tr}slap [input | reply to msg]",
+    },
+    allow_channels=False,
+)
 async def slap_(message: Message):
     """slap"""
     u_id = message.input_str
@@ -331,19 +384,25 @@ async def slap_(message: Message):
     hit = choice(HIT)
     throw = choice(THROW)
     where = choice(WHERE)
-    caption = "..." + temp.format(victim=info_dict['mention'],
-                                  item=item, hits=hit,
-                                  throws=throw, where=where)
+    caption = "..." + temp.format(
+        victim=info_dict["mention"], item=item, hits=hit, throws=throw, where=where
+    )
     try:
         await message.edit(caption)
     except Exception:
         await message.edit(
-            "`Can't slap this person, need to fetch some sticks and stones !!`")
+            "`Can't slap this person, need to fetch some sticks and stones !!`"
+        )
 
 
-@userge.on_cmd("(yes|no|maybe|decide)$", about={
-    'header': "Make a quick decision",
-    'examples': ['{tr}decide', '{tr}yes', '{tr}no', '{tr}maybe']}, name="decide")
+@userge.on_cmd(
+    "(yes|no|maybe|decide)$",
+    about={
+        "header": "Make a quick decision",
+        "examples": ["{tr}decide", "{tr}yes", "{tr}no", "{tr}maybe"],
+    },
+    name="decide",
+)
 async def decide_(message: Message):
     """decide"""
     decision = message.matches[0].group(1).lower()
@@ -358,16 +417,22 @@ async def decide_(message: Message):
     if message.reply_to_message:
         message_id = message.reply_to_message.message_id
     await message.delete()
-    await message.client.send_photo(chat_id=chat_id,
-                                    photo=path,
-                                    caption=str(r["answer"]).upper(),
-                                    reply_to_message_id=message_id)
+    await message.client.send_photo(
+        chat_id=chat_id,
+        photo=path,
+        caption=str(r["answer"]).upper(),
+        reply_to_message_id=message_id,
+    )
     os.remove(path)
 
 
-@userge.on_cmd("cp", about={
-    'header': "Copypasta the famous meme",
-    'usage': "{tr}cp [input | reply to msg]"})
+@userge.on_cmd(
+    "cp",
+    about={
+        "header": "Copypasta the famous meme",
+        "usage": "{tr}cp [input | reply to msg]",
+    },
+)
 async def copypasta(message: Message):
     """copypasta"""
     input_str = message.input_or_reply_str
@@ -391,9 +456,13 @@ async def copypasta(message: Message):
     await message.edit(reply_text)
 
 
-@userge.on_cmd("vapor", about={
-    'header': "Vaporize everything!",
-    'usage': "{tr}vapor [input | reply to msg]"})
+@userge.on_cmd(
+    "vapor",
+    about={
+        "header": "Vaporize everything!",
+        "usage": "{tr}vapor [input | reply to msg]",
+    },
+)
 async def vapor_(message: Message):
     """vapor"""
     input_str = message.input_or_reply_str
@@ -411,9 +480,9 @@ async def vapor_(message: Message):
     await message.edit("".join(reply_text))
 
 
-@userge.on_cmd("str", about={
-    'header': "Stretch it",
-    'usage': "{tr}str [input | reply to msg]"})
+@userge.on_cmd(
+    "str", about={"header": "Stretch it", "usage": "{tr}str [input | reply to msg]"}
+)
 async def stretch(message: Message):
     """stretch"""
     input_str = message.input_or_reply_str
@@ -421,17 +490,24 @@ async def stretch(message: Message):
         await message.edit("`GiiiiiiiB sooooooomeeeeeee teeeeeeext!`")
         return
     await message.edit(
-        sub(r"([aeiouAEIOUａｅｉｏｕＡＥＩＯＵаеиоуюяыэё])", (r"\1" * randint(3, 10)), input_str))
+        sub(r"([aeiouAEIOUａｅｉｏｕＡＥＩＯＵаеиоуюяыэё])", (r"\1" * randint(3, 10)), input_str)
+    )
 
 
-@userge.on_cmd("zal", about={
-    'header': "Invoke the feeling of chaos",
-    'usage': "{tr}zal [input | reply to msg]"})
+@userge.on_cmd(
+    "zal",
+    about={
+        "header": "Invoke the feeling of chaos",
+        "usage": "{tr}zal [input | reply to msg]",
+    },
+)
 async def zal_(message: Message):
     """zal"""
     input_str = message.input_or_reply_str
     if not input_str:
-        await message.edit("`gͫ ̆ i̛ ̺ v͇̆ ȅͅ   a̢ͦ   s̴̪ c̸̢ ä̸ rͩͣ y͖͞   t̨͚ é̠ x̢͖  t͔͛`")
+        await message.edit(
+            "`gͫ ̆ i̛ ̺ v͇̆ ȅͅ   a̢ͦ   s̴̪ c̸̢ ä̸ rͩͣ y͖͞   t̨͚ é̠ x̢͖  t͔͛`"
+        )
         return
     reply_text = []
     for charac in input_str:
@@ -450,9 +526,9 @@ async def zal_(message: Message):
     await message.edit("".join(reply_text))
 
 
-@userge.on_cmd("owo", about={
-    'header': "UwU",
-    'usage': "{tr}owo [input | reply to msg]"})
+@userge.on_cmd(
+    "owo", about={"header": "UwU", "usage": "{tr}owo [input | reply to msg]"}
+)
 async def owo_(message: Message):
     """owo"""
     input_str = message.input_or_reply_str
@@ -469,9 +545,13 @@ async def owo_(message: Message):
     await message.edit(reply_text)
 
 
-@userge.on_cmd("mock", about={
-    'header': "Do it and find the real fun",
-    'usage': "{tr}mock [input | reply to msg]"})
+@userge.on_cmd(
+    "mock",
+    about={
+        "header": "Do it and find the real fun",
+        "usage": "{tr}mock [input | reply to msg]",
+    },
+)
 async def mock_(message: Message):
     """mock"""
     input_str = message.input_or_reply_str
@@ -488,9 +568,13 @@ async def mock_(message: Message):
     await message.edit("".join(reply_text))
 
 
-@userge.on_cmd("lfy", about={
-    'header': "Let me Google that for you real quick !!",
-    'usage': "{tr}lfy [query | reply to msg]"})
+@userge.on_cmd(
+    "lfy",
+    about={
+        "header": "Let me Google that for you real quick !!",
+        "usage": "{tr}lfy [query | reply to msg]",
+    },
+)
 async def lfy_(message: Message):
     """lfy_"""
     query = message.input_or_reply_str
@@ -499,24 +583,50 @@ async def lfy_(message: Message):
         return
     query_encoded = query.replace(" ", "+")
     lfy_url = f"http://lmgtfy.com/?s=g&iie=1&q={query_encoded}"
-    payload = {'format': 'json', 'url': lfy_url}
-    r = requests.get('http://is.gd/create.php', params=payload)
-    await message.edit(f"Here you are, help yourself.\n[{query}]({r.json()['shorturl']})")
+    payload = {"format": "json", "url": lfy_url}
+    r = requests.get("http://is.gd/create.php", params=payload)
+    await message.edit(
+        f"Here you are, help yourself.\n[{query}]({r.json()['shorturl']})"
+    )
 
 
-@userge.on_cmd("scam", about={
-    'header': "Create fake chat actions, for fun.",
-    'available actions': [
-        'typing (default)', 'playing', 'upload_photo', 'upload_video',
-        'upload_audio', 'upload_document', 'upload_video_note',
-        'record_video', 'record_audio', 'record_video_note',
-        'find_location', 'choose_contact'],
-    'usage': "{tr}scam\n{tr}scam [action]\n{tr}scam [time]\n{tr}scam [action] [time]"})
+@userge.on_cmd(
+    "scam",
+    about={
+        "header": "Create fake chat actions, for fun.",
+        "available actions": [
+            "typing (default)",
+            "playing",
+            "upload_photo",
+            "upload_video",
+            "upload_audio",
+            "upload_document",
+            "upload_video_note",
+            "record_video",
+            "record_audio",
+            "record_video_note",
+            "find_location",
+            "choose_contact",
+        ],
+        "usage": "{tr}scam\n{tr}scam [action]\n{tr}scam [time]\n{tr}scam [action] [time]",
+    },
+)
 async def scam_(message: Message):
     """scam"""
-    options = ('typing', 'upload_photo', 'record_video', 'upload_video', 'record_audio',
-               'upload_audio', 'upload_document', 'find_location', 'record_video_note',
-               'upload_video_note', 'choose_contact', 'playing')
+    options = (
+        "typing",
+        "upload_photo",
+        "record_video",
+        "upload_video",
+        "record_audio",
+        "upload_audio",
+        "upload_document",
+        "find_location",
+        "record_video_note",
+        "upload_video_note",
+        "choose_contact",
+        "playing",
+    )
     input_str = message.input_str
     args = input_str.split()
     if len(args) == 0:  # Let bot decide action and time
@@ -548,77 +658,84 @@ async def scam_(message: Message):
         await message.delete()
 
 
-@userge.on_cmd("try", about={
-    'header': "send dart, dice, basketball or football randomly",
-    'usage': "{tr}try [send to chat or anyone]"})
+@userge.on_cmd(
+    "try",
+    about={
+        "header": "send dart, dice, basketball or football randomly",
+        "usage": "{tr}try [send to chat or anyone]",
+    },
+)
 async def dice_gen(message: Message):
     """send dice"""
     random_emo = choice(DICE_EMO)
     await message.client.send_dice(message.chat.id, random_emo)
     await message.delete()
-                       
-                       
-@userge.on_cmd("emoji$", about={
-'header': "Multiple Animated Emojis"})
 
+
+@userge.on_cmd("emoji$", about={"header": "Multiple Animated Emojis"})
 async def emoji_func(message):
 
     switch = await message.edit_text("🤔")
     userge = "😆 😂 😳 😒 🧐 🤔 😍 😘 🥰 🥳 😌 😮 🙄 😐 😧 😔 😢 😡 😨 🎃 🤕 🤒 😷 🤧 🤢 🤮 👍 💝 ❤ 💋 😻 🎉 🎄 👛 💎 🙈 ☃ 📁 👻 💀 🦠 🚑"
 
     for emoji in userge:
-    	try:
-    		await switch.edit(emoji)
-    		await sleep(2)
-    	except:
-    			pass
-                       
-                       
-@userge.on_cmd("bigoof$", about={'header': "Use when something is beyond just oof"})
+        try:
+            await switch.edit(emoji)
+            await sleep(2)
+        except:
+            pass
+
+
+@userge.on_cmd("bigoof$", about={"header": "Use when something is beyond just oof"})
 async def bigf_func(message):
 
     animation_chars = [
-    "`┏━━━┓╋╋╋╋┏━━━┓ \n┃┏━┓┃╋╋╋╋┃┏━┓┃ \n┃┃╋┃┣┓┏┓┏┫┃╋┃┃ \n┃┃╋┃┃┗┛┗┛┃┃╋┃┃ \n┃┗━┛┣┓┏┓┏┫┗━┛┃ \n┗━━━┛┗┛┗┛┗━━━┛`",
-    "`╭━━━╮╱╱╱╭━╮ \n┃╭━╮┃╱╱╱┃╭╯ \n┃┃╱┃┣━━┳╯╰╮ \n┃┃╱┃┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃┃┃ \n╰━━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━╯╰╯`",
-    "`╭━━━╮╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━╯╰╯`"
+        "`┏━━━┓╋╋╋╋┏━━━┓ \n┃┏━┓┃╋╋╋╋┃┏━┓┃ \n┃┃╋┃┣┓┏┓┏┫┃╋┃┃ \n┃┃╋┃┃┗┛┗┛┃┃╋┃┃ \n┃┗━┛┣┓┏┓┏┫┗━┛┃ \n┗━━━┛┗┛┗┛┗━━━┛`",
+        "`╭━━━╮╱╱╱╭━╮ \n┃╭━╮┃╱╱╱┃╭╯ \n┃┃╱┃┣━━┳╯╰╮ \n┃┃╱┃┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃┃┃ \n╰━━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━┻━━╯╰╯`",
+        "`╭━━━╮╱╱╱╱╱╱╭━╮ \n┃╭━╮┃╱╱╱╱╱╱┃╭╯ \n┃┃╱┃┣━━┳━━┳╯╰╮ \n┃┃╱┃┃╭╮┃╭╮┣╮╭╯ \n┃╰━╯┃╰╯┃╰╯┃┃┃ \n╰━━━┻━━┻━━╯╰╯`",
     ]
-    
+
     for i in range(18):
         await asyncio.sleep(0.3)
         await message.edit(animation_chars[i % 9])
-               
-                       
-@userge.on_cmd("luvstory$", about={'header': "Get ready to witness a true love story that proves that love is the strongest force on Earth."})
+
+
+@userge.on_cmd(
+    "luvstory$",
+    about={
+        "header": "Get ready to witness a true love story that proves that love is the strongest force on Earth."
+    },
+)
 async def luv_story(message):
     await message.edit("Starting asf")
     animation_chars = [
-            "1 ❤️ love story",
-            "  😐             😕 \n/👕\         <👗\ \n 👖               /|",    
-            "  😉          😳 \n/👕\       /👗\ \n  👖            /|",
-            "  😚            😒 \n/👕\         <👗> \n  👖             /|",
-            "  😍         ☺️ \n/👕\      /👗\ \n  👖          /|",
-            "  😍           😍 \n/👕\       /👗\ \n  👖           /|",
-            "  😘     😊 \n /👕\/👗\ \n   👖   /|",
-            " 😳  😁 \n /|\ /👙\ \n /\     / |",    
-            "😈    /😰\ \n<|\      👙 \n /🍆    / |",
-            "😅 \n/(),✊😮 \n /\         _/\\/|",
-            "😎 \n/\\_,__😫 \n  //    //       \\",
-            "😖 \n/\\_,💦_😋  \n  //         //        \\",
-            "  😭      ☺️ \n  /|\   /(👶)\ \n  /!\      / \ ",
-            "The End 😂..."
+        "1 ❤️ love story",
+        "  😐             😕 \n/👕\         <👗\ \n 👖               /|",
+        "  😉          😳 \n/👕\       /👗\ \n  👖            /|",
+        "  😚            😒 \n/👕\         <👗> \n  👖             /|",
+        "  😍         ☺️ \n/👕\      /👗\ \n  👖          /|",
+        "  😍           😍 \n/👕\       /👗\ \n  👖           /|",
+        "  😘     😊 \n /👕\/👗\ \n   👖   /|",
+        " 😳  😁 \n /|\ /👙\ \n /\     / |",
+        "😈    /😰\ \n<|\      👙 \n /🍆    / |",
+        "😅 \n/(),✊😮 \n /\         _/\\/|",
+        "😎 \n/\\_,__😫 \n  //    //       \\",
+        "😖 \n/\\_,💦_😋  \n  //         //        \\",
+        "  😭      ☺️ \n  /|\   /(👶)\ \n  /!\      / \ ",
+        "The End 😂...",
     ]
     for i in range(14):
         await asyncio.sleep(2.7)
-        await message.edit(animation_chars[i % 14])                  
+        await message.edit(animation_chars[i % 14])
 
 
-@userge.on_cmd("earth$", about={'header': "Beautiful Earth Animation"})
+@userge.on_cmd("earth$", about={"header": "Beautiful Earth Animation"})
 async def sun_(message: Message):
     """earth"""
     deq = deque(list("🌏🌍🌎🌎🌍🌏🌍🌎"))
@@ -630,7 +747,8 @@ async def sun_(message: Message):
     except Exception:
         await message.delete()
 
-@userge.on_cmd("brain$", about={'header': "Dump your Brain into Trash"})
+
+@userge.on_cmd("brain$", about={"header": "Dump your Brain into Trash"})
 async def brain_func(message):
     animation_chars = [
         "YOᑌᖇ ᗷᖇᗩIᑎ ➡️ 🧠\n\n🧠         <(^_^ <)🗑",
@@ -652,10 +770,11 @@ async def brain_func(message):
         await asyncio.sleep(0.3)
         await message.edit(animation_chars[i % 14])
 
-@userge.on_cmd("hack$", about={'header': "kensar hacking animation"})
+
+@userge.on_cmd("hack$", about={"header": "kensar hacking animation"})
 async def hack_func(message):
     user = await message.client.get_user_dict(message.from_user.id)
-    heckerman = user['mention']
+    heckerman = user["mention"]
     animation_chars = [
         "```Connecting To Private Server \\```",
         "```Connecting To Private Server |```",
@@ -689,15 +808,18 @@ async def hack_func(message):
         "**User Data Upload Completed:** Target's User Data Stored "
         "at `downloads/victim/telegram-authuser.data.sql`",
     ]
-    hecked = (f"**Targeted Account Hacked**\n\n```Pay 69$ To``` {heckerman}``` "
-              "To Remove This Hack```")
+    hecked = (
+        f"**Targeted Account Hacked**\n\n```Pay 69$ To``` {heckerman}``` "
+        "To Remove This Hack```"
+    )
     max_ani = len(animation_chars)
     for i in range(max_ani):
         await asyncio.sleep(2)
         await message.edit(animation_chars[i % max_ani])
     await message.edit(hecked)
 
-@userge.on_cmd("kill$", about={'header': "Kill anybody With Full Power ;-)"})
+
+@userge.on_cmd("kill$", about={"header": "Kill anybody With Full Power ;-)"})
 async def kill_func(message):
     animation_chars = [
         "killing...",
@@ -715,6 +837,7 @@ async def kill_func(message):
         await asyncio.sleep(0.6)
         await message.edit(animation_chars[i % 10], parse_mode="html")
 
+
 THROW = ("throws", "flings", "chucks", "hurls")
 
 HIT = ("hits", "whacks", "slaps", "smacks", "bashes")
@@ -722,23 +845,75 @@ HIT = ("hits", "whacks", "slaps", "smacks", "bashes")
 WHERE = ("in the chest", "on the head", "on the butt", "on the crotch")
 
 METOOSTR = (
-    "Me too thanks", "Haha yes, me too", "Same lol", "Me irl", "Same here", "Haha yes", "Me rn")
+    "Me too thanks",
+    "Haha yes, me too",
+    "Same lol",
+    "Me irl",
+    "Same here",
+    "Haha yes",
+    "Me rn",
+)
 
 HELLOSTR = (
-    "Hi !", "‘Ello, gov'nor!", "What’s crackin’?", "‘Sup, homeslice?", "Howdy, howdy ,howdy!",
-    "Hello, who's there, I'm talking.", "You know who this is.", "Yo!", "Whaddup.",
-    "Greetings and salutations!", "Hello, sunshine!", "Hey, howdy, hi!",
-    "What’s kickin’, little chicken?", "Peek-a-boo!", "Howdy-doody!",
-    "Hey there, freshman!", "I come in peace!", "Ahoy, matey!", "Hiya!")
+    "Hi !",
+    "‘Ello, gov'nor!",
+    "What’s crackin’?",
+    "‘Sup, homeslice?",
+    "Howdy, howdy ,howdy!",
+    "Hello, who's there, I'm talking.",
+    "You know who this is.",
+    "Yo!",
+    "Whaddup.",
+    "Greetings and salutations!",
+    "Hello, sunshine!",
+    "Hey, howdy, hi!",
+    "What’s kickin’, little chicken?",
+    "Peek-a-boo!",
+    "Howdy-doody!",
+    "Hey there, freshman!",
+    "I come in peace!",
+    "Ahoy, matey!",
+    "Hiya!",
+)
 
 ITEMS = (
-    "cast iron skillet", "large trout", "baseball bat", "cricket bat", "wooden cane", "nail",
-    "printer", "shovel", "pair of trousers", "CRT monitor", "diamond sword", "baguette",
-    "physics textbook", "toaster", "portrait of Richard Stallman", "television", "mau5head",
-    "five ton truck", "roll of duct tape", "book", "laptop", "old television",
-    "sack of rocks", "rainbow trout", "cobblestone block", "lava bucket", "rubber chicken",
-    "spiked bat", "gold block", "fire extinguisher", "heavy rock", "chunk of dirt",
-    "beehive", "piece of rotten meat", "bear", "ton of bricks")
+    "cast iron skillet",
+    "large trout",
+    "baseball bat",
+    "cricket bat",
+    "wooden cane",
+    "nail",
+    "printer",
+    "shovel",
+    "pair of trousers",
+    "CRT monitor",
+    "diamond sword",
+    "baguette",
+    "physics textbook",
+    "toaster",
+    "portrait of Richard Stallman",
+    "television",
+    "mau5head",
+    "five ton truck",
+    "roll of duct tape",
+    "book",
+    "laptop",
+    "old television",
+    "sack of rocks",
+    "rainbow trout",
+    "cobblestone block",
+    "lava bucket",
+    "rubber chicken",
+    "spiked bat",
+    "gold block",
+    "fire extinguisher",
+    "heavy rock",
+    "chunk of dirt",
+    "beehive",
+    "piece of rotten meat",
+    "bear",
+    "ton of bricks",
+)
 
 RUNS_STR = (
     "Runs to Thanos..",
@@ -760,7 +935,8 @@ RUNS_STR = (
     "Anyone can run a hundred meters, it's the next forty-two thousand and two hundred that count.",
     "Why are all these people following me?",
     "Are the kids still chasing me?",
-    "Running a marathon...there's an app for that.")
+    "Running a marathon...there's an app for that.",
+)
 
 SLAP_TEMPLATES = (
     "{hits} {victim} with a {item}.",
@@ -768,7 +944,8 @@ SLAP_TEMPLATES = (
     "{hits} {victim} around a bit with a {item}.",
     "{throws} a {item} at {victim}.",
     "grabs a {item} and {throws} it at {victim}'s face.",
-    "{hits} a {item} at {victim}.", "{throws} a few {item} at {victim}.",
+    "{hits} a {item} at {victim}.",
+    "{throws} a few {item} at {victim}.",
     "grabs a {item} and {throws} it in {victim}'s face.",
     "launches a {item} in {victim}'s general direction.",
     "sits on {victim}'s face while slamming a {item} {where}.",
@@ -783,16 +960,21 @@ SLAP_TEMPLATES = (
     "{hits} {victim} {where} with a {item}.",
     "ties {victim} to a pole and whips them {where} with a {item}."
     "gave a friendly push to help {victim} learn to swim in lava.",
-    "sent {victim} to /dev/null.", "sent {victim} down the memory hole.",
-    "beheaded {victim}.", "threw {victim} off a building.",
+    "sent {victim} to /dev/null.",
+    "sent {victim} down the memory hole.",
+    "beheaded {victim}.",
+    "threw {victim} off a building.",
     "replaced all of {victim}'s music with Nickelback.",
-    "spammed {victim}'s email.", "made {victim} a knuckle sandwich.",
+    "spammed {victim}'s email.",
+    "made {victim} a knuckle sandwich.",
     "slapped {victim} with pure nothing.",
     "hit {victim} with a small, interstellar spaceship.",
-    "quickscoped {victim}.", "put {victim} in check-mate.",
+    "quickscoped {victim}.",
+    "put {victim} in check-mate.",
     "RSA-encrypted {victim} and deleted the private key.",
     "put {victim} in the friendzone.",
-    "slaps {victim} with a DMCA takedown request!")
+    "slaps {victim} with a DMCA takedown request!",
+)
 
 CHASE_STR = (
     "Where do you think you're going?",
@@ -820,7 +1002,7 @@ CHASE_STR = (
     "May the odds be ever in your favour.",
     "Famous last words.",
     "And they disappeared forever, never to be seen again.",
-    "\"Oh, look at me! I'm so cool, I can run from a bot!\" - this person",
+    '"Oh, look at me! I\'m so cool, I can run from a bot!" - this person',
     "Yeah yeah, just tap /kickme already.",
     "Here, take this ring and head to Mordor while you're at it.",
     "Legend has it, they're still running...",
@@ -845,7 +1027,8 @@ CHASE_STR = (
     "Hey, look at them! They're running from the inevitable banhammer... Cute.",
     "Han shot first. So will I.",
     "What are you running after, a white rabbit?",
-    "As The Doctor would say... RUN!")
+    "As The Doctor would say... RUN!",
+)
 
 INSULT_STRINGS = (
     "Owww ... Such a stupid idiot.",
@@ -909,69 +1092,373 @@ INSULT_STRINGS = (
     "You should try hot bath in a volcano.",
     "Try to spend one day in a coffin and it will be yours forever.",
     "Hit Uranium with a slow moving neutron in your presence. It will be a worthwhile experience.",
-    "You can be the first person to step on sun. Have a try.")
+    "You can be the first person to step on sun. Have a try.",
+)
 
 EMOJIS = (
-    "😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕",
-    "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰")
+    "😂",
+    "😂",
+    "👌",
+    "✌",
+    "💞",
+    "👍",
+    "👌",
+    "💯",
+    "🎶",
+    "👀",
+    "😂",
+    "👓",
+    "👏",
+    "👐",
+    "🍕",
+    "💥",
+    "🍴",
+    "💦",
+    "💦",
+    "🍑",
+    "🍆",
+    "😩",
+    "😏",
+    "👉👌",
+    "👀",
+    "👅",
+    "😩",
+    "🚰",
+)
 
 DICE_EMO = ("🎯", "🎲", "⚽️", "🏀")
 
 ZALG_LIST = (
-    ("̖", " ̗", " ̘", " ̙", " ̜", " ̝", " ̞", " ̟", " ̠", " ̤", " ̥", " ̦", " ̩", " ̪", " ̫",
-     " ̬", " ̭", " ̮", " ̯", " ̰", " ̱", " ̲", " ̳", " ̹", " ̺", " ̻", " ̼", " ͅ", " ͇",
-     " ͈", " ͉", " ͍", " ͎", " ͓", " ͔", " ͕", " ͖", " ͙", " ͚", " "),
-
-    (" ̍", " ̎", " ̄", " ̅", " ̿", " ̑", " ̆", " ̐", " ͒", " ͗", " ͑", " ̇", " ̈", " ̊",
-     " ͂", " ̓", " ̈́", " ͊", " ͋", " ͌", " ̃", " ̂", " ̌", " ͐", " ́", " ̋", " ̏", " ̽",
-     " ̉", " ͣ", " ͤ", " ͥ", " ͦ", " ͧ", " ͨ", " ͩ", " ͪ", " ͫ", " ͬ", " ͭ", " ͮ", " ͯ",
-     " ̾", " ͛", " ͆", " ̚"),
-
-    (" ̕", " ̛", " ̀", " ́", " ͘", " ̡", " ̢", " ̧", " ̨", " ̴", " ̵", " ̶", " ͜",
-     " ͝", " ͞", " ͟", " ͠", " ͢", " ̸", " ̷", " ͡")
+    (
+        "̖",
+        " ̗",
+        " ̘",
+        " ̙",
+        " ̜",
+        " ̝",
+        " ̞",
+        " ̟",
+        " ̠",
+        " ̤",
+        " ̥",
+        " ̦",
+        " ̩",
+        " ̪",
+        " ̫",
+        " ̬",
+        " ̭",
+        " ̮",
+        " ̯",
+        " ̰",
+        " ̱",
+        " ̲",
+        " ̳",
+        " ̹",
+        " ̺",
+        " ̻",
+        " ̼",
+        " ͅ",
+        " ͇",
+        " ͈",
+        " ͉",
+        " ͍",
+        " ͎",
+        " ͓",
+        " ͔",
+        " ͕",
+        " ͖",
+        " ͙",
+        " ͚",
+        " ",
+    ),
+    (
+        " ̍",
+        " ̎",
+        " ̄",
+        " ̅",
+        " ̿",
+        " ̑",
+        " ̆",
+        " ̐",
+        " ͒",
+        " ͗",
+        " ͑",
+        " ̇",
+        " ̈",
+        " ̊",
+        " ͂",
+        " ̓",
+        " ̈́",
+        " ͊",
+        " ͋",
+        " ͌",
+        " ̃",
+        " ̂",
+        " ̌",
+        " ͐",
+        " ́",
+        " ̋",
+        " ̏",
+        " ̽",
+        " ̉",
+        " ͣ",
+        " ͤ",
+        " ͥ",
+        " ͦ",
+        " ͧ",
+        " ͨ",
+        " ͩ",
+        " ͪ",
+        " ͫ",
+        " ͬ",
+        " ͭ",
+        " ͮ",
+        " ͯ",
+        " ̾",
+        " ͛",
+        " ͆",
+        " ̚",
+    ),
+    (
+        " ̕",
+        " ̛",
+        " ̀",
+        " ́",
+        " ͘",
+        " ̡",
+        " ̢",
+        " ̧",
+        " ̨",
+        " ̴",
+        " ̵",
+        " ̶",
+        " ͜",
+        " ͝",
+        " ͞",
+        " ͟",
+        " ͠",
+        " ͢",
+        " ̸",
+        " ̷",
+        " ͡",
+    ),
 )
 
 UWUS = (
-    "(・`ω´・)", ";;w;;", "owo", "UwU", ">w<", "^w^", r"\(^o\) (/o^)/", "( ^ _ ^)∠☆", "(ô_ô)",
-    "~:o", ";-;", "(*^*)", "(>_", "(♥_♥)", "*(^O^)*", "((+_+))")
+    "(・`ω´・)",
+    ";;w;;",
+    "owo",
+    "UwU",
+    ">w<",
+    "^w^",
+    r"\(^o\) (/o^)/",
+    "( ^ _ ^)∠☆",
+    "(ô_ô)",
+    "~:o",
+    ";-;",
+    "(*^*)",
+    "(>_",
+    "(♥_♥)",
+    "*(^O^)*",
+    "((+_+))",
+)
 
 SHGS = (
-    "┐(´д｀)┌", "┐(´～｀)┌", "┐(´ー｀)┌", "┐(￣ヘ￣)┌", "╮(╯∀╰)╭", "╮(╯_╰)╭", "┐(´д`)┌", "┐(´∀｀)┌",
-    "ʅ(́◡◝)ʃ", "┐(ﾟ～ﾟ)┌", "┐('д')┌", "┐(‘～`;)┌", "ヘ(´－｀;)ヘ", "┐( -“-)┌", "ʅ（´◔౪◔）ʃ",
-    "ヽ(゜～゜o)ノ", "ヽ(~～~ )ノ", "┐(~ー~;)┌", "┐(-。ー;)┌", r"¯\_(ツ)_/¯", r"¯\_(⊙_ʖ⊙)_/¯",
-    r"¯\_༼ ಥ ‿ ಥ ༽_/¯", "乁( ⁰͡  Ĺ̯ ⁰͡ ) ㄏ")
+    "┐(´д｀)┌",
+    "┐(´～｀)┌",
+    "┐(´ー｀)┌",
+    "┐(￣ヘ￣)┌",
+    "╮(╯∀╰)╭",
+    "╮(╯_╰)╭",
+    "┐(´д`)┌",
+    "┐(´∀｀)┌",
+    "ʅ(́◡◝)ʃ",
+    "┐(ﾟ～ﾟ)┌",
+    "┐('д')┌",
+    "┐(‘～`;)┌",
+    "ヘ(´－｀;)ヘ",
+    "┐( -“-)┌",
+    "ʅ（´◔౪◔）ʃ",
+    "ヽ(゜～゜o)ノ",
+    "ヽ(~～~ )ノ",
+    "┐(~ー~;)┌",
+    "┐(-。ー;)┌",
+    r"¯\_(ツ)_/¯",
+    r"¯\_(⊙_ʖ⊙)_/¯",
+    r"¯\_༼ ಥ ‿ ಥ ༽_/¯",
+    "乁( ⁰͡  Ĺ̯ ⁰͡ ) ㄏ",
+)
 
 CRI = (
-    "أ‿أ", "╥﹏╥", "(;﹏;)", "(ToT)", "(┳Д┳)", "(ಥ﹏ಥ)", "（；へ：）", "(T＿T)", "（πーπ）", "(Ｔ▽Ｔ)",
-    "(⋟﹏⋞)", "（ｉДｉ）", "(´Д⊂ヽ", "(;Д;)", "（>﹏<）", "(TдT)", "(つ﹏⊂)", "༼☯﹏☯༽", "(ノ﹏ヽ)",
-    "(ノAヽ)", "(╥_╥)", "(T⌓T)", "(༎ຶ⌑༎ຶ)", "(☍﹏⁰)｡", "(ಥ_ʖಥ)", "(つд⊂)", "(≖͞_≖̥)", "(இ﹏இ`｡)",
-    "༼ಢ_ಢ༽", "༼ ༎ຶ ෴ ༎ຶ༽")
+    "أ‿أ",
+    "╥﹏╥",
+    "(;﹏;)",
+    "(ToT)",
+    "(┳Д┳)",
+    "(ಥ﹏ಥ)",
+    "（；へ：）",
+    "(T＿T)",
+    "（πーπ）",
+    "(Ｔ▽Ｔ)",
+    "(⋟﹏⋞)",
+    "（ｉДｉ）",
+    "(´Д⊂ヽ",
+    "(;Д;)",
+    "（>﹏<）",
+    "(TдT)",
+    "(つ﹏⊂)",
+    "༼☯﹏☯༽",
+    "(ノ﹏ヽ)",
+    "(ノAヽ)",
+    "(╥_╥)",
+    "(T⌓T)",
+    "(༎ຶ⌑༎ຶ)",
+    "(☍﹏⁰)｡",
+    "(ಥ_ʖಥ)",
+    "(つд⊂)",
+    "(≖͞_≖̥)",
+    "(இ﹏இ`｡)",
+    "༼ಢ_ಢ༽",
+    "༼ ༎ຶ ෴ ༎ຶ༽",
+)
 
 FACEREACTS = (
-    "ʘ‿ʘ", "ヾ(-_- )ゞ", "(っ˘ڡ˘ς)", "(´ж｀ς)", "( ಠ ʖ̯ ಠ)", "(° ͜ʖ͡°)╭∩╮", "(ᵟຶ︵ ᵟຶ)", "(งツ)ว",
-    "ʚ(•｀", "(っ▀¯▀)つ", "(◠﹏◠)", "( ͡ಠ ʖ̯ ͡ಠ)", "( ఠ ͟ʖ ఠ)", "(∩｀-´)⊃━☆ﾟ.*･｡ﾟ", "(⊃｡•́‿•̀｡)⊃",
-    "(._.)", "{•̃_•̃}", "(ᵔᴥᵔ)", "♨_♨", "⥀.⥀", "ح˚௰˚づ ", "(҂◡_◡)", "ƪ(ړײ)‎ƪ​​", "(っ•́｡•́)♪♬",
-    "◖ᵔᴥᵔ◗ ♪ ♫ ", "(☞ﾟヮﾟ)☞", "[¬º-°]¬", "(Ծ‸ Ծ)", "(•̀ᴗ•́)و ̑̑", "ヾ(´〇`)ﾉ♪♪♪", "(ง'̀-'́)ง",
-    "ლ(•́•́ლ)", "ʕ •́؈•̀ ₎", "♪♪ ヽ(ˇ∀ˇ )ゞ", "щ（ﾟДﾟщ）", "( ˇ෴ˇ )", "눈_눈", "(๑•́ ₃ •̀๑) ",
-    "( ˘ ³˘)♥ ", "ԅ(≖‿≖ԅ)", "♥‿♥", "◔_◔", "⁽⁽ଘ( ˊᵕˋ )ଓ⁾⁾", "乁( ◔ ౪◔)「      ┑(￣Д ￣)┍",
-    "( ఠൠఠ )ﾉ", "٩(๏_๏)۶", "┌(ㆆ㉨ㆆ)ʃ", "ఠ_ఠ", "(づ｡◕‿‿◕｡)づ", "༼ ༎ຶ ෴ ༎ຶ༽", "｡ﾟ( ﾟஇ‸இﾟ)ﾟ｡",
-    "(づ￣ ³￣)づ", "(⊙.☉)7", "ᕕ( ᐛ )ᕗ", "t(-_-t)", "(ಥ⌣ಥ)", "ヽ༼ ಠ益ಠ ༽ﾉ", "༼∵༽ ༼⍨༽ ༼⍢༽ ༼⍤༽",
-    "ミ●﹏☉ミ", "(⊙_◎)", "¿ⓧ_ⓧﮌ", "ಠ_ಠ", "(´･_･`)", "ᕦ(ò_óˇ)ᕤ", "⊙﹏⊙", "(╯°□°）╯︵ ┻━┻",
-    r"¯\_(⊙︿⊙)_/¯", "٩◔̯◔۶", "°‿‿°", "ᕙ(⇀‸↼‶)ᕗ", "⊂(◉‿◉)つ", "V•ᴥ•V", "q(❂‿❂)p", "ಥ_ಥ",
-    "ฅ^•ﻌ•^ฅ", "ಥ﹏ಥ", "（ ^_^）o自自o（^_^ ）", "ಠ‿ಠ", "ヽ(´▽`)/", "ᵒᴥᵒ#", "( ͡° ͜ʖ ͡°)",
-    "┬─┬﻿ ノ( ゜-゜ノ)", "ヽ(´ー｀)ノ", "☜(⌒▽⌒)☞", "ε=ε=ε=┌(;*´Д`)ﾉ", "(╬ ಠ益ಠ)", "┬─┬⃰͡ (ᵔᵕᵔ͜ )",
-    "┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻", r"¯\_(ツ)_/¯", "ʕᵔᴥᵔʔ", "(`･ω･´)", "ʕ•ᴥ•ʔ", "ლ(｀ー´ლ)", "ʕʘ̅͜ʘ̅ʔ",
-    "（　ﾟДﾟ）", r"¯\(°_o)/¯", "(｡◕‿◕｡)", "(ノಠ ∩ಠ)ノ彡( \\o°o)\\", "“ヽ(´▽｀)ノ”", "( ͡° ͜ʖ ͡°)",
-    r"¯\_(ツ)_/¯", "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)", "ʕ•ᴥ•ʔ", "(▀̿Ĺ̯▀̿ ̿)", "(ง ͠° ͟ل͜ ͡°)ง",
-    "༼ つ ◕_◕ ༽つ", "ಠ_ಠ", "(☞ ͡° ͜ʖ ͡°)☞", "¯_༼ ି ~ ି ༽_/¯", "c༼ ͡° ͜ʖ ͡° ༽⊃")
+    "ʘ‿ʘ",
+    "ヾ(-_- )ゞ",
+    "(っ˘ڡ˘ς)",
+    "(´ж｀ς)",
+    "( ಠ ʖ̯ ಠ)",
+    "(° ͜ʖ͡°)╭∩╮",
+    "(ᵟຶ︵ ᵟຶ)",
+    "(งツ)ว",
+    "ʚ(•｀",
+    "(っ▀¯▀)つ",
+    "(◠﹏◠)",
+    "( ͡ಠ ʖ̯ ͡ಠ)",
+    "( ఠ ͟ʖ ఠ)",
+    "(∩｀-´)⊃━☆ﾟ.*･｡ﾟ",
+    "(⊃｡•́‿•̀｡)⊃",
+    "(._.)",
+    "{•̃_•̃}",
+    "(ᵔᴥᵔ)",
+    "♨_♨",
+    "⥀.⥀",
+    "ح˚௰˚づ ",
+    "(҂◡_◡)",
+    "ƪ(ړײ)‎ƪ​​",
+    "(っ•́｡•́)♪♬",
+    "◖ᵔᴥᵔ◗ ♪ ♫ ",
+    "(☞ﾟヮﾟ)☞",
+    "[¬º-°]¬",
+    "(Ծ‸ Ծ)",
+    "(•̀ᴗ•́)و ̑̑",
+    "ヾ(´〇`)ﾉ♪♪♪",
+    "(ง'̀-'́)ง",
+    "ლ(•́•́ლ)",
+    "ʕ •́؈•̀ ₎",
+    "♪♪ ヽ(ˇ∀ˇ )ゞ",
+    "щ（ﾟДﾟщ）",
+    "( ˇ෴ˇ )",
+    "눈_눈",
+    "(๑•́ ₃ •̀๑) ",
+    "( ˘ ³˘)♥ ",
+    "ԅ(≖‿≖ԅ)",
+    "♥‿♥",
+    "◔_◔",
+    "⁽⁽ଘ( ˊᵕˋ )ଓ⁾⁾",
+    "乁( ◔ ౪◔)「      ┑(￣Д ￣)┍",
+    "( ఠൠఠ )ﾉ",
+    "٩(๏_๏)۶",
+    "┌(ㆆ㉨ㆆ)ʃ",
+    "ఠ_ఠ",
+    "(づ｡◕‿‿◕｡)づ",
+    "༼ ༎ຶ ෴ ༎ຶ༽",
+    "｡ﾟ( ﾟஇ‸இﾟ)ﾟ｡",
+    "(づ￣ ³￣)づ",
+    "(⊙.☉)7",
+    "ᕕ( ᐛ )ᕗ",
+    "t(-_-t)",
+    "(ಥ⌣ಥ)",
+    "ヽ༼ ಠ益ಠ ༽ﾉ",
+    "༼∵༽ ༼⍨༽ ༼⍢༽ ༼⍤༽",
+    "ミ●﹏☉ミ",
+    "(⊙_◎)",
+    "¿ⓧ_ⓧﮌ",
+    "ಠ_ಠ",
+    "(´･_･`)",
+    "ᕦ(ò_óˇ)ᕤ",
+    "⊙﹏⊙",
+    "(╯°□°）╯︵ ┻━┻",
+    r"¯\_(⊙︿⊙)_/¯",
+    "٩◔̯◔۶",
+    "°‿‿°",
+    "ᕙ(⇀‸↼‶)ᕗ",
+    "⊂(◉‿◉)つ",
+    "V•ᴥ•V",
+    "q(❂‿❂)p",
+    "ಥ_ಥ",
+    "ฅ^•ﻌ•^ฅ",
+    "ಥ﹏ಥ",
+    "（ ^_^）o自自o（^_^ ）",
+    "ಠ‿ಠ",
+    "ヽ(´▽`)/",
+    "ᵒᴥᵒ#",
+    "( ͡° ͜ʖ ͡°)",
+    "┬─┬﻿ ノ( ゜-゜ノ)",
+    "ヽ(´ー｀)ノ",
+    "☜(⌒▽⌒)☞",
+    "ε=ε=ε=┌(;*´Д`)ﾉ",
+    "(╬ ಠ益ಠ)",
+    "┬─┬⃰͡ (ᵔᵕᵔ͜ )",
+    "┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻",
+    r"¯\_(ツ)_/¯",
+    "ʕᵔᴥᵔʔ",
+    "(`･ω･´)",
+    "ʕ•ᴥ•ʔ",
+    "ლ(｀ー´ლ)",
+    "ʕʘ̅͜ʘ̅ʔ",
+    "（　ﾟДﾟ）",
+    r"¯\(°_o)/¯",
+    "(｡◕‿◕｡)",
+    "(ノಠ ∩ಠ)ノ彡( \\o°o)\\",
+    "“ヽ(´▽｀)ノ”",
+    "( ͡° ͜ʖ ͡°)",
+    r"¯\_(ツ)_/¯",
+    "( ͡°( ͡° ͜ʖ( ͡° ͜ʖ ͡°)ʖ ͡°) ͡°)",
+    "ʕ•ᴥ•ʔ",
+    "(▀̿Ĺ̯▀̿ ̿)",
+    "(ง ͠° ͟ل͜ ͡°)ง",
+    "༼ つ ◕_◕ ༽つ",
+    "ಠ_ಠ",
+    "(☞ ͡° ͜ʖ ͡°)☞",
+    "¯_༼ ି ~ ି ༽_/¯",
+    "c༼ ͡° ͜ʖ ͡° ༽⊃",
+)
 
-HAPPY = ("( ͡° ͜ʖ ͡°)", "(ʘ‿ʘ)", "(✿´‿`)", "=͟͟͞͞٩(๑☉ᴗ☉)੭ु⁾⁾", "(*⌒▽⌒*)θ～♪",
-         "°˖✧◝(⁰▿⁰)◜✧˖°", "✌(-‿-)✌", "⌒°(❛ᴗ❛)°⌒", "(ﾟ<|＼(･ω･)／|>ﾟ)", "ヾ(o✪‿✪o)ｼ")
+HAPPY = (
+    "( ͡° ͜ʖ ͡°)",
+    "(ʘ‿ʘ)",
+    "(✿´‿`)",
+    "=͟͟͞͞٩(๑☉ᴗ☉)੭ु⁾⁾",
+    "(*⌒▽⌒*)θ～♪",
+    "°˖✧◝(⁰▿⁰)◜✧˖°",
+    "✌(-‿-)✌",
+    "⌒°(❛ᴗ❛)°⌒",
+    "(ﾟ<|＼(･ω･)／|>ﾟ)",
+    "ヾ(o✪‿✪o)ｼ",
+)
 
 THINKING = ("(҂⌣̀_⌣́)", "（；¬＿¬)", "(-｡-;", "┌[ O ʖ̯ O ]┐", "〳 ͡° Ĺ̯ ͡° 〵")
 
 WAVING = (
-    "(ノ^∇^)", "(;-_-)/", "@(o・ェ・)@ノ", "ヾ(＾-＾)ノ", "ヾ(◍’౪`◍)ﾉﾞ♡", "(ό‿ὸ)ﾉ", "(ヾ(´・ω・｀)")
+    "(ノ^∇^)",
+    "(;-_-)/",
+    "@(o・ェ・)@ノ",
+    "ヾ(＾-＾)ノ",
+    "ヾ(◍’౪`◍)ﾉﾞ♡",
+    "(ό‿ὸ)ﾉ",
+    "(ヾ(´・ω・｀)",
+)
 
 WTF = ("༎ຶ‿༎ຶ", "(‿ˠ‿)", "╰U╯☜(◉ɷ◉ )", "(;´༎ຶ益༎ຶ`)♡", "╭∩╮(︶ε︶*)chu", "( ＾◡＾)っ (‿|‿)")
 

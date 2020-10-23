@@ -6,12 +6,16 @@
 #
 # All rights reserved.
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd("sd (?:(\\d+)?\\s?(.+))", about={
-    'header': "make self-destructable messages",
-    'usage': "{tr}sd [test]\n{tr}sd [timeout in seconds] [text]"})
+@userge.on_cmd(
+    "sd (?:(\\d+)?\\s?(.+))",
+    about={
+        "header": "make self-destructable messages",
+        "usage": "{tr}sd [test]\n{tr}sd [timeout in seconds] [text]",
+    },
+)
 async def selfdestruct(message: Message):
     seconds = int(message.matches[0].group(1) or 0)
     text = str(message.matches[0].group(2))

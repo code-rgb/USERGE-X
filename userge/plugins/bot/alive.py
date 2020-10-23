@@ -1,28 +1,28 @@
 """Fun plugin"""
 
+import asyncio
 from re import search
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
-from userge import userge, Message, Config
-import asyncio
+
+from userge import Config, Message, userge
 
 
-@userge.on_cmd("alive", about={
-    'header': "Just For Fun"}, allow_channels=False)
+@userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, "alive")
     y = await userge.send_inline_bot_result(
-            chat_id=message.chat.id,
-            query_id=x.query_id,
-            result_id=x.results[0].id
-        )
+        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+    )
     await message.delete()
     await asyncio.sleep(90)
     await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
 if userge.has_bot:
+
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
         if Config.HEROKU_APP:
@@ -30,8 +30,8 @@ if userge.has_bot:
         else:
             dynos_saver = "Not Supported"
         alive_s = "• ➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
-                        _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
-                    )
+            _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
+        )
         alive_s += f"• 👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s += f"• 🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         alive_s += f"• ⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {dynos_saver}\n"

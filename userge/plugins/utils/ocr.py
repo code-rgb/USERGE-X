@@ -10,16 +10,15 @@ import os
 
 import requests
 
-from userge import userge, Message, Config, pool
+from userge import Config, Message, pool, userge
 
 CHANNEL = userge.getCLogger(__name__)
 
 
 @pool.run_in_thread
-def ocr_space_file(filename,
-                   language='eng',
-                   overlay=False,
-                   api_key=Config.OCR_SPACE_API_KEY):
+def ocr_space_file(
+    filename, language="eng", overlay=False, api_key=Config.OCR_SPACE_API_KEY
+):
     """
     OCR.space API request with local file.
         Python3.5 - not tested on 2.7
@@ -34,25 +33,30 @@ def ocr_space_file(filename,
     :return: Result in JSON format.
     """
     payload = {
-        'isOverlayRequired': overlay,
-        'apikey': api_key,
-        'language': language,
+        "isOverlayRequired": overlay,
+        "apikey": api_key,
+        "language": language,
     }
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         r = requests.post(
-            'https://api.ocr.space/parse/image',
+            "https://api.ocr.space/parse/image",
             files={filename: f},
             data=payload,
         )
     return r.json()
 
 
-@userge.on_cmd("ocr", about={
-    'header': "use this to run ocr reader",
-    'description': "get ocr result for images (file size limit = 1MB)",
-    'examples': [
-        "{tr}ocr [reply to image]",
-        "{tr}ocr eng [reply to image] (get lang codes from 'https://ocr.space/ocrapi')"]})
+@userge.on_cmd(
+    "ocr",
+    about={
+        "header": "use this to run ocr reader",
+        "description": "get ocr result for images (file size limit = 1MB)",
+        "examples": [
+            "{tr}ocr [reply to image]",
+            "{tr}ocr eng [reply to image] (get lang codes from 'https://ocr.space/ocrapi')",
+        ],
+    },
+)
 async def ocr_gen(message: Message):
     """
     this function can generate ocr output for a image file
@@ -63,14 +67,18 @@ async def ocr_gen(message: Message):
             "<a href='http://eepurl.com/bOLOcf'>HERE</a> "
             "<code>& add it to Heroku config vars</code> (<code>OCR_SPACE_API_KEY</code>)",
             disable_web_page_preview=True,
-            parse_mode="html", del_in=0)
+            parse_mode="html",
+            del_in=0,
+        )
         return
 
     if message.reply_to_message:
 
         lang_code = message.input_str or "eng"
         await message.edit(r"`Trying to Read.. 📖")
-        downloaded_file_name = await message.client.download_media(message.reply_to_message)
+        downloaded_file_name = await message.client.download_media(
+            message.reply_to_message
+        )
         test_file = await ocr_space_file(downloaded_file_name, lang_code)
         try:
             ParsedText = test_file["ParsedResults"][0]["ParsedText"]
@@ -78,13 +86,15 @@ async def ocr_gen(message: Message):
             await message.edit(
                 r"`Couldn't read it.. (╯‵□′)╯︵┻━┻`"
                 "\n`I guess I need new glasses.. 👓`"
-                f"\n\n**ERROR**: `{e_f}`", del_in=0)
+                f"\n\n**ERROR**: `{e_f}`",
+                del_in=0,
+            )
             os.remove(downloaded_file_name)
             return
         else:
             await message.edit(
-                "**Here's what I could read from it:**"
-                f"\n\n`{ParsedText}`")
+                "**Here's what I could read from it:**" f"\n\n`{ParsedText}`"
+            )
             os.remove(downloaded_file_name)
             await CHANNEL.log("`ocr` command succefully executed")
             return

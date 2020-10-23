@@ -6,8 +6,8 @@
 #
 # All rights reserved.
 
-import re
 import json
+import re
 import urllib.parse
 from os import popen
 from random import choice
@@ -15,17 +15,30 @@ from random import choice
 import requests
 from bs4 import BeautifulSoup
 
-from userge import userge, Message
+from userge import Message, userge
 from userge.utils import humanbytes
 
 
-@userge.on_cmd("direct", about={
-    'header': "Generate a direct download link",
-    'supported links': [
-        'Google Drive', 'MEGA.nz', 'Cloud Mail', 'Yandex.Disk', 'AFH',
-        'ZippyShare', 'MediaFire', 'SourceForge', 'OSDN', 'GitHub'],
-    'usage': "{tr}direct [link]",
-    'others': "MEGA.nz and ZippyShare **DISABLED**"})
+@userge.on_cmd(
+    "direct",
+    about={
+        "header": "Generate a direct download link",
+        "supported links": [
+            "Google Drive",
+            "MEGA.nz",
+            "Cloud Mail",
+            "Yandex.Disk",
+            "AFH",
+            "ZippyShare",
+            "MediaFire",
+            "SourceForge",
+            "OSDN",
+            "GitHub",
+        ],
+        "usage": "{tr}direct [link]",
+        "others": "MEGA.nz and ZippyShare **DISABLED**",
+    },
+)
 async def direct_(message: Message):
     """direct links generator"""
 
@@ -36,41 +49,41 @@ async def direct_(message: Message):
 
     await message.edit("`Processing...`")
 
-    links = re.findall(r'\bhttps?://.*\.\S+', text)
+    links = re.findall(r"\bhttps?://.*\.\S+", text)
     if not links:
         await message.err("No links found!")
         return
 
     reply = "**Direct Links** :\n\n"
     for link in links:
-        if 'drive.google.com' in link:
+        if "drive.google.com" in link:
             reply += f" 👉 {gdrive(link)}\n"
 
         # elif 'zippyshare.com' in link:
-            # reply += f" 👉 {zippy_share(link)}\n"
+        # reply += f" 👉 {zippy_share(link)}\n"
 
-        elif 'mega.' in link:
+        elif "mega." in link:
             reply += f" 👉 {mega_dl(link)}\n"
 
-        elif 'yadi.sk' in link:
+        elif "yadi.sk" in link:
             reply += f" 👉 {yandex_disk(link)}\n"
 
-        elif 'cloud.mail.ru' in link:
+        elif "cloud.mail.ru" in link:
             reply += f" 👉 {cm_ru(link)}\n"
 
-        elif 'mediafire.com' in link:
+        elif "mediafire.com" in link:
             reply += f" 👉 {mediafire(link)}\n"
 
-        elif 'sourceforge.net' in link:
+        elif "sourceforge.net" in link:
             reply += f" 👉 {sourceforge(link)}\n"
 
-        elif 'osdn.net' in link:
+        elif "osdn.net" in link:
             reply += f" 👉 {osdn(link)}\n"
 
-        elif 'github.com' in link:
+        elif "github.com" in link:
             reply += f" 👉 {github(link)}\n"
 
-        elif 'androidfilehost.com' in link:
+        elif "androidfilehost.com" in link:
             reply += f" 👉 {androidfilehost(link)}\n"
 
         else:
@@ -82,18 +95,18 @@ async def direct_(message: Message):
 def gdrive(url: str) -> str:
     """GDrive direct links generator"""
 
-    drive = 'https://drive.google.com'
+    drive = "https://drive.google.com"
     try:
-        link = re.findall(r'\bhttps?://drive\.google\.com\S+', url)[0]
+        link = re.findall(r"\bhttps?://drive\.google\.com\S+", url)[0]
     except IndexError:
         reply = "`No Google drive links found`\n"
         return reply
 
-    file_id = ''
-    reply = ''
+    file_id = ""
+    reply = ""
 
     if link.find("view") != -1:
-        file_id = link.split('/')[-2]
+        file_id = link.split("/")[-2]
 
     elif link.find("open?id=") != -1:
         file_id = link.split("open?id=")[1].strip()
@@ -101,35 +114,34 @@ def gdrive(url: str) -> str:
     elif link.find("uc?id=") != -1:
         file_id = link.split("uc?id=")[1].strip()
 
-    url = f'{drive}/uc?export=download&id={file_id}'
+    url = f"{drive}/uc?export=download&id={file_id}"
     download = requests.get(url, stream=True, allow_redirects=False)
     cookies = download.cookies
 
     try:
         # In case of small file size, Google downloads directly
         dl_url = download.headers["location"]
-        if 'accounts.google.com' in dl_url:  # non-public file
-            reply += '`Link is not public!`\n'
+        if "accounts.google.com" in dl_url:  # non-public file
+            reply += "`Link is not public!`\n"
             return reply
-        name = 'Direct Download Link'
+        name = "Direct Download Link"
 
     except KeyError:
         # In case of download warning page
-        page = BeautifulSoup(download.content, 'lxml')
-        export = drive + page.find('a', {'id': 'uc-download-link'}).get('href')
-        name = page.find('span', {'class': 'uc-name-size'}).text
+        page = BeautifulSoup(download.content, "lxml")
+        export = drive + page.find("a", {"id": "uc-download-link"}).get("href")
+        name = page.find("span", {"class": "uc-name-size"}).text
 
-        response = requests.get(export,
-                                stream=True,
-                                allow_redirects=False,
-                                cookies=cookies)
+        response = requests.get(
+            export, stream=True, allow_redirects=False, cookies=cookies
+        )
 
-        dl_url = response.headers['location']
-        if 'accounts.google.com' in dl_url:
-            reply += 'Link is not public!'
+        dl_url = response.headers["location"]
+        if "accounts.google.com" in dl_url:
+            reply += "Link is not public!"
             return reply
 
-    reply += f'[{name}]({dl_url})\n'
+    reply += f"[{name}]({dl_url})\n"
     return reply
 
 
@@ -137,33 +149,37 @@ def zippy_share(url: str) -> str:
     """ZippyShare direct links generator
     Based on https://github.com/LameLemon/ziggy"""
 
-    reply = ''
-    dl_url = ''
+    reply = ""
+    dl_url = ""
 
     try:
-        link = re.findall(r'\bhttps?://.*zippyshare\.com\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*zippyshare\.com\S+", url)[0]
     except IndexError:
         reply = "`No ZippyShare links found`\n"
         return reply
 
     session = requests.Session()
-    base_url = re.search('http.+.com', link).group()
+    base_url = re.search("http.+.com", link).group()
     response = session.get(link)
     page_soup = BeautifulSoup(response.content, "lxml")
     scripts = page_soup.find_all("script", {"type": "text/javascript"})
 
     for script in scripts:
         if "getElementById('dlbutton')" in script.text:
-            url_raw = re.search(r'= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);',
-                                script.text).group('url')
-            math = re.search(r'= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);',
-                             script.text).group('math')
-            dl_url = url_raw.replace(math, '"' + str(eval(math)) + '"')  # pylint: disable=W0123
+            url_raw = re.search(
+                r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);", script.text
+            ).group("url")
+            math = re.search(
+                r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);", script.text
+            ).group("math")
+            dl_url = url_raw.replace(
+                math, '"' + str(eval(math)) + '"'
+            )  # pylint: disable=W0123
             break
 
     dl_url = base_url + eval(dl_url)  # pylint: disable=W0123
-    name = urllib.parse.unquote(dl_url.split('/')[-1])
-    reply += f'[{name}]({dl_url})\n'
+    name = urllib.parse.unquote(dl_url.split("/")[-1])
+    reply += f"[{name}]({dl_url})\n"
 
     return reply
 
@@ -172,23 +188,23 @@ def yandex_disk(url: str) -> str:
     """Yandex.Disk direct links generator
     Based on https://github.com/wldhx/yadisk-direct"""
 
-    reply = ''
+    reply = ""
 
     try:
-        link = re.findall(r'\bhttps?://.*yadi\.sk\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*yadi\.sk\S+", url)[0]
     except IndexError:
         reply = "`No Yandex.Disk links found`\n"
         return reply
 
-    api = 'https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key={}'
+    api = "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key={}"
 
     try:
-        dl_url = requests.get(api.format(link)).json()['href']
-        name = dl_url.split('filename=')[1].split('&disposition')[0]
-        reply += f'[{name}]({dl_url})\n'
+        dl_url = requests.get(api.format(link)).json()["href"]
+        name = dl_url.split("filename=")[1].split("&disposition")[0]
+        reply += f"[{name}]({dl_url})\n"
 
     except KeyError:
-        reply += '`Error: File not found / Download limit reached`\n'
+        reply += "`Error: File not found / Download limit reached`\n"
 
         return reply
 
@@ -199,15 +215,15 @@ def mega_dl(url: str) -> str:
     """MEGA.nz direct links generator
     Using https://github.com/tonikelope/megadown"""
 
-    reply = ''
+    reply = ""
 
     try:
-        link = re.findall(r'\bhttps?://.*mega.*\.nz\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*mega.*\.nz\S+", url)[0]
     except IndexError:
         reply = "`No MEGA.nz links found`\n"
         return reply
 
-    command = f'bin/megadown -q -m {link}'
+    command = f"bin/megadown -q -m {link}"
     result = popen(command).read()  # nosec
 
     try:
@@ -217,10 +233,10 @@ def mega_dl(url: str) -> str:
         reply += "`Error: Can't extract the link`\n"
         return reply
 
-    dl_url = data['url']
-    name = data['file_name']
-    size = humanbytes(int(data['file_size']))
-    reply += f'[{name} ({size})]({dl_url})\n'
+    dl_url = data["url"]
+    name = data["file_name"]
+    size = humanbytes(int(data["file_size"]))
+    reply += f"[{name} ({size})]({dl_url})\n"
 
     return reply
 
@@ -229,15 +245,15 @@ def cm_ru(url: str) -> str:
     """cloud.mail.ru direct links generator
     Using https://github.com/JrMasterModelBuilder/cmrudl.py"""
 
-    reply = ''
+    reply = ""
 
     try:
-        link = re.findall(r'\bhttps?://.*cloud\.mail\.ru\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*cloud\.mail\.ru\S+", url)[0]
     except IndexError:
         reply = "`No cloud.mail.ru links found`\n"
         return reply
 
-    command = f'bin/cmrudl -s {link}'
+    command = f"bin/cmrudl -s {link}"
     result = popen(command).read()  # nosec
     result = result.splitlines()[-1]
 
@@ -247,10 +263,10 @@ def cm_ru(url: str) -> str:
         reply += "`Error: Can't extract the link`\n"
         return reply
 
-    dl_url = data['download']
-    name = data['file_name']
-    size = humanbytes(int(data['file_size']))
-    reply += f'[{name} ({size})]({dl_url})\n'
+    dl_url = data["download"]
+    name = data["file_name"]
+    size = humanbytes(int(data["file_size"]))
+    reply += f"[{name} ({size})]({dl_url})\n"
 
     return reply
 
@@ -259,18 +275,18 @@ def mediafire(url: str) -> str:
     """MediaFire direct links generator"""
 
     try:
-        link = re.findall(r'\bhttps?://.*mediafire\.com\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*mediafire\.com\S+", url)[0]
     except IndexError:
         reply = "`No MediaFire links found`\n"
         return reply
 
-    reply = ''
-    page = BeautifulSoup(requests.get(link).content, 'lxml')
-    info = page.find('a', {'aria-label': 'Download file'})
-    dl_url = info.get('href')
-    size = re.findall(r'\(.*\)', info.text)[0]
-    name = page.find('div', {'class': 'filename'}).text
-    reply += f'[{name} {size}]({dl_url})\n'
+    reply = ""
+    page = BeautifulSoup(requests.get(link).content, "lxml")
+    info = page.find("a", {"aria-label": "Download file"})
+    dl_url = info.get("href")
+    size = re.findall(r"\(.*\)", info.text)[0]
+    name = page.find("div", {"class": "filename"}).text
+    reply += f"[{name} {size}]({dl_url})\n"
 
     return reply
 
@@ -279,25 +295,29 @@ def sourceforge(url: str) -> str:
     """SourceForge direct links generator"""
 
     try:
-        link = re.findall(r'\bhttps?://.*sourceforge\.net\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*sourceforge\.net\S+", url)[0]
     except IndexError:
         reply = "`No SourceForge links found`\n"
         return reply
 
-    file_path = re.findall(r'files(.*)/download', link)[0]
+    file_path = re.findall(r"files(.*)/download", link)[0]
     reply = f"Mirrors for __{file_path.split('/')[-1]}__\n"
-    project = re.findall(r'projects?/(.*?)/files', link)[0]
+    project = re.findall(r"projects?/(.*?)/files", link)[0]
 
-    mirrors = f'https://sourceforge.net/settings/mirror_choices?' \
-        f'projectname={project}&filename={file_path}'
+    mirrors = (
+        f"https://sourceforge.net/settings/mirror_choices?"
+        f"projectname={project}&filename={file_path}"
+    )
 
-    page = BeautifulSoup(requests.get(mirrors).content, 'html.parser')
-    info = page.find('ul', {'id': 'mirrorList'}).findAll('li')
+    page = BeautifulSoup(requests.get(mirrors).content, "html.parser")
+    info = page.find("ul", {"id": "mirrorList"}).findAll("li")
 
     for mirror in info[1:]:
-        name = re.findall(r'\((.*)\)', mirror.text.strip())[0]
-        dl_url = f'https://{mirror["id"]}.dl.sourceforge.net/project/{project}/{file_path}'
-        reply += f'[{name}]({dl_url}) '
+        name = re.findall(r"\((.*)\)", mirror.text.strip())[0]
+        dl_url = (
+            f'https://{mirror["id"]}.dl.sourceforge.net/project/{project}/{file_path}'
+        )
+        reply += f"[{name}]({dl_url}) "
 
     return reply
 
@@ -305,27 +325,26 @@ def sourceforge(url: str) -> str:
 def osdn(url: str) -> str:
     """OSDN direct links generator"""
 
-    osdn_link = 'https://osdn.net'
+    osdn_link = "https://osdn.net"
 
     try:
-        link = re.findall(r'\bhttps?://.*osdn\.net\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*osdn\.net\S+", url)[0]
     except IndexError:
         reply = "`No OSDN links found`\n"
         return reply
 
-    page = BeautifulSoup(
-        requests.get(link, allow_redirects=True).content, 'lxml')
+    page = BeautifulSoup(requests.get(link, allow_redirects=True).content, "lxml")
 
-    info = page.find('a', {'class': 'mirror_link'})
-    link = urllib.parse.unquote(osdn_link + info['href'])
+    info = page.find("a", {"class": "mirror_link"})
+    link = urllib.parse.unquote(osdn_link + info["href"])
     reply = f"Mirrors for __{link.split('/')[-1]}__\n"
-    mirrors = page.find('form', {'id': 'mirror-select-form'}).findAll('tr')
+    mirrors = page.find("form", {"id": "mirror-select-form"}).findAll("tr")
 
     for data in mirrors[1:]:
-        mirror = data.find('input')['value']
-        name = re.findall(r'\((.*)\)', data.findAll('td')[-1].text.strip())[0]
-        dl_url = re.sub(r'm=(.*)&f', f'm={mirror}&f', link)
-        reply += f'[{name}]({dl_url}) '
+        mirror = data.find("input")["value"]
+        name = re.findall(r"\((.*)\)", data.findAll("td")[-1].text.strip())[0]
+        dl_url = re.sub(r"m=(.*)&f", f"m={mirror}&f", link)
+        reply += f"[{name}]({dl_url}) "
 
     return reply
 
@@ -334,13 +353,13 @@ def github(url: str) -> str:
     """GitHub direct links generator"""
 
     try:
-        link = re.findall(r'\bhttps?://.*github\.com.*releases\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*github\.com.*releases\S+", url)[0]
     except IndexError:
         reply = "`No GitHub Releases links found`\n"
         return reply
 
-    reply = ''
-    dl_url = ''
+    reply = ""
+    dl_url = ""
     download = requests.get(url, stream=True, allow_redirects=False)
 
     try:
@@ -348,8 +367,8 @@ def github(url: str) -> str:
     except KeyError:
         reply += "`Error: Can't extract the link`\n"
 
-    name = link.split('/')[-1]
-    reply += f'[{name}]({dl_url}) '
+    name = link.split("/")[-1]
+    reply += f"[{name}]({dl_url}) "
 
     return reply
 
@@ -358,47 +377,44 @@ def androidfilehost(url: str) -> str:
     """AFH direct links generator"""
 
     try:
-        link = re.findall(r'\bhttps?://.*androidfilehost.*fid.*\S+', url)[0]
+        link = re.findall(r"\bhttps?://.*androidfilehost.*fid.*\S+", url)[0]
     except IndexError:
         reply = "`No AFH links found`\n"
         return reply
 
-    fid = re.findall(r'\?fid=(.*)', link)[0]
+    fid = re.findall(r"\?fid=(.*)", link)[0]
     session = requests.Session()
     user_agent = useragent()
 
-    headers = {'user-agent': user_agent}
+    headers = {"user-agent": user_agent}
     res = session.get(link, headers=headers, allow_redirects=True)
     headers = {
-        'origin': 'https://androidfilehost.com',
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.9',
-        'user-agent': user_agent,
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'x-mod-sbb-ctype': 'xhr',
-        'accept': '*/*',
-        'referer': f'https://androidfilehost.com/?fid={fid}',
-        'authority': 'androidfilehost.com',
-        'x-requested-with': 'XMLHttpRequest',
+        "origin": "https://androidfilehost.com",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "user-agent": user_agent,
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "x-mod-sbb-ctype": "xhr",
+        "accept": "*/*",
+        "referer": f"https://androidfilehost.com/?fid={fid}",
+        "authority": "androidfilehost.com",
+        "x-requested-with": "XMLHttpRequest",
     }
 
-    data = {
-        'submit': 'submit',
-        'action': 'getdownloadmirrors',
-        'fid': f'{fid}'
-    }
+    data = {"submit": "submit", "action": "getdownloadmirrors", "fid": f"{fid}"}
 
     mirrors = None
-    reply = ''
+    reply = ""
     error = "`Error: Can't find Mirrors for the link`\n"
 
     try:
         req = session.post(
-            'https://androidfilehost.com/libs/otf/mirrors.otf.php',
+            "https://androidfilehost.com/libs/otf/mirrors.otf.php",
             headers=headers,
             data=data,
-            cookies=res.cookies)
-        mirrors = req.json()['MIRRORS']
+            cookies=res.cookies,
+        )
+        mirrors = req.json()["MIRRORS"]
     except (json.decoder.JSONDecodeError, TypeError):
         reply += error
 
@@ -407,9 +423,9 @@ def androidfilehost(url: str) -> str:
         return reply
 
     for item in mirrors:
-        name = item['name']
-        dl_url = item['url']
-        reply += f'[{name}]({dl_url}) '
+        name = item["name"]
+        dl_url = item["url"]
+        reply += f"[{name}]({dl_url}) "
 
     return reply
 
@@ -419,9 +435,11 @@ def useragent():
 
     useragents = BeautifulSoup(
         requests.get(
-            'https://developers.whatismybrowser.com/'
-            'useragents/explore/operating_system_name/android/').content,
-        'lxml').findAll('td', {'class': 'useragent'})
+            "https://developers.whatismybrowser.com/"
+            "useragents/explore/operating_system_name/android/"
+        ).content,
+        "lxml",
+    ).findAll("td", {"class": "useragent"})
 
     user_agent = choice(useragents)
 
