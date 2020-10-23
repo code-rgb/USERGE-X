@@ -34,10 +34,8 @@ async def block_user(message: Message):
         await message.edit("Are you serious bruh? :/")
         await asyncio.sleep(2)
         await message.edit("Do you want me to block myself? :|", del_in=7)
-        return
     elif user_id in Config.SUDO_USERS:
         await message.err("Remove User From Sudo First", del_in=5)
-        return
     else:
         try:
             user = await userge.get_users(user_id)
@@ -69,7 +67,6 @@ async def unblock_user(message: Message):
         await message.edit("Are you serious bruh? :/")
         await asyncio.sleep(2)
         await message.edit("How am i even supposed to unblock myself? :|", del_in=7)
-        return
     else:
         try:
             user = await userge.get_users(user_id)
