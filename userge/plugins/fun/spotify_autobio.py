@@ -256,7 +256,7 @@ async def spotify_biox():
         elif r.status_code == 502:
             if save_spam("spotify", True):
                 string = (
-                    f"**[WARNING]**\n\nSpotify returned a Bad gateway, which means they have a problem on their "
+                    "**[WARNING]**\n\nSpotify returned a Bad gateway, which means they have a problem on their "
                     f"servers. The bot will continue to run but may not update the bio for a short time."
                 )
                 await CHANNEL.log(string)
@@ -265,7 +265,7 @@ async def spotify_biox():
         elif r.status_code == 503:
             if save_spam("spotify", True):
                 string = (
-                    f"**[WARNING]**\n\nSpotify said that the service is unavailable, which means they have a "
+                    "**[WARNING]**\n\nSpotify said that the service is unavailable, which means they have a "
                     f"problem on their servers. The bot will continue to run but may not update the bio for a "
                     f"short time."
                 )
@@ -274,7 +274,7 @@ async def spotify_biox():
         # https://github.com/spotify/web-api/issues/1280
         elif r.status_code == 404:
             if save_spam("spotify", True):
-                string = f"**[INFO]**\n\nSpotify returned a 404 error, which is a bug on their side."
+                string = "**[INFO]**\n\nSpotify returned a 404 error, which is a bug on their side."
                 await CHANNEL.log(string)
         # catch anything else
         else:
