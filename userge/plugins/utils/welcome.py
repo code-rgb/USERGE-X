@@ -92,7 +92,7 @@ async def setwel(msg: Message):
             "video",
         ],
         "examples": [
-            "{tr}setleft {flname}, Why you left :(\n" "or reply to supported media",
+            "{tr}setleft {flname}, Why you left :(\n", "or reply to supported media",
             "reply {tr}setleft to text message or supported media with text",
         ],
         "buttons": "<code>[name][buttonurl:link]</code> - <b>add a url button</b>\n"
