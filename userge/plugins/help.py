@@ -484,7 +484,7 @@ if userge.has_bot:
         if not media_:
             return
         MEDIA_TYPE = type_
-        if type(media_) == str:
+        if type(media_) is str:
             limit = 1 if type_ == "url_gif" else 5
             media_info = MediaInfo.parse(media_)
             for track in media_info.tracks:
