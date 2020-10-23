@@ -21,13 +21,12 @@ async def gizoo_(message: Message):
     if not text:
         await message.edit("```You didn't gave the text```", del_in=3)
         return
-    else:
-        try:
-            result = text(input_str)
-        except:
-            result = "Failed to gizoogle the text."
-        finally:
-            return await message.edit(result)
+    try:
+        result = text(input_str)
+    except:
+        result = "Failed to gizoogle the text."
+    finally:
+        return await message.edit(result)
 
 
 def text(input_text: str) -> str:
