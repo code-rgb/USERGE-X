@@ -38,7 +38,7 @@ async def reddit_fetch(message: Message):
     if "code" in r:
         code = r["code"]
         code_message = r["message"]
-        return await CHANNEL.log(f"*Error Code: {code}*\n`{code_message}`")
+        await CHANNEL.log(f"*Error Code: {code}*\n`{code_message}`")
     else:
         if "url" not in r:
             return await message.err(
