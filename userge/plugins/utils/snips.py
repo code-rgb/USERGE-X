@@ -25,7 +25,7 @@ async def _list_all_snips_(message: Message) -> None:
         all_snips += "• <code>${}</code>  {}\n".format(
             data["snip_name"], CHANNEL.get_link(data["snip_msg_id"])
         )
-    await message.edit(all_snips, del_in=20)
+    await message.edit(all_snips, del_in=50)
 
 
 @userge.on_cmd(
@@ -37,7 +37,7 @@ async def _list_all_snips_(message: Message) -> None:
     name="get_snip",
     trigger="",
     filter_me=True,
-    check_client=True,
+    #check_client=True,
     allow_channels=False,
 )
 async def get_snip(message: Message) -> None:
