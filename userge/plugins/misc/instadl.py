@@ -8,23 +8,29 @@
 #
 # All rights reserved.
 
+import asyncio
 import os
 import re
 import shutil
-import asyncio
 
-from natsort import natsorted
-from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
-from pyrogram.types import InputMediaPhoto, InputMediaVideo
-from pyrogram.errors import FloodWait
+from hachoir.parser import createParser
 from instaloader import (
-    Instaloader, Post, Profile, NodeIterator,
-    TwoFactorAuthRequiredException, InvalidArgumentException, BadCredentialsException,
-    ConnectionException, LoginRequiredException
+    BadCredentialsException,
+    ConnectionException,
+    Instaloader,
+    InvalidArgumentException,
+    LoginRequiredException,
+    NodeIterator,
+    Post,
+    Profile,
+    TwoFactorAuthRequiredException,
 )
+from natsort import natsorted
+from pyrogram.errors import FloodWait
+from pyrogram.types import InputMediaPhoto, InputMediaVideo
 
-from userge import userge, pool, Message, Config
+from userge import Config, Message, pool, userge
 from userge.plugins.misc.upload import get_thumb, remove_thumb
 
 
@@ -34,64 +40,68 @@ def get_caption(post: Post) -> str:
     caption = post.caption
     replace = '<a href="https://instagram.com/{}/">{}</a>'
     for mention in post.caption_mentions:
-        men = '@' + mention
+        men = "@" + mention
         val = replace.format(mention, men)
         caption = caption.replace(men, val)
-    header = f'♥️`{post.likes}`  💬`{post.comments}`'
+    header = f"♥️`{post.likes}`  💬`{post.comments}`"
     if post.is_video:
-        header += f'  👀`{post.video_view_count}`'
-    caption = header + '\n\n' + caption
+        header += f"  👀`{post.video_view_count}`"
+    caption = header + "\n\n" + caption
     return caption
 
 
-async def upload_to_tg(message: Message, dirname: str, post: Post) -> None:  # pylint: disable=R0912
+async def upload_to_tg(
+    message: Message, dirname: str, post: Post
+) -> None:  # pylint: disable=R0912
     """ uploads downloaded post from local to telegram servers """
     pto = (".jpg", ".jpeg", ".png", ".bmp")
     vdo = (".mkv", ".mp4", ".webm")
     paths = []
-    if post.typename == 'GraphSidecar':
+    if post.typename == "GraphSidecar":
         # upload media group
         captioned = False
         media = []
         for path in natsorted(os.listdir(dirname)):
-            ab_path = dirname + '/' + path
+            ab_path = dirname + "/" + path
             paths.append(ab_path)
             if str(path).endswith(pto):
                 if captioned:
                     media.append(InputMediaPhoto(media=ab_path))
                 else:
-                    media.append(InputMediaPhoto(media=ab_path, caption=get_caption(post)[:1023]))
+                    media.append(
+                        InputMediaPhoto(media=ab_path, caption=get_caption(post)[:1023])
+                    )
                     captioned = True
             elif str(path).endswith(vdo):
                 if captioned:
                     media.append(InputMediaVideo(media=ab_path))
                 else:
-                    media.append(InputMediaVideo(media=ab_path, caption=get_caption(post)[:1023]))
+                    media.append(
+                        InputMediaVideo(media=ab_path, caption=get_caption(post)[:1023])
+                    )
                     captioned = True
         if media:
             await message.client.send_media_group(message.chat.id, media)
             await message.client.send_media_group(Config.LOG_CHANNEL_ID, media)
 
-    if post.typename == 'GraphImage':
+    if post.typename == "GraphImage":
         # upload a photo
         for path in natsorted(os.listdir(dirname)):
             if str(path).endswith(pto):
-                ab_path = dirname + '/' + path
+                ab_path = dirname + "/" + path
                 paths.append(ab_path)
                 await message.client.send_photo(
-                    message.chat.id,
-                    ab_path,
-                    caption=get_caption(post)[:1023])
+                    message.chat.id, ab_path, caption=get_caption(post)[:1023]
+                )
                 await message.client.send_photo(
-                    Config.LOG_CHANNEL_ID,
-                    ab_path,
-                    caption=get_caption(post)[:1023])
+                    Config.LOG_CHANNEL_ID, ab_path, caption=get_caption(post)[:1023]
+                )
 
-    if post.typename == 'GraphVideo':
+    if post.typename == "GraphVideo":
         # upload a video
         for path in natsorted(os.listdir(dirname)):
             if str(path).endswith(vdo):
-                ab_path = dirname + '/' + path
+                ab_path = dirname + "/" + path
                 paths.append(ab_path)
                 thumb = await get_thumb(ab_path)
                 duration = 0
@@ -104,13 +114,15 @@ async def upload_to_tg(message: Message, dirname: str, post: Post) -> None:  # p
                     video=ab_path,
                     duration=duration,
                     thumb=thumb,
-                    caption=get_caption(post)[:1023])
+                    caption=get_caption(post)[:1023],
+                )
                 await message.client.send_video(
                     chat_id=Config.LOG_CHANNEL_ID,
                     video=ab_path,
                     duration=duration,
                     thumb=thumb,
-                    caption=get_caption(post)[:1023])
+                    caption=get_caption(post)[:1023],
+                )
                 await remove_thumb(thumb)
     for del_p in paths:
         if os.path.lexists(del_p):
@@ -144,22 +156,27 @@ def get_profile_posts(profile: Profile) -> NodeIterator[Post]:
 
 
 # pylint: disable=R0914, R0912, R0915, R0911
-@userge.on_cmd("postdl", about={
-    'header': "Instagram Post Downloader",
-    'description': "Download a post of a instagram user by passing post link or download all posts "
-                   "by passing username of instagram user (<code>requires flag</code>)",
-    'flags': {'-u': "use this to define a batch download of post"},
-    'usage': "{tr}postdl [flag] [link|username]",
-    'examples': [
-        "{tr}postdl https://www.instagram.com/××××××××××/",
-        "{tr}postdl https://www.instagram.com/×××××××××/igshid=×××××/",
-        "{tr}postdl -u [username]",
-        "{tr}postdl -u instagram"]})
+@userge.on_cmd(
+    "postdl",
+    about={
+        "header": "Instagram Post Downloader",
+        "description": "Download a post of a instagram user by passing post link or download all posts "
+        "by passing username of instagram user (<code>requires flag</code>)",
+        "flags": {"-u": "use this to define a batch download of post"},
+        "usage": "{tr}postdl [flag] [link|username]",
+        "examples": [
+            "{tr}postdl https://www.instagram.com/××××××××××/",
+            "{tr}postdl https://www.instagram.com/×××××××××/igshid=×××××/",
+            "{tr}postdl -u [username]",
+            "{tr}postdl -u instagram",
+        ],
+    },
+)
 async def _insta_post_downloader(message: Message):
     """ download instagram post """
-    await message.edit('`Setting up Configs. Please don\'t flood.`')
-    dirname = 'instadl_{target}'
-    filename = '{target}\'s_post'
+    await message.edit("`Setting up Configs. Please don't flood.`")
+    dirname = "instadl_{target}"
+    filename = "{target}'s_post"
     insta = Instaloader(
         dirname_pattern=dirname,
         filename_pattern=filename,
@@ -167,43 +184,54 @@ async def _insta_post_downloader(message: Message):
         download_geotags=False,
         download_comments=False,
         save_metadata=False,
-        compress_json=False
+        compress_json=False,
     )
     if Config.INSTA_ID and Config.INSTA_PASS:
         # try login
         try:
             insta.load_session_from_file(Config.INSTA_ID)
-            await message.edit('`Logged in with current Session`')
+            await message.edit("`Logged in with current Session`")
         except FileNotFoundError:
-            await message.edit('`Login required. Trying to login`')
+            await message.edit("`Login required. Trying to login`")
             try:
                 insta.login(Config.INSTA_ID, Config.INSTA_PASS)
             except InvalidArgumentException:
-                await message.err('Provided `INSTA_ID` is incorrect')
+                await message.err("Provided `INSTA_ID` is incorrect")
                 return
             except BadCredentialsException:
-                await message.err('Provided `INSTA_PASS` is incorrect')
+                await message.err("Provided `INSTA_PASS` is incorrect")
                 return
             except ConnectionException:
-                await message.err('Instagram refused to connect. Try again later or never'
-                                  ' (your choice)😒')
+                await message.err(
+                    "Instagram refused to connect. Try again later or never"
+                    " (your choice)😒"
+                )
                 return
             # This is a nightmare.
             except TwoFactorAuthRequiredException:
                 # Send a promt for 2FA code in saved messages
-                chat_type = 'Saved Messages' if message.from_user.is_self else 'Private Message'
-                text = ('[<b>2 Factor Authentication Detected</b>]\n'
-                        f'I have sent a message to {chat_type}. '
-                        'Please continue there and send your 2FA code.')
+                chat_type = (
+                    "Saved Messages" if message.from_user.is_self else "Private Message"
+                )
+                text = (
+                    "[<b>2 Factor Authentication Detected</b>]\n"
+                    f"I have sent a message to {chat_type}. "
+                    "Please continue there and send your 2FA code."
+                )
                 await message.edit(text)
                 for _ in range(4):
                     # initial convo with the user who sent message in pm.
                     # if user is_self convo in saved messages
                     # else in pm of sudo user
                     async with userge.conversation(message.from_user.id) as asker:
-                        asked = await asker.send_message('Please reply me with your 2FA code `int`')
+                        asked = await asker.send_message(
+                            "Please reply me with your 2FA code `int`"
+                        )
                         response = await asker.get_response(mark_read=True)
-                        if not (response.reply_to_message and response.reply_to_message.is_self):
+                        if not (
+                            response.reply_to_message
+                            and response.reply_to_message.is_self
+                        ):
                             # I said reply me.
                             continue
                         code = response.text
@@ -217,64 +245,76 @@ async def _insta_post_downloader(message: Message):
                         except BadCredentialsException as b_c_e:
                             await asked.err(b_c_e)
                         except InvalidArgumentException:
-                            await asked.edit('`No pending Login Found`')
+                            await asked.edit("`No pending Login Found`")
                             return
             else:
                 try:
                     insta.save_session_to_file()
                 except LoginRequiredException:
-                    await message.err('Failed to save session file, probably due to invalid login.')
+                    await message.err(
+                        "Failed to save session file, probably due to invalid login."
+                    )
                     await asyncio.sleep(5)
     else:
-        await message.edit('Login Credentials not found. `[NOTE]`: '
-                           '**You may not be able to download private contents or so**')
+        await message.edit(
+            "Login Credentials not found. `[NOTE]`: "
+            "**You may not be able to download private contents or so**"
+        )
         await asyncio.sleep(2)
 
-    url_patern = r'^https:\/\/www\.instagram\.com\/(p|tv|reel)\/([A-Za-z0-9\-_]*)\/(\?igshid=[a-zA-Z0-9]*)?$'
+    url_patern = r"^https:\/\/www\.instagram\.com\/(p|tv|reel)\/([A-Za-z0-9\-_]*)\/(\?igshid=[a-zA-Z0-9]*)?$"
     # pylint: disable=C0301
     match = re.search(url_patern, message.input_str)
 
-    if '-u' in message.flags:
+    if "-u" in message.flags:
         username = message.filtered_input_str
-        sent = await message.edit(f'`Fetching all posts of {username}`')
+        sent = await message.edit(f"`Fetching all posts of {username}`")
         profile = await get_profile(insta, username)
         for post in await get_profile_posts(profile):
             try:
                 await download_post(insta, post)
-                await upload_to_tg(message, dirname.format(target=post.owner_username), post)
+                await upload_to_tg(
+                    message, dirname.format(target=post.owner_username), post
+                )
             except FloodWait as f_w:
                 await asyncio.sleep(f_w.x + 10)
-                await upload_to_tg(message, dirname.format(target=post.owner_username), post)
+                await upload_to_tg(
+                    message, dirname.format(target=post.owner_username), post
+                )
             except (KeyError, LoginRequiredException):
-                await message.err('Private Content Login Required')
+                await message.err("Private Content Login Required")
                 return
             finally:
-                shutil.rmtree(dirname.format(target=post.owner_username), ignore_errors=True)
+                shutil.rmtree(
+                    dirname.format(target=post.owner_username), ignore_errors=True
+                )
         await sent.delete()
     elif match:
-        dtypes = {
-            'p': 'POST',
-            'tv': 'IGTV',
-            'reel': 'REELS'
-        }
+        dtypes = {"p": "POST", "tv": "IGTV", "reel": "REELS"}
         d_t = dtypes.get(match.group(1))
         if not d_t:
-            await message.err('Unsupported Format')
+            await message.err("Unsupported Format")
             return
-        sent = await message.edit(f'`Fetching {d_t} Content.`')
+        sent = await message.edit(f"`Fetching {d_t} Content.`")
         shortcode = match.group(2)
         post = await get_post(insta, shortcode)
         try:
             await download_post(insta, post)
-            await upload_to_tg(message, dirname.format(target=post.owner_username), post)
+            await upload_to_tg(
+                message, dirname.format(target=post.owner_username), post
+            )
         except (KeyError, LoginRequiredException):
             await message.err("Post is private. Login and try again")
             return
         except FloodWait as f_w:
             await asyncio.sleep(f_w.x + 5)
-            await upload_to_tg(message, dirname.format(target=post.owner_username), post)
+            await upload_to_tg(
+                message, dirname.format(target=post.owner_username), post
+            )
         finally:
-            shutil.rmtree(dirname.format(target=post.owner_username), ignore_errors=True)
+            shutil.rmtree(
+                dirname.format(target=post.owner_username), ignore_errors=True
+            )
         await sent.delete()
     else:
-        await message.err('`Invalid Input`')
+        await message.err("`Invalid Input`")

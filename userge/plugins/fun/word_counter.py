@@ -2,13 +2,17 @@
 
 import asyncio
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd("wordc", about={
-    'header': "Finds most 25 words used in last 1000 messages",
-    'usage': "{tr}wordc"},
-    allow_private=False)
+@userge.on_cmd(
+    "wordc",
+    about={
+        "header": "Finds most 25 words used in last 1000 messages",
+        "usage": "{tr}wordc",
+    },
+    allow_private=False,
+)
 async def word_count(message: Message):
     """ Finds most words used """
     words = custom()

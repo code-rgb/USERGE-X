@@ -6,38 +6,70 @@
 #
 # All rights reserved.
 
+import asyncio
 import os
 import random
-import asyncio
 from urllib.parse import quote_plus
 
 import aiofiles
-from selenium import webdriver
 from pyrogram.errors.exceptions.bad_request_400 import YouBlockedUser
+from selenium import webdriver
 
-from userge import userge, Message, Config
+from userge import Config, Message, userge
 
-CARBON = 'https://carbon.now.sh/?t={theme}&l={lang}&code={code}&bg={bg}'
+CARBON = "https://carbon.now.sh/?t={theme}&l={lang}&code={code}&bg={bg}"
 
 
-@userge.on_cmd("carbon", about={
-    'header': "create a carbon",
-    'flags': {
-        '-r': "red -> 0-255",
-        '-g': "green -> 0-255",
-        '-b': "blue -> 0-255",
-        '-a': "alpha -> 0-100"},
-    'usage': "{tr}carbon [flags] [theme] | [language] | [text | reply to msg]",
-    'examples': [
-        "{tr}carbon haha", "{tr}carbon vscode | hoho",
-        "{tr}carbon -r100 -g75 -b50 -a50 blackboard | hola"],
-    'themes': [
-        '3024-night', 'a11y-dark', 'blackboard', 'base16-dark', 'base16-light',
-        'cobalt', 'dracula', 'duotone-dark', 'hopscotch', 'lucario', 'material',
-        'monokai', 'night-owl', 'nord', 'oceanic-next', 'one-light', 'one-dark',
-        'panda-syntax', 'paraiso-dark', 'seti', 'shades-of-purple', 'solarized dark',
-        'solarized light', 'synthwave-84', 'twilight', 'verminal', 'vscode',
-        'yeti', 'zenburn']}, del_pre=True)
+@userge.on_cmd(
+    "carbon",
+    about={
+        "header": "create a carbon",
+        "flags": {
+            "-r": "red -> 0-255",
+            "-g": "green -> 0-255",
+            "-b": "blue -> 0-255",
+            "-a": "alpha -> 0-100",
+        },
+        "usage": "{tr}carbon [flags] [theme] | [language] | [text | reply to msg]",
+        "examples": [
+            "{tr}carbon haha",
+            "{tr}carbon vscode | hoho",
+            "{tr}carbon -r100 -g75 -b50 -a50 blackboard | hola",
+        ],
+        "themes": [
+            "3024-night",
+            "a11y-dark",
+            "blackboard",
+            "base16-dark",
+            "base16-light",
+            "cobalt",
+            "dracula",
+            "duotone-dark",
+            "hopscotch",
+            "lucario",
+            "material",
+            "monokai",
+            "night-owl",
+            "nord",
+            "oceanic-next",
+            "one-light",
+            "one-dark",
+            "panda-syntax",
+            "paraiso-dark",
+            "seti",
+            "shades-of-purple",
+            "solarized dark",
+            "solarized light",
+            "synthwave-84",
+            "twilight",
+            "verminal",
+            "vscode",
+            "yeti",
+            "zenburn",
+        ],
+    },
+    del_pre=True,
+)
 async def carbon_(message: Message):
     replied = message.reply_to_message
     if Config.GOOGLE_CHROME_BIN is None:
@@ -50,7 +82,7 @@ async def carbon_(message: Message):
             try:
                 await conv.send_message(text)
             except YouBlockedUser:
-                await message.edit('first **unblock** @CarbonNowShBot')
+                await message.edit("first **unblock** @CarbonNowShBot")
                 return
             response = await conv.get_response(mark_read=True)
             while not response.reply_markup:
@@ -63,34 +95,39 @@ async def carbon_(message: Message):
             file_id = response.document.file_id
             await asyncio.gather(
                 message.delete(),
-                userge.send_document(chat_id=message.chat.id,
-                                     document=file_id,
-                                     caption='`' + caption + '`',
-                                     reply_to_message_id=replied.message_id if replied else None)
+                userge.send_document(
+                    chat_id=message.chat.id,
+                    document=file_id,
+                    caption="`" + caption + "`",
+                    reply_to_message_id=replied.message_id if replied else None,
+                ),
             )
     else:
         input_str = message.filtered_input_str
-        theme = 'seti'
-        lang = 'auto'
-        red = message.flags.get('r', random.randint(0, 255))
-        green = message.flags.get('g', random.randint(0, 255))
-        blue = message.flags.get('b', random.randint(0, 255))
-        alpha = message.flags.get('a', random.randint(0, 100))
+        theme = "seti"
+        lang = "auto"
+        red = message.flags.get("r", random.randint(0, 255))
+        green = message.flags.get("g", random.randint(0, 255))
+        blue = message.flags.get("b", random.randint(0, 255))
+        alpha = message.flags.get("a", random.randint(0, 100))
         bg_ = f"rgba({red}, {green}, {blue}, {alpha})"
-        if replied and (replied.text
-                        or (replied.document and 'text' in replied.document.mime_type)):
+        if replied and (
+            replied.text or (replied.document and "text" in replied.document.mime_type)
+        ):
             message_id = replied.message_id
             if replied.document:
                 await message.edit("`Downloading File...`")
-                path_ = await message.client.download_media(replied, file_name=Config.DOWN_PATH)
+                path_ = await message.client.download_media(
+                    replied, file_name=Config.DOWN_PATH
+                )
                 async with aiofiles.open(path_) as file_:
                     code = await file_.read()
                 os.remove(path_)
             else:
                 code = replied.text
             if input_str:
-                if '|' in input_str:
-                    args = input_str.split('|')
+                if "|" in input_str:
+                    args = input_str.split("|")
                     if len(args) == 2:
                         theme = args[0].strip()
                         lang = args[1].strip()
@@ -98,8 +135,8 @@ async def carbon_(message: Message):
                     theme = input_str
         elif input_str:
             message_id = message.message_id
-            if '|' in input_str:
-                args = input_str.split('|')
+            if "|" in input_str:
+                args = input_str.split("|")
                 if len(args) == 3:
                     theme = args[0].strip()
                     lang = args[1].strip()
@@ -129,19 +166,20 @@ async def carbon_(message: Message):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-gpu")
-        prefs = {'download.default_directory': Config.DOWN_PATH}
-        chrome_options.add_experimental_option('prefs', prefs)
+        prefs = {"download.default_directory": Config.DOWN_PATH}
+        chrome_options.add_experimental_option("prefs", prefs)
         driver = webdriver.Chrome(chrome_options=chrome_options)
         driver.get(url)
         await message.edit("`Processing... 40%`")
-        driver.command_executor._commands["send_command"] = (  # pylint: disable=protected-access
-            "POST", '/session/$sessionId/chromium/send_command')
+        driver.command_executor._commands[
+            "send_command"
+        ] = (  # pylint: disable=protected-access
+            "POST",
+            "/session/$sessionId/chromium/send_command",
+        )
         params = {
-            'cmd': 'Page.setDownloadBehavior',
-            'params': {
-                'behavior': 'allow',
-                'downloadPath': Config.DOWN_PATH
-            }
+            "cmd": "Page.setDownloadBehavior",
+            "params": {"behavior": "allow", "downloadPath": Config.DOWN_PATH},
         }
         driver.execute("send_command", params)
         # driver.find_element_by_xpath("//button[contains(text(),'Export')]").click()
@@ -158,9 +196,11 @@ async def carbon_(message: Message):
         await message.edit("`Uploading Carbon...`")
         await asyncio.gather(
             message.delete(),
-            message.client.send_photo(chat_id=message.chat.id,
-                                      photo=carbon_path,
-                                      reply_to_message_id=message_id)
+            message.client.send_photo(
+                chat_id=message.chat.id,
+                photo=carbon_path,
+                reply_to_message_id=message_id,
+            ),
         )
         os.remove(carbon_path)
         driver.quit()

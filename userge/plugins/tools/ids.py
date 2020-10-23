@@ -6,12 +6,16 @@
 #
 # All rights reserved.
 
-from userge import userge, Message
+from userge import Message, userge
 
 
-@userge.on_cmd("ids", about={
-    'header': "display ids",
-    'usage': "reply {tr}ids any message, file or just send this command"})
+@userge.on_cmd(
+    "ids",
+    about={
+        "header": "display ids",
+        "usage": "reply {tr}ids any message, file or just send this command",
+    },
+)
 async def getids(message: Message):
     msg = message.reply_to_message or message
     out_str = f"👥 **Chat ID** : `{(msg.forward_from_chat or msg.chat).id}`\n"

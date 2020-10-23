@@ -1,22 +1,27 @@
 """Block/Unblock Targetted User!"""
 
-# Plugin By - XlayerCharon[XCB] X github.com/code-rgb 
+# Plugin By - XlayerCharon[XCB] X github.com/code-rgb
 # TG ~>>//@CharonCB21 X //@DeletedUser420
 
 
 import asyncio
-from userge import userge, Message, Config
-from userge.utils import mention_html
+
 from pyrogram.errors import BadRequest
 
+from userge import Config, Message, userge
+from userge.utils import mention_html
 
 CHANNEL = userge.getCLogger(__name__)
 
 
-@userge.on_cmd("block", about={
-    'header': "Blocks a User!",
-    'usage': "{tr}block [ID] or [Reply To User]",
-    'examples': "{tr}block @CharonCB21"})
+@userge.on_cmd(
+    "block",
+    about={
+        "header": "Blocks a User!",
+        "usage": "{tr}block [ID] or [Reply To User]",
+        "examples": "{tr}block @CharonCB21",
+    },
+)
 async def block_user(message: Message):
     """ Blocks a User! """
     reply = message.reply_to_message
@@ -43,14 +48,18 @@ async def block_user(message: Message):
         blocked_msg = action_msg(user, "BLOCKED")
         await CHANNEL.log(blocked_msg)
         await message.edit(blocked_msg, del_in=10)
-        
 
-@userge.on_cmd("unblock", about={
-    'header': "Unblocks a User!",
-    'usage': "{tr}unblock [ID] or [Reply To User]",
-    'examples': "{tr}unblock @CharonCB21"})
+
+@userge.on_cmd(
+    "unblock",
+    about={
+        "header": "Unblocks a User!",
+        "usage": "{tr}unblock [ID] or [Reply To User]",
+        "examples": "{tr}unblock @CharonCB21",
+    },
+)
 async def unblock_user(message: Message):
-    """ Unblocks a User! """ 
+    """ Unblocks a User! """
     reply = message.reply_to_message
     if not (reply or message.input_str):
         await message.err("Reply to a user or give ID to unblock him/her!", del_in=5)
