@@ -413,7 +413,7 @@ async def now_playing_(message: Message):
 
 
 @userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
-async def now_playing_(message: Message):
+async def sp_info_(message: Message):
     """Spotify Device Info"""
     global database
     # =====================================GET_204=====================================================#
