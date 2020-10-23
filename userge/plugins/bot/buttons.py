@@ -63,9 +63,6 @@ async def create_button(msg: Message):
         await msg.delete()
 
 
-""" Create Buttons Through Inline Bots """
-
-
 @userge.on_cmd(
     "ibutton",
     about={
@@ -79,6 +76,7 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
+    """ Create Buttons Through Inline Bots """
     if Config.BOT_TOKEN is None:
         await message.err(
             "First Create a Inline Bot via @Botfather to Create Buttons..."

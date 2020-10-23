@@ -1,4 +1,5 @@
 import io
+import os
 import textwrap
 
 from PIL import Image, ImageDraw, ImageFont
@@ -6,7 +7,6 @@ from PIL import Image, ImageDraw, ImageFont
 from userge import Message, userge
 
 
-# from ubot.micro_bot import ldr
 @userge.on_cmd(
     "slet",
     about={
@@ -79,7 +79,6 @@ async def sticklet(message: Message):
 
     # cleanup
     try:
-        os.remove(font_file)
         os.remove(image_name)
     except Exception:
         pass
