@@ -65,7 +65,7 @@ async def butts(message: Message):
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
-    async def alive_callback(_, c_q: CallbackQuery):
+    async def age_verification_true(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
@@ -96,7 +96,7 @@ if userge.has_bot:
             return
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
-    async def alive_callback(_, c_q: CallbackQuery):
+    async def age_verification_false(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
@@ -124,7 +124,7 @@ if userge.has_bot:
             return
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
-    async def alive_callback(_, c_q: CallbackQuery):
+    async def chg_of_decision_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
