@@ -287,7 +287,7 @@ async def spotify_biox():
             )
             LOG.error(f"Spotify, error {str(r.status_code)}, text: {r.text}")
             # stop the whole program since I dont know what happens here and this is the safest thing we can do
-            SPOTIFY_MODE = False  # TODO check this
+            Config.SPOTIFY_MODE = False  # TODO check this
         # TELEGRAM
         try:
             # full needed, since we dont get a bio with the normal request
