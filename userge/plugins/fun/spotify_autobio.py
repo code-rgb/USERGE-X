@@ -209,8 +209,8 @@ async def spotify_biox():
                 if save_spam("spotify", True):
                     # currently item is not passed when the user plays a podcast
                     string = (
-                        f"**[INFO]**\n\nThe playback {received['currently_playing_type']} didn't gave me any "
-                        f"additional information, so I skipped updating the bio."
+                        f"**[INFO]**\n\nThe playback {received['currently_playing_type']}"
+                        " didn't gave me any additional information, so I skipped updating the bio."
                     )
                     await CHANNEL.log(string)
 
@@ -219,7 +219,7 @@ async def spotify_biox():
             to_wait = r.headers["Retry-After"]
             LOG.error(f"Spotify, have to wait for {str(to_wait)}")
             await CHANNEL.log(
-                f"**[WARNING]**\n\nI caught a spotify api limit. I shall sleep for "
+                "**[WARNING]**\n\nI caught a spotify api limit. I shall sleep for "
                 f"{str(to_wait)} seconds until I refresh again"
             )
             skip = True
@@ -257,7 +257,7 @@ async def spotify_biox():
             if save_spam("spotify", True):
                 string = (
                     "**[WARNING]**\n\nSpotify returned a Bad gateway, which means they have a problem on their "
-                    f"servers. The bot will continue to run but may not update the bio for a short time."
+                    "servers. The bot will continue to run but may not update the bio for a short time."
                 )
                 await CHANNEL.log(string)
         # 503 means service unavailable, its an issue on spotify site which we can do nothing about. 30 seconds wait
@@ -266,8 +266,8 @@ async def spotify_biox():
             if save_spam("spotify", True):
                 string = (
                     "**[WARNING]**\n\nSpotify said that the service is unavailable, which means they have a "
-                    f"problem on their servers. The bot will continue to run but may not update the bio for a "
-                    f"short time."
+                    "problem on their servers. The bot will continue to run but may not update the bio for a "
+                    "short time."
                 )
                 await CHANNEL.log(string)
         # 404 is a spotify error which isn't supposed to happen (since our URL is correct). Track the issue here:
@@ -347,8 +347,8 @@ async def spotify_biox():
                         except AboutTooLong:
                             if save_spam("telegram", True):
                                 stringy = (
-                                    f"**[WARNING]**\n\nThe biography I tried to insert was too long. In order "
-                                    f"to not let that happen again in the future, please read the part about OFFSET "
+                                    "**[WARNING]**\n\nThe biography I tried to insert was too long. In order "
+                                    "to not let that happen again in the future, please read the part about OFFSET "
                                     f"in the constants. Anyway, here is the bio I tried to insert:\n\n{new_bio}"
                                 )
                                 await CHANNEL.log(stringy)
@@ -356,7 +356,7 @@ async def spotify_biox():
                 if not new_bio:
                     if save_spam("telegram", True):
                         to_send = (
-                            f"**[INFO]**\n\nThe current track exceeded the character limit, so the bio wasn't "
+                            "**[INFO]**\n\nThe current track exceeded the character limit, so the bio wasn't "
                             f"updated.\n\n Track: {title}\nInterpret: {interpret}"
                         )
                         await CHANNEL.log(to_send)
@@ -386,7 +386,7 @@ async def spotify_biox():
             to_wait = e.seconds
             LOG.error(f"to wait for {str(to_wait)}")
             await CHANNEL.log(
-                f"**[WARNING]**\n\nI caught a telegram api limit. I shall sleep "
+                "**[WARNING]**\n\nI caught a telegram api limit. I shall sleep "
                 f"{str(to_wait)} seconds until I refresh again"
             )
             skip = True
