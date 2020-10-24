@@ -1,6 +1,6 @@
-
 from userge import Message, userge
 from userge.utils import mention_html
+
 
 @userge.on_cmd(
     "admins",
@@ -26,7 +26,9 @@ async def mentionadmins(message: Message):
     show_id = "-id" in flags
     if not chat_id:
         chat_id = message.chat.id
-    mentions = "<b>Admins in {}</b>\n".format((await message.client.get_chat(chat_id)).title)
+    mentions = "<b>Admins in {}</b>\n\n".format(
+        (await message.client.get_chat(chat_id)).title
+    )
     try:
         async for x in message.client.iter_chat_members(
             chat_id=chat_id, filter="administrators"
@@ -63,6 +65,4 @@ async def mentionadmins(message: Message):
         mentions += f"{owner_}\n{admins_}{bots_}"
     except Exception as e:
         mentions += " " + str(e) + "\n"
-    await message.edit(
-        mentions, disable_web_page_preview=True
-    )
+    await message.edit(mentions, disable_web_page_preview=True)
