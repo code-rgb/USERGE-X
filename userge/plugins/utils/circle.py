@@ -9,7 +9,7 @@ import shutil
 from pymediainfo import MediaInfo
 
 from userge import Message, userge
-from userge.utils import thumb_from_audio
+from userge.utils import thumb_from_audio, runcmd
 
 CACHE = "userge/xcache/circle"
 PATH = os.path.join(CACHE, "temp_vid.mp4")
@@ -44,7 +44,7 @@ async def video_note(message: Message):
                 width = track.width
         if aspect_ratio != 1:
             crop_by = width if (height > width) else height
-            os.system(f'ffmpeg -i {note} -vf "crop={crop_by}:{crop_by}" {PATH}')
+            await runcmd(f'ffmpeg -i {note} -vf "crop={crop_by}:{crop_by}" {PATH}')
             os.remove(note)
         else:
             os.rename(note, PATH)
@@ -61,8 +61,8 @@ async def video_note(message: Message):
         if thumb:
             os.rename(thumb, thumb_loc)
         else:
-            thumb_from_audio(audio_loc, thumb_loc)
-        os.system(
+            await thumb_from_audio(audio_loc, thumb_loc)
+        await runcmd(
             f"ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale='iw-mod (iw,2)':'ih-mod(ih,2)',format=yuv420p\" -shortest -movflags +faststart {PATH}"
         )
     if os.path.exists(PATH):
