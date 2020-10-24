@@ -58,7 +58,9 @@ async def mentionadmins(message: Message):
                     elif username:
                         admins_ += f"\n • [{full_name}](https://t.me/{username})"
                     else:
-                        admins_ += f"\n • [{full_name}](tg://openmessage?user_id={u_id})"
+                        admins_ += (
+                            f"\n • [{full_name}](tg://openmessage?user_id={u_id})"
+                        )
                     if show_id:
                         admins_ += f"  `{u_id}`"
 
