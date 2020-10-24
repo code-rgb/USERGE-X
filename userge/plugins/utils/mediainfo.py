@@ -21,7 +21,6 @@ TYPES = [
     "photo",
     "sticker",
 ]
-X_MEDIA = None
 
 
 @userge.on_cmd("mediainfo", about={"header": "Get Detailed Info About Replied Media"})
@@ -32,12 +31,13 @@ async def mediainfo(message: Message):
         await message.err("reply to media first", del_in=5)
         return
     process = await message.edit("`Processing ...`")
+    x_media = None
     for media_type in TYPES:
         if reply[media_type]:
-            X_MEDIA = media_type
+            x_media = media_type
             break
-    if not X_MEDIA:
-        return await message.err("Reply To a Vaild Media Format", del_in=5)
+    if not x_media:
+        return await message.err("Reply To a Vaild Media Format", del_in=3)
     file_path = await reply.download()
     output_ = await runcmd(f"mediainfo {file_path}")
     out = output_[0] if len(output_) != 0 else None
@@ -45,20 +45,20 @@ async def mediainfo(message: Message):
         out = "Not Supported"
     body_text = f"""<br>
 <h2>JSON</h2>
-<code>{reply[X_MEDIA]}</code>
+<code>{reply[x_media]}</code>
 <br>
 <br>
 <h2>DETAILS</h2>
 <code>{out}</code>
 """
-    link = post_to_telegraph(f"pyrogram.types.{X_MEDIA}", body_text)
+    link = post_to_telegraph(f"pyrogram.types.{x_media}", body_text)
     if message.client.is_bot:
         markup = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text=X_MEDIA.upper(), url=link)]]
+            [[InlineKeyboardButton(text=x_media.upper(), url=link)]]
         )
         await process.edit_text("ℹ️  <b>MEDIA INFO</b>", reply_markup=markup)
 
     else:
-        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{X_MEDIA.upper()}]({link})</b>")
+        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{x_media.upper()}]({link})</b>")
 
     os.remove(file_path)
