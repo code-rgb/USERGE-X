@@ -223,7 +223,7 @@ async def manga_(message: Message):
             return ""
         title = manga.get("title")
         japanese = manga.get("title_japanese")
-        type = manga.get("type")
+        manga_type = manga.get("type")
         status = manga.get("status")
         score = manga.get("score")
         volumes = manga.get("volumes")
@@ -239,7 +239,7 @@ async def manga_(message: Message):
         url_img = url
         url_img += "/pics"
         rep = f"<b>{title} ({japanese})</b>\n"
-        rep += f"<b>Type:</b> <code>{type}</code>\n"
+        rep += f"<b>Type:</b> <code>{manga_type}</code>\n"
         rep += f"<b>Status:</b> <code>{status}</code>\n"
         rep += f"<b>Genres:</b> <code>{genres}</code>\n"
         rep += f"<b>Score:</b> <code>{score}</code>\n"
