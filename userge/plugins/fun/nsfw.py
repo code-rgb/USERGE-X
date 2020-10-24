@@ -1,8 +1,3 @@
-import asyncio
-import os
-import urllib
-
-import requests
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import (
@@ -12,7 +7,7 @@ from pyrogram.types import (
     InputMediaPhoto,
 )
 
-from userge import Config, Message, userge
+from userge import Config, userge
 from userge.utils import get_file_id_and_ref
 
 
@@ -26,40 +21,6 @@ async def age_verification(msg):
         chat_id=msg.chat.id, query_id=x.query_id, result_id=x.results[0].id
     )
     return True
-
-
-@userge.on_cmd("boobs", about={"header": "Find some Bob", "usage": "{tr}boobs"})
-async def boobs(message: Message):
-    if await age_verification(message):
-        return
-    if not os.path.isdir(Config.DOWN_PATH):
-        os.makedirs(Config.DOWN_PATH)
-    pic_loc = os.path.join(Config.DOWN_PATH, "bobs.jpg")
-    await message.edit("`Finding some big bobs 🧐...`")
-    await asyncio.sleep(0.5)
-    await message.edit("`Sending some big bobs 🌚...`")
-    nsfw = requests.get("http://api.oboobs.ru/noise/1").json()[0]["preview"]
-    urllib.request.urlretrieve("http://media.oboobs.ru/{}".format(nsfw), pic_loc)
-    await message.client.send_photo(message.chat.id, photo=pic_loc)
-    os.remove(pic_loc)
-    await message.delete()
-
-
-@userge.on_cmd("butts", about={"header": "Find some Butts", "usage": "{tr}butts"})
-async def butts(message: Message):
-    if await age_verification(message):
-        return
-    if not os.path.isdir(Config.DOWN_PATH):
-        os.makedirs(Config.DOWN_PATH)
-    pic_loc = os.path.join(Config.DOWN_PATH, "bobs.jpg")
-    await message.edit("`Finding some beautiful butts 🧐...`")
-    await asyncio.sleep(0.5)
-    await message.edit("`Sending some beautiful butts 🌚...`")
-    nsfw = requests.get("http://api.obutts.ru/noise/1").json()[0]["preview"]
-    urllib.request.urlretrieve("http://media.obutts.ru/{}".format(nsfw), pic_loc)
-    await message.client.send_photo(message.chat.id, photo=pic_loc)
-    os.remove(pic_loc)
-    await message.delete()
 
 
 if userge.has_bot:
