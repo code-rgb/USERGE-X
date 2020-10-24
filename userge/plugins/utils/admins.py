@@ -1,6 +1,7 @@
+import html
+
 from userge import Message, userge
 from userge.utils import mention_html
-import html
 
 
 @userge.on_cmd(
@@ -43,9 +44,13 @@ async def mentionadmins(message: Message):
                 if men_admins or men_creator:
                     owner_ += f"\n 👑 {mention_html(u_id, full_name)}"
                 elif username:
-                    owner_ += u'\n 👑 [{}](https://t.me/{})'.format(html.escape(full_name), username)
+                    owner_ += "\n 👑 [{}](https://t.me/{})".format(
+                        html.escape(full_name), username
+                    )
                 else:
-                    owner_ += u'\n 👑 [{}](tg://openmessage?user_id={})'.format(html.escape(full_name), u_id)
+                    owner_ += "\n 👑 [{}](tg://openmessage?user_id={})".format(
+                        html.escape(full_name), u_id
+                    )
                 if show_id:
                     owner_ += f"  `{u_id}`"
             elif status == "administrator":
@@ -57,10 +62,12 @@ async def mentionadmins(message: Message):
                     if men_admins:
                         admins_ += f"\n • {mention_html(u_id, full_name)}"
                     elif username:
-                        admins_ += u'\n • [{}](https://t.me/{})'.format(html.escape(full_name), username)
+                        admins_ += "\n • [{}](https://t.me/{})".format(
+                            html.escape(full_name), username
+                        )
                     else:
-                        admins_ += (
-                            u'\n • [{}](tg://openmessage?user_id={})'.format(html.escape(full_name), u_id)
+                        admins_ += "\n • [{}](tg://openmessage?user_id={})".format(
+                            html.escape(full_name), u_id
                         )
                     if show_id:
                         admins_ += f"  `{u_id}`"
