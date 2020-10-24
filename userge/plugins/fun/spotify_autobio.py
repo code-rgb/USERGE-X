@@ -442,10 +442,9 @@ async def sp_info_(message: Message):
             get_name = track["name"]
             with open("status_recent_played_song.txt", "a") as sf:
                 sf.write("• __" + get_name + "__" + "\n")
-        f = open("status_recent_played_song.txt", "r+")
-        recent_p = f.read()
-        f.truncate(0)
-
+        with open("status_recent_played_song.txt", "r+") as f:
+            recent_p = f.read()
+            f.truncate(0)
         device_info = device.json()
         g_dlist = device_info["devices"][0]
         device_name = g_dlist["name"]
@@ -502,9 +501,9 @@ async def sp_recents_(message: Message):
         with open("userge/xcache/recent_played_song.txt", "a") as f:
             f.write("• [" + get_name + "]" + "(" + get_link + ")" + "\n")
     await message.edit("`Getting recent played songs...`")
-    f = open("userge/xcache/recent_played_song.txt", "r+")
-    recent = f.read()
-    f.truncate(0)
+    with open("userge/xcache/recent_played_song.txt", "r+") as f:
+        recent = f.read()
+        f.truncate(0)
     await message.edit(
         "🎵 **Recently played songs:**\n" + recent, disable_web_page_preview=True
     )
