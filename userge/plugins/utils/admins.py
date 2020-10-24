@@ -1,5 +1,6 @@
 from userge import Message, userge
 from userge.utils import mention_html
+import html
 
 
 @userge.on_cmd(
@@ -42,9 +43,9 @@ async def mentionadmins(message: Message):
                 if men_admins or men_creator:
                     owner_ += f"\n 👑 {mention_html(u_id, full_name)}"
                 elif username:
-                    owner_ += f"\n 👑 [{full_name}](https://t.me/{username})"
+                    owner_ += u'\n 👑 [{}](https://t.me/{})'.format(html.escape(full_name), username)
                 else:
-                    owner_ += f"\n 👑 [{full_name}](tg://openmessage?user_id={u_id})"
+                    owner_ += u'\n 👑 [{}](tg://openmessage?user_id={})'.format(html.escape(full_name), u_id)
                 if show_id:
                     owner_ += f"  `{u_id}`"
             elif status == "administrator":
@@ -56,15 +57,15 @@ async def mentionadmins(message: Message):
                     if men_admins:
                         admins_ += f"\n • {mention_html(u_id, full_name)}"
                     elif username:
-                        admins_ += f"\n • [{full_name}](https://t.me/{username})"
+                        admins_ += u'\n • [{}](https://t.me/{})'.format(html.escape(full_name), username)
                     else:
                         admins_ += (
-                            f"\n • [{full_name}](tg://openmessage?user_id={u_id})"
+                            u'\n • [{}](tg://openmessage?user_id={})'.format(html.escape(full_name), u_id)
                         )
                     if show_id:
                         admins_ += f"  `{u_id}`"
 
-        mentions += f"{owner_}{admins_}{bots_}"
+        mentions += f"{owner_}\n{admins_}{bots_}"
     except Exception as e:
         mentions += " " + str(e) + "\n"
     await message.edit(mentions, disable_web_page_preview=True)
