@@ -1,13 +1,6 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 
 from userge import Message, userge
-
+from userge.utils import mention_html
 
 @userge.on_cmd(
     "admins",
@@ -23,7 +16,8 @@ from userge import Message, userge
     allow_channels=False,
 )
 async def mentionadmins(message: Message):
-    mentions = "🛡 **Admin List** 🛡\n"
+    owner_ = ""
+    admins_ = ""
     chat_id = message.filtered_input_str
     flags = message.flags
     men_admins = "-m" in flags
@@ -31,6 +25,7 @@ async def mentionadmins(message: Message):
     show_id = "-id" in flags
     if not chat_id:
         chat_id = message.chat.id
+    mentions = "<b>Admins in {}</b>\n\n".format((await message.client.get_chat(chat_id)).title)
     try:
         async for x in message.client.iter_chat_members(
             chat_id=chat_id, filter="administrators"
@@ -41,25 +36,26 @@ async def mentionadmins(message: Message):
             full_name = (await message.client.get_user_dict(u_id))["flname"]
             if status == "creator":
                 if men_admins or men_creator:
-                    mentions += f"\n 👑 [{full_name}](tg://user?id={u_id})"
+                    owner_ += f"\n 👑 {mention_html(u_id, full_name)}"
                 elif username:
-                    mentions += f"\n 👑 [{full_name}](https://t.me/{username})"
+                    owner_ += f"\n 👑 [{full_name}](https://t.me/{username})"
                 else:
-                    mentions += f"\n 👑 {full_name}"
+                    owner_ += f"\n 👑 [{full_name}](tg://openmessage?user_id={u_id})"
                 if show_id:
-                    mentions += f" `{u_id}`"
+                    owner_ += f"👑 `{u_id}`"
             elif status == "administrator":
                 if men_admins:
-                    mentions += f"\n >> [{full_name}](tg://user?id={u_id})"
+                    admins_ += f"\n • {mention_html(u_id, full_name)}"
                 elif username:
-                    mentions += f"\n >> [{full_name}](https://t.me/{username})"
+                    admins_ += f"\n • [{full_name}](https://t.me/{username})"
                 else:
-                    mentions += f"\n >> {full_name}"
+                    admins_ += f"\n • [{full_name}](tg://openmessage?user_id={u_id})"
                 if show_id:
-                    mentions += f" `{u_id}`"
+                    admins_ += f"• `{u_id}`"
+
+        mentions += f"{owner_}\n{admins_}"
     except Exception as e:
         mentions += " " + str(e) + "\n"
-    await message.delete()
-    await message.client.send_message(
-        chat_id=message.chat.id, text=mentions, disable_web_page_preview=True
+    await message.edit(
+        mentions, disable_web_page_preview=True
     )
