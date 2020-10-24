@@ -9,7 +9,7 @@ import shutil
 from pymediainfo import MediaInfo
 
 from userge import Message, userge
-from userge.utils import thumb_from_audio, runcmd
+from userge.utils import runcmd, thumb_from_audio
 
 CACHE = "userge/xcache/circle"
 PATH = os.path.join(CACHE, "temp_vid.mp4")
