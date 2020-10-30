@@ -1,12 +1,5 @@
 """ setup gban """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved
 
 import asyncio
 import json
@@ -14,9 +7,10 @@ from typing import Union
 
 import aiohttp
 import spamwatch
-from pyrogram.errors.exceptions.bad_request_400 import (
+from pyrogram.errors import (
     ChatAdminRequired,
     UserAdminInvalid,
+    PeerIdInvalid
 )
 from spamwatch.types import Ban
 
@@ -166,7 +160,21 @@ async def ungban_user(message: Message):
     if not user_id:
         await message.err("user-id not found")
         return
-    get_mem = await message.client.get_user_dict(user_id)
+    try:
+        get_mem = await message.client.get_user_dict(user_id)
+    except PeerIdInvalid:
+        await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
+        deleted_user_ = f"\nRemoved one [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
+        await message.edit(
+            r"\\**#UnGbanned_User**//" + "\n"
+            + deleted_user_
+        )
+        await CHANNEL.log(
+            r"\\**#Antispam_Log**//" + "\n"
+            + deleted_user_
+        )
+        return
+
     firstname = get_mem["fname"]
     user_id = get_mem["id"]
     found = await GBAN_USER_BASE.find_one({"user_id": user_id})
@@ -206,19 +214,31 @@ async def ungban_user(message: Message):
 async def list_gbanned(message: Message):
     """ vies gbanned users """
     msg = ""
+    bad_users = ""
     async for c in GBAN_USER_BASE.find():
-        msg += (
-            "**User** : "
-            + str(c["firstname"])
-            + "-> with **User ID** -> "
-            + str(c["user_id"])
-            + " is **GBanned for** : "
-            + str(c["reason"])
-            + "\n\n"
-        )
+        try:
+            msg += (
+                "**User** : "
+                + str(c["firstname"])
+                + "-> with **User ID** -> "
+                + str(c["user_id"])
+                + " is **GBanned for** : "
+                + str(c["reason"])
+                + "\n\n"
+            )
+        except KeyError:
+            await GBAN_USER_BASE.delete_one(c)
+            bad_users += ("**User** : "
+                + str(c["firstname"])
+                + "-> with **User ID** -> "
+                + str(c["user_id"]))
+           
     await message.edit_or_send_as_file(
         f"**--Globally Banned Users List--**\n\n{msg}" if msg else "`glist empty!`"
     )
+    if bad_users:
+        await CHANNEL.log("**These users are removed from gban list due to some errors in gban reason!"
+        " you can ban them again manually**\n" + bad_users)
 
 
 @userge.on_cmd(
