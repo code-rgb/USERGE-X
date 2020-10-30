@@ -7,11 +7,7 @@ from typing import Union
 
 import aiohttp
 import spamwatch
-from pyrogram.errors import (
-    ChatAdminRequired,
-    UserAdminInvalid,
-    PeerIdInvalid
-)
+from pyrogram.errors import ChatAdminRequired, PeerIdInvalid, UserAdminInvalid
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
@@ -165,14 +161,8 @@ async def ungban_user(message: Message):
     except PeerIdInvalid:
         await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
         deleted_user_ = f"\nRemoved one [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
-        await message.edit(
-            r"\\**#UnGbanned_User**//" + "\n"
-            + deleted_user_
-        )
-        await CHANNEL.log(
-            r"\\**#Antispam_Log**//" + "\n"
-            + deleted_user_
-        )
+        await message.edit(r"\\**#UnGbanned_User**//" + "\n" + deleted_user_)
+        await CHANNEL.log(r"\\**#Antispam_Log**//" + "\n" + deleted_user_)
         return
 
     firstname = get_mem["fname"]
@@ -228,17 +218,21 @@ async def list_gbanned(message: Message):
             )
         except KeyError:
             await GBAN_USER_BASE.delete_one(c)
-            bad_users += ("**User** : "
+            bad_users += (
+                "**User** : "
                 + str(c["firstname"])
                 + "-> with **User ID** -> "
-                + str(c["user_id"]))
-           
+                + str(c["user_id"])
+            )
+
     await message.edit_or_send_as_file(
         f"**--Globally Banned Users List--**\n\n{msg}" if msg else "`glist empty!`"
     )
     if bad_users:
-        await CHANNEL.log("**These users are removed from gban list due to some errors in gban reason!"
-        " you can ban them again manually**\n" + bad_users)
+        await CHANNEL.log(
+            "**These users are removed from gban list due to some errors in gban reason!"
+            " you can ban them again manually**\n" + bad_users
+        )
 
 
 @userge.on_cmd(
