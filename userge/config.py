@@ -97,6 +97,7 @@ class Config:
     pmlog_grp = os.environ.get("PM_LOG_GROUP_ID")
     PM_LOG_GROUP_ID = int(pmlog_grp) if pmlog_grp else None
     PM_LOGGING = False
+    DEEP_AI = os.environ.get("DEEP_AI", None)
     
 
 def get_version() -> str:
