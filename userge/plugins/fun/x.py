@@ -23,7 +23,7 @@ async def usx_(message: Message):
         path = "resources/ghosts.png"
     else:
         path = "resources/logo.png"
-        
+
     replied = message.reply_to_message
     await message.edit("𝐗")
     a = []
