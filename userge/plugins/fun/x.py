@@ -13,7 +13,7 @@ from userge import Config, Message, userge
 
 @userge.on_cmd(
     "x",
-    about={"header": "USERGE-X", "flags": {"-alt": "To get inverted X"}},
+    about={"header": "USERGE-X", "flags": {"-alt": "To get inverted X", "-ghost": "spooky ghost"}},
     check_downpath=True,
 )
 async def usx_(message: Message):
@@ -44,8 +44,9 @@ async def usx_(message: Message):
     for i, color in enumerate(interpolate(f_co, t_co, im.width * 2)):
         draw.line([(i, 0), (0, i)], tuple(color), width=1)
 
-    gradient = gradient.resize(im.size)
+    # gradient = gradient.resize(im.size)   no need for that
     im_composite = Image.alpha_composite(gradient, im)
+    im_composite = im_composite.resize(im_composite.size, Image.ANTIALIAS)
     image_name = "grad_x.webp"
     webp_file = os.path.join(Config.DOWN_PATH, image_name)
     im_composite.save(webp_file, "WebP")
