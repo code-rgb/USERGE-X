@@ -13,7 +13,10 @@ from userge import Config, Message, userge
 
 @userge.on_cmd(
     "x",
-    about={"header": "USERGE-X", "flags": {"-alt": "To get inverted X", "-ghost": "spooky ghost"}},
+    about={
+        "header": "USERGE-X",
+        "flags": {"-alt": "To get inverted X", "-ghost": "spooky ghost"},
+    },
     check_downpath=True,
 )
 async def usx_(message: Message):
