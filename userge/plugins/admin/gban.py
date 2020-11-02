@@ -191,7 +191,7 @@ async def ungban_user(message: Message):
     )
     LOG.info("UnGbanned %s", str(user_id))
 
-    
+
 @userge.on_cmd(
     "glist",
     about={
