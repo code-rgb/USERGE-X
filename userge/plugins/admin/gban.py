@@ -11,6 +11,7 @@ from pyrogram.errors import ChatAdminRequired, PeerIdInvalid, UserAdminInvalid
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
+from userge.utils import mention_html
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 GBAN_USER_BASE = get_collection("GBAN_USER")
@@ -160,14 +161,14 @@ async def ungban_user(message: Message):
         get_mem = await message.client.get_user_dict(user_id)
     except PeerIdInvalid:
         await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
-        deleted_user_ = f"\nRemoved one [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
+        deleted_user_ = f"\nRemoved [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
         await message.edit(r"\\**#UnGbanned_User**//" + "\n" + deleted_user_)
         await CHANNEL.log(r"\\**#Antispam_Log**//" + "\n" + deleted_user_)
         return
 
     firstname = get_mem["fname"]
     user_id = get_mem["id"]
-    found = await GBAN_USER_BASE.find_one({"user_id": user_id})
+    found = await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
     if not found:
         await message.err("User Not Found in My Gban List")
         return
@@ -177,7 +178,7 @@ async def ungban_user(message: Message):
                 await userge.unban_chat_member(chat_id, user_id)
                 await CHANNEL.log(
                     r"\\**#Antispam_Log**//"
-                    f"\n**User:** [{firstname}](tg://user?id={user_id})\n"
+                    f"\n**User:** {mention_html(user_id, firstname)}\n"
                     f"**User ID:** `{user_id}`\n\n"
                     f"$UNGBAN #id{user_id}"
                 )
@@ -185,13 +186,12 @@ async def ungban_user(message: Message):
                 pass
     await message.edit(
         r"\\**#UnGbanned_User**//"
-        f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
+        f"\n\n**First Name:** {mention_html(user_id, firstname)}\n"
         f"**User ID:** `{user_id}`"
     )
-    await GBAN_USER_BASE.delete_one({"firstname": firstname, "user_id": user_id})
     LOG.info("UnGbanned %s", str(user_id))
 
-
+    
 @userge.on_cmd(
     "glist",
     about={
@@ -367,7 +367,7 @@ async def gban_at_entry(message: Message):
                 message.reply(
                     r"\\**#Userge_Antispam**//"
                     "\n\nGlobally Banned User Detected in this Chat.\n\n"
-                    f"**User:** [{first_name}](tg://user?id={user_id})\n"
+                    f"**User:** {mention_html(user_id, firstname)}\n"
                     f"**ID:** `{user_id}`\n**Reason:** `{gbanned['reason']}`\n\n"
                     "**Quick Action:** Banned",
                     del_in=10,
@@ -375,7 +375,7 @@ async def gban_at_entry(message: Message):
                 CHANNEL.log(
                     r"\\**#Antispam_Log**//"
                     "\n\n**GBanned User $SPOTTED**\n"
-                    f"**User:** [{first_name}](tg://user?id={user_id})\n"
+                    f"**User:** {mention_html(user_id, firstname)}\n"
                     f"**ID:** `{user_id}`\n**Reason:** {gbanned['reason']}\n**Quick Action:** "
                     f"Banned in {message.chat.title}"
                 ),
@@ -401,7 +401,7 @@ async def gban_at_entry(message: Message):
                         r"\\**#Userge_Antispam**//"
                         "\n\nGlobally Banned User Detected in this Chat.\n\n"
                         "**$SENTRY CAS Federation Ban**\n"
-                        f"**User:** [{first_name}](tg://user?id={user_id})\n"
+                        f"**User:** {mention_html(user_id, firstname)}\n"
                         f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n\n"
                         "**Quick Action:** Banned",
                         del_in=10,
@@ -410,7 +410,7 @@ async def gban_at_entry(message: Message):
                         r"\\**#Antispam_Log**//"
                         "\n\n**GBanned User $SPOTTED**\n"
                         "**$SENRTY #CAS BAN**"
-                        f"\n**User:** [{first_name}](tg://user?id={user_id})\n"
+                        f"\n**User:** {mention_html(user_id, firstname)}\n"
                         f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n**Quick Action:**"
                         f" Banned in {message.chat.title}\n\n$AUTOBAN #id{user_id}"
                     ),
@@ -424,7 +424,7 @@ async def gban_at_entry(message: Message):
                             r"\\**#Userge_Antispam**//"
                             "\n\nGlobally Banned User Detected in this Chat.\n\n"
                             "**$SENTRY SpamWatch Federation Ban**\n"
-                            f"**User:** [{first_name}](tg://user?id={user_id})\n"
+                            f"**User:** {mention_html(user_id, firstname)}\n"
                             f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n\n"
                             "**Quick Action:** Banned",
                             del_in=10,
@@ -433,7 +433,7 @@ async def gban_at_entry(message: Message):
                             r"\\**#Antispam_Log**//"
                             "\n\n**GBanned User $SPOTTED**\n"
                             "**$SENRTY #SPAMWATCH_API BAN**"
-                            f"\n**User:** [{first_name}](tg://user?id={user_id})\n"
+                            f"\n**User:** {mention_html(user_id, firstname)}\n"
                             f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n"
                             f"**Quick Action:** Banned in {message.chat.title}\n\n"
                             f"$AUTOBAN #id{user_id}"
