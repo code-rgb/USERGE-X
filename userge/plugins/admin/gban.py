@@ -77,7 +77,7 @@ async def gban_user(message: Message):
     firstname = get_mem["fname"]
     if not reason:
         await message.edit(
-            f"**#Aborted**\n\n**Gbanning** of [{firstname}](tg://user?id={user_id}) "
+            f"**#Aborted**\n\n**Gbanning** of {mention_html(user_id, firstname)} "
             "Aborted coz No reason of gban provided by banner",
             del_in=5,
         )
@@ -103,7 +103,7 @@ async def gban_user(message: Message):
         return
     await message.edit(
         r"\\**#GBanned_User**//"
-        f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
+        f"\n\n**First Name:** {mention_html(user_id, firstname)}\n"
         f"**User ID:** `{user_id}`\n**Reason:** `{reason}`"
     )
     # TODO: can we add something like "GBanned by {any_sudo_user_fname}"
@@ -118,7 +118,7 @@ async def gban_user(message: Message):
             gbanned_chats.append(chat.id)
             await CHANNEL.log(
                 r"\\**#Antispam_Log**//"
-                f"\n**User:** [{firstname}](tg://user?id={user_id})\n"
+                f"\n**User:** {mention_html(user_id, firstname)}\n"
                 f"**User ID:** `{user_id}`\n"
                 f"**Chat:** {chat.title}\n"
                 f"**Chat ID:** `{chat.id}`\n"
@@ -263,12 +263,12 @@ async def whitelist(message: Message):
         WHITELIST.insert_one({"firstname": firstname, "user_id": user_id}),
         message.edit(
             r"\\**#Whitelisted_User**//"
-            f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
+            f"\n\n**First Name:** {mention_html(user_id, firstname)}\n"
             f"**User ID:** `{user_id}`"
         ),
         CHANNEL.log(
             r"\\**#Antispam_Log**//"
-            f"\n**User:** [{firstname}](tg://user?id={user_id})\n"
+            f"\n**User:** {mention_html(user_id, firstname)}\n"
             f"**User ID:** `{user_id}`\n"
             f"**Chat:** {message.chat.title}\n"
             f"**Chat ID:** `{message.chat.id}`\n\n$WHITELISTED #id{user_id}"
@@ -305,12 +305,12 @@ async def rmwhitelist(message: Message):
         WHITELIST.delete_one({"firstname": firstname, "user_id": user_id}),
         message.edit(
             r"\\**#Removed_Whitelisted_User**//"
-            f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
+            f"\n\n**First Name:** {mention_html(user_id, firstname)}\n"
             f"**User ID:** `{user_id}`"
         ),
         CHANNEL.log(
             r"\\**#Antispam_Log**//"
-            f"\n**User:** [{firstname}](tg://user?id={user_id})\n"
+            f"\n**User:** {mention_html(user_id, firstname)}\n"
             f"**User ID:** `{user_id}`\n"
             f"**Chat:** {message.chat.title}\n"
             f"**Chat ID:** `{message.chat.id}`\n\n$RMWHITELISTED #id{user_id}"
