@@ -11,6 +11,7 @@ from pyrogram import filters
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid
 
 from userge import Config, Message, get_collection, userge
+from userge.utils import mention_html
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -302,10 +303,10 @@ async def ungban_user(message: Message):
         await message.err("User Not Found in My Bot Ban List")
         return
     await asyncio.gather(
-        BOT_BAN.delete_one({"firstname": firstname, "user_id": user_id}),
+        BOT_BAN.delete_one(found),
         message.edit(
             r"\\**#UnBotbanned_User**//"
-            f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"
+            f"\n\n**First Name:** {mention_html(user_id, firstname)}"
             f"**User ID:** `{user_id}`"
         ),
     )
