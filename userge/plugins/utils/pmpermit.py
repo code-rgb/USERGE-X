@@ -82,7 +82,7 @@ async def allow(message: Message):
             "I need to reply to a user or provide the username/id or be in a private chat",
             del_in=3,
         )
-        
+
 
 @userge.on_cmd(
     "nopm",
@@ -286,10 +286,12 @@ async def uninvitedPmHandler(message: Message):
             )
     else:
         pmCounter.update({message.from_user.id: 1})
-        PMPERMIT_MSG[message.from_user.id] = (await message.reply(
-            noPmMessage.format_map(SafeDict(**user_dict))
-            + "\n`- Protected by USERGE-X`"
-        )).message_id
+        PMPERMIT_MSG[message.from_user.id] = (
+            await message.reply(
+                noPmMessage.format_map(SafeDict(**user_dict))
+                + "\n`- Protected by USERGE-X`"
+            )
+        ).message_id
         await asyncio.sleep(1)
         await CHANNEL.log(f"#NEW_MESSAGE\n{user_dict['mention']} has messaged you")
 
