@@ -17,6 +17,8 @@ from userge.utils import SafeDict
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
 ALLOWED_COLLECTION = get_collection("PM_PERMIT")
+PMPERMIT_MSG = {}
+
 
 pmCounter: Dict[int, int] = {}
 allowAllFilter = filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
@@ -70,12 +72,17 @@ async def allow(message: Message):
         else:
             await (await userge.get_users(userid)).unblock()
             await message.edit("`Approved to direct message`", del_in=3)
+
+        if userid in PMPERMIT_MSG:
+            await userge.delete_messages(userid, message_ids=PMPERMIT_MSG[userid])
+            del PMPERMIT_MSG[userid]
+
     else:
         await message.edit(
             "I need to reply to a user or provide the username/id or be in a private chat",
             del_in=3,
         )
-
+        
 
 @userge.on_cmd(
     "nopm",
@@ -279,10 +286,10 @@ async def uninvitedPmHandler(message: Message):
             )
     else:
         pmCounter.update({message.from_user.id: 1})
-        await message.reply(
+        PMPERMIT_MSG[message.from_user.id] = (await message.reply(
             noPmMessage.format_map(SafeDict(**user_dict))
             + "\n`- Protected by USERGE-X`"
-        )
+        )).message_id
         await asyncio.sleep(1)
         await CHANNEL.log(f"#NEW_MESSAGE\n{user_dict['mention']} has messaged you")
 
