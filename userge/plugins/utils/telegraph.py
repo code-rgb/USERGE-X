@@ -1,10 +1,3 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 
 import os
 
@@ -29,24 +22,37 @@ async def telegraph_(message: Message):
     if not replied:
         await message.err("reply to supported media")
         return
+    link = await upload_media_(message)
+    if link == 'error':
+        return
+    else:
+        await message.edit(
+            f"**[Here Your Telegra.ph Link!](https://telegra.ph{link})**",
+            disable_web_page_preview=True
+        )
+    
+
+
+async def upload_media_(message: Message):
+    replied = message.reply_to_message
     if not (
         (replied.photo and replied.photo.file_size <= _T_LIMIT)
         or (replied.animation and replied.animation.file_size <= _T_LIMIT)
         or (
             replied.video
-            and replied.video.file_name.endswith(".mp4")
+            and replied.video.file_name.endswith((".mp4", ".mkv"))
             and replied.video.file_size <= _T_LIMIT
         )
         or (
             replied.document
             and replied.document.file_name.endswith(
-                (".jpg", ".jpeg", ".png", ".gif", ".mp4")
+                (".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mkv")
             )
             and replied.document.file_size <= _T_LIMIT
         )
     ):
         await message.err("not supported!")
-        return
+        return 'error'
     await message.edit("`processing...`")
     dl_loc = await message.client.download_media(
         message=message.reply_to_message,
@@ -59,9 +65,8 @@ async def telegraph_(message: Message):
         response = upload_file(dl_loc)
     except Exception as t_e:
         await message.err(t_e)
-    else:
-        await message.edit(
-            f"**[Here Your Telegra.ph Link!](https://telegra.ph{response[0]})**"
-        )
+        return 'error'
     finally:
         os.remove(dl_loc)
+        return str(response[0])
+
