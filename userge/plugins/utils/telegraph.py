@@ -1,4 +1,3 @@
-
 import os
 
 from telegraph import upload_file
@@ -23,14 +22,13 @@ async def telegraph_(message: Message):
         await message.err("reply to supported media")
         return
     link = await upload_media_(message)
-    if link == 'error':
+    if link == "error":
         return
     else:
         await message.edit(
             f"**[Here Your Telegra.ph Link!](https://telegra.ph{link})**",
-            disable_web_page_preview=True
+            disable_web_page_preview=True,
         )
-    
 
 
 async def upload_media_(message: Message):
@@ -52,7 +50,7 @@ async def upload_media_(message: Message):
         )
     ):
         await message.err("not supported!")
-        return 'error'
+        return "error"
     await message.edit("`processing...`")
     dl_loc = await message.client.download_media(
         message=message.reply_to_message,
@@ -65,8 +63,7 @@ async def upload_media_(message: Message):
         response = upload_file(dl_loc)
     except Exception as t_e:
         await message.err(t_e)
-        return 'error'
+        return "error"
     finally:
         os.remove(dl_loc)
         return str(response[0])
-
