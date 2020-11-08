@@ -10,9 +10,10 @@
 
 import asyncio
 from typing import Dict
-
+import os
 from userge import Config, Message, filters, get_collection, userge
 from userge.utils import SafeDict
+from .fake_report import reported_user_image
 
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -271,12 +272,15 @@ async def uninvitedPmHandler(message: Message):
     if message.from_user.id in pmCounter:
         if pmCounter[message.from_user.id] > 3:
             del pmCounter[message.from_user.id]
-            await message.reply(blocked_message)
+          # await message.reply(blocked_message)
+            report_img_ = await reported_user_image(message.from_user.first_name)
+            await message.reply_photo(report_img_, caption=blocked_message)
             await message.from_user.block()
             await asyncio.sleep(1)
             await CHANNEL.log(
                 f"#BLOCKED\n{user_dict['mention']} has been blocked due to spamming in pm !! "
             )
+            os.remove(report_img_)
         else:
             pmCounter[message.from_user.id] += 1
             await message.reply(
