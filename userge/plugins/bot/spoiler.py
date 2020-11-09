@@ -135,7 +135,7 @@ async def spoiler_get(_, message: Message):
             d2 = today.strftime("%B %d, %Y")
             start_date = d2.replace(",", "")
             BOT_START.insert_one(
-                {"firstname": , u_user.first_name, "user_id": u_user.id, "date": start_date}
+                {"firstname": u_user.first_name, "user_id": u_user.id, "date": start_date}
             )
             log_msg = (
                 f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
