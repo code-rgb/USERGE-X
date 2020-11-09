@@ -1,6 +1,7 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
+
 import textwrap
 from io import BytesIO
 
@@ -24,6 +25,7 @@ async def reported_user_image(u_name: str):
     for u_text in textwrap.wrap(text2, width=38):
         drawing.text(xy=(132, 305 + x), text=u_text, font=font1, fill=white)
         x += 53
-    photo.save(in_memory, format='JPEG')
-    in_memory.name = "Blocked.jpg"
-    return in_memory
+    new_pic = BytesIO()
+    photo.save(new_pic, format='JPEG')
+    new_pic.name = "Blocked.jpg"
+    return new_pic

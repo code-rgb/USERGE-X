@@ -283,7 +283,6 @@ async def uninvitedPmHandler(message: Message):
             await CHANNEL.log(
                 f"#BLOCKED\n{user_dict['mention']} has been blocked due to spamming in pm !! "
             )
-            os.remove(report_img_)
         else:
             pmCounter[message.from_user.id] += 1
             await message.reply(
