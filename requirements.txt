@@ -22,7 +22,7 @@ Pillow==7.1.0
 psutil
 pybase64
 pymediainfo
-git+https://github.com/code-rgb/pyrogram.git
+git+https://github.com/code-rgb/pyrogram.git@verlock
 pySmartDL
 python-dotenv
 pytz
