@@ -176,7 +176,7 @@ if userge.has_bot:
             pass
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^nobtnspoiler([\S]+)$"))
-    async def get_spoiler_link(_, c_q: CallbackQuery):
+    async def nobtnspoiler_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         u_name = c_q.from_user.first_name
         if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
