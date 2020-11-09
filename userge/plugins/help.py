@@ -833,31 +833,28 @@ if userge.has_bot:
             if string == "repo":
                 results.append(REPO_X)
 
-
             if str_y[0] == "spoiler":
                 if not os.path.exists("./userge/xcache/spoiler_db.json"):
                     results.append(
-                                InlineQueryResultArticle(
-                                    title="Path Doesn't Exist",
-                                    input_message_content=InputTextMessageContent("Path Doesn't Exist"),
-                                    description="No",
-                                )
+                        InlineQueryResultArticle(
+                            title="Path Doesn't Exist",
+                            input_message_content=InputTextMessageContent(
+                                "Path Doesn't Exist"
+                            ),
+                            description="No",
+                        )
                     )
                 else:
                     bot_name = (await userge.bot.get_me()).username
                     if len(str_y) == 2:
                         link = f"https://t.me/{bot_name}?start=spoiler_{str_y[1]}"
-                        buttons = [
-                            [
-                                InlineKeyboardButton(
-                                    text="View", url=link
-                                )
-                            ]
-                        ]
+                        buttons = [[InlineKeyboardButton(text="View", url=link)]]
                         results.append(
                             InlineQueryResultArticle(
                                 title="Share Spoiler",
-                                input_message_content=InputTextMessageContent("<b>Click To View The Spoiler !</b>"),
+                                input_message_content=InputTextMessageContent(
+                                    "<b>Click To View The Spoiler !</b>"
+                                ),
                                 description="No",
                                 thumb_url="https://telegra.ph/file/ee3a6439494463acd1a3a.jpg",
                                 reply_markup=InlineKeyboardMarkup(buttons),
@@ -870,20 +867,22 @@ if userge.has_bot:
                                 buttons = [
                                     [
                                         InlineKeyboardButton(
-                                            text=i, url=f"https://t.me/{bot_name}?start=spoiler_{i}"
+                                            text=i,
+                                            url=f"https://t.me/{bot_name}?start=spoiler_{i}",
                                         )
                                     ]
                                 ]
                                 results.append(
                                     InlineQueryResultArticle(
                                         title="Share Spoiler",
-                                        input_message_content=InputTextMessageContent("<b>Click To View The Spoiler !</b>"),
+                                        input_message_content=InputTextMessageContent(
+                                            "<b>Click To View The Spoiler !</b>"
+                                        ),
                                         description="No",
                                         thumb_url="https://telegra.ph/file/ee3a6439494463acd1a3a.jpg",
                                         reply_markup=InlineKeyboardMarkup(buttons),
                                     )
                                 )
-
 
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
