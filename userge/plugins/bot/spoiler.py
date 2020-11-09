@@ -98,15 +98,21 @@ async def spoiler_get(_, message: Message):
         await message.err("Not Found", del_in=5)
     view_data = SPOILER_DB.db
     mid = view_data.get(spoiler_key, None)
-    if mid:
-        return await CHANNEL.forward_stored(
-            client=userge.bot,
-            message_id=mid["msg_id"],
-            user_id=message.from_user.id,
-            chat_id=message.chat.id,
-            reply_to_message_id=message.message_id,
-        )
-    await message.reply("Not Found / Expired")
+    if not mid:
+        return await message.reply("Sorry 🥺 , Spoiler has now expired !")
+    await CHANNEL.forward_stored(
+        client=userge.bot,
+        message_id=mid["msg_id"],
+        user_id=message.from_user.id,
+        chat_id=message.chat.id,
+        reply_to_message_id=message.message_id,
+    )
+    log_msg = (
+        f"A New User Viewed Spoiler ID: `{spoiler_key}` \n\n• <i>ID</i>: `{message.from_user.id}`\n   👤 : "
+    )
+    log_msg += "@" + message.from_user.username if message.from_user.username else message.from_user.first_name
+    await CHANNEL.log(log_msg)
+    
 
 
 if userge.has_bot:
