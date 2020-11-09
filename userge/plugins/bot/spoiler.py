@@ -14,6 +14,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
 
+
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/spoiler_db.json"
 BOT_BAN = get_collection("BOT_BAN")
@@ -67,7 +68,7 @@ async def spoiler_alert_(message: Message):
     bot_name = (await userge.bot.get_me()).username
     link = f"https://t.me/{bot_name}?start={rnd_id}"
     buttons = None
-    text_ = "**{} Shared A Spoiler** !\n[> **Click To View** <]({})".format(
+    text_ = "<b>{} Shared A Spoiler</b> !\n[<b>Click To View</b>]({})".format(
         mention_html(message.from_user.id, message.from_user.first_name), link
     )
     if message.client.is_bot:
@@ -189,7 +190,7 @@ if userge.has_bot:
         url = f"https://t.me/{bot_name}?start={c_q.matches[0].group(1)}"
         try:
             await c_q.edit_message_text(
-                "**{} Shared A Spoiler** !\n[> **Click To View** <]({})".format(
+                "<b>{} Shared A Spoiler</b> !\n[<b>Click To View</b>]({})".format(
                     mention_html(u_id, u_name), url
                 ),
                 disable_web_page_preview=True,
