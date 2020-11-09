@@ -848,7 +848,9 @@ if userge.has_bot:
                     bot_name = (await userge.bot.get_me()).username
                     if len(str_y) == 2:
                         link = f"https://t.me/{bot_name}?start=spoiler_{str_y[1]}"
-                        buttons = [[InlineKeyboardButton(text="View Spoiler", url=link)]]
+                        buttons = [
+                            [InlineKeyboardButton(text="View Spoiler", url=link)]
+                        ]
                         results.append(
                             InlineQueryResultArticle(
                                 title="Spoiler",
@@ -875,7 +877,9 @@ if userge.has_bot:
                                     ]
                                 ]
                                 saved_at = view_db.get(spoilerr, None)
-                                savetime = saved_at.get('savetime', None) if saved_at else None
+                                savetime = (
+                                    saved_at.get("savetime", None) if saved_at else None
+                                )
                                 results.append(
                                     InlineQueryResultArticle(
                                         title=f"#{numm}  Spoiler",

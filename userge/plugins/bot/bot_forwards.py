@@ -20,7 +20,6 @@ BOT_START = get_collection("BOT_START")
 SAVED_SETTINGS = get_collection("CONFIGS")
 
 
-
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "BOT_FORWARDS"})
     if data:
@@ -81,7 +80,9 @@ if userge.has_bot:
         & filters.user(Config.OWNER_ID)
         & filters.private
         & filters.reply
-        & ~filters.regex(pattern="^(/.*|\{}spoiler(?:$|\s)[\S]+)".format(Config.SUDO_TRIGGER))
+        & ~filters.regex(
+            pattern="^(/.*|\{}spoiler(?:$|\s)[\S]+)".format(Config.SUDO_TRIGGER)
+        )
     )
     async def forward_reply(_, message: Message):
         replied = message.reply_to_message
