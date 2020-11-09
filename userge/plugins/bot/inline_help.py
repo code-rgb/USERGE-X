@@ -59,7 +59,7 @@ COMMANDS = {
     "spoiler": {
         "help_txt": "**Send Saved Spoiler Via Inline**\n For more info see `.help spoiler`\n\n>>>  `spoiler [ID]`",
         "i_q": "spoiler",
-    }
+    },
 }
 
 

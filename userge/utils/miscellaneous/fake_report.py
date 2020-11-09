@@ -1,14 +1,12 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
 
-import os
 import textwrap
 from io import BytesIO
 
 from PIL import Image, ImageDraw, ImageFont
 from requests import get
 
-from userge import Config
 
 
 async def reported_user_image(u_name: str):
