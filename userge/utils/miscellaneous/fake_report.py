@@ -15,9 +15,8 @@ async def reported_user_image(u_name: str):
     """reported user"""
     text1 = "Block " + u_name
     text2 = f"Do you want to block {u_name} from messaging and calling you on Telegram?"
-    photo = Image.open(
-        BytesIO(get("https://telegra.ph/file/886e00818c68f53d24f92.jpg").content)
-    )
+    in_memory = BytesIO(get("https://telegra.ph/file/886e00818c68f53d24f92.jpg").content)
+    photo = Image.open(in_memory)
     drawing = ImageDraw.Draw(photo)
     white = (255, 255, 255)
     font1 = ImageFont.truetype("resources/Roboto-Regular.ttf", 45)
@@ -27,6 +26,6 @@ async def reported_user_image(u_name: str):
     for u_text in textwrap.wrap(text2, width=38):
         drawing.text(xy=(132, 305 + x), text=u_text, font=font1, fill=white)
         x += 53
-    img_file = os.path.join(Config.DOWN_PATH, "temp_image.jpg")
-    photo.save(img_file)
-    return img_file
+    photo.save(in_memory, format='JPEG')
+    in_memory.name = "Blocked.jpg"
+    return in_memory

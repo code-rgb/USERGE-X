@@ -865,7 +865,7 @@ if userge.has_bot:
                     else:
                         view_db = json.load(open("./userge/xcache/spoiler_db.json"))
                         if len(view_db) != 0:
-                            numm = 1
+                            numm = 0
                             for spoilerr in view_db:
                                 numm += 1
                                 buttons = [

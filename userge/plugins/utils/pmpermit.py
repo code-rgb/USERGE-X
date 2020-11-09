@@ -15,7 +15,7 @@ from typing import Dict
 from userge import Config, Message, filters, get_collection, userge
 from userge.utils import SafeDict
 
-from .fake_report import reported_user_image
+from userge.utils.miscellaneous import reported_user_image
 
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -276,7 +276,7 @@ async def uninvitedPmHandler(message: Message):
             del pmCounter[message.from_user.id]
             # await message.reply(blocked_message)
             report_img_ = await reported_user_image(message.from_user.first_name)
-            await message.reply_photo(report_img_, caption=blocked_message)
+            await userge.send_photo(message.chat.id, report_img_, caption=blocked_message)
             await message.from_user.block()
             await asyncio.sleep(1)
             await CHANNEL.log(
