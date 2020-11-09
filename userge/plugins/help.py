@@ -833,6 +833,65 @@ if userge.has_bot:
             if string == "repo":
                 results.append(REPO_X)
 
+            if str_y[0] == "spoiler":
+                if not os.path.exists("./userge/xcache/spoiler_db.json"):
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="No Spoiler Found",
+                            input_message_content=InputTextMessageContent(
+                                "No Spoiler Found !\nLet's Add Some 😈"
+                            ),
+                            description="See .help spoiler for more info",
+                        )
+                    )
+                else:
+                    bot_name = (await userge.bot.get_me()).username
+                    if len(str_y) == 2:
+                        link = f"https://t.me/{bot_name}?start=spoiler_{str_y[1]}"
+                        buttons = [
+                            [InlineKeyboardButton(text="View Spoiler", url=link)]
+                        ]
+                        results.append(
+                            InlineQueryResultArticle(
+                                title="Spoiler",
+                                input_message_content=InputTextMessageContent(
+                                    "<b>Click To View The Spoiler !</b>"
+                                ),
+                                description="Click To Send",
+                                thumb_url="https://telegra.ph/file/ee3a6439494463acd1a3a.jpg",
+                                reply_markup=InlineKeyboardMarkup(buttons),
+                            )
+                        )
+                    else:
+                        view_db = json.load(open("./userge/xcache/spoiler_db.json"))
+                        if len(view_db) != 0:
+                            numm = 0
+                            for spoilerr in view_db:
+                                numm += 1
+                                buttons = [
+                                    [
+                                        InlineKeyboardButton(
+                                            text="View Spoiler",
+                                            url=f"https://t.me/{bot_name}?start=spoiler_{spoilerr}",
+                                        )
+                                    ]
+                                ]
+                                saved_at = view_db.get(spoilerr, None)
+                                savetime = (
+                                    saved_at.get("savetime", None) if saved_at else None
+                                )
+                                results.append(
+                                    InlineQueryResultArticle(
+                                        title=f"#{numm}  Spoiler",
+                                        input_message_content=InputTextMessageContent(
+                                            "<b>Click To View The Spoiler !</b>"
+                                        ),
+                                        description=f"Created At: {savetime}",
+                                        thumb_url="https://telegra.ph/file/ee3a6439494463acd1a3a.jpg",
+                                        reply_markup=InlineKeyboardMarkup(buttons),
+                                    )
+                                )
+
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
 

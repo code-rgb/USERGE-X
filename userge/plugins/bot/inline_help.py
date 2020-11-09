@@ -56,6 +56,10 @@ COMMANDS = {
         "help_txt": "**Download Youtube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]`",
         "i_q": "ytdl https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
+    "spoiler": {
+        "help_txt": "**Send Saved Spoiler Via Inline**\n For more info see `.help spoiler`\n\n>>>  `spoiler [ID]`",
+        "i_q": "spoiler",
+    },
 }
 
 
