@@ -81,7 +81,7 @@ if userge.has_bot:
         & filters.private
         & filters.reply
         & ~filters.regex(
-            pattern="^(/.*|\{}spoiler(?:$|\s)[\S]+)".format(Config.SUDO_TRIGGER)
+            pattern="^(/.*|\{}spoiler(?:$|.*))".format(Config.SUDO_TRIGGER)
         )
     )
     async def forward_reply(_, message: Message):
