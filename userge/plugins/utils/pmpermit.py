@@ -9,7 +9,6 @@
 # All rights reserved.
 
 import asyncio
-import os
 from typing import Dict
 
 from userge import Config, Message, filters, get_collection, userge
