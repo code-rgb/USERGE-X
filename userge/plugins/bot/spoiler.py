@@ -11,9 +11,8 @@ from pyrogram import filters
 from pyrogram.errors import MessageNotModified, UserIsBlocked
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
-
 
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/spoiler_db.json"
@@ -135,7 +134,11 @@ async def spoiler_get(_, message: Message):
             d2 = today.strftime("%B %d, %Y")
             start_date = d2.replace(",", "")
             BOT_START.insert_one(
-                {"firstname": u_user.first_name, "user_id": u_user.id, "date": start_date}
+                {
+                    "firstname": u_user.first_name,
+                    "user_id": u_user.id,
+                    "date": start_date,
+                }
             )
             log_msg = (
                 f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
