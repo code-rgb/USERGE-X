@@ -8,14 +8,17 @@ import os
 from uuid import uuid1
 
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified
+from pyrogram.errors import MessageNotModified, UserIsBlocked
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, userge
+from userge import Config, Message, userge, get_collection
 from userge.utils import mention_html
+
 
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/spoiler_db.json"
+BOT_BAN = get_collection("BOT_BAN")
+BOT_START = get_collection("BOT_START")
 
 
 class Spoiler_DB:
@@ -25,9 +28,14 @@ class Spoiler_DB:
             json.dump(d, open(PATH, "w"))
         self.db = json.load(open(PATH))
 
+    def stats_(self, rnd_id: str, user_id: int, user_name: str)):
+        if user_id != Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
+            self.db[rnd_id]["stats"][user_id] = user_name
+            self.save()
+
     def save_msg(self, rnd_id: str, msg_id: int):
         savetime = (datetime.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
-        self.db[rnd_id] = {"msg_id": msg_id, "savetime": str(savetime)}
+        self.db[rnd_id] = {"msg_id": msg_id, "savetime": str(savetime), "stats": {}}
         self.save()
 
     def save(self):
@@ -93,27 +101,45 @@ async def spoiler_alert_(message: Message):
     )
 )
 async def spoiler_get(_, message: Message):
+    u_user = message.from_user
+    found = await BOT_BAN.find_one({"user_id": u_user.id})
+    if found:
+        return
     spoiler_key = message.matches[0].group(1)
     if not os.path.exists(PATH):
-        await message.err("Not Found", del_in=5)
+        await message.err("Sorry 🥺 , The Spoiler has now been expired !")
     view_data = SPOILER_DB.db
     mid = view_data.get(spoiler_key, None)
     if not mid:
-        return await message.reply("Sorry 🥺 , Spoiler has now expired !")
-    await CHANNEL.forward_stored(
-        client=userge.bot,
-        message_id=mid["msg_id"],
-        user_id=message.from_user.id,
-        chat_id=message.chat.id,
-        reply_to_message_id=message.message_id,
-    )
-    log_msg = f"A New User Viewed Spoiler ID: `{spoiler_key}` \n\n• <i>ID</i>: `{message.from_user.id}`\n   👤 : "
-    log_msg += (
-        "@" + message.from_user.username
-        if message.from_user.username
-        else message.from_user.first_name
-    )
-    await CHANNEL.log(log_msg)
+        try:
+            await message.reply("Sorry 🥺 , The Spoiler has now been expired !")
+        except UserIsBlocked:
+            pass
+        return
+    try:
+        await CHANNEL.forward_stored(
+            client=userge.bot,
+            message_id=mid["msg_id"],
+            user_id=u_user.id,
+            chat_id=message.chat.id,
+            reply_to_message_id=message.message_id,
+        )
+    except UserIsBlocked:
+        pass
+    SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
+    new_user = await BOT_START.find_one({"user_id": u_user.id})
+    if new_user:
+        today = datetime.date.today()
+        d2 = today.strftime("%B %d, %Y")
+        start_date = d2.replace(",", "")
+        BOT_START.insert_one(
+            {"firstname": , u_user.first_name, "user_id": u_user.id, "date": start_date}
+        )
+        log_msg = (
+            f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
+        )
+        log_msg += f"@{u_user.username}" if u_user.username else u_user.first_name
+        await CHANNEL.log(log_msg)
 
 
 if userge.has_bot:

@@ -65,7 +65,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                 BOT_START.insert_one(
                     {"firstname": f_name, "user_id": u_id, "date": start_date}
                 )
-                await asyncio.sleep(5)
+                await asyncio.sleep(2)
                 log_msg = (
                     f"A New User Started your Bot \n\n• <i>ID</i>: `{u_id}`\n   👤 : "
                 )
