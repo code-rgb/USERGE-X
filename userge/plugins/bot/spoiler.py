@@ -28,7 +28,7 @@ class Spoiler_DB:
             json.dump(d, open(PATH, "w"))
         self.db = json.load(open(PATH))
 
-    def stats_(self, rnd_id: str, user_id: int, user_name: str)):
+    def stats_(self, rnd_id: str, user_id: int, user_name: str):
         if user_id != Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
             self.db[rnd_id]["stats"][user_id] = user_name
             self.save()
