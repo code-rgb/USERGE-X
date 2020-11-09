@@ -14,7 +14,6 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
 
-
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/spoiler_db.json"
 BOT_BAN = get_collection("BOT_BAN")
