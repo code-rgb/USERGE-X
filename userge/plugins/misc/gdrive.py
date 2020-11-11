@@ -252,7 +252,11 @@ class _GDrive:
             )
             if mime_type == G_DRIVE_DIR_MIME_TYPE:
                 link += "/"
-            out += f"\n👥 __[Shareable Link]({link})__"
+            out += f"\n👥 __[
+            
+            
+            
+            able Link]({link})__"
         return out
 
     def _upload_file(self, file_path: str, parent_id: str) -> str:
@@ -834,7 +838,7 @@ class Worker(_GDrive):
         await self._message.edit("`Loading GDrive Share...`")
         file_id, _ = self._get_file_id()
         try:
-            out = await pool.run_in_thread(self._get_output)(file_id)
+            out = str(await pool.run_in_thread(self._get_output)(file_id))
         except HttpError as h_e:
             _LOG.exception(h_e)
             await self._message.err(
@@ -842,7 +846,7 @@ class Worker(_GDrive):
             )  # pylint: disable=protected-access
             return
         await self._message.edit(
-            f"**Shareable Links**\n\n{out}", disable_web_page_preview=True, log=__name__
+            f"**Shareable Links**\n\n{out.replace('upload/Upload/', '')}", disable_web_page_preview=True, log=__name__
         )
 
     @creds_dec
