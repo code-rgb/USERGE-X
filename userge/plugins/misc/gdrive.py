@@ -403,7 +403,7 @@ class _GDrive:
             d_file_obj = MediaIoBaseDownload(d_f, request, chunksize=50 * 1024 * 1024)
             c_time = time.time()
             done = False
-            while done is False:
+            while not done:
                 status, done = d_file_obj.next_chunk(num_retries=5)
                 if self._is_canceled:
                     raise ProcessCanceled
@@ -954,7 +954,7 @@ class Worker(_GDrive):
                     if self._message.process_is_canceled:
                         downloader.stop()
                         raise Exception("Process Canceled!")
-                    total_length = downloader.filesize if downloader.filesize else 0
+                    total_length = downloader.filesize or 0
                     downloaded = downloader.get_dl_size()
                     percentage = downloader.get_progress() * 100
                     speed = downloader.get_speed(human=True)
@@ -1002,7 +1002,7 @@ class Worker(_GDrive):
             except Exception as d_e:
                 await self._message.err(d_e)
                 return
-        file_path = dl_loc if dl_loc else self._message.input_str
+        file_path = dl_loc or self._message.input_str
         if not os.path.exists(file_path):
             await self._message.err("invalid file path provided?")
             return
@@ -1033,7 +1033,7 @@ class Worker(_GDrive):
             out = f"**ERROR** : `{self._output._get_reason()}`"  # pylint: disable=protected-access
         elif self._output is not None and not self._is_canceled:
             out = f"**Uploaded Successfully** __in {m_s} seconds__\n\n{self._output}"
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to upload.. check logs?`"
@@ -1063,7 +1063,7 @@ class Worker(_GDrive):
             out = (
                 f"**Downloaded Successfully** __in {m_s} seconds__\n\n`{self._output}`"
             )
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to download.. check logs?`"
@@ -1094,7 +1094,7 @@ class Worker(_GDrive):
             out = f"**ERROR** : `{self._output._get_reason()}`"  # pylint: disable=protected-access
         elif self._output is not None and not self._is_canceled:
             out = f"**Copied Successfully** __in {m_s} seconds__\n\n{self._output}"
-        elif self._output is not None and self._is_canceled:
+        elif self._output is not None:
             out = self._output
         else:
             out = "`failed to copy.. check logs?`"
