@@ -252,7 +252,7 @@ class _GDrive:
             )
             if mime_type == G_DRIVE_DIR_MIME_TYPE:
                 link += "/"
-            out += f"\n👥 __[Shareable Link]({str(link).replace("/upload/Upload", "")})__"
+            out += f"\n👥 __[Shareable Link]({link})__"
         return out
 
     def _upload_file(self, file_path: str, parent_id: str) -> str:
