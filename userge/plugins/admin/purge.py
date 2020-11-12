@@ -110,7 +110,7 @@ async def purgeme_(message: Message):
         limit=number,
         from_user="me"
     ):
-    msg_list.append(msg.message_id)
+        msg_list.append(msg.message_id)
     await userge.delete_messages(
         message.chat.id,
         message_ids=msg_list
