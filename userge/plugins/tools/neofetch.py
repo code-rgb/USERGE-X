@@ -27,7 +27,7 @@ async def neofetch_(message: Message):
     await message.edit("Getting System Info ...")
     if not os.path.exists("/app/.apt/usr/bin/config/"):
         os.makedirs("/app/.apt/usr/bin/config/")
-        shutil.move("downloads/config.conf", "/app/.apt/usr/bin/config/")
+        shutil.move("resources/config.conf", "/app/.apt/usr/bin/config/")
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     if "-img" in message.flags:
