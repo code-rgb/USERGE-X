@@ -95,25 +95,26 @@ async def purge_(message: Message):
         "usage": "{tr}purgeme [no. of message to delete]",
         "examples": ["{tr}purgeme 10"],
     },
-    allow_bots=False
+    allow_bots=False,
 )
 async def purgeme_(message: Message):
     await message.edit("`purging ...`")
-    if not ( message.input_str and message.input_str.isdigit() and (int(message.input_str) < 100) ):
-        await message.err('Provide a valid number of message to delete', del_in=5)
+    if not (
+        message.input_str
+        and message.input_str.isdigit()
+        and (int(message.input_str) < 100)
+    ):
+        await message.err("Provide a valid number of message to delete", del_in=5)
     start_t = datetime.now()
     number = int(message.input_str)
     msg_list = []
     async for msg in userge.search_messages(
-        message.chat.id,
-        "",
-        limit=number,
-        from_user="me"
+        message.chat.id, "", limit=number, from_user="me"
     ):
         msg_list.append(msg.message_id)
-    await userge.delete_messages(
-        message.chat.id,
-        message_ids=msg_list
-    )
+    await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = datetime.now()
-    await message.edit(f"Purged {len(msg_list)} Messages Successfully in {(end_t - start_t).seconds} seconds!", del_in=6)
+    await message.edit(
+        f"Purged {len(msg_list)} Messages Successfully in {(end_t - start_t).seconds} seconds!",
+        del_in=6,
+    )
