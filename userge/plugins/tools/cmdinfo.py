@@ -16,7 +16,7 @@ from userge.utils import humanbytes
         "header": "find plugin and other info for a given command",
         "description": "you can also provide optional text to search within the plugin",
         "usage": "{tr}cmdinfo [cmd] | [optional text]",
-        "examples": "{tr}cmdinfo .ars\n" "{tr}cmdinfo .ars | tracemoepy",
+        "examples": "{tr}cmdinfo .ars\n" "  {tr}cmdinfo .ars | tracemoepy",
     },
 )
 async def see_info(message: Message):
