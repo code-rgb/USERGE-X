@@ -74,7 +74,7 @@ async def see_info(message: Message):
     if plugin_link:
         result += f"\n💻 <b>[View Code on Github]({plugin_link})</b>"
     if word:
-        result += f"\n\n🔍 <b>Matches for:</b> {word}\n"
+        result += f"\n\n🔎 <b>Matches for:</b> {word}\n"
         s_result = ""
         if len(search_path[1]) == 0:
             s_result += "  ❌ Not Found !"
@@ -85,7 +85,7 @@ async def see_info(message: Message):
                 s_result += f"[#L{line}]({plugin_link}#L{line})  "
                 if line_c > 5:
                     break
-        result += "<b>{}</b>".format(s_result)
+        result += "  <b>{}</b>".format(s_result)
     await message.edit(result, disable_web_page_preview=True)
 
 
