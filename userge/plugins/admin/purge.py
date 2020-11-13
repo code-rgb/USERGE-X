@@ -1,14 +1,7 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
-
-from datetime import datetime
+import time
 
 from userge import Message, userge
+from userge.utils import time_formatter
 
 
 @userge.on_cmd(
@@ -27,6 +20,7 @@ from userge import Message, userge
     del_pre=True,
 )
 async def purge_(message: Message):
+    """purge from replied message"""
     await message.edit("`purging ...`")
     from_user_id = None
     if message.filtered_input_str:
@@ -64,7 +58,7 @@ async def purge_(message: Message):
             purged_messages_count += len(list_of_messages)
             list_of_messages = []
 
-    start_t = datetime.now()
+    start_t = time.time()
     if message.client.is_bot:
         for a_message in await message.client.get_messages(
             chat_id=message.chat.id,
@@ -82,7 +76,39 @@ async def purge_(message: Message):
             chat_id=message.chat.id, message_ids=list_of_messages
         )
         purged_messages_count += len(list_of_messages)
-    end_t = datetime.now()
-    time_taken_s = (end_t - start_t).seconds
-    out = f"<u>purged</u> {purged_messages_count} messages in {time_taken_s} seconds."
+    end_t = time.time()
+    out = f"<u>purged</u> {purged_messages_count} messages in {time_formatter(end_t - start_t)}."
     await message.edit(out, del_in=3)
+
+
+@userge.on_cmd(
+    "purgeme",
+    about={
+        "header": "purge messages from yourself",
+        "usage": "{tr}purgeme [number]",
+        "examples": ["{tr}purgeme 10"],
+    },
+    allow_bots=False,
+    allow_channels=False,
+    allow_via_bot=False,
+)
+async def purgeme_(message: Message):
+    """purge given no. of your messages"""
+    await message.edit("`purging ...`")
+    if not (message.input_str and message.input_str.isdigit()):
+        return await message.err(
+            "Provide a valid number of message to delete", del_in=3
+        )
+    start_t = time.time()
+    number = min(int(message.input_str), 100)
+    msg_list = []
+    async for msg in userge.search_messages(
+        message.chat.id, "", limit=number, from_user="me"
+    ):
+        msg_list.append(msg.message_id)
+    await userge.delete_messages(message.chat.id, message_ids=msg_list)
+    end_t = time.time()
+    out = (
+        f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
+    )
+    await message.edit(out, del_in=3, log=__name__)

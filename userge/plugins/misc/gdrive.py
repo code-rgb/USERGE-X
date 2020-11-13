@@ -1,12 +1,5 @@
 """ manage your gdrive """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 
 import asyncio
 import io
@@ -834,7 +827,7 @@ class Worker(_GDrive):
         await self._message.edit("`Loading GDrive Share...`")
         file_id, _ = self._get_file_id()
         try:
-            out = str(await pool.run_in_thread(self._get_output)(file_id))
+            out = await pool.run_in_thread(self._get_output)(file_id)
         except HttpError as h_e:
             _LOG.exception(h_e)
             await self._message.err(
@@ -842,9 +835,7 @@ class Worker(_GDrive):
             )  # pylint: disable=protected-access
             return
         await self._message.edit(
-            f"**Shareable Links**\n\n{out.replace('upload/Upload/', '')}",
-            disable_web_page_preview=True,
-            log=__name__,
+            f"**Shareable Links**\n\n{out}", disable_web_page_preview=True, log=__name__
         )
 
     @creds_dec

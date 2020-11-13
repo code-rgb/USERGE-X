@@ -21,13 +21,13 @@ async def gizoo_(message: Message):
         await message.edit("```You didn't gave the text```", del_in=3)
         return
     try:
-        result = text(input_str)
+        result = text_giz(input_str)
     except:
         return await message.err("Failed to gizoogle the text.", del_in=3)
     await message.edit(result)
 
 
-def text(input_text: str) -> str:
+def text_giz(input_text: str) -> str:
     """Taken from https://github.com/chafla/gizoogle-py/blob/master/gizoogle.py"""
     params = {"translatetext": input_text}
     target_url = "http://www.gizoogle.net/textilizer.php"

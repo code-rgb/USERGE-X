@@ -13,7 +13,6 @@ from pyrogram.errors import FloodWait, MessageIdInvalid
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
 
-# CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
 ALLOWED_COLLECTION = get_collection("PM_PERMIT")
 NO_PM_LOG = get_collection("NO_PM_LOG")
@@ -44,7 +43,7 @@ async def pm_logger_(message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return await message.edit(
             "Make a Group and add it's ID in Heroku," "\n Var: '`PM_LOG_GROUP_ID`' ",
-            del_in=6,
+            del_in=5,
         )
     if Config.PM_LOGGING:
         Config.PM_LOGGING = False
@@ -86,7 +85,6 @@ async def pm_logger(_, message: Message):
             "msg_count": 1,
             "logger_msg_id": logger_msg_count.message_id,
         }
-        await asyncio.sleep(2)
     # either it can be the same user or a new user
     elif len(PM_LOGGER_CACHE) == 1:
         if u_id in PM_LOGGER_CACHE:  # if same person just updating the count
@@ -107,7 +105,6 @@ async def pm_logger(_, message: Message):
                 await asyncio.sleep(e.x)
 
             PM_LOGGER_CACHE.clear()
-            await asyncio.sleep(2)
             try:
                 logger_msg_count = await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
@@ -153,7 +150,11 @@ async def pm_user_log_(message: Message):
     if found:
         await asyncio.gather(
             NO_PM_LOG.delete_one({"user_id": user_id}),
-            message.edit(f"Now Logging PM for user: {user_data['mention']}", del_in=3),
+            message.edit(
+                f"Now Logging PM for user: {user_data['mention']}",
+                del_in=3,
+                log=__name__,
+            ),
         )
         return
     await asyncio.gather(
@@ -164,7 +165,9 @@ async def pm_user_log_(message: Message):
             }
         ),
         message.edit(
-            f"PM Logging turned off for user: {user_data['mention']}", del_in=3
+            f"PM Logging turned off for user: {user_data['mention']}",
+            del_in=3,
+            log=__name__,
         ),
     )
 
@@ -193,8 +196,7 @@ async def list_no_pm_log_users(message: Message):
     )
 
 
-async def get_id(message: Message):
-    userid = None
+async def get_id(message: Message, userid=None):
     if message.chat.type in ["private", "bot"]:
         userid = message.chat.id
     if message.reply_to_message:

@@ -7,7 +7,12 @@ from typing import Union
 
 import aiohttp
 import spamwatch
-from pyrogram.errors import ChatAdminRequired, PeerIdInvalid, UserAdminInvalid
+from pyrogram.errors import (
+    ChannelInvalid,
+    ChatAdminRequired,
+    PeerIdInvalid,
+    UserAdminInvalid,
+)
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
@@ -124,7 +129,7 @@ async def gban_user(message: Message):
                 f"**Chat ID:** `{chat.id}`\n"
                 f"**Reason:** `{reason}`\n\n$GBAN #id{user_id}"
             )
-        except (ChatAdminRequired, UserAdminInvalid):
+        except (ChatAdminRequired, UserAdminInvalid, ChannelInvalid):
             pass
     await GBAN_USER_BASE.insert_one(
         {
@@ -182,7 +187,7 @@ async def ungban_user(message: Message):
                     f"**User ID:** `{user_id}`\n\n"
                     f"$UNGBAN #id{user_id}"
                 )
-            except (ChatAdminRequired, UserAdminInvalid):
+            except (ChatAdminRequired, UserAdminInvalid, ChannelInvalid):
                 pass
     await message.edit(
         r"\\**#UnGbanned_User**//"

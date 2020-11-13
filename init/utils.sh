@@ -83,6 +83,10 @@ fetchBranches() {
     done
 }
 
+updateBuffer() {
+    git config http.postBuffer 524288000
+}
+
 upgradePip() {
     pip3 install -U pip &> /dev/null
 }
@@ -113,7 +117,7 @@ printLogo() {
                  X::::::X     X::::::X                
                  X:::::X       X:::::X                
                  X:::::X       X:::::X                
-                 XXXXXXX       XXXXXXX                                                         
+                 XXXXXXX       XXXXXXX                
 '
     printLine
 }

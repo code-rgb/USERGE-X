@@ -9,13 +9,13 @@
 
 import asyncio
 import shutil
-import sys
 import time
 
 from pyrogram.types import User
 
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
+from userge.utils import terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 MAX_IDLE_TIME = 300
@@ -48,7 +48,7 @@ async def _init() -> None:
 )
 async def restart_(message: Message):
     """ restart userge """
-    await message.edit("Restarting Userge Services", log=__name__)
+    await message.edit("Restarting <b><u>USERGE-X</u></b> Services", log=__name__)
     LOG.info("USERGE Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
@@ -79,7 +79,7 @@ async def shutdown_(message: Message) -> None:
     else:
         await asyncio.sleep(1)
     await message.delete()
-    sys.exit()
+    terminate()
 
 
 @userge.on_cmd(
@@ -269,13 +269,13 @@ async def _dyno_saver_worker() -> None:
                         try:
                             Config.HEROKU_APP.process_formation()["worker"].scale(0)
                         except Exception as h_e:  # pylint: disable=broad-except
-                            LOG.err(f"heroku app error : {h_e}")
+                            LOG.error(f"heroku app error : {h_e}")
                             offline_start_time += 20
                             await asyncio.sleep(10)
                             continue
                         LOG.info("< successfully killed heroku dyno ! >")
                         await CHANNEL.log("heroku dyno killed !")
-                        sys.exit()
+                        terminate()
                         return
                     prog = round(current_idle_time * 100 / MAX_IDLE_TIME, 2)
                     mins = int(MAX_IDLE_TIME / 60)

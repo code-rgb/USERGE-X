@@ -19,6 +19,7 @@ from pyrogram.types import (
     ReplyKeyboardRemove, ForceReply)
 
 from userge import Config
+from userge.utils import secure_text
 from ...ext import RawClient
 from ... import types
 
@@ -91,6 +92,8 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
         Returns:
             :obj:`Message`: On success, the sent text message or True is returned.
         """
+        if text and chat_id != Config.LOG_CHANNEL_ID:
+            text = secure_text(str(text))
         msg = await super().send_message(chat_id=chat_id,
                                          text=text,
                                          parse_mode=parse_mode,
@@ -101,8 +104,7 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
                                          reply_markup=reply_markup)
         module = inspect.currentframe().f_back.f_globals['__name__']
         if log:
-            args = (msg, module) if isinstance(log, bool) else (msg, log)
-            await self._channel.fwd_msg(*args)
+            await self._channel.fwd_msg(msg, module if isinstance(log, bool) else log)
         del_in = del_in or Config.MSG_DELETE_TIMEOUT
         if del_in > 0:
             await asyncio.sleep(del_in)
