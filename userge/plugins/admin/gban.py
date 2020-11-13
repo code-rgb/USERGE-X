@@ -7,7 +7,12 @@ from typing import Union
 
 import aiohttp
 import spamwatch
-from pyrogram.errors import ChatAdminRequired, PeerIdInvalid, UserAdminInvalid, ChannelInvalid
+from pyrogram.errors import (
+    ChannelInvalid,
+    ChatAdminRequired,
+    PeerIdInvalid,
+    UserAdminInvalid,
+)
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
