@@ -97,7 +97,10 @@ class Config:
     PM_LOG_GROUP_ID = int(pmlog_grp) if pmlog_grp else None
     PM_LOGGING = False
     DEEP_AI = os.environ.get("DEEP_AI", None)
-    
+    ### Last FM
+    LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
+    LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", None)
+
 
 def get_version() -> str:
     """ get userge version """
