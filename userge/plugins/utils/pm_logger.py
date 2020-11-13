@@ -150,7 +150,11 @@ async def pm_user_log_(message: Message):
     if found:
         await asyncio.gather(
             NO_PM_LOG.delete_one({"user_id": user_id}),
-            message.edit(f"Now Logging PM for user: {user_data['mention']}", del_in=3, log=__name__),
+            message.edit(
+                f"Now Logging PM for user: {user_data['mention']}",
+                del_in=3,
+                log=__name__,
+            ),
         )
         return
     await asyncio.gather(
@@ -161,7 +165,9 @@ async def pm_user_log_(message: Message):
             }
         ),
         message.edit(
-            f"PM Logging turned off for user: {user_data['mention']}", del_in=3, log=__name__
+            f"PM Logging turned off for user: {user_data['mention']}",
+            del_in=3,
+            log=__name__,
         ),
     )
 
@@ -190,7 +196,7 @@ async def list_no_pm_log_users(message: Message):
     )
 
 
-async def get_id(message: Message, userid = None):
+async def get_id(message: Message, userid=None):
     if message.chat.type in ["private", "bot"]:
         userid = message.chat.id
     if message.reply_to_message:
