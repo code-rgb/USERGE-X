@@ -1,10 +1,3 @@
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 
 from datetime import datetime
 
@@ -28,6 +21,7 @@ from userge.utils import time_formatter
     del_pre=True,
 )
 async def purge_(message: Message):
+    """purge from replied message"""
     await message.edit("`purging ...`")
     from_user_id = None
     if message.filtered_input_str:
@@ -92,7 +86,7 @@ async def purge_(message: Message):
     "purgeme",
     about={
         "header": "purge messages from yourself",
-        "usage": "{tr}purgeme [no. of message to delete]",
+        "usage": "{tr}purgeme [number]",
         "examples": ["{tr}purgeme 10"],
     },
     allow_bots=False,
@@ -100,6 +94,7 @@ async def purge_(message: Message):
     allow_via_bot=False
 )
 async def purgeme_(message: Message):
+    """purge given no. of your messages"""
     await message.edit("`purging ...`")
     if not (
         message.input_str
@@ -107,7 +102,7 @@ async def purgeme_(message: Message):
     ):
         return await message.err("Provide a valid number of message to delete", del_in=3)
     start_t = datetime.now()
-    limit = min(int(message.input_str), 100)
+    number = min(int(message.input_str), 100)
     msg_list = []
     async for msg in userge.search_messages(
         message.chat.id, "", limit=number, from_user="me"
@@ -116,4 +111,4 @@ async def purgeme_(message: Message):
     await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = datetime.now()
     out = f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
-    await message.edit(out, del_in=3)
+    await message.edit(out, del_in=3, log=__name__)
