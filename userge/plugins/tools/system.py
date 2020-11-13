@@ -48,7 +48,7 @@ async def _init() -> None:
 )
 async def restart_(message: Message):
     """ restart userge """
-    await message.edit("Restarting Userge Services", log=__name__)
+    await message.edit("Restarting <b><u>USERGE-X</u></b> Services", log=__name__)
     LOG.info("USERGE Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
