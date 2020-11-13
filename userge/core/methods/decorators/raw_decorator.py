@@ -197,8 +197,10 @@ async def _both_have_perm(flt: Union['types.raw.Command', 'types.raw.Filter'],
     if flt.check_invite_perm and not (
             (user.can_all or user.can_invite_users) and bot.can_invite_users):
         return False
-    return bool(not flt.check_pin_perm or (
-            (user.can_all or user.can_pin_messages) and bot.can_pin_messages))
+    if flt.check_pin_perm and not (
+            (user.can_all or user.can_pin_messages) and bot.can_pin_messages):
+        return False
+    return True
 
 
 class RawDecorator(RawClient):
@@ -207,7 +209,7 @@ class RawDecorator(RawClient):
 
     def __init__(self, **kwargs) -> None:
         self.manager = types.new.Manager(self)
-        self._tasks: List[Callable[[Any], Any]] = []
+        self._tasks: List[Callable[[], Any]] = []
         super().__init__(**kwargs)
 
     def on_filters(self, filters: RawFilter, group: int = 0,

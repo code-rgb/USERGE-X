@@ -47,7 +47,6 @@ class Config:
     INSTA_PASS = os.environ.get("INSTA_PASS")
     UPSTREAM_REPO = os.environ.get("UPSTREAM_REPO")
     UPSTREAM_REMOTE = os.environ.get("UPSTREAM_REMOTE")
-    SCREENSHOT_API = os.environ.get("SCREENSHOT_API", None)
     SPAM_WATCH_API = os.environ.get("SPAM_WATCH_API", None)
     CURRENCY_API = os.environ.get("CURRENCY_API", None)
     OCR_SPACE_API_KEY = os.environ.get("OCR_SPACE_API_KEY", None)
@@ -94,7 +93,7 @@ class Config:
     IMGFLIP_ID = os.environ.get('IMGFLIP_ID', None)
     IMGFLIP_PASS = os.environ.get('IMGFLIP_PASS', None)
     ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "False")
-    pmlog_grp = os.environ.get("PM_LOG_GROUP_ID")
+    pmlog_grp = os.environ.get("PM_LOG_GROUP_ID", None)
     PM_LOG_GROUP_ID = int(pmlog_grp) if pmlog_grp else None
     PM_LOGGING = False
     DEEP_AI = os.environ.get("DEEP_AI", None)

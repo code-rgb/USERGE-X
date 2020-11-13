@@ -134,7 +134,7 @@ class ChannelLogger:
                 pass pyrogram.Message object which want to forward.
 
             caption (`str`, *optional*):
-                Text or Cpation of the message to be sent.
+                Text or Caption of the message to be sent.
 
         Returns:
             message_id on success or None
@@ -201,10 +201,9 @@ class ChannelLogger:
         if caption:
             u_dict = await client.get_user_dict(user_id)
             chat = await client.get_chat(chat_id)
-            u_dict.update(
-                {'chat': chat.title or "this group", 'count': chat.members_count}
-            )
-
+            u_dict.update({
+                'chat': chat.title if chat.title else "this group",
+                'count': chat.members_count})
             caption = caption.format_map(SafeDict(**u_dict))
         file_id, file_ref = get_file_id_and_ref(message)
         caption, buttons = parse_buttons(caption)

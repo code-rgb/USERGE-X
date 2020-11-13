@@ -9,6 +9,7 @@
 from datetime import datetime
 
 from userge import Message, userge
+from userge.utils import time_formatter
 
 
 @userge.on_cmd(
@@ -83,8 +84,7 @@ async def purge_(message: Message):
         )
         purged_messages_count += len(list_of_messages)
     end_t = datetime.now()
-    time_taken_s = (end_t - start_t).seconds
-    out = f"<u>purged</u> {purged_messages_count} messages in {time_taken_s} seconds."
+    out = f"<u>purged</u> {purged_messages_count} messages in {time_formatter(end_t - start_t)}."
     await message.edit(out, del_in=3)
 
 
@@ -96,17 +96,18 @@ async def purge_(message: Message):
         "examples": ["{tr}purgeme 10"],
     },
     allow_bots=False,
+    allow_channels=False,
+    allow_via_bot=False
 )
 async def purgeme_(message: Message):
     await message.edit("`purging ...`")
     if not (
         message.input_str
         and message.input_str.isdigit()
-        and (int(message.input_str) < 100)
     ):
-        await message.err("Provide a valid number of message to delete", del_in=5)
+        return await message.err("Provide a valid number of message to delete", del_in=3)
     start_t = datetime.now()
-    number = int(message.input_str)
+    limit = min(int(message.input_str), 100)
     msg_list = []
     async for msg in userge.search_messages(
         message.chat.id, "", limit=number, from_user="me"
@@ -114,7 +115,5 @@ async def purgeme_(message: Message):
         msg_list.append(msg.message_id)
     await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = datetime.now()
-    await message.edit(
-        f"Purged {len(msg_list)} Messages Successfully in {(end_t - start_t).seconds} seconds!",
-        del_in=6,
-    )
+    out = f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
+    await message.edit(out, del_in=3)
