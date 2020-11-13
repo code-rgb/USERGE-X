@@ -109,4 +109,7 @@ async def purgeme_(message: Message):
         msg_list.append(msg.message_id)
     await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = datetime.now()
+    out = (
+        f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
+    )
     await message.edit(out, del_in=3, log=__name__)
