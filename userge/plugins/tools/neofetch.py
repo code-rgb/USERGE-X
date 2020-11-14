@@ -25,7 +25,8 @@ from userge.utils import runcmd
 )
 async def neofetch_(message: Message):
     await message.edit("Getting System Info ...")
-    if not os.path.exists("/app/.apt/usr/bin/config/"):
+    #  Checking if using Heroku and config file is not present
+    if os.path.abspath('') == '/app' and not os.path.exists("/app/.apt/usr/bin/config/"):
         os.makedirs("/app/.apt/usr/bin/config/")
         shutil.move("resources/config.conf", "/app/.apt/usr/bin/config/")
     reply = message.reply_to_message
