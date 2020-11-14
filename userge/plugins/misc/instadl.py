@@ -46,7 +46,7 @@ def get_caption(post: Post) -> str:
     header = f"♥️`{post.likes}`  💬`{post.comments}`"
     if post.is_video:
         header += f"  👀`{post.video_view_count}`"
-    caption = header + "\n\n" + caption
+    caption = f"{header}\n\n{caption}"
     return caption
 
 
