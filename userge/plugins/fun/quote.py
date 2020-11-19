@@ -12,7 +12,7 @@ from userge import Message, userge
         "usage": "{tr}q [text or reply to msg]",
         "flags": {"-l": "limit, for multiple messages"},
         "usage": "Reply {tr}q -l[message limit]",
-        "examples": ["{tr}q" "{tr}q -l3"],
+        "examples": ["{tr}q", "{tr}q -l3"],
     },
     allow_via_bot=False,
     del_pre=True,
