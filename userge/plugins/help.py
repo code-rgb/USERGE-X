@@ -704,8 +704,8 @@ if userge.has_bot:
  • 🐍 Python :  `v{versions.__python_version__}`
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
  • 🧬 𝑿 :  `v{get_version()}`
- • 🎛 Mode :  {_get_mode()}
 
+    🎛 <u>Mode</u> :  {_get_mode()}
     🕔 Uptime : {userge.uptime}
 """
 
