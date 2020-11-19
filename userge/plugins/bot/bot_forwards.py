@@ -95,7 +95,7 @@ if userge.has_bot:
             try:
                 data = json.load(open(PATH))
                 user_id = data[0][str(replied.message_id)]
-                
+
                 await userge.bot.forward_messages(
                     user_id, message.chat.id, msg_id, as_copy=to_copy
                 )
@@ -110,7 +110,9 @@ if userge.has_bot:
                 )
                 return
         else:
-            await userge.bot.forward_messages(to_user.id, message.chat.id, msg_id, as_copy=to_copy)
+            await userge.bot.forward_messages(
+                to_user.id, message.chat.id, msg_id, as_copy=to_copy
+            )
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
@@ -170,7 +172,6 @@ if userge.has_bot:
             await userge.bot.send_message(user_id, banned_msg),
         )
 
-
     @userge.bot.on_message(
         allowForwardFilter
         & filters.user(Config.OWNER_ID)
@@ -201,7 +202,9 @@ if userge.has_bot:
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:
-                blocked_users.append(b_id)  # Collect the user id and removing them later
+                blocked_users.append(
+                    b_id
+                )  # Collect the user id and removing them later
             else:
                 count += 1
 
@@ -213,13 +216,11 @@ if userge.has_bot:
             for buser in blocked_users:
                 await BOT_START.find_one_and_delete({"user_id": buser})
 
-
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID)
         & filters.private
         & filters.reply
         & filters.command("getinfo")
-        
     )
     async def getinfo_(_, message: Message):
         replied = message.reply_to_message
@@ -242,8 +243,8 @@ if userge.has_bot:
             user_id = fwd.id
 
         if not (user_id or usr):
-            return await message.err('Not Found', del_in=3)
-        await message.edit(f'<b>User Info</b>\n\n__ID__ {user_id}\n👤 User: {usr}')
+            return await message.err("Not Found", del_in=3)
+        await message.edit(f"<b>User Info</b>\n\n__ID__ {user_id}\n👤 User: {usr}")
 
 
 async def dumper(a, b, update):
