@@ -28,7 +28,7 @@ class Spoiler_DB:
         self.db = json.load(open(PATH))
 
     def stats_(self, rnd_id: str, user_id: int, user_name: str):
-        if user_id != Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
+        if user_id not in Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
             self.db[rnd_id]["stats"][user_id] = user_name
             self.save()
 
@@ -101,7 +101,7 @@ async def spoiler_alert_(message: Message):
 )
 async def spoiler_get(_, message: Message):
     u_user = message.from_user
-    if u_user.id != Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
+    if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
         found = await BOT_BAN.find_one({"user_id": u_user.id})
         if found:
             return
@@ -126,7 +126,7 @@ async def spoiler_get(_, message: Message):
             except UserIsBlocked:
                 pass
 
-    if u_user.id != Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
+    if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
         SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
         user_list = await BOT_START.find_one({"user_id": u_user.id})
         if not user_list:
@@ -152,7 +152,7 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^getl([\S]+)$"))
     async def get_spoiler_link(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
+        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
                 show_alert=True,
@@ -179,7 +179,7 @@ if userge.has_bot:
     async def nobtnspoiler_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         u_name = c_q.from_user.first_name
-        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
+        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
                 show_alert=True,

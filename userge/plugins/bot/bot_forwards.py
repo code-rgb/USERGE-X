@@ -68,7 +68,7 @@ if userge.has_bot:
         msg_id = message.message_id
         try:
             msg_owner = await userge.bot.forward_messages(
-                Config.OWNER_ID, message.chat.id, msg_id
+                Config.OWNER_ID[0], message.chat.id, msg_id
             )
         except MessageIdInvalid:
             return
@@ -135,7 +135,7 @@ if userge.has_bot:
         get_mem = await userge.bot.get_users(user_id)
         firstname = get_mem.first_name
         user_id = get_mem.id
-        if user_id == Config.OWNER_ID:
+        if user_id in Config.OWNER_ID:
             await start_ban.edit(r"I Can't Ban You My Master")
             return
         if user_id in Config.SUDO_USERS:

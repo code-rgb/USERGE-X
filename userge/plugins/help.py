@@ -153,7 +153,7 @@ if userge.has_bot:
 
     def check_owner(func):
         async def wrapper(_, c_q: CallbackQuery):
-            if c_q.from_user and c_q.from_user.id == Config.OWNER_ID:
+            if c_q.from_user and c_q.from_user.id in Config.OWNER_ID:
                 try:
                     await func(c_q)
                 except MessageNotModified:
@@ -164,7 +164,7 @@ if userge.has_bot:
                         show_alert=True,
                     )
             else:
-                user_dict = await userge.bot.get_user_dict(Config.OWNER_ID)
+                user_dict = await userge.bot.get_user_dict(Config.OWNER_ID[0])
                 await c_q.answer(
                     f"Only {user_dict['flname']} Can Access this...! Build Your USERGE-X",
                     show_alert=True,
@@ -512,7 +512,7 @@ if userge.has_bot:
         string_split = string.split()  # All lower and Split each word
 
         if (
-            inline_query.from_user.id == Config.OWNER_ID
+            inline_query.from_user.id in Config.OWNER_ID
             or inline_query.from_user.id in Config.SUDO_USERS
         ):
 

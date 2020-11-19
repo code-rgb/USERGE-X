@@ -55,7 +55,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             hello += "\n<b>NOTE: </b> "
             hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
             hello += "All your messages here will be forwared to my **MASTER**"
-        if u_id != Config.OWNER_ID:
+        if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
             if not found:
                 today = date.today()
@@ -153,7 +153,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
     @userge.bot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
     async def add_to_grp(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id
-        if u_id == Config.OWNER_ID:
+        if u_id in Config.OWNER_ID:
             botname = (await userge.bot.get_me()).username
             msg = "**🤖 Add Your Bot to Group** \n\n <u>Note:</u>  <i>Admin Privilege Required !</i>"
             add_bot = f"http://t.me/{botname}?startgroup=start"
