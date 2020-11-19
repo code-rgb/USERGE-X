@@ -1,5 +1,5 @@
-#image:
-  #file: .gitpod.Dockerfile
+image:
+  file: .gitpod.Dockerfile
 
 tasks:
   # Install dependencies first.
@@ -9,6 +9,5 @@ tasks:
       if [[ -f config.env ]]; then
         bash run
       else
-        echo "Please copy the config.env.sample file and edit it to continue."
+        echo "Please edit the config.env.sample and rename it to 'config.env'. Then to run do-> bash run"
       fi
- 

@@ -219,7 +219,7 @@ if userge.has_bot:
         & filters.private
         & filters.reply
         & filters.command("getinfo")
-        )
+        
     )
     async def getinfo_(_, message: Message):
         replied = message.reply_to_message
