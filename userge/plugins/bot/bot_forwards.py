@@ -395,4 +395,4 @@ async def bf_help(message: Message):
     {cmd_}unbban [user_id/user_name]
     Hint: Check bblist for banned users.
 """
-    await userge.send_message(message.chat.id, bot_forwards_help, del_in=60)
+    await message.edit(bot_forwards_help, del_in=60)

@@ -120,14 +120,17 @@ if userge.has_bot:
 @pool.run_in_thread
 def _tubeDl(url: list, starttime, uid):
     ydl_opts = {
+        "addmetadata": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
         "outtmpl": os.path.join(
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid}+bestaudio",
+        "format": f"{uid}+bestaudio/best",
         "writethumbnail": True,
         "prefer_ffmpeg": True,
-        "postprocessors": [{"key": "FFmpegMetadata"}],
+        "postprocessors": [{"key": "FFmpegMetadata", "preferedformat": "mp4"}],
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         x = ydl.download([url])
