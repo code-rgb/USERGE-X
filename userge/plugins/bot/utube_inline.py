@@ -130,7 +130,7 @@ def _tubeDl(url: list, starttime, uid):
         "format": f"{uid}+bestaudio/best",
         "writethumbnail": True,
         "prefer_ffmpeg": True,
-        "postprocessors": [{"key": "FFmpegMetadata", "preferedformat": "mp4"}],
+        "postprocessors": [{"key": "FFmpegMetadata"}],
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         x = ydl.download([url])
