@@ -24,6 +24,7 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 
+from userge.core.ext import RawClient
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
@@ -80,6 +81,14 @@ ALIVE_IMGS = [
     "https://telegra.ph/file/995c75983a6c0e4499b55.png",
     "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
 ]
+
+
+def _get_mode() -> str:
+    if RawClient.DUAL_MODE:
+        return "↕️  **DUAL**"
+    if Config.BOT_TOKEN:
+        return "🤖  **BOT**"
+    return "👤  **USER**"
 
 
 async def _init() -> None:
@@ -695,6 +704,7 @@ if userge.has_bot:
  • 🐍 Python :  `v{versions.__python_version__}`
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
  • 🧬 𝑿 :  `v{get_version()}`
+ • 🎛 Mode :  {_get_mode()}
 
     🕔 Uptime : {userge.uptime}
 """
