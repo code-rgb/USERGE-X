@@ -99,7 +99,7 @@ async def helpme(
         out_str = (
             f"""⚒ <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
         )
-        cat_plugins = userge.manager.get_all_plugins()
+        cat_plugins = userge.manager.get_plugins()
         for cat in sorted(cat_plugins):
             if cat == "plugins":
                 continue
