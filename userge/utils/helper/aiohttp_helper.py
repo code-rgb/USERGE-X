@@ -1,3 +1,8 @@
+"""
+From Nana-Remix (https://github.com/pokurt/Nana-Remix)
+Author: https://github.com/pokurt
+"""
+
 import aiohttp
 
 
