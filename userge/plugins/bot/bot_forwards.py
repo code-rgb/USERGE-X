@@ -192,7 +192,7 @@ if userge.has_bot:
         b_msg = replied.message_id
         blocked_users = []
         count = 0
-        to_copy = False if message.poll else True
+        to_copy = False if replied.poll else True
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
