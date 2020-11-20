@@ -239,7 +239,7 @@ if userge.has_bot:
             try:
                 data = json.load(open(PATH))
                 user_id = data[0].get(str(replied.message_id), None)
-                usr = mention_html(user_id, (await userge.bot.get_users(user_id)).first_name)
+                usr = (await userge.bot.get_users(user_id)).mention
             except (BadRequest, FileNotFoundError):
                 user_id = None
         elif fwd:
