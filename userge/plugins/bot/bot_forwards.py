@@ -56,7 +56,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & ~filters.user(Config.OWNER_ID)
+        & ~filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.incoming
         & ~filters.command("start")
@@ -77,7 +77,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & filters.user(Config.OWNER_ID)
+        & filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.reply
         & ~filters.regex(
@@ -117,7 +117,7 @@ if userge.has_bot:
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
     @userge.bot.on_message(
-        filters.user(Config.OWNER_ID)
+        filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.incoming
         & filters.regex(pattern=r"^\/ban(?: )(.+)")
@@ -174,7 +174,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & filters.user(Config.OWNER_ID)
+        & filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.command("broadcast")
     )
@@ -217,7 +217,7 @@ if userge.has_bot:
                 await BOT_START.find_one_and_delete({"user_id": buser})
 
     @userge.bot.on_message(
-        filters.user(Config.OWNER_ID)
+        filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.reply
         & filters.command("getinfo")
