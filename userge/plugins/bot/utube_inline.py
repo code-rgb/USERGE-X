@@ -6,15 +6,17 @@ from time import time
 
 import requests
 import youtube_dl
+from youtube_dl.utils import DownloadError
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
-
+from pyrogram.errors import MessageIdInvalid
 from userge import Config, pool, userge
 from userge.utils import get_file_id_and_ref
 
 from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
+CHANNEL = userge.getCLogger(__name__)
 
 
 def get_ytthumb(videoid):
@@ -76,7 +78,10 @@ if userge.has_bot:
         yt_code = c_q.matches[0].group(1)
         yt_url = f"https://www.youtube.com/watch?v={yt_code}"
         await c_q.edit_message_caption(
-            caption=f"Video is now Downloading, for progress see [LOG CHANNEL]({upload_msg.link})\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}",
+            caption=(
+                f"Video is now Downloading, for progress [<b>click here</b>]({upload_msg.link})"
+                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}"
+           ),
             reply_markup=None,
         )
         retcode = await _tubeDl(yt_url, startTime, choice_id)
@@ -95,25 +100,27 @@ if userge.has_bot:
             Config.LOG_CHANNEL_ID, uploaded_vid.message_id
         )
         f_id, f_ref = get_file_id_and_ref(refresh_vid)
-        if hasattr(refresh_vid.video, "thumbs"):
-            try:
-                video_thumb = await userge.bot.download_media(
-                    refresh_vid.video.thumbs[0].file_id
-                )
-            except TypeError:
-                video_thumb = None
-        else:
-            video_thumb = None
-        await c_q.edit_message_media(
-            media=InputMediaVideo(
-                media=f_id,
-                file_ref=f_ref,
-                thumb=video_thumb,
-                caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                supports_streaming=True,
-            ),
-            reply_markup=None,
-        )
+        video_thumb = None
+        if refresh_vid.video.thumbs:
+            video_thumb = await userge.bot.download_media(
+                refresh_vid.video.thumbs[0].file_id
+            )
+
+        try:
+            m = await c_q.edit_message_media(
+                media=InputMediaVideo(
+                    media=f_id,
+                    file_ref=f_ref,
+                    thumb=video_thumb,
+                    caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                    supports_streaming=True,
+                ),
+                reply_markup=None,
+            )
+        except MessageIdInvalid:
+            # Send Normal Video
+            await CHANNEL.log(m)
+
         await uploaded_vid.delete()
 
 
@@ -133,5 +140,9 @@ def _tubeDl(url: list, starttime, uid):
         "postprocessors": [{"key": "FFmpegMetadata"}],
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        x = ydl.download([url])
+        try:
+            x = ydl.download([url])
+        except DownloadError as e:
+            await CHANNEL.log(e)
+            x = None
     return x

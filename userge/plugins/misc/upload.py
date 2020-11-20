@@ -240,7 +240,7 @@ async def vid_upload(message: Message, path, del_path: bool = False, extra: str 
     finally:
         if os.path.exists(str(path)) and del_path:
             os.remove(str(path))
-    return msg
+        return msg
 
 
 async def audio_upload(message: Message, path, del_path: bool = False, extra: str = ""):

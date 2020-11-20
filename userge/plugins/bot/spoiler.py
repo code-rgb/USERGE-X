@@ -92,62 +92,62 @@ async def spoiler_alert_(message: Message):
     await message.edit(text_, reply_markup=buttons, disable_web_page_preview=True)
 
 
-@userge.bot.on_message(
-    filters.private
-    & (
-        filters.regex(pattern=r"^/start spoiler_([\S]+)")
-        | filters.regex(pattern=r"^/spoiler_([\S]+)")
-    )
-)
-async def spoiler_get(_, message: Message):
-    u_user = message.from_user
-    if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
-        found = await BOT_BAN.find_one({"user_id": u_user.id})
-        if found:
-            return
-    spoiler_key = message.matches[0].group(1)
-    if os.path.exists(PATH):
-        view_data = SPOILER_DB.db
-        mid = view_data.get(spoiler_key, None)
-        if mid:
-            try:
-                await CHANNEL.forward_stored(
-                    client=userge.bot,
-                    message_id=mid["msg_id"],
-                    user_id=u_user.id,
-                    chat_id=message.chat.id,
-                    reply_to_message_id=message.message_id,
-                )
-            except UserIsBlocked:
-                pass
-        else:
-            try:
-                await message.reply("Sorry 🥺 , The Spoiler has now been expired !")
-            except UserIsBlocked:
-                pass
-
-    if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
-        SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
-        user_list = await BOT_START.find_one({"user_id": u_user.id})
-        if not user_list:
-            today = datetime.date.today()
-            d2 = today.strftime("%B %d, %Y")
-            start_date = d2.replace(",", "")
-            BOT_START.insert_one(
-                {
-                    "firstname": u_user.first_name,
-                    "user_id": u_user.id,
-                    "date": start_date,
-                }
-            )
-            log_msg = (
-                f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
-            )
-            log_msg += f"@{u_user.username}" if u_user.username else u_user.first_name
-            await CHANNEL.log(log_msg)
-
-
 if userge.has_bot:
+    
+    @userge.bot.on_message(
+        filters.private
+        & (
+            filters.regex(pattern=r"^/start spoiler_([\S]+)")
+            | filters.regex(pattern=r"^/spoiler_([\S]+)")
+        )
+    )
+    async def spoiler_get(_, message: Message):
+        u_user = message.from_user
+        if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
+            found = await BOT_BAN.find_one({"user_id": u_user.id})
+            if found:
+                return
+        spoiler_key = message.matches[0].group(1)
+        if os.path.exists(PATH):
+            view_data = SPOILER_DB.db
+            mid = view_data.get(spoiler_key, None)
+            if mid:
+                try:
+                    await CHANNEL.forward_stored(
+                        client=userge.bot,
+                        message_id=mid["msg_id"],
+                        user_id=u_user.id,
+                        chat_id=message.chat.id,
+                        reply_to_message_id=message.message_id,
+                    )
+                except UserIsBlocked:
+                    pass
+            else:
+                try:
+                    await message.reply("Sorry 🥺 , The Spoiler has now been expired !")
+                except UserIsBlocked:
+                    pass
+
+        if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
+            SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
+            user_list = await BOT_START.find_one({"user_id": u_user.id})
+            if not user_list:
+                today = datetime.date.today()
+                d2 = today.strftime("%B %d, %Y")
+                start_date = d2.replace(",", "")
+                BOT_START.insert_one(
+                    {
+                        "firstname": u_user.first_name,
+                        "user_id": u_user.id,
+                        "date": start_date,
+                    }
+                )
+                log_msg = (
+                    f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
+                )
+                log_msg += f"@{u_user.username}" if u_user.username else u_user.first_name
+                await CHANNEL.log(log_msg)
+
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^getl([\S]+)$"))
     async def get_spoiler_link(_, c_q: CallbackQuery):
