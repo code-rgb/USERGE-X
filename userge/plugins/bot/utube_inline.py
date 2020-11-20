@@ -67,7 +67,9 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
+        print(c_q)
         startTime = time()
+        inline_mode = True
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
@@ -78,13 +80,16 @@ if userge.has_bot:
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_code = c_q.matches[0].group(1)
         yt_url = f"https://www.youtube.com/watch?v={yt_code}"
-        await c_q.edit_message_caption(
-            caption=(
-                f"Video is now Downloading, for progress [<b>click here</b>]({upload_msg.link})"
-                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}"
-            ),
-            reply_markup=None,
-        )
+        try:
+            await c_q.edit_message_caption(
+                caption=(
+                    f"Video is now Downloading, for progress [<b>click here</b>]({upload_msg.link})"
+                    f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}"
+                ),
+                reply_markup=None,
+            )
+        except MessageIdInvalid:
+            inline_mode = False
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode == 0:
             _fpath = ""
@@ -107,8 +112,8 @@ if userge.has_bot:
                 refresh_vid.video.thumbs[0].file_id
             )
 
-        try:
-            m = await c_q.edit_message_media(
+        if inline_mode:
+            await c_q.edit_message_media(
                 media=InputMediaVideo(
                     media=f_id,
                     file_ref=f_ref,
@@ -118,9 +123,6 @@ if userge.has_bot:
                 ),
                 reply_markup=None,
             )
-        except MessageIdInvalid:
-            # Send Normal Video
-            await CHANNEL.log(m)
 
         await uploaded_vid.delete()
 
@@ -144,6 +146,6 @@ def _tubeDl(url: list, starttime, uid):
         try:
             x = ydl.download([url])
         except DownloadError as e:
-            await CHANNEL.log(e)
+            CHANNEL.log(e)
             x = None
     return x
