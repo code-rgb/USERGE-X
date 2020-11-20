@@ -110,6 +110,9 @@ if userge.has_bot:
                 )
                 return
         else:
+            # Incase message is your own forward
+            if to_user.id in Config.OWNER_ID:
+                return
             await userge.bot.forward_messages(
                 to_user.id, message.chat.id, msg_id, as_copy=to_copy
             )
@@ -220,9 +223,9 @@ if userge.has_bot:
         filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.reply
-        & filters.command("getinfo")
+        & filters.command("uinfo")
     )
-    async def getinfo_(_, message: Message):
+    async def uinfo_(_, message: Message):
         replied = message.reply_to_message
         if not replied:
             await userge.bot.send_message(
@@ -236,8 +239,8 @@ if userge.has_bot:
             try:
                 data = json.load(open(PATH))
                 user_id = data[0].get(str(replied.message_id), None)
-                usr = (await userge.bot.get_users(user_id)).first_name
-            except:
+                usr = mention_html(user_id, (await userge.bot.get_users(user_id)).first_name)
+            except (BadRequest, FileNotFoundError):
                 user_id = None
         elif fwd:
             usr = fwd.mention
@@ -245,7 +248,7 @@ if userge.has_bot:
 
         if not (user_id and usr):
             return await message.err("Not Found", del_in=3)
-        await info_msg.edit(f"<b>User Info</b>\n\n__ID__ {user_id}\n👤 User: {usr}")
+        await info_msg.edit(f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr}")
 
 
 async def dumper(a, b, update):
@@ -382,9 +385,9 @@ async def bf_help(message: Message):
     e.g-
     /broadcast [reply to a message]
 
-• `/getinfo` - Get user Info
+• `/uinfo` - Get user Info
     e.g-
-    /getinfo [reply to forwarded message]
+    /uinfo [reply to forwarded message]
   
     <i>can work outside bot pm</i>
 • `{cmd_}bblist` - BotBanList (Users Banned from your Bot's PM)
