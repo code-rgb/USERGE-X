@@ -88,7 +88,7 @@ if userge.has_bot:
         replied = message.reply_to_message
         to_user = replied.forward_from
         msg_id = message.message_id
-        to_copy = False if (message.poll or message.quiz) else True
+        to_copy = False if message.poll else True
         if not to_user:
             if not replied.forward_sender_name:
                 return
@@ -189,7 +189,7 @@ if userge.has_bot:
         b_msg = replied.message_id
         blocked_users = []
         count = 0
-        to_copy = False if (message.poll or message.quiz) else True
+        to_copy = False if message.poll else True
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
