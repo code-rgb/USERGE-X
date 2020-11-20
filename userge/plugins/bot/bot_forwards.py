@@ -224,12 +224,13 @@ if userge.has_bot:
     )
     async def getinfo_(_, message: Message):
         replied = message.reply_to_message
-        fwd = replied.forward_from
         if not replied:
             await userge.bot.send_message(
                 message.chat.id, "Reply to a message to see user info"
             )
             return
+        fwd = replied.forward_from
+        info_msg = await message.reply("`🔎 Searching for user in database ...`")
         usr = None
         if replied.forward_sender_name:
             try:
@@ -242,9 +243,9 @@ if userge.has_bot:
             usr = fwd.mention
             user_id = fwd.id
 
-        if not (user_id or usr):
+        if not (user_id and usr):
             return await message.err("Not Found", del_in=3)
-        await message.edit(f"<b>User Info</b>\n\n__ID__ {user_id}\n👤 User: {usr}")
+        await info_msg.edit(f"<b>User Info</b>\n\n__ID__ {user_id}\n👤 User: {usr}")
 
 
 async def dumper(a, b, update):
