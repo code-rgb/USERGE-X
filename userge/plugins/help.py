@@ -705,8 +705,7 @@ if userge.has_bot:
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
  • 🧬 𝑿 :  `v{get_version()}`
 
-    🎛 <u>Mode</u> :  {_get_mode()}
-    🕔 Uptime : {userge.uptime}
+{_get_mode()}  |  🕔: {userge.uptime}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
