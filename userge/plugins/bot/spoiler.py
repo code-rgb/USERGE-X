@@ -93,7 +93,7 @@ async def spoiler_alert_(message: Message):
 
 
 if userge.has_bot:
-    
+
     @userge.bot.on_message(
         filters.private
         & (
@@ -142,12 +142,11 @@ if userge.has_bot:
                         "date": start_date,
                     }
                 )
-                log_msg = (
-                    f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
+                log_msg = f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
+                log_msg += (
+                    f"@{u_user.username}" if u_user.username else u_user.first_name
                 )
-                log_msg += f"@{u_user.username}" if u_user.username else u_user.first_name
                 await CHANNEL.log(log_msg)
-
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^getl([\S]+)$"))
     async def get_spoiler_link(_, c_q: CallbackQuery):
