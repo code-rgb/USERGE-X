@@ -48,12 +48,12 @@ async def see_info(message: Message):
     branch = repo.active_branch.name
     if branch == "master":
         branch = "alpha"
-    unofficial_repo = "https://github.com/code-rgb/Userge-Plugins/blob/master/plugins/"
     plugin_name = userge.manager.commands[cmd_str].plugin_name
     plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
         "/plugins", ""
     )
     if plugin_loc == "/unofficial":
+        unofficial_repo = "https://github.com/code-rgb/Userge-Plugins/blob/master/plugins/"
         plugin_link = f"{unofficial_repo}/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
@@ -95,7 +95,6 @@ def count_lines(cmd_path: str, word=None):
     with open(cmd_path, "r") as f:
         for line in f:
             num_lines += 1
-            if word:
-                if word in line:
-                    arr.append(num_lines)
+            if word and word in line:
+                arr.append(num_lines)
     return num_lines, arr

@@ -101,11 +101,9 @@ async def purgeme_(message: Message):
         )
     start_t = time.time()
     number = min(int(message.input_str), 100)
-    msg_list = []
-    async for msg in userge.search_messages(
+    msg_list = [msg.message_id for msg in userge.search_messages(
         message.chat.id, "", limit=number, from_user="me"
-    ):
-        msg_list.append(msg.message_id)
+    )]
     await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = time.time()
     out = (

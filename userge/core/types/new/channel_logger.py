@@ -152,10 +152,9 @@ class ChannelLogger:
                                                          file_id=file_id,
                                                          file_ref=file_ref,
                                                          caption=caption)
-            message_id = msg.message_id
+            return msg.message_id
         else:
-            message_id = await self.log(caption)
-        return message_id
+            return await self.log(caption)
 
     async def forward_stored(self,
                              client: Union['_client.Userge', '_client._UsergeBot'],
@@ -201,9 +200,10 @@ class ChannelLogger:
         if caption:
             u_dict = await client.get_user_dict(user_id)
             chat = await client.get_chat(chat_id)
-            u_dict.update({
-                'chat': chat.title if chat.title else "this group",
-                'count': chat.members_count})
+            u_dict.update(
+                {'chat': chat.title or "this group", 'count': chat.members_count}
+            )
+
             caption = caption.format_map(SafeDict(**u_dict))
         file_id, file_ref = get_file_id_and_ref(message)
         caption, buttons = parse_buttons(caption)

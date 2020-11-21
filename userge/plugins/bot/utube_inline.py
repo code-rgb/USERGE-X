@@ -76,9 +76,9 @@ def date_formatter(date_):
 async def iytdl_inline(message: Message):
     reply = message.reply_to_message
     input_url = None
-    if message.input_str or (reply and message.input_str):
+    if message.input_str:
         input_url = message.input_str
-    elif reply and not message.input_str:
+    elif reply:
         if reply.text:
             input_url = reply.text
         elif reply.caption:
@@ -93,7 +93,7 @@ async def iytdl_inline(message: Message):
         chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
     )
     for i in y.updates:
-        if isinstance(i, UpdateNewMessage) or isinstance(i, UpdateNewChannelMessage):
+        if isinstance(i, (UpdateNewMessage, UpdateNewChannelMessage)):
             datax = (
                 (
                     (i["message"].reply_markup.rows[0].buttons[0].data).decode("utf-8")
@@ -143,17 +143,16 @@ if userge.has_bot:
                 )
 
         retcode = await _tubeDl(yt_url, startTime, choice_id)
-        if retcode == 0:
-            _fpath = ""
-            for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), "*")):
-                if not _path.lower().endswith((".jpg", ".png", ".webp")):
-                    _fpath = _path
-            if not _fpath:
-                await upload_msg.err("nothing found !")
-                return
-            uploaded_vid = await upload(upload_msg, Path(_fpath))
-        else:
+        if retcode != 0:
             return await upload_msg.edit(str(retcode))
+        _fpath = ""
+        for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), "*")):
+            if not _path.lower().endswith((".jpg", ".png", ".webp")):
+                _fpath = _path
+        if not _fpath:
+            await upload_msg.err("nothing found !")
+            return
+        uploaded_vid = await upload(upload_msg, Path(_fpath))
         if not inline_mode:
             return
         refresh_vid = await userge.bot.get_messages(
@@ -168,17 +167,16 @@ if userge.has_bot:
         else:
             video_thumb = download(get_ytthumb(yt_code))
 
-        if inline_mode:
-            await c_q.edit_message_media(
-                media=InputMediaVideo(
-                    media=f_id,
-                    file_ref=f_ref,
-                    thumb=video_thumb,
-                    caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                    supports_streaming=True,
-                ),
-                reply_markup=None,
-            )
+        await c_q.edit_message_media(
+            media=InputMediaVideo(
+                media=f_id,
+                file_ref=f_ref,
+                thumb=video_thumb,
+                caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                supports_streaming=True,
+            ),
+            reply_markup=None,
+        )
         await uploaded_vid.delete()
 
 
