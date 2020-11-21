@@ -45,12 +45,11 @@ async def sticklet(message: Message):
             sticktext, font=font, stroke_width=6, spacing=-10
         )
 
-        if current_size[0] > 512 or current_size[1] > 512 - 64:
-            fontsize -= 3
-            font = ImageFont.truetype("resources/Roboto-Regular.ttf", size=fontsize)
-        else:
+        if current_size[0] <= 512 and current_size[1] <= 512 - 64:
             break
 
+        fontsize -= 3
+        font = ImageFont.truetype("resources/Roboto-Regular.ttf", size=fontsize)
     width, height = draw.multiline_textsize(
         sticktext, font=font, stroke_width=6, spacing=-10
     )

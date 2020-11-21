@@ -111,8 +111,8 @@ if userge.has_bot:
         if os.path.exists(PATH):
             view_data = SPOILER_DB.db
             mid = view_data.get(spoiler_key, None)
-            if mid:
-                try:
+            try:
+                if mid:
                     await CHANNEL.forward_stored(
                         client=userge.bot,
                         message_id=mid["msg_id"],
@@ -120,14 +120,10 @@ if userge.has_bot:
                         chat_id=message.chat.id,
                         reply_to_message_id=message.message_id,
                     )
-                except UserIsBlocked:
-                    pass
-            else:
-                try:
+                else:
                     await message.reply("Sorry 🥺 , The Spoiler has now been expired !")
-                except UserIsBlocked:
-                    pass
-
+            except UserIsBlocked:
+                pass
         if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
             SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
             user_list = await BOT_START.find_one({"user_id": u_user.id})
