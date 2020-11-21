@@ -3,16 +3,20 @@ import glob
 import os
 from pathlib import Path
 from time import time
-import asyncio
-from wget import download
+
 import requests
 import youtube_dl
 from pyrogram import filters
 from pyrogram.errors import MessageIdInvalid
+from pyrogram.raw.types.update_new_message import (
+    UpdateNewChannelMessage,
+    UpdateNewMessage,
+)
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
+from wget import download
 from youtube_dl.utils import DownloadError
-from pyrogram.raw.types.update_new_message import UpdateNewMessage, UpdateNewChannelMessage
-from userge import Config, pool, userge, Message
+
+from userge import Config, Message, pool, userge
 from userge.utils import get_file_id_and_ref
 
 from ..misc.upload import upload
@@ -20,6 +24,7 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 STORE_DATA = {}
+
 
 def get_ytthumb(videoid):
     thumb_quality = [
@@ -74,12 +79,16 @@ async def iytdl_inline(message: Message):
     )
     for i in y.updates:
         if isinstance(i, UpdateNewMessage) or isinstance(i, UpdateNewChannelMessage):
-            datax = (((i['message'].reply_markup.rows[0].buttons[0].data).decode("utf-8")).split('|'))[2]
+            datax = (
+                (
+                    (i["message"].reply_markup.rows[0].buttons[0].data).decode("utf-8")
+                ).split("|")
+            )[2]
             break
 
-    STORE_DATA[datax] = {'chat_id': message.chat.id,'msg_id': y.updates[0].id}
-    #await CHANNEL.log(str(x))
-    #await CHANNEL.log(str(y))
+    STORE_DATA[datax] = {"chat_id": message.chat.id, "msg_id": y.updates[0].id}
+    # await CHANNEL.log(str(x))
+    # await CHANNEL.log(str(y))
     await message.delete()
     # await asyncio.sleep(90)
     # await userge.delete_messages(message.chat.id, y.updates[0].id)
@@ -115,7 +124,7 @@ if userge.has_bot:
             inline_mode = False
             todelete = STORE_DATA.get(i_q_id, None)
             if todelete:
-                await userge.get_messages(todelete['chat_id'], todelete['msg_id'])
+                await userge.get_messages(todelete["chat_id"], todelete["msg_id"])
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode == 0:
             _fpath = ""
@@ -125,8 +134,8 @@ if userge.has_bot:
             if not _fpath:
                 await upload_msg.err("nothing found !")
                 return
-            if not inline_mode: # WIP
-                pass 
+            if not inline_mode:  # WIP
+                pass
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))
@@ -179,5 +188,3 @@ def _tubeDl(url: list, starttime, uid):
             CHANNEL.log(e)
             x = None
     return x
-
-
