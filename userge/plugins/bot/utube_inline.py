@@ -120,7 +120,7 @@ if userge.has_bot:
         try:
             await c_q.edit_message_caption(
                 caption=(
-                    f"Video is now Downloading, for progress [<b>click here</b>]({upload_msg.link})"
+                    f"Video is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
                     f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}"
                 ),
                 reply_markup=None,
