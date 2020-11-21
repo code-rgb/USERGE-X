@@ -63,6 +63,5 @@ async def upload_media_(message: Message):
     except Exception as t_e:
         await message.err(t_e)
         return
-    finally:
-        os.remove(dl_loc)
-        return str(response[0])
+    os.remove(dl_loc)
+    return str(response[0])
