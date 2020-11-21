@@ -13,7 +13,8 @@ RUN apt -qq install -y --no-install-recommends \
     wget \
     ffmpeg \
     jq \
-    mediainfo
+    mediainfo \
+    neofetch
 
 # install chrome
 RUN mkdir -p /tmp/ && \

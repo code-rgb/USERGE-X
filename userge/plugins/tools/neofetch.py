@@ -2,8 +2,6 @@
 # All rights reserved.
 
 
-import os
-import shutil
 from io import BytesIO
 
 from PIL import Image, ImageDraw, ImageFont
@@ -25,12 +23,6 @@ from userge.utils import runcmd
 )
 async def neofetch_(message: Message):
     await message.edit("Getting System Info ...")
-    #  Checking if using Heroku and config file is not present
-    if os.path.abspath("") == "/app" and not os.path.exists(
-        "/app/.apt/usr/bin/config/"
-    ):
-        os.makedirs("/app/.apt/usr/bin/config/")
-        shutil.move("resources/config.conf", "/app/.apt/usr/bin/config/")
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     if "-img" in message.flags:

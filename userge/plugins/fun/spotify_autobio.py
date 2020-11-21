@@ -78,7 +78,7 @@ async def spotify_bio_(message: Message):
             del_in=5,
         )
         USER_INITIAL_BIO["bio"] = (
-            await userge.get_chat(Config.OWNER_ID)
+            await userge.get_chat((await userge.get_me()).id)
         ).description or ""
         Config.SPOTIFY_MODE = True
         await spotify_biox()
@@ -291,7 +291,7 @@ async def spotify_biox():
         # TELEGRAM
         try:
             # full needed, since we dont get a bio with the normal request
-            full = await userge.get_chat(Config.OWNER_ID)
+            full = await userge.get_chat((await userge.get_me()).id)
             bio = full.description
             # to_insert means we have a successful playback
             if to_insert:

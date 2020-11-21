@@ -56,7 +56,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & ~filters.user(Config.OWNER_ID)
+        & ~filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.incoming
         & ~filters.command("start")
@@ -68,7 +68,7 @@ if userge.has_bot:
         msg_id = message.message_id
         try:
             msg_owner = await userge.bot.forward_messages(
-                Config.OWNER_ID, message.chat.id, msg_id
+                Config.OWNER_ID[0], message.chat.id, msg_id
             )
         except MessageIdInvalid:
             return
@@ -77,7 +77,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & filters.user(Config.OWNER_ID)
+        & filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.reply
         & ~filters.regex(
@@ -88,34 +88,39 @@ if userge.has_bot:
         replied = message.reply_to_message
         to_user = replied.forward_from
         msg_id = message.message_id
+        to_copy = False if message.poll else True
         if not to_user:
-            if replied.forward_sender_name:
-                try:
-                    data = json.load(open(PATH))
-                    user_id = data[0][str(replied.message_id)]
-                    await userge.bot.forward_messages(
-                        user_id, message.chat.id, msg_id, as_copy=True
-                    )
-                except BadRequest:
-                    return
-                except:
-                    await userge.bot.send_message(
-                        message.chat.id,
-                        "`You can't reply to old messages with if user's"
-                        "forward privacy is enabled`",
-                        del_in=10,
-                    )
-                    return
-            else:
+            if not replied.forward_sender_name:
+                return
+            try:
+                data = json.load(open(PATH))
+                user_id = data[0][str(replied.message_id)]
+
+                await userge.bot.forward_messages(
+                    user_id, message.chat.id, msg_id, as_copy=to_copy
+                )
+            except BadRequest:
+                return
+            except:
+                await userge.bot.send_message(
+                    message.chat.id,
+                    "`You can't reply to old messages with if user's"
+                    "forward privacy is enabled`",
+                    del_in=5,
+                )
                 return
         else:
-            to_id = to_user.id
-            await userge.bot.forward_messages(to_id, message.chat.id, msg_id)
+            # Incase message is your own forward
+            if to_user.id in Config.OWNER_ID:
+                return
+            await userge.bot.forward_messages(
+                to_user.id, message.chat.id, msg_id, as_copy=to_copy
+            )
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
     @userge.bot.on_message(
-        filters.user(Config.OWNER_ID)
+        filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.incoming
         & filters.regex(pattern=r"^\/ban(?: )(.+)")
@@ -135,7 +140,7 @@ if userge.has_bot:
         get_mem = await userge.bot.get_users(user_id)
         firstname = get_mem.first_name
         user_id = get_mem.id
-        if user_id == Config.OWNER_ID:
+        if user_id in Config.OWNER_ID:
             await start_ban.edit(r"I Can't Ban You My Master")
             return
         if user_id in Config.SUDO_USERS:
@@ -172,7 +177,7 @@ if userge.has_bot:
 
     @userge.bot.on_message(
         allowForwardFilter
-        & filters.user(Config.OWNER_ID)
+        & filters.user(list(Config.OWNER_ID))
         & filters.private
         & filters.command("broadcast")
     )
@@ -185,6 +190,9 @@ if userge.has_bot:
             return
         br_cast = await message.reply_text("`Broadcasting ...`", quote=True)
         b_msg = replied.message_id
+        blocked_users = []
+        count = 0
+        to_copy = False if replied.poll else True
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
@@ -192,14 +200,55 @@ if userge.has_bot:
                     b_id, "🔊 You received a **new** Broadcast."
                 )
                 await userge.bot.forward_messages(
-                    b_id, message.chat.id, b_msg, as_copy=True
+                    b_id, message.chat.id, b_msg, as_copy=to_copy
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:
-                await asyncio.gather(BOT_START.delete_one({"user_id": b_id}))
-        b_info = "🔊 **Successfully Broadcasted This Message**"
+                blocked_users.append(
+                    b_id
+                )  # Collect the user id and removing them later
+            else:
+                count += 1
+
+        b_info = f"🔊 **Successfully Broadcasted This Message to** `{count} users`"
+        if len(blocked_users) != 0:
+            b_info += f"\n\n😕 {len(blocked_users)} users blocked your bot recently"
         await br_cast.edit(b_info)
+        if blocked_users:
+            for buser in blocked_users:
+                await BOT_START.find_one_and_delete({"user_id": buser})
+
+    @userge.bot.on_message(
+        filters.user(list(Config.OWNER_ID))
+        & filters.private
+        & filters.reply
+        & filters.command("uinfo")
+    )
+    async def uinfo_(_, message: Message):
+        replied = message.reply_to_message
+        if not replied:
+            await userge.bot.send_message(
+                message.chat.id, "Reply to a message to see user info"
+            )
+            return
+        fwd = replied.forward_from
+        info_msg = await message.reply("`🔎 Searching for user in database ...`")
+        usr = None
+        if replied.forward_sender_name:
+            try:
+                data = json.load(open(PATH))
+                user_id = data[0].get(str(replied.message_id), None)
+                usr = (await userge.bot.get_users(user_id)).mention
+            except (BadRequest, FileNotFoundError):
+                user_id = None
+        elif fwd:
+            usr = fwd.mention
+            user_id = fwd.id
+
+        if not (user_id and usr):
+            return await message.err("Not Found", del_in=3)
+        await info_msg.edit(f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr}")
 
 
 async def dumper(a, b, update):
@@ -212,7 +261,7 @@ async def dumper(a, b, update):
     json.dump(data, open(PATH, "w"))  # Dump
 
 
-def extract_content(msg):  # Modified a bound method
+def extract_content(msg: Message):  # Modified a bound method
     id_reason = msg.matches[0].group(1)
     replied = msg.reply_to_message
     if replied:
@@ -332,10 +381,14 @@ async def bf_help(message: Message):
     /ban [reply to forwarded message with reason]
     /ban [user_id/user_name] reason
 
-• `/broadcast` - Send a Broadcast Message to Users in your `{cmd_}startlist`
+• `/broadcast` - Send a Broadcast Message to Users in your `{cmd_}bot_users`
     e.g-
     /broadcast [reply to a message]
 
+• `/uinfo` - Get user Info
+    e.g-
+    /uinfo [reply to forwarded message]
+  
     <i>can work outside bot pm</i>
 • `{cmd_}bblist` - BotBanList (Users Banned from your Bot's PM)
     e.g-
@@ -346,4 +399,4 @@ async def bf_help(message: Message):
     {cmd_}unbban [user_id/user_name]
     Hint: Check bblist for banned users.
 """
-    await userge.send_message(message.chat.id, bot_forwards_help, del_in=60)
+    await message.edit(bot_forwards_help, del_in=60)

@@ -1,15 +1,10 @@
 <h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
-
-
 <br>
-
-
 <p align="center">
-    <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
-    <br>
-    <br>
+   <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
+   <br>
+   <br>
 </p>
-
 <h1>USERGE-X</h1>
 <b>Pluggable Telegram UserBot</b>
 <br>
@@ -30,68 +25,55 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/code-rgb/userge-x)
 <br>
 
- **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
+**USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
-
-[![Telegram](https://img.shields.io/badge/Support%20Group-USERGE--X-blue?&logo=telegram&style=social)](https://telegram.dog/x_xtests)
+<p align="center">
+    <a href="https://telegram.dog/x_xtests"><img src="https://img.shields.io/badge/Support%20Group-USERGE--%F0%9D%91%BF-blue?&logo=telegram&style=social" width=220px></a></p>
 
 ## Disclaimer
-
-                
-   ```
-
+```
 /**
-    ⚠️Kang at your own risk⚠️          
-    Your Telegram account may get banned.
-    I am not responsible for any improper use of this bot
-    This bot is intended for the purpose of having fun with memes,
-    as well as efficiently managing groups.
-    It can help you with managing yourself as well.
-    You ended up spamming groups, getting reported left and right,
-    and then you ended up in a Final Battle with Telegram
-    and at the end the Telegram Team
-    deleted your account?
-    And after that, you pointed your fingers at us
-    for getting your account deleted?
-    We will be rolling on the floor laughing at you.
-    Yes! you heard it right.
+   ⚠️Kang at your own risk⚠️          
+   Your Telegram account may get banned.
+   I am not responsible for any improper use of this bot
+   This bot is intended for the purpose of having fun with memes,
+   as well as efficiently managing groups.
+   It can help you with managing yourself as well.
+   You ended up spamming groups, getting reported left and right,
+   and then you ended up in a Final Battle with Telegram
+   and at the end the Telegram Team
+   deleted your account?
+   And after that, you pointed your fingers at us
+   for getting your account deleted?
+   We will be rolling on the floor laughing at you.
+   Yes! you heard it right.
 /**
 ```
-
-
 ## Requirements 
-
 * Python 3.8 or Higher
 * Telegram [API Keys](https://my.telegram.org/apps)
 * Google Drive [API Keys](https://console.developers.google.com/)
 * MongoDB [Database URL](https://cloud.mongodb.com/)
-
-
 ## How To Deploy 
 * With Heroku:
-
 <p align="center">
-<a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a></p>
+   <a href = "https://heroku.com/deploy?template=https://github.com/code-rgb/USERGE-X/tree/alpha"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a>
+</p>
 <br>
 
-  > **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
-  * First click The Button Above.
-  * Fill `API_ID`, `API_HASH`, `DATABASE_URL` and `LOG_CHANNEL_ID` and `HEROKU_APP_NAME` (**required**)
-  * Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
-  * Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
-  * Finally **hit deploy** button
-  
-  
+> **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
+* First click The Button Above.
+* Fill `API_ID`, `API_HASH`, `DATABASE_URL`, `LOG_CHANNEL_ID`, `HEROKU_APP_NAME` and `HEROKU_API_KEY` (**required**)
+* Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
+* Then fill [other **non-required** vars](https://telegra.ph/Heroku-Vars-for-USERGE-X-08-25) later
+* Finally **hit deploy** button
 ## String Session
-**VAR :** `HU_STRING_SESSION`
-
-### HEROKU 
-- [open your app](https://dashboard.heroku.com/apps/) then go to **more** -> **run console** and paste the command below and click **run**.
-  > command: `bash genStr`
-### REPL
-- [**Generate on REPL**](https://stringsessiongen.leorio.repl.run/)
-
-## Read more
+**VAR ->** `HU_STRING_SESSION`
+#### By HEROKU
+- [open your app](https://dashboard.heroku.com/apps/) then go to **more** -> **run console** and type `bash genStr` and click **run**.
+#### On REPL
+- [Generate on REPL](https://repl.it/@Leorio/stringsessiongen#main.py)
+### Read more
 <details>
   <summary><b>Details and Guides</b></summary>
 
@@ -119,11 +101,11 @@
   # get string session and add it to config.env
   bash genStr
 
-  # finally run the Userge ;)
+  # finally run the USERGE-X ;)
   bash run
   ```
 
-  
+
 <h2>Guide to Upstream Forked Repo</h2>
 <a href="https://telegra.ph/Upstream-Userge-Forked-Repo-Guide-07-04"><b>Upstream Forked Repo</b></a>
 <br>
@@ -182,15 +164,10 @@ async def test_filter(message: Message):
 
 </details> 
 
-
 ### Project Credits 
-
 * [Pyrogram Assistant](https://github.com/pyrogram/assistant)
 * [PyroGramBot](https://github.com/SpEcHiDe/PyroGramBot)
 * [PaperPlane](https://github.com/RaphielGang/Telegram-Paperplane)
 * [Uniborg](https://github.com/SpEcHiDe/UniBorg)
-
-
 ### Copyright & License 
-
 [**GNU General Public License v3.0**](https://github.com/code-rgb/USERGE-X/blob/alpha/LICENSE)

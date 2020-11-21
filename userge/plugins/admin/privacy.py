@@ -30,7 +30,7 @@ async def block_user(message: Message):
         return
     user_id = reply.from_user.id if reply else message.input_str
     bot_id = (await userge.bot.get_me()).id
-    if user_id in [bot_id, Config.OWNER_ID]:
+    if user_id == bot_id or user_id in Config.OWNER_ID:
         await message.edit("Are you serious bruh? :/")
         await asyncio.sleep(2)
         await message.edit("Do you want me to block myself? :|", del_in=5)
@@ -62,7 +62,7 @@ async def unblock_user(message: Message):
         await message.err("Reply to a user or give ID to unblock him/her!", del_in=5)
         return
     user_id = reply.from_user.id if reply else message.input_str
-    if user_id == Config.OWNER_ID:
+    if user_id in Config.OWNER_ID:
         await message.edit("Are you serious bruh? :/")
         await asyncio.sleep(2)
         await message.edit("How am i even supposed to unblock myself? :|", del_in=5)

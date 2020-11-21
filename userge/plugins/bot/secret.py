@@ -26,7 +26,7 @@ if userge.has_bot:
             receiver = data["user_id"]
             msg += data["msg"]
             u_id = c_q.from_user.id
-            if u_id in [Config.OWNER_ID, receiver]:
+            if u_id in Config.OWNER_ID or u_id == receiver:
                 await c_q.answer(msg, show_alert=True)
             else:
                 await c_q.answer("This Message is Confidential", show_alert=True)

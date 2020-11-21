@@ -1,12 +1,5 @@
 """ manage your group """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
 
 import asyncio
 import os
@@ -70,14 +63,15 @@ async def promote_usr(message: Message):
             can_invite_users=True,
             can_pin_messages=True,
         )
-        await asyncio.sleep(2)
-        await message.client.set_administrator_title(chat_id, user_id, custom_rank)
+        if custom_rank:
+            await asyncio.sleep(2)
+            await message.client.set_administrator_title(chat_id, user_id, custom_rank)
         await message.edit("`👑 Promoted Successfully..`", del_in=5)
         await CHANNEL.log(
             "#PROMOTE\n\n"
             f"USER: [{get_mem.user.first_name}](tg://user?id={get_mem.user.id}) "
             f"(`{get_mem.user.id}`)\n"
-            f"CUSTOM TITLE: `{custom_rank}`\n"
+            f"CUSTOM TITLE: `{custom_rank or None}`\n"
             f"CHAT: `{message.chat.title}` (`{chat_id}`)"
         )
     except UsernameInvalid:
@@ -457,16 +451,14 @@ async def zombie_clean(message: Message):
     )
     flags = message.flags
     rm_delaccs = "-c" in flags
-    del_stats = (
-        r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
-    )
-    del_users = 0
+    can_clean = check_user.status in ("administrator", "creator")
     if rm_delaccs:
-        can_clean = check_user.status in ("administrator", "creator")
+        del_users = 0
+        del_admins = 0
+        del_total = 0
+        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
         if can_clean:
             await message.edit("`Hang on!! cleaning zombie accounts from this chat..`")
-            del_admins = 0
-            del_total = 0
             async for member in message.client.iter_chat_members(chat_id):
                 if member.user.is_deleted:
                     try:
@@ -500,6 +492,8 @@ async def zombie_clean(message: Message):
                 r"`i don't have proper permission to do that! (* ￣︿￣)`", del_in=5
             )
     else:
+        del_users = 0
+        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
         await message.edit("`🔎 Searching for zombie accounts in this chat..`")
         async for member in message.client.iter_chat_members(chat_id):
             if member.user.is_deleted:

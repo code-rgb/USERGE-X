@@ -28,7 +28,7 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_true"))
     async def age_verification_true(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
+        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
                 show_alert=True,
@@ -59,7 +59,7 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def age_verification_false(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
+        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
                 show_alert=True,
@@ -87,7 +87,7 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
     async def chg_of_decision_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
-        if u_id != Config.OWNER_ID and u_id not in Config.SUDO_USERS:
+        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer(
                 "Given That It's A Stupid-Ass Decision, I've Elected To Ignore It.",
                 show_alert=True,

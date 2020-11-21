@@ -105,7 +105,7 @@ if userge.has_bot:
     async def choice_result_cb(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         opinion_id = c_q.matches[0].group(1)
-        if u_id == Config.OWNER_ID:
+        if u_id in Config.OWNER_ID:
             data = json.load(open(PATH))
             view_data = data[str(opinion_id)]
             total = len(view_data[0])

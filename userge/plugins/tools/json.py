@@ -62,4 +62,4 @@ def convert(obj):
 
 
 def bool_emoji(choice: bool) -> str:
-    return "✔️" if choice else "✖️"
+    return "✔" if choice else "✖"
