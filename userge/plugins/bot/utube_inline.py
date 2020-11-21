@@ -122,11 +122,15 @@ if userge.has_bot:
             todelete = STORE_DATA.get(i_q_id, None)
             print(todelete)
             if todelete:
-                bad_msg = await userge.get_messages(todelete["chat_id"], todelete["msg_id"])
+                bad_msg = await userge.get_messages(
+                    todelete["chat_id"], todelete["msg_id"]
+                )
                 print(bad_msg)
                 await bad_msg.delete()
-                upload_msg = await userge.send_message(todelete["chat_id"], 'Uploading ...')
-                
+                upload_msg = await userge.send_message(
+                    todelete["chat_id"], "Uploading ..."
+                )
+
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode == 0:
             _fpath = ""
