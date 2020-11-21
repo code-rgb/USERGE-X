@@ -9,7 +9,6 @@ from userge import Message, userge
     "q",
     about={
         "header": "Quote a message",
-        "usage": "{tr}q [text or reply to msg]",
         "flags": {"-l": "limit, for multiple messages"},
         "usage": "Reply {tr}q -l[message limit]",
         "examples": ["{tr}q", "{tr}q -l3"],
