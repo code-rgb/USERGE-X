@@ -3,22 +3,23 @@ import glob
 import os
 from pathlib import Path
 from time import time
-
+import asyncio
+from wget import download
 import requests
 import youtube_dl
 from pyrogram import filters
 from pyrogram.errors import MessageIdInvalid
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
 from youtube_dl.utils import DownloadError
-
-from userge import Config, pool, userge
+from pyrogram.raw.types.update_new_message import UpdateNewMessage, UpdateNewChannelMessage
+from userge import Config, pool, userge, Message
 from userge.utils import get_file_id_and_ref
 
 from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-
+STORE_DATA = {}
 
 def get_ytthumb(videoid):
     thumb_quality = [
@@ -38,12 +39,12 @@ def get_ytthumb(videoid):
     return thumb_link
 
 
-def ytdl_btn_generator(array, code):
+def ytdl_btn_generator(array, code, i_q_id):
     btn = []
     b = []
     for i in array:
         name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
-        call_back = f"ytdl{code}|{i.get('format_id', '')}"
+        call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
         b.append(InlineKeyboardButton(name, callback_data=call_back))
         if len(b) == 3:  # no. of columns
             btn.append(b)
@@ -63,17 +64,39 @@ def date_formatter(date_):
     return str(x.strftime("%d-%b-%Y"))
 
 
+@userge.on_cmd("iytdl", about={"header": "Inline youtube go Brr"})
+async def iytdl_inline(message: Message):
+    input_url = message.input_str
+    bot = await userge.bot.get_me()
+    x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url}")
+    y = await userge.send_inline_bot_result(
+        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+    )
+    for i in y.updates:
+        if isinstance(i, UpdateNewMessage) or isinstance(i, UpdateNewChannelMessage):
+            datax = (((i['message'].reply_markup.rows[0].buttons[0].data).decode("utf-8")).split('|'))[2]
+            break
+
+    STORE_DATA[datax] = {'chat_id': message.chat.id,'msg_id': y.updates[0].id}
+    #await CHANNEL.log(str(x))
+    #await CHANNEL.log(str(y))
+    await message.delete()
+    # await asyncio.sleep(90)
+    # await userge.delete_messages(message.chat.id, y.updates[0].id)
+
+
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
-        print(c_q)
+        await CHANNEL.log(str(c_q))
         startTime = time()
         inline_mode = True
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
         choice_id = c_q.matches[0].group(2)
+        i_q_id = c_q.matches[0].group(3)
         callback_continue = "Downloading Video Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id}"
         await c_q.answer(callback_continue, show_alert=True)
@@ -90,6 +113,9 @@ if userge.has_bot:
             )
         except MessageIdInvalid:
             inline_mode = False
+            todelete = STORE_DATA.get(i_q_id, None)
+            if todelete:
+                await userge.get_messages(todelete['chat_id'], todelete['msg_id'])
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode == 0:
             _fpath = ""
@@ -99,6 +125,8 @@ if userge.has_bot:
             if not _fpath:
                 await upload_msg.err("nothing found !")
                 return
+            if not inline_mode: # WIP
+                pass 
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))
@@ -111,6 +139,8 @@ if userge.has_bot:
             video_thumb = await userge.bot.download_media(
                 refresh_vid.video.thumbs[0].file_id
             )
+        else:
+            video_thumb = download(get_ytthumb(yt_code))
 
         if inline_mode:
             await c_q.edit_message_media(
@@ -149,3 +179,5 @@ def _tubeDl(url: list, starttime, uid):
             CHANNEL.log(e)
             x = None
     return x
+
+
