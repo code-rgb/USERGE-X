@@ -66,9 +66,21 @@ def date_formatter(date_):
     return str(x.strftime("%d-%b-%Y"))
 
 
-@userge.on_cmd("iytdl", about={"header": "Inline youtube go Brr"})
+@userge.on_cmd("iytdl", about={"header": "ytdl with inline buttons", "usage": "{tr}iytdl [URL] or [Reply to URL]",})
 async def iytdl_inline(message: Message):
-    input_url = message.input_str
+    reply = message.reply_to_message
+    input_url = None
+    if message.input_str or (reply and message.input_str):
+        input_url = message.input_str
+    elif reply and not message.input_str:
+        if reply.text:
+            input_url = reply.text
+        elif reply.caption:
+            input_url = reply.caption
+        
+    if not input_url
+        return await message.err('Input or reply to a valid youtube URL', del_in=5)
+
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url}")
     y = await userge.send_inline_bot_result(
@@ -82,13 +94,9 @@ async def iytdl_inline(message: Message):
                 ).split("|")
             )[2]
             break
-
-    STORE_DATA[datax] = {"chat_id": message.chat.id, "msg_id": y.updates[0].id}
-    # await CHANNEL.log(str(x))
-    # await CHANNEL.log(str(y))
     await message.delete()
-    # await asyncio.sleep(90)
-    # await userge.delete_messages(message.chat.id, y.updates[0].id)
+    STORE_DATA[datax] = {"chat_id": message.chat.id, "msg_id": y.updates[0].id}
+    
 
 
 if userge.has_bot:
@@ -120,12 +128,10 @@ if userge.has_bot:
         except MessageIdInvalid:
             inline_mode = False
             todelete = STORE_DATA.get(i_q_id, None)
-            print(todelete)
             if todelete:
                 bad_msg = await userge.get_messages(
                     todelete["chat_id"], todelete["msg_id"]
                 )
-                print(bad_msg)
                 await bad_msg.delete()
                 upload_msg = await userge.send_message(
                     todelete["chat_id"], "Uploading ..."
@@ -143,7 +149,7 @@ if userge.has_bot:
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))
-        if not inline_mode:  # WIP
+        if not inline_mode:
             return
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_vid.message_id
@@ -168,7 +174,6 @@ if userge.has_bot:
                 ),
                 reply_markup=None,
             )
-
         await uploaded_vid.delete()
 
 
