@@ -66,7 +66,13 @@ def date_formatter(date_):
     return str(x.strftime("%d-%b-%Y"))
 
 
-@userge.on_cmd("iytdl", about={"header": "ytdl with inline buttons", "usage": "{tr}iytdl [URL] or [Reply to URL]",})
+@userge.on_cmd(
+    "iytdl",
+    about={
+        "header": "ytdl with inline buttons",
+        "usage": "{tr}iytdl [URL] or [Reply to URL]",
+    },
+)
 async def iytdl_inline(message: Message):
     reply = message.reply_to_message
     input_url = None
@@ -77,9 +83,9 @@ async def iytdl_inline(message: Message):
             input_url = reply.text
         elif reply.caption:
             input_url = reply.caption
-        
+
     if not input_url:
-        return await message.err('Input or reply to a valid youtube URL', del_in=5)
+        return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url}")
@@ -96,7 +102,6 @@ async def iytdl_inline(message: Message):
             break
     await message.delete()
     STORE_DATA[datax] = {"chat_id": message.chat.id, "msg_id": y.updates[0].id}
-    
 
 
 if userge.has_bot:
