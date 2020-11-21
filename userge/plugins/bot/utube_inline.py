@@ -8,7 +8,7 @@ import requests
 import youtube_dl
 from pyrogram import filters
 from pyrogram.errors import MessageIdInvalid
-from pyrogram.raw.types.update_new_message import (
+from pyrogram.raw.types import (
     UpdateNewChannelMessage,
     UpdateNewMessage,
 )
