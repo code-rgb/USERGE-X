@@ -78,7 +78,7 @@ async def iytdl_inline(message: Message):
         elif reply.caption:
             input_url = reply.caption
         
-    if not input_url
+    if not input_url:
         return await message.err('Input or reply to a valid youtube URL', del_in=5)
 
     bot = await userge.bot.get_me()
