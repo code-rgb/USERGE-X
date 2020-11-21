@@ -120,8 +120,13 @@ if userge.has_bot:
         except MessageIdInvalid:
             inline_mode = False
             todelete = STORE_DATA.get(i_q_id, None)
+            print(todelete)
             if todelete:
-                await userge.get_messages(todelete["chat_id"], todelete["msg_id"])
+                bad_msg = await userge.get_messages(todelete["chat_id"], todelete["msg_id"])
+                print(bad_msg)
+                await bad_msg.delete()
+                upload_msg = await userge.send_message(todelete["chat_id"], 'Uploading ...')
+                
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode == 0:
             _fpath = ""
@@ -131,11 +136,11 @@ if userge.has_bot:
             if not _fpath:
                 await upload_msg.err("nothing found !")
                 return
-            if not inline_mode:  # WIP
-                pass
             uploaded_vid = await upload(upload_msg, Path(_fpath))
         else:
             return await upload_msg.edit(str(retcode))
+        if not inline_mode:  # WIP
+            return
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_vid.message_id
         )
@@ -182,6 +187,6 @@ def _tubeDl(url: list, starttime, uid):
         try:
             x = ydl.download([url])
         except DownloadError as e:
-            CHANNEL.log(e)
+            CHANNEL.log(str(e))
             x = None
     return x
