@@ -451,7 +451,9 @@ async def zombie_clean(message: Message):
     )
     flags = message.flags
     rm_delaccs = "-c" in flags
-    del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
+    del_stats = (
+        r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
+    )
     del_users = 0
     if rm_delaccs:
         can_clean = check_user.status in ("administrator", "creator")

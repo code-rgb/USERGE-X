@@ -53,7 +53,9 @@ async def see_info(message: Message):
         "/plugins", ""
     )
     if plugin_loc == "/unofficial":
-        unofficial_repo = "https://github.com/code-rgb/Userge-Plugins/blob/master/plugins/"
+        unofficial_repo = (
+            "https://github.com/code-rgb/Userge-Plugins/blob/master/plugins/"
+        )
         plugin_link = f"{unofficial_repo}/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
