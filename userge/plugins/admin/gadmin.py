@@ -451,14 +451,14 @@ async def zombie_clean(message: Message):
     )
     flags = message.flags
     rm_delaccs = "-c" in flags
-    can_clean = check_user.status in ("administrator", "creator")
+    del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
+    del_users = 0
     if rm_delaccs:
-        del_users = 0
-        del_admins = 0
-        del_total = 0
-        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
+        can_clean = check_user.status in ("administrator", "creator")
         if can_clean:
             await message.edit("`Hang on!! cleaning zombie accounts from this chat..`")
+            del_admins = 0
+            del_total = 0
             async for member in message.client.iter_chat_members(chat_id):
                 if member.user.is_deleted:
                     try:
@@ -492,8 +492,6 @@ async def zombie_clean(message: Message):
                 r"`i don't have proper permission to do that! (* ￣︿￣)`", del_in=5
             )
     else:
-        del_users = 0
-        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
         await message.edit("`🔎 Searching for zombie accounts in this chat..`")
         async for member in message.client.iter_chat_members(chat_id):
             if member.user.is_deleted:

@@ -111,7 +111,7 @@ async def neko_life(message: Message):
     await message.delete()
     if link.endswith(".gif"):
         #  Bots can't use "unsave=True"
-        bool_unsave = False if message.client.is_bot else True
+        bool_unsave = not message.client.is_bot
         await message.client.send_animation(
             chat_id=message.chat.id,
             animation=link,
