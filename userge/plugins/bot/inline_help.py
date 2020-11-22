@@ -36,10 +36,6 @@ COMMANDS = {
         "help_txt": "**Lastest Ofox Recovery for supported device, Powered By offcial Ofox API v2**\n\n>>>  `ofox <device codename>`",
         "i_q": "ofox whyred",
     },
-    "rick": {
-        "help_txt": "**Useless Rick Roll**\n\nBasically a wierd looking button with rickroll link xD\n>>> `rick`",
-        "i_q": "rick",
-    },
     "reddit": {
         "help_txt": '**Get Reddit Image post**\n\nGet Random Reddit meme or a post from specific subreddit, if you want post from specific subreddit do "reddit [subreddit]."\n>>> `reddit  or  reddit dankmemes.`',
         "i_q": "reddit nextfuckinglevel.",
@@ -53,7 +49,7 @@ COMMANDS = {
         "i_q": "stylish USERGE-X",
     },
     "ytdl": {
-        "help_txt": "**Download Youtube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]`",
+        "help_txt": f"**Download Youtube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]` or `{Config.CMD_TRIGGER}iytdl`",
         "i_q": "ytdl https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
     "spoiler": {
@@ -84,10 +80,10 @@ if userge.has_bot:
 
     BACK_BTN = InlineKeyboardButton(" ◀️  Back ", callback_data="backbtn_ihelp")
 
-    inline_help_txt = " <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see: [ **📕  EXAMPLE** ]"
+    inline_help_txt = " <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see:\n[ **📕  EXAMPLE** ]"
 
     @userge.bot.on_message(
-        filters.user(Config.OWNER_ID)
+        filters.user(list(Config.OWNER_ID))
         & filters.private
         & (filters.command("inline") | filters.regex(pattern=r"^/start inline$"))
     )
@@ -99,7 +95,7 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.user(Config.OWNER_ID) & filters.regex(pattern=r"^backbtn_ihelp$")
+        filters.user(list(Config.OWNER_ID)) & filters.regex(pattern=r"^backbtn_ihelp$")
     )
     async def back_btn(_, c_q: CallbackQuery):
         await c_q.edit_message_text(
