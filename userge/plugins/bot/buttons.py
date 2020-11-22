@@ -7,14 +7,14 @@ import os
 import re
 
 from html_telegraph_poster.upload_images import upload_image
-from pyrogram.errors.exceptions.bad_request_400 import (
+from pyrogram.errors import (
     BadRequest,
     MessageEmpty,
     UserIsBot,
 )
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import parse_buttons as pb
+from userge.utils import get_file_id_and_ref, parse_buttons as pb
 
 BUTTON_BASE = get_collection("TEMP_BUTTON")
 BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
@@ -130,3 +130,45 @@ async def down_image(message):
         message=message.reply_to_message, file_name=Config.DOWN_PATH
     )
     return os.path.join(Config.DOWN_PATH, os.path.basename(dls))
+
+
+@userge.on_cmd(
+    "noformat",
+    about={
+        "header": "decompile a message",
+        "description": "reply to a message to get it without any text formatting"
+    },
+)
+async def noformat_message(message: Message):
+    reply = message.reply_to_message
+    msg_text = None
+    medias = None
+    buttons = ""
+    if reply.text:
+        msg_text = reply.text.html
+    elif reply.media:
+        medias = get_file_id_and_ref(reply)
+        msg_text = reply.caption.html if reply.caption else None
+    else:
+        return await message.err('reply to valid message', del_in=5)
+    if reply.reply_markup:
+        for row in reply.reply_markup.inline_keyboard:
+            firstbtn = True
+            for btn in row:
+                if btn.url:
+                    if firstbtn:
+                        buttons += f"[{btn.text}][buttonurl:{btn.url}]"
+                        firstbtn = False
+                    else:
+                        buttons += f"[{btn.text}][buttonurl:{btn.url}:same]"
+    if medias:
+        await message.client.send_cached_media(
+            chat_id=message.chat.id,
+            file_id=medias[0],
+            file_ref=medias[1],
+            caption=f"{msg_text}{buttons}",
+            reply_to_message_id=reply.message_id,
+            parse_mode=None
+        )
+    else:
+        await message.reply(f"{msg_text}{buttons}", parse_mode=None)
