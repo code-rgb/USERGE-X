@@ -1,5 +1,5 @@
-import time
 import datetime
+import time
 
 from userge import Message, userge
 from userge.utils import time_formatter
@@ -104,10 +104,12 @@ async def purgeme_(message: Message):
     number = min(int(message.input_str), 100)
     msg_list = []
     new_msg = []
-    
+
     old_msg = (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp()
 
-    async for msgg in userge.iter_history(message.chat.id, offset_id=message.message_id, offset=0):
+    async for msgg in userge.iter_history(
+        message.chat.id, offset_id=message.message_id, offset=0
+    ):
         if msgg.from_user.id.is_self:
             new_msg.append(msgg.message_id)
         if old_msg > msg.date:
