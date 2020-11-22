@@ -107,7 +107,8 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.user(list(Config.OWNER_ID)) & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
+        filters.user(list(Config.OWNER_ID))
+        & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
     )
     async def help_query(_, c_q: CallbackQuery):
         command_name = c_q.matches[0].group(1)
