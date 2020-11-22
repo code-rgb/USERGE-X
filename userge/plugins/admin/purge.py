@@ -112,7 +112,7 @@ async def purgeme_(message: Message):
     ):
         if msgg.from_user.id.is_self:
             new_msg.append(msgg.message_id)
-        if old_msg > msg.date:
+        if old_msg > msgg.date:
             break
 
     async for msg in userge.search_messages(
