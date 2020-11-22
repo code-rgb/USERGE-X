@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from userge import Message, userge
 from userge.utils import time_formatter
@@ -101,15 +102,29 @@ async def purgeme_(message: Message):
         )
     start_t = time.time()
     number = min(int(message.input_str), 100)
-    msg_list = [
-        msg.message_id
-        for msg in userge.search_messages(
-            message.chat.id, "", limit=number, from_user="me"
-        )
-    ]
+    msg_list = []
+    new_msg = []
+    
+    old_msg = (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp()
+
+    async for msgg in userge.iter_history(message.chat.id, offset_id=message.message_id, offset=0):
+        if msgg.from_user.id.is_self:
+            new_msg.append(msgg.message_id)
+        if old_msg > msg.date:
+            break
+
+    async for msg in userge.search_messages(
+        message.chat.id, "", limit=number, from_user="me"
+    ):
+        msg_list.append(msg.message_id)
+        if new_msg:
+            for mids in new_msg:
+                if mids > msg.message_id:
+                    msg_list.append(mids)
+
     await userge.delete_messages(message.chat.id, message_ids=msg_list)
     end_t = time.time()
     out = (
         f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
     )
-    await message.edit(out, del_in=3, log=__name__)
+    await message.edit(out, del_in=3)
