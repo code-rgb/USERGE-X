@@ -110,7 +110,7 @@ async def purgeme_(message: Message):
     async for msgg in userge.iter_history(
         message.chat.id, offset_id=message.message_id, offset=0
     ):
-        if msgg.from_user.id.is_self:
+        if msgg.from_user.is_self:
             new_msg.append(msgg.message_id)
         if old_msg > msgg.date:
             break
