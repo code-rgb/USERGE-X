@@ -132,7 +132,7 @@ if userge.has_bot:
             )
         except MessageIdInvalid:
             inline_mode = False
-            todelete = STORE_DATA.get(i_q_id, None)
+            todelete = STORE_DATA.get(i_q_id)
             if todelete:
                 bad_msg = await userge.get_messages(
                     todelete["chat_id"], todelete["msg_id"]
