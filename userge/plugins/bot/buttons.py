@@ -134,31 +134,41 @@ async def down_image(message):
     about={
         "header": "decompile a message",
         "description": "reply to a message to get it without any text formatting",
+        "flags": {"-alt": "for MissRose bot supported format"},
     },
 )
 async def noformat_message(message: Message):
     reply = message.reply_to_message
     msg_text = None
-    medias = None
     buttons = ""
+    medias = get_file_id_and_ref(reply)
     if reply.text:
         msg_text = reply.text.html
-    elif reply.media:
-        medias = get_file_id_and_ref(reply)
+    elif medias[0]:
         msg_text = reply.caption.html if reply.caption else None
     else:
-        return await message.err("reply to valid message", del_in=5)
+        return await message.err("Now Supported!, reply to a supported media type or text", del_in=5)
+
+    if '-alt' in message.flags:
+        lbr_ = '('
+        rbr_ = ')'
+    else:
+        lbr_ = '['
+        rbr_ = ']'
+
     if reply.reply_markup:
         for row in reply.reply_markup.inline_keyboard:
             firstbtn = True
             for btn in row:
                 if btn.url:
                     if firstbtn:
-                        buttons += f"[{btn.text}][buttonurl:{btn.url}]"
+                        buttons += f"[{btn.text}]{lbr_}buttonurl:{btn.url}{rbr_}"
                         firstbtn = False
                     else:
-                        buttons += f"[{btn.text}][buttonurl:{btn.url}:same]"
-    if medias:
+                        buttons += f"[{btn.text}]{lbr_}buttonurl:{btn.url}:same{rbr_}"
+
+    if medias[0]:
+        await message.delete()
         await message.client.send_cached_media(
             chat_id=message.chat.id,
             file_id=medias[0],
@@ -168,4 +178,4 @@ async def noformat_message(message: Message):
             parse_mode=None,
         )
     else:
-        await message.reply(f"{msg_text}{buttons}", parse_mode=None)
+        await message.edit(f"{msg_text}{buttons}", parse_mode=None)
