@@ -147,14 +147,16 @@ async def noformat_message(message: Message):
     elif medias[0]:
         msg_text = reply.caption.html if reply.caption else None
     else:
-        return await message.err("Now Supported!, reply to a supported media type or text", del_in=5)
+        return await message.err(
+            "Now Supported!, reply to a supported media type or text", del_in=5
+        )
 
-    if '-alt' in message.flags:
-        lbr_ = '('
-        rbr_ = ')'
+    if "-alt" in message.flags:
+        lbr_ = "("
+        rbr_ = ")"
     else:
-        lbr_ = '['
-        rbr_ = ']'
+        lbr_ = "["
+        rbr_ = "]"
 
     if reply.reply_markup:
         for row in reply.reply_markup.inline_keyboard:
