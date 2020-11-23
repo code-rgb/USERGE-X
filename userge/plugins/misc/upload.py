@@ -23,7 +23,7 @@ from userge.plugins.misc.download import tg_download, url_download
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 
-LOGO_PATH = 'resources/userge.png'
+LOGO_PATH = 'resources/logo.png'
 
 
 @userge.on_cmd("rename", about={
@@ -172,13 +172,13 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
         await sent.edit(u_e)
         raise u_e
     else:
-        await sent.delete()vid_upload
+        await sent.delete()
         await finalize(message, msg, start_t)
         if os.path.exists(strpath) and del_path:
             os.remove(strpath)
 
 
-async def (message: Message, path, del_path: bool = False, extra: str = ''):
+async def vid_upload(message: Message, path, del_path: bool = False, extra: str = ''):
     strpath = str(path)
     thumb = await get_thumb(strpath)
     duration = 0
@@ -213,7 +213,6 @@ async def (message: Message, path, del_path: bool = False, extra: str = ''):
         if os.path.exists(str(path)) and del_path:
             os.remove(str(path))
     return msg
-
 
 async def audio_upload(message: Message, path, del_path: bool = False, extra: str = ''):
     title = None
