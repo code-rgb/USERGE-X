@@ -940,7 +940,7 @@ if userge.has_bot:
                 )
 
             if (str_y[0] == "btn" or "btn_" in  str_y[0]) and len(str_y) == 2:
-                if "btn_":
+                if "btn_" in str_y[0]:
                     pass
                 else:
                     textx, buttonsx = pb(str_y[1])
