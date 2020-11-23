@@ -108,8 +108,6 @@ async def purgeme_(message: Message):
     # so using iter_history to get messages newer than 5 mins.
     old_msg = (start_t - datetime.timedelta(minutes=5)).timestamp()
 
-
-
     async for msg in userge.search_messages(
         message.chat.id, "", limit=number, from_user="me"
     ):
@@ -118,7 +116,7 @@ async def purgeme_(message: Message):
     async for new_msg in userge.iter_history(message.chat.id, offset_id=mid, offset=0):
         if new_msg.from_user.is_self:
             msg_list.append(new_msg.message_id)
-        if (old_msg > new_msg.date or  msg_list[-1] > new_msg.message_id):
+        if old_msg > new_msg.date or msg_list[-1] > new_msg.message_id:
             break
 
     # https://stackoverflow.com/questions/39734485/python-combining-two-lists-and-removing-duplicates-in-a-functional-programming
