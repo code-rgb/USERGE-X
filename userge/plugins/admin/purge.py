@@ -1,8 +1,6 @@
 import datetime
-import time
 
 from userge import Message, userge
-from userge.utils import time_formatter
 
 
 @userge.on_cmd(
@@ -59,7 +57,7 @@ async def purge_(message: Message):
             purged_messages_count += len(list_of_messages)
             list_of_messages = []
 
-    start_t = time.time()
+    start_t = datetime.datetime.now()
     if message.client.is_bot:
         for a_message in await message.client.get_messages(
             chat_id=message.chat.id,
@@ -77,8 +75,9 @@ async def purge_(message: Message):
             chat_id=message.chat.id, message_ids=list_of_messages
         )
         purged_messages_count += len(list_of_messages)
-    end_t = time.time()
-    out = f"<u>purged</u> {purged_messages_count} messages in {time_formatter(end_t - start_t)}."
+    end_t = datetime.datetime.now()
+    time_taken_s = (end_t - start_t).seconds
+    out = f"<u>purged</u> {purged_messages_count} messages in {time_taken_s} seconds."
     await message.edit(out, del_in=3)
 
 
@@ -100,33 +99,33 @@ async def purgeme_(message: Message):
         return await message.err(
             "Provide a valid number of message to delete", del_in=3
         )
-    start_t = time.time()
+    start_t = datetime.datetime.now()
     number = min(int(message.input_str), 100)
+    mid = message.message_id
     msg_list = []
-    new_msg = []
+    # https://t.me/pyrogramchat/266224
+    # search_messages takes some minutes to index new messages
+    # so using iter_history to get messages newer than 5 mins.
+    old_msg = (start_t - datetime.timedelta(minutes=5)).timestamp()
 
-    old_msg = (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp()
-
-    async for msgg in userge.iter_history(
-        message.chat.id, offset_id=message.message_id, offset=0
-    ):
-        if msgg.from_user.is_self:
-            new_msg.append(msgg.message_id)
-        if old_msg > msgg.date:
+    async for new_msg in userge.iter_history(message.chat.id, offset_id=mid, offset=0):
+        if new_msg.from_user.is_self:
+            msg_list.append(new_msg.message_id)
+        if old_msg > new_msg.date:
             break
 
-    async for msg in userge.search_messages(
-        message.chat.id, "", limit=number, from_user="me"
-    ):
+    async for msg in userge.search_messages(message.chat.id, "", limit=number, from_user="me"):
         msg_list.append(msg.message_id)
-        if new_msg:
-            for mids in new_msg:
-                if mids > msg.message_id:
-                    msg_list.append(mids)
 
-    await userge.delete_messages(message.chat.id, message_ids=msg_list)
-    end_t = time.time()
+    # https://stackoverflow.com/questions/39734485/python-combining-two-lists-and-removing-duplicates-in-a-functional-programming
+    del_list = list(set(msg_list))
+    if mid in del_list: del_list.remove(mid)
+
+    await userge.delete_messages(message.chat.id, message_ids=del_list)
+    
+    end_t = datetime.datetime.now()
+    time_taken_s = (end_t - start_t).seconds
     out = (
-        f"<u>purged</u> {len(msg_list)} messages in {time_formatter(end_t - start_t)}."
+        f"<u>purged</u> {len(msg_list)} messages in {time_taken_s} seconds."
     )
     await message.edit(out, del_in=3)
