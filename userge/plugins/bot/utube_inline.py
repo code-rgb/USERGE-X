@@ -108,7 +108,6 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)\|(\d+)$"))
     async def ytdl_callback(_, c_q: CallbackQuery):
-        await CHANNEL.log(str(c_q))
         startTime = time()
         inline_mode = True
         u_id = c_q.from_user.id
