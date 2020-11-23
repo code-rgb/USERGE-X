@@ -939,7 +939,7 @@ if userge.has_bot:
                     )
                 )
 
-            if (str_y[0] == "btn" or "btn_" in  str_y[0]) and len(str_y) == 2:
+            if (str_y[0] == "btn" or "btn_" in str_y[0]) and len(str_y) == 2:
                 if "btn_":
                     pass
                 else:
@@ -951,8 +951,6 @@ if userge.has_bot:
                             reply_markup=buttonsx,
                         )
                     )
-
-              
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:

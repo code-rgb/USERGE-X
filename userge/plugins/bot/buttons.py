@@ -3,10 +3,8 @@
 # IMPROVED BY code-rgb
 # By @krishna_singhal
 
-import os
 import re
 
-from html_telegraph_poster.upload_images import upload_image
 from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
 
 from userge import Config, Message, get_collection, userge
@@ -77,9 +75,7 @@ async def inline_buttons(message: Message):
     if not replied:
         await message.err("Reply to a message First")
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(
-        bot.username, f"btn {replied.text}"
-    )
+    x = await userge.get_inline_bot_results(bot.username, f"btn {replied.text}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,
@@ -87,7 +83,6 @@ async def inline_buttons(message: Message):
         reply_to_message_id=replied.message_id,
     )
     await message.delete()
-
 
 
 def check_brackets(text):
@@ -103,9 +98,6 @@ def check_brackets(text):
         textx += word
     text = unmatch + textx
     return text
-
-
-
 
 
 @userge.on_cmd(
