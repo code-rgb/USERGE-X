@@ -123,6 +123,8 @@ async def purgeme_(message: Message):
     del_list = list(set(msg_list))
     if mid in del_list:
         del_list.remove(mid)
+    del_list.reverse()
+    del_list = del_list[:number]
 
     await userge.delete_messages(message.chat.id, message_ids=del_list)
 
