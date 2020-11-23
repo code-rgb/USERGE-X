@@ -939,7 +939,7 @@ if userge.has_bot:
                     )
                 )
 
-            if (str_y[0] == "btn" or "btn_" in  str_y[0]) and len(str_y) == 2:
+            if (str_y[0] == "btn" or "btn_" in str_y[0]) and len(str_y) == 2:
                 if "btn_" in str_y[0]:
                     pass
                 else:
