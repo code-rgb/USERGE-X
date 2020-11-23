@@ -114,18 +114,19 @@ async def purgeme_(message: Message):
         if old_msg > new_msg.date:
             break
 
-    async for msg in userge.search_messages(message.chat.id, "", limit=number, from_user="me"):
+    async for msg in userge.search_messages(
+        message.chat.id, "", limit=number, from_user="me"
+    ):
         msg_list.append(msg.message_id)
 
     # https://stackoverflow.com/questions/39734485/python-combining-two-lists-and-removing-duplicates-in-a-functional-programming
     del_list = list(set(msg_list))
-    if mid in del_list: del_list.remove(mid)
+    if mid in del_list:
+        del_list.remove(mid)
 
     await userge.delete_messages(message.chat.id, message_ids=del_list)
-    
+
     end_t = datetime.datetime.now()
     time_taken_s = (end_t - start_t).seconds
-    out = (
-        f"<u>purged</u> {len(msg_list)} messages in {time_taken_s} seconds."
-    )
+    out = f"<u>purged</u> {len(msg_list)} messages in {time_taken_s} seconds."
     await message.edit(out, del_in=3)
