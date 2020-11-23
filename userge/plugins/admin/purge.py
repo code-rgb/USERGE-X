@@ -128,5 +128,5 @@ async def purgeme_(message: Message):
 
     end_t = datetime.datetime.now()
     time_taken_s = (end_t - start_t).seconds
-    out = f"<u>purged</u> {len(msg_list)} messages in {time_taken_s} seconds."
+    out = f"<u>purged</u> {len(del_list)} messages in {time_taken_s} seconds."
     await message.edit(out, del_in=3)
