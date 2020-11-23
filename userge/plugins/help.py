@@ -952,8 +952,6 @@ if userge.has_bot:
                         )
                     )
 
-              
-
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
                     results = []
