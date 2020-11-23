@@ -73,35 +73,21 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
-    """ Create Buttons Through Inline Bots """
-    if Config.BOT_TOKEN is None:
-        await message.err(
-            "First Create a Inline Bot via @Botfather to Create Buttons..."
-        )
-        return
     replied = message.reply_to_message
-    if not (replied and (replied.text or replied.caption)):
-        await message.err("Reply a text Msg")
-        return
-    await message.edit("<code>Creating an inline button...</code>")
-    if replied.caption:
-        text = replied.caption
-        text = check_brackets(text)
-        dls_loc = await down_image(message)
-        photo_url = str(upload_image(dls_loc))
-        BUTTON_BASE.insert_one({"msg_data": text, "photo_url": photo_url})
-        os.remove(dls_loc)
-    else:
-        text = replied.text
-        text = check_brackets(text)
-        BUTTON_BASE.insert_one({"msg_data": text})
+    if not replied:
+        await message.err("Reply to a message First")
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, "buttonnn")
-    await userge.send_inline_bot_result(
-        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+    x = await userge.get_inline_bot_results(
+        bot.username, f"btn {replied.text}"
     )
-    await BUTTON_BASE.drop()
+    await userge.send_inline_bot_result(
+        chat_id=message.chat.id,
+        query_id=x.query_id,
+        result_id=x.results[0].id,
+        reply_to_message_id=replied.message_id,
+    )
     await message.delete()
+
 
 
 def check_brackets(text):
@@ -119,14 +105,7 @@ def check_brackets(text):
     return text
 
 
-async def down_image(message):
-    message.reply_to_message
-    if not os.path.isdir(Config.DOWN_PATH):
-        os.makedirs(Config.DOWN_PATH)
-    dls = await userge.download_media(
-        message=message.reply_to_message, file_name=Config.DOWN_PATH
-    )
-    return os.path.join(Config.DOWN_PATH, os.path.basename(dls))
+
 
 
 @userge.on_cmd(

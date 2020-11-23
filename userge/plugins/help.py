@@ -939,28 +939,20 @@ if userge.has_bot:
                     )
                 )
 
-            if string == "buttonnn":
-                async for data in BUTTON_BASE.find():
-                    button_data = data["msg_data"]
-                text, buttons = pb(button_data)
-                try:
-                    photo_url = data["photo_url"]
-                except KeyError:
-                    photo_url = None
-                if photo_url:
-                    results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=photo_url, caption=text, reply_markup=buttons
-                        )
-                    )
+            if (str_y[0] == "btn" or "btn_" in  str_y[0]) and len(str_y) == 2:
+                if "btn_":
+                    pass
                 else:
+                    textx, buttonsx = pb(str_y[1])
                     results.append(
                         InlineQueryResultArticle(
-                            title=text,
-                            input_message_content=InputTextMessageContent(text),
-                            reply_markup=buttons,
+                            title=textx,
+                            input_message_content=InputTextMessageContent(textx),
+                            reply_markup=buttonsx,
                         )
                     )
+
+              
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
