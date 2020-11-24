@@ -115,7 +115,7 @@ async def inline_buttons(message: Message):
         return await message.err("Reply to a message or give input")
 
     if is_media:
-        msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).id
+        msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
 
     InlineDB.save_msg(msg_id, text_x, is_media)
 
