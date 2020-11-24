@@ -101,11 +101,12 @@ async def inline_buttons(message: Message):
         text_x = message.input_str
         if reply and reply.media:
             f_id, f_ref = get_file_id_and_ref(reply)
-            is_media = True if f_id
+            is_media = True if f_id else False
     elif reply:
         msg_id = reply.message_id
         f_id, f_ref = get_file_id_and_ref(reply)
         if f_id and reply.caption:
+            is_media = True
             text_x = reply.caption.html
         elif reply.text:
             text_x = reply.text.html
