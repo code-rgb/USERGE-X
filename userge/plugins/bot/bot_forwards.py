@@ -215,6 +215,7 @@ if userge.has_bot:
         if len(blocked_users) != 0:
             b_info += f"\n\n😕 {len(blocked_users)} users blocked your bot recently"
         await br_cast.edit(b_info)
+        await CHANNEL.log(b_info)
         if blocked_users:
             for buser in blocked_users:
                 await BOT_START.find_one_and_delete({"user_id": buser})

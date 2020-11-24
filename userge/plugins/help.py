@@ -939,18 +939,50 @@ if userge.has_bot:
                     )
                 )
 
-            if (str_y[0] == "btn" or "btn_" in str_y[0]) and len(str_y) == 2:
-                if "btn_" in str_y[0]:
-                    pass
-                else:
-                    textx, buttonsx = pb(str_y[1])
-                    results.append(
-                        InlineQueryResultArticle(
-                            title=textx,
-                            input_message_content=InputTextMessageContent(textx),
-                            reply_markup=buttonsx,
+            if (str_y[0] == "btn" or "btn_" in  str_y[0]):
+                inline_db_path = "./userge/xcache/inline_db.json"
+                if os.path.exists(inline_db_path):
+                    view_db = json.load(open(inline_db_path))
+                    if len(view_db) != 0:
+                        msg_id = (str_y[0])[4:]
+                        inline_db = view_db.get(msg_id, None)
+                            if inline_db:
+                                if inline_db['is_media']:
+                                    saved_msg = await userge.bot.get_messages(Config.LOG_CHANNEL_ID, msg_id)
+                                    media_data = get_file_id_and_ref(saved_msg)
+
+                                textx, buttonsx = pb(inline_db['msg_data'])
+
+                    if inline_db['is_media']:
+                        if saved_msg.photo:
+                            results.append(
+                                InlineQueryResultCachedPhoto(
+                                    file_id=media_data[0],
+                                    file_ref=media_data[1],
+                                    caption=textx,
+                                    reply_markup=buttonsx,
+                                )
+                            )
+                        else:
+                            results.append(
+                                InlineQueryResultCachedDocument(
+                                    title=textx,
+                                    file_id=media_data[0],
+                                    file_ref=media_data[1],
+                                    caption=textx,
+                                    description="Inline Button",
+                                    reply_markup=buttonsx,
+                                )
+                            )
+                    else:
+                        results.append(
+                            InlineQueryResultArticle(
+                                title=textx,
+                                input_message_content=InputTextMessageContent(textx),
+                                reply_markup=buttonsx,
+                            )
                         )
-                    )
+
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:

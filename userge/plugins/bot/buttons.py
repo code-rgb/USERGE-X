@@ -1,10 +1,11 @@
+
 """ Create Buttons Through Bots """
 
 # IMPROVED BY code-rgb
-# By @krishna_singhal
 
+import json
 import re
-
+import os
 from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
 
 from userge import Config, Message, get_collection, userge
@@ -14,6 +15,25 @@ from userge.utils import parse_buttons as pb
 BUTTON_BASE = get_collection("TEMP_BUTTON")
 BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 BTNX = re.compile(BTN)
+PATH = "./userge/xcache/inline_db.json"
+
+
+class Inline_DB:
+    def __init__(self):
+        if not os.path.exists(PATH):
+            d = {}
+            json.dump(d, open(PATH, "w"))
+        self.db = json.load(open(PATH))
+
+    def save_msg(self, msg_id: int, msg_data: str, is_media: bool):
+        self.db[msg_id] = {'is_media': is_media, 'msg_data': msg_data}
+        self.save()
+
+    def save(self):
+        with open(PATH, "w") as outfile:
+            json.dump(self.db, outfile, indent=4)
+
+InlineDB = Inline_DB()
 
 
 @userge.on_cmd(
@@ -71,11 +91,36 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
-    replied = message.reply_to_message
-    if not replied:
-        await message.err("Reply to a message First")
+    reply = message.reply_to_message
+    media = None
+    text_x = None
+    if not reply or message.input_str:
+        return await message.err("Reply to a message or give input")
+    if message.input_str:
+        msg_id = message.message_id
+        text_x = message.input_str
+        if reply and reply.media:
+            f_id, f_ref = get_file_id_and_ref(reply)
+            is_media = True if f_id
+    elif reply:
+        msg_id = reply.message_id
+        f_id, f_ref = get_file_id_and_ref(reply)
+        if f_id and reply.caption:
+            text_x = reply.caption.html
+        elif reply.text:
+            text_x = reply.text.html
+
+    if not text_x:
+        return await message.err("Reply to a message or give input")
+
+    if is_media:
+        msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).id
+    
+
+    InlineDB.save_msg(msg_id, text_x, is_media)
+
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, f"btn {replied.text}")
+    x = await userge.get_inline_bot_results(bot.username, f"btn_{msg_id}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,
@@ -83,6 +128,11 @@ async def inline_buttons(message: Message):
         reply_to_message_id=replied.message_id,
     )
     await message.delete()
+
+
+
+
+
 
 
 def check_brackets(text):
