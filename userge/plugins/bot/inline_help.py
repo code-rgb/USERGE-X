@@ -17,7 +17,7 @@ COMMANDS = {
         "i_q": "secret @DeletedUser420 This is a secret message",
     },
     "alive": {
-        "help_txt": "**Alive Command for USERGE-X**\n\nThis You can view Uptime, Setting and Versions of your bot and when you change settings they are updayted in Real-time UwU\n>>>  `alive`",
+        "help_txt": "**Alive Command for USERGE-X**\n\nThis You can view Uptime, Setting and Versions of your bot and when you change settings they are updated in Real-time UwU\n>>>  `alive`",
         "i_q": "alive",
     },
     "opinion": {
