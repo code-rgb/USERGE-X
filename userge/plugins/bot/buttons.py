@@ -16,6 +16,7 @@ BUTTON_BASE = get_collection("TEMP_BUTTON")
 BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 BTNX = re.compile(BTN)
 PATH = "./userge/xcache/inline_db.json"
+CHANNEL = userge.getCLogger(__name__)
 
 
 class Inline_DB:
@@ -118,7 +119,7 @@ async def inline_buttons(message: Message):
         msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
 
     InlineDB.save_msg(msg_id, text_x, is_media)
-
+    await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"btn_{msg_id}")
     await userge.send_inline_bot_result(
