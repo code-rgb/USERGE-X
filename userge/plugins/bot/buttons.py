@@ -1,11 +1,11 @@
-
 """ Create Buttons Through Bots """
 
 # IMPROVED BY code-rgb
 
 import json
-import re
 import os
+import re
+
 from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
 
 from userge import Config, Message, get_collection, userge
@@ -26,12 +26,13 @@ class Inline_DB:
         self.db = json.load(open(PATH))
 
     def save_msg(self, msg_id: int, msg_data: str, is_media: bool):
-        self.db[msg_id] = {'is_media': is_media, 'msg_data': msg_data}
+        self.db[msg_id] = {"is_media": is_media, "msg_data": msg_data}
         self.save()
 
     def save(self):
         with open(PATH, "w") as outfile:
             json.dump(self.db, outfile, indent=4)
+
 
 InlineDB = Inline_DB()
 
@@ -92,7 +93,6 @@ async def create_button(msg: Message):
 )
 async def inline_buttons(message: Message):
     reply = message.reply_to_message
-    media = None
     text_x = None
     if not reply or message.input_str:
         return await message.err("Reply to a message or give input")
@@ -116,7 +116,6 @@ async def inline_buttons(message: Message):
 
     if is_media:
         msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).id
-    
 
     InlineDB.save_msg(msg_id, text_x, is_media)
 
@@ -129,11 +128,6 @@ async def inline_buttons(message: Message):
         reply_to_message_id=replied.message_id,
     )
     await message.delete()
-
-
-
-
-
 
 
 def check_brackets(text):
