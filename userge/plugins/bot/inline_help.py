@@ -13,15 +13,15 @@ HELP_BUTTONS = None
 
 COMMANDS = {
     "secret": {
-        "help_txt": "**Send a secret message to a user**\n (only the entered user and you can view  the message)\n\n>>>  `secret @username [text]`",
+        "help_txt": "**Send a secret message to a user**\n (only the entered user and you can view the message)\n\n>>>  `secret @username [text]`",
         "i_q": "secret @DeletedUser420 This is a secret message",
     },
     "alive": {
-        "help_txt": "**Alive Command for USERGE-X**\n\nThis You can view Uptime, Setting and Versions of your bot and when you change settings they are updated in Real-time UwU\n>>>  `alive`",
+        "help_txt": "**Alive Command for USERGE-X**\n\nHere You can view Uptime, Setting and Versions of your bot and when you change settings they are updated in Real-time UwU\n>>>  `alive`",
         "i_q": "alive",
     },
     "opinion": {
-        "help_txt": "**Ask for opinion via inline**\n\nYou can now send multple opinion messages at once\n**Note: **All button data is cleared as soon as you restart or update bot\n>>>  `op [Question or Statement]`",
+        "help_txt": "**Ask for opinion via inline**\n\nYou can now send multiple opinion messages at once\n**Note: **All button data is cleared as soon as you restart or update the bot\n>>>  `op [Question or Statement]`",
         "i_q": "op Are Cats Cute ?",
     },
     "repo": {
@@ -49,7 +49,7 @@ COMMANDS = {
         "i_q": "stylish USERGE-X",
     },
     "ytdl": {
-        "help_txt": f"**Download Youtube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]` or `{Config.CMD_TRIGGER}iytdl`",
+        "help_txt": f"**Download YouTube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]` or `{Config.CMD_TRIGGER}iytdl`",
         "i_q": "ytdl https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
     "spoiler": {
