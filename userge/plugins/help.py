@@ -34,7 +34,6 @@ from .bot.utube_inline import get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
-
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
 PATH = "userge/xcache"
@@ -946,7 +945,7 @@ if userge.has_bot:
                 if os.path.exists(inline_db_path):
                     view_db = json.load(open(inline_db_path))
                     await CHANNEL.log(str(view_db))
-                    
+
                     if len(view_db) != 0:
                         msg_id = (str_y[0])[4:]
                         print(msg_id)
