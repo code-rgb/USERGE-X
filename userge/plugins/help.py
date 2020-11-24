@@ -946,12 +946,12 @@ if userge.has_bot:
                     if len(view_db) != 0:
                         msg_id = (str_y[0])[4:]
                         inline_db = view_db.get(msg_id, None)
-                            if inline_db:
-                                if inline_db['is_media']:
-                                    saved_msg = await userge.bot.get_messages(Config.LOG_CHANNEL_ID, msg_id)
-                                    media_data = get_file_id_and_ref(saved_msg)
+                        if inline_db:
+                            if inline_db['is_media']:
+                                saved_msg = await userge.bot.get_messages(Config.LOG_CHANNEL_ID, msg_id)
+                                media_data = get_file_id_and_ref(saved_msg)
 
-                                textx, buttonsx = pb(inline_db['msg_data'])
+                            textx, buttonsx = pb(inline_db['msg_data'])
 
                     if inline_db['is_media']:
                         if saved_msg.photo:
