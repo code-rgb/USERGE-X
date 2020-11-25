@@ -18,11 +18,11 @@ owner_or_sudo = "I can't Ban My Owner and Sudo Users"
 @userge.on_cmd("warn", about={"header": "Create buttons Using bot"})
 async def warn_func(message: Message):
     reply = message.reply_to_message
-    if not (message.input_str and reply):
+    if not (message.input_str or reply):
         return await message.err(no_input_reply, del_in=3)
 
     if message.input_str:
-        warn_input = message.input_str.split("", 1)
+        warn_input = message.input_str.split(None, 1)
         reason = message.input_str
         if len(warn_input) >= 1 and warn_input[0].is_digit():
             try:
