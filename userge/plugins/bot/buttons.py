@@ -8,6 +8,7 @@ import re
 
 from html_telegraph_poster.upload_images import upload_image
 from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
+from pyrogram.types import ReplyKeyboardRemove
 
 from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id_and_ref
@@ -158,7 +159,7 @@ async def noformat_message(message: Message):
         lbr_ = "["
         rbr_ = "]"
 
-    if reply.reply_markup:
+    if reply.reply_markup and not isinstance(reply.reply_markup, ReplyKeyboardRemove):
         for row in reply.reply_markup.inline_keyboard:
             firstbtn = True
             for btn in row:
