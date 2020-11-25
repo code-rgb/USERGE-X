@@ -1,6 +1,8 @@
+from time import time
+
 from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from time import time
+
 from userge import Config, Message, get_collection, userge
 
 WARN_DATA = get_collection("WARN_DATA")
@@ -60,19 +62,19 @@ async def warn_func(message: Message):
         wcount += 1
     elif wcount >= max_warns:
         banned = await message.chat.kick_member(
-            warned_user.id,
-            until_date=int(time() + 60)
+            warned_user.id, until_date=int(time() + 60)
         )
-        
+
     if banned:
-        warn_text = f"Warnings has been exceeded! {warned_user.mention} has been banned!"
+        warn_text = (
+            f"Warnings has been exceeded! {warned_user.mention} has been banned!"
+        )
     else:
         warn_text = f"""
 {by_user.mention} has warned {warned_user.mention} in <b>{chat_title}</b>
 Reason: <code>{reason}</code>
 Warns: {wcount}/{max_warns}
 """
-    
 
     warn_id = str(
         (
@@ -104,17 +106,14 @@ Warns: {wcount}/{max_warns}
             reply_markup=buttons,
         )
 
-    
-
-
 
 @userge.on_cmd("warnmode", about={"header": "warn_mode"})
 async def warn_mode(message: Message):
-    warn_types = ['kick', 'ban', 'mute']
+    warn_types = ["kick", "ban", "mute"]
     warn_mode = message.input_str
     if not (warn_mode and warn_mode in warn_types):
-        return await message.err('Not a valid warm mode', del_in=5)
-    
+        return await message.err("Not a valid warm mode", del_in=5)
+
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id}, {"$set": {"warn_mode": warn_mode}}, upsert=True
     )
