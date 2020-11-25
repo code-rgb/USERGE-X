@@ -129,7 +129,9 @@ async def warn_mode(message: Message):
 async def maxwarns(message: Message):
     maxwarns = message.input_str
     result = await WARN_DATA.update_one(
-        {"chat_id": message.chat.id}, {"$set": {"max_warns": int(maxwarns)}}, upsert=True
+        {"chat_id": message.chat.id},
+        {"$set": {"max_warns": int(maxwarns)}},
+        upsert=True,
     )
     out = "{} <b>{}</b> for Chat: {}"
     if result.upserted_id:
