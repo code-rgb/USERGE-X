@@ -45,11 +45,11 @@ async def warn_func(message: Message):
 
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
     if found:
-        max_warns = found["max_warns"]
-        rules = "https://t.me/useless_x/22"
+        max_warns = found.get("max_warns", 3)
+        rules = found.get("rules", "https://t.me/useless_x/22")
     else:
         max_warns = 3  # Default
-        rules = ""
+        rules = "https://t.me/useless_x/22"
     ###
     by_user = message.from_user
     wcount = await WARNS_DB.count_documents(
@@ -129,7 +129,7 @@ async def warn_mode(message: Message):
 async def maxwarns(message: Message):
     maxwarns = message.input_str
     result = await WARN_DATA.update_one(
-        {"chat_id": message.chat.id}, {"$set": {"rules": int(maxwarns)}}, upsert=True
+        {"chat_id": message.chat.id}, {"$set": {"max_warns": int(maxwarns)}}, upsert=True
     )
     out = "{} <b>{}</b> for Chat: {}"
     if result.upserted_id:
