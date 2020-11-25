@@ -75,7 +75,7 @@ Warns: {wcount}/{max_warns}
         ).inserted_id
     )
 
-    if userge.has_bot and messaage.client.is_bot:
+    if userge.has_bot and message.client.is_bot:
         btn_row = [
             InlineKeyboardButton(
                 "⚠️  Remove Warn", callback_data=f"remove_warn_{warn_id}"
