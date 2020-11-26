@@ -1,7 +1,7 @@
 from time import time
 
 from pyrogram.errors import PeerIdInvalid
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Chat
+from pyrogram.types import Chat, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, get_collection, userge
 
@@ -17,7 +17,7 @@ user_is_admin = "Sorry! I can't warn an Admin"
 owner_or_sudo = "I can't Ban My Owner and Sudo Users"
 permission_denied = "You Don't have the permission to do it !"
 warn_removed = "✅ Warn Removed Successfully"
-warn_removed_caption  = "✅ Warn removed by {} !"
+warn_removed_caption = "✅ Warn removed by {} !"
 no_warns_msg = "Well, {} doesn't have any warns."
 total_warns_msg = "User {} has {}/{} warnings.\n**Reasons** are:"
 purge_warns = "{} reset {} warns of {} in {}!"
@@ -76,9 +76,14 @@ async def warn_func(message: Message):
         banned_text = (
             f"Warnings has been exceeded! {warned_user.mention} has been banned!"
         )
-        await WARNS_DB.delete_many({'user_id': warned_user.id, 'chat_id': message.chat.id})
-        return await message.reply(banned_text, disable_web_page_preview=True,)
-   
+        await WARNS_DB.delete_many(
+            {"user_id": warned_user.id, "chat_id": message.chat.id}
+        )
+        return await message.reply(
+            banned_text,
+            disable_web_page_preview=True,
+        )
+
     warn_text = f"""
 {by_user.mention} has warned {warned_user.mention} in <b>{chat_title}</b>
 Reason: <code>{reason}</code>
@@ -174,10 +179,21 @@ async def admin_check(chatx: Chat, user_id: int) -> bool:
 @userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "remove warns"})
 async def totalwarns(message: Message):
     reply = message.reply_to_message
-    if await WARN_DB.find_one({'chat_id': message.chat.id, 'user_id': reply.from_user.id}):
-        deleted = await WARN_DB.delete_many({'chat_id': message.chat.id, 'user_id': reply.from_user.id})
+    if await WARN_DB.find_one(
+        {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+    ):
+        deleted = await WARN_DB.delete_many(
+            {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+        )
         purged = deleted.deleted_count
-        await message.reply(purge_warns.format(message.from_user.mention, purged, reply.from_user.mention, message.chat.title))
+        await message.reply(
+            purge_warns.format(
+                message.from_user.mention,
+                purged,
+                reply.from_user.mention,
+                message.chat.title,
+            )
+        )
     else:
         await message.reply(no_warns_msg.format(reply.from_user.mention))
 
@@ -192,13 +208,15 @@ async def totalwarns(message: Message):
     if found:
         max_warns = found.get("max_warns", 3)
     warns_ = ""
-    async for warn in WARN_DB.find({'chat_id': message.chat.id, 'user_id': reply.from_user.id}):
+    async for warn in WARN_DB.find(
+        {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+    ):
         count += 1
-        rsn = warn['reason']
+        rsn = warn["reason"]
         reason = f"<code>{rsn}</code>"
-        if not rsn or rsn == 'None':
-            reason = '<i>No Reason</i>'
-        u_mention = (await userge.get_users(warn['by'])).mention
+        if not rsn or rsn == "None":
+            reason = "<i>No Reason</i>"
+        u_mention = (await userge.get_users(warn["by"])).mention
         warns_ += f"\n{count}- {reason} by {u_mention}"
     if count == 0:
         await message.reply(no_warns_msg.format(warned_user))
@@ -209,7 +227,7 @@ async def totalwarns(message: Message):
 
 
 if userge.has_bot:
-    
+
     @userge.bot.on_callback_query(filters.regex(pattern=r"^remove_warn_(.*)$"))
     async def remove_warn_(_, c_q: CallbackQuery):
         await CHANNEL.log(str(c_q))
@@ -217,13 +235,11 @@ if userge.has_bot:
         if u_id not in Config.OWNER_ID:
             return await c_q.answer(permission_denied, show_alert=True)
         obj_id = c_q.matches[0].group(1)
-        m = await WARNS_DB.delete_one({'_id': ObjectId(obj_id)})
+        m = await WARNS_DB.delete_one({"_id": ObjectId(obj_id)})
         if m:
             await CHANNEL.log(str(m))
             await c_q.answer(warn_removed, show_alert=False)
             await c_q.edit_message_caption(
-                caption=(
-                   warn_removed_caption.format(c_q.from_user.mention)
-                ),
+                caption=(warn_removed_caption.format(c_q.from_user.mention)),
                 reply_markup=None,
             )
