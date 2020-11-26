@@ -20,7 +20,7 @@ from typing import List, Dict, Union, Any, Callable, Optional
 from pyrogram import StopPropagation, ContinuePropagation
 from pyrogram.filters import Filter as RawFilter
 from pyrogram.types import Message as RawMessage, ChatMember
-from pyrogram.errors.exceptions.bad_request_400 import ChatAdminRequired, PeerIdInvalid
+from pyrogram.errors import ChatAdminRequired, PeerIdInvalid
 
 from userge import logging, Config
 from ...ext import RawClient
@@ -41,6 +41,10 @@ _B_NM_CHT: Dict[int, ChatMember] = {}
 _U_ID = 0
 _U_AD_CHT: Dict[int, ChatMember] = {}
 _U_NM_CHT: Dict[int, ChatMember] = {}
+
+_CH_LKS: Dict[str, asyncio.Lock] = {}
+_CH_LKS_LK = asyncio.Lock()
+_INIT_LK = asyncio.Lock()
 
 
 async def _update_u_cht(r_m: RawMessage) -> ChatMember:
@@ -88,20 +92,21 @@ async def _init(r_c: Union['_client.Userge', '_client._UsergeBot'],
     global _U_ID, _B_ID  # pylint: disable=global-statement
     if r_m.from_user and (r_m.from_user.is_self
                           or (r_m.from_user.id in Config.SUDO_USERS)
-                          or (r_m.from_user.id == Config.OWNER_ID)):
+                          or (r_m.from_user.id in Config.OWNER_ID)):
         RawClient.LAST_OUTGOING_TIME = time.time()
-    if _U_ID and _B_ID:
-        return
-    if isinstance(r_c, _client.Userge):
-        if not _U_ID:
-            _U_ID = (await r_c.get_me()).id
-        if RawClient.DUAL_MODE and not _B_ID:
-            _B_ID = (await r_c.bot.get_me()).id
-    else:
-        if not _B_ID:
-            _B_ID = (await r_c.get_me()).id
-        if RawClient.DUAL_MODE and not _U_ID:
-            _U_ID = (await r_c.ubot.get_me()).id
+    async with _INIT_LK:
+        if _U_ID and _B_ID:
+            return
+        if isinstance(r_c, _client.Userge):
+            if not _U_ID:
+                _U_ID = (await r_c.get_me()).id
+            if RawClient.DUAL_MODE and not _B_ID:
+                _B_ID = (await r_c.bot.get_me()).id
+        else:
+            if not _B_ID:
+                _B_ID = (await r_c.get_me()).id
+            if RawClient.DUAL_MODE and not _U_ID:
+                _U_ID = (await r_c.ubot.get_me()).id
 
 
 async def _raise_func(r_c: Union['_client.Userge', '_client._UsergeBot'],
@@ -130,6 +135,26 @@ async def _is_admin(r_c: Union['_client.Userge', '_client._UsergeBot'],
     return r_m.chat.id in _B_AD_CHT
 
 
+def _get_chat_member(r_c: Union['_client.Userge', '_client._UsergeBot'],
+                     r_m: RawMessage) -> Optional[ChatMember]:
+    if r_m.chat.type in ("private", "bot"):
+        return None
+    if isinstance(r_c, _client.Userge):
+        if r_m.chat.id in _U_AD_CHT:
+            return _U_AD_CHT[r_m.chat.id]
+        return _U_NM_CHT[r_m.chat.id]
+    if r_m.chat.id in _B_AD_CHT:
+        return _B_AD_CHT[r_m.chat.id]
+    return _B_NM_CHT[r_m.chat.id]
+
+
+async def _get_lock(key: str) -> asyncio.Lock:
+    async with _CH_LKS_LK:
+        if key not in _CH_LKS:
+            _CH_LKS[key] = asyncio.Lock()
+    return _CH_LKS[key]
+
+
 async def _bot_is_present(r_c: Union['_client.Userge', '_client._UsergeBot'],
                           r_m: RawMessage) -> bool:
     global _TASK_2_START_TO  # pylint: disable=global-statement
@@ -147,19 +172,6 @@ async def _bot_is_present(r_c: Union['_client.Userge', '_client._UsergeBot'],
         if r_m.chat.id not in _B_CMN_CHT:
             _B_CMN_CHT.append(r_m.chat.id)
     return r_m.chat.id in _B_CMN_CHT
-
-
-def _get_chat_member(r_c: Union['_client.Userge', '_client._UsergeBot'],
-                     r_m: RawMessage) -> Optional[ChatMember]:
-    if r_m.chat.type in ("private", "bot"):
-        return None
-    if isinstance(r_c, _client.Userge):
-        if r_m.chat.id in _U_AD_CHT:
-            return _U_AD_CHT[r_m.chat.id]
-        return _U_NM_CHT[r_m.chat.id]
-    if r_m.chat.id in _B_AD_CHT:
-        return _B_AD_CHT[r_m.chat.id]
-    return _B_NM_CHT[r_m.chat.id]
 
 
 async def _both_are_admins(r_c: Union['_client.Userge', '_client._UsergeBot'],
@@ -197,8 +209,10 @@ async def _both_have_perm(flt: Union['types.raw.Command', 'types.raw.Filter'],
     if flt.check_invite_perm and not (
             (user.can_all or user.can_invite_users) and bot.can_invite_users):
         return False
-    return bool(not flt.check_pin_perm or (
-            (user.can_all or user.can_pin_messages) and bot.can_pin_messages))
+    if flt.check_pin_perm and not (
+            (user.can_all or user.can_pin_messages) and bot.can_pin_messages):
+        return False
+    return True
 
 
 class RawDecorator(RawClient):
@@ -276,18 +290,19 @@ class RawDecorator(RawClient):
                     if (flt.check_client
                             or (r_m.from_user and r_m.from_user.id in Config.SUDO_USERS)):
                         cond = True
-                        if flt.only_admins:
-                            cond = cond and await _both_are_admins(r_c, r_m)
-                        if flt.check_perm:
-                            cond = cond and await _both_have_perm(flt, r_c, r_m)
-                        if cond:
-                            if Config.USE_USER_FOR_CLIENT_CHECKS:
-                                # pylint: disable=protected-access
-                                if isinstance(r_c, _client._UsergeBot):
-                                    return
-                            elif await _bot_is_present(r_c, r_m):
-                                if isinstance(r_c, _client.Userge):
-                                    return
+                        async with await _get_lock(str(flt)):
+                            if flt.only_admins:
+                                cond = cond and await _both_are_admins(r_c, r_m)
+                            if flt.check_perm:
+                                cond = cond and await _both_have_perm(flt, r_c, r_m)
+                            if cond:
+                                if Config.USE_USER_FOR_CLIENT_CHECKS:
+                                    # pylint: disable=protected-access
+                                    if isinstance(r_c, _client._UsergeBot):
+                                        return
+                                elif await _bot_is_present(r_c, r_m):
+                                    if isinstance(r_c, _client.Userge):
+                                        return
                 if flt.check_downpath and not os.path.isdir(Config.DOWN_PATH):
                     os.makedirs(Config.DOWN_PATH)
                 try:
