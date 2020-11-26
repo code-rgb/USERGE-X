@@ -185,10 +185,10 @@ async def admin_check(chatx: Chat, user_id: int) -> bool:
 @userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "remove warns"})
 async def totalwarns(message: Message):
     reply = message.reply_to_message
-    if await WARN_DB.find_one(
+    if await WARNS_DB.find_one(
         {"chat_id": message.chat.id, "user_id": reply.from_user.id}
     ):
-        deleted = await WARN_DB.delete_many(
+        deleted = await WARNS_DB.delete_many(
             {"chat_id": message.chat.id, "user_id": reply.from_user.id}
         )
         purged = deleted.deleted_count
@@ -214,7 +214,7 @@ async def totalwarns(message: Message):
     if found:
         max_warns = found.get("max_warns", 3)
     warns_ = ""
-    async for warn in WARN_DB.find(
+    async for warn in WARNS_DB.find(
         {"chat_id": message.chat.id, "user_id": reply.from_user.id}
     ):
         count += 1
