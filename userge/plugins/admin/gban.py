@@ -357,7 +357,7 @@ async def gban_at_entry(message: Message):
     chat_id = message.chat.id
     for user in message.new_chat_members:
         user_id = user.id
-        first_name = user.first_name
+        firstname = user.first_name
         if await WHITELIST.find_one({"user_id": user_id}):
             continue
         gbanned = await GBAN_USER_BASE.find_one({"user_id": user_id})
@@ -385,7 +385,7 @@ async def gban_at_entry(message: Message):
                     f"Banned in {message.chat.title}"
                 ),
                 GBAN_USER_BASE.update_one(
-                    {"user_id": user_id, "firstname": first_name},
+                    {"user_id": user_id, "firstname": firstname},
                     {"$set": {"chat_ids": chat_ids}},
                     upsert=True,
                 ),
