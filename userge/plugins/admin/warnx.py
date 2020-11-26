@@ -6,8 +6,10 @@ from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import (
     CallbackQuery,
     Chat,
+    User,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    ChatPermissions,
 )
 
 from userge import Config, Message, get_collection, userge
@@ -28,6 +30,7 @@ warn_removed_caption = "✅ Warn removed by {} !"
 no_warns_msg = "Well, {} doesn't have any warns."
 total_warns_msg = "User {} has {}/{} warnings.\n**Reasons** are:"
 purge_warns = "{} reset {} warns of {} in {}!"
+banned_text = "Warnings has been exceeded! {} has been {}!"
 
 
 @userge.on_cmd("warn", about={"header": "Create buttons Using bot"})
@@ -35,20 +38,19 @@ async def warn_func(message: Message):
     reply = message.reply_to_message
     if not (message.input_str or reply):
         return await message.err(no_input_reply, del_in=3)
+    
+    warned_user = reply.from_user if reply else None
 
     if message.input_str:
         warn_input = message.input_str.split(None, 1)
         reason = message.input_str
-        if len(warn_input) >= 1 and warn_input[0].isdigit():
+        if warn_input[0].isdigit():
             try:
                 warned_user = await message.client.get_user(warn_input[0])
             except PeerIdInvalid:
                 return await message.err(userid_not_valid, del_in=3)
             reason = "" if len(warn_input) == 1 else warn_input[1]
-        elif len(warn_input) == 1 and reply:
-            warned_user = reply.from_user
-    elif reply:
-        warned_user = reply.from_user
+    else:
         reason = ""
 
     if await admin_check(message.chat, warned_user.id):
@@ -59,10 +61,12 @@ async def warn_func(message: Message):
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
     if found:
         max_warns = found.get("max_warns", 3)
-        rules = found.get("rules", "https://t.me/useless_x/22")
+        rules = found.get("rules", None)
+        warn_mode = found.get("warn_mode", "ban")
+
     else:
         max_warns = 3  # Default
-        rules = "https://t.me/useless_x/22"
+        rules = None
     ###
     by_user = message.from_user
     wcount = await WARNS_DB.count_documents(
@@ -70,26 +74,27 @@ async def warn_func(message: Message):
     )
     chat_title = message.chat.title
     ###
-    banned = False
-    if wcount < max_warns:
-        wcount += 1
-    elif wcount >= max_warns:
-        # KICK
-        banned = await message.chat.kick_member(
-            warned_user.id, until_date=int(time() + 90)
-        )
 
-    if banned:
-        banned_text = (
-            f"Warnings has been exceeded! {warned_user.mention} has been banned!"
+    wcount += 1
+        
+    if wcount >= max_warns:
+        
+        if warn_mode == "ban":
+            warn_mode_text = "banned"
+        elif warn_mode == "mute":
+            warn_mode_text = "muted"
+        else:
+            warn_mode_text = "kicked"
+  
+        await message.reply(
+            banned_text.format(warned_user.mention, warn_mode_text),
+            disable_web_page_preview=True,
         )
+        await ban_function(message, warned_user, warn_mode)
         await WARNS_DB.delete_many(
             {"user_id": warned_user.id, "chat_id": message.chat.id}
         )
-        return await message.reply(
-            banned_text,
-            disable_web_page_preview=True,
-        )
+        return 
 
     warn_text = f"""
 {by_user.mention} has warned {warned_user.mention} in <b>{chat_title}</b>
@@ -183,6 +188,23 @@ async def admin_check(chatx: Chat, user_id: int) -> bool:
     return check_status.status in admin_strings
 
 
+async def ban_function(message: Message, warned_user: User, warn_mode: str):
+    if warn_mode == "ban":
+        await message.chat.kick_member(
+            warned_user.id
+        )
+    elif warn_mode == "mute":
+        await message.chat.restrict_member(
+            user_id=warned_user.id
+            permissions=ChatPermissions(can_send_messages=False)
+        )
+    elif warn_mode == "mute"
+        await message.chat.kick_member(
+                    warned_user.id, until_date=int(time() + 90)
+        )
+
+    
+
 @userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "remove warns"})
 async def totalwarns(message: Message):
     reply = message.reply_to_message
@@ -242,11 +264,25 @@ if userge.has_bot:
         if u_id not in Config.OWNER_ID:
             return await c_q.answer(permission_denied, show_alert=True)
         obj_id = c_q.matches[0].group(1)
-        m = await WARNS_DB.delete_one({"_id": ObjectId(obj_id)})
-        if m:
-            await CHANNEL.log(str(m))
+        if await WARNS_DB.delete_one({"_id": ObjectId(obj_id)}):
             await c_q.answer(warn_removed, show_alert=False)
             await c_q.edit_message_caption(
                 caption=(warn_removed_caption.format(c_q.from_user.mention)),
                 reply_markup=None,
             )
+
+# TODO
+"""
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^warnmode_type_(.*)$"))
+    async def remove_warn_(_, c_q: CallbackQuery):
+        u_id = c_q.from_user.id
+        if u_id not in Config.OWNER_ID:
+            return await c_q.answer(permission_denied, show_alert=True)
+        obj_id = c_q.matches[0].group(1)
+        if await WARNS_DB.delete_one({"_id": ObjectId(obj_id)}):
+            await c_q.answer(warn_removed, show_alert=False)
+            await c_q.edit_message_caption(
+                caption=(warn_removed_caption.format(c_q.from_user.mention)),
+                reply_markup=None,
+            )
+"""
