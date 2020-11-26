@@ -198,7 +198,7 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
             user_id=warned_user.id,
             permissions=ChatPermissions(can_send_messages=False)
         )
-    elif warn_mode == "mute"
+    elif warn_mode == "kick":
         await message.chat.kick_member(
                     warned_user.id, until_date=int(time() + 90)
         )
