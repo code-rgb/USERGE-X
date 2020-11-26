@@ -36,7 +36,7 @@ async def status(message: Message) -> None:
     name_ = message.filtered_input_str
     type_ = list(message.flags)
     if not type_:
-        out_str = f"""📊 **--Userge Status--** 📊
+        out_str = f"""📊 **--USERGE-X Status--** 📊
 
 🗃 **Plugins** : `{len(userge.manager.plugins)}`
         ✅ **Loaded** : `{len(userge.manager.loaded_plugins)}`
