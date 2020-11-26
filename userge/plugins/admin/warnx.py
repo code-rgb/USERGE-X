@@ -6,10 +6,10 @@ from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import (
     CallbackQuery,
     Chat,
-    User,
+    ChatPermissions,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    ChatPermissions,
+    User,
 )
 
 from userge import Config, Message, get_collection, userge
@@ -38,7 +38,7 @@ async def warn_func(message: Message):
     reply = message.reply_to_message
     if not (message.input_str or reply):
         return await message.err(no_input_reply, del_in=3)
-    
+
     warned_user = reply.from_user if reply else None
 
     if message.input_str:
@@ -76,16 +76,16 @@ async def warn_func(message: Message):
     ###
 
     wcount += 1
-        
+
     if wcount >= max_warns:
-        
+
         if warn_mode == "ban":
             warn_mode_text = "banned"
         elif warn_mode == "mute":
             warn_mode_text = "muted"
         else:
             warn_mode_text = "kicked"
-  
+
         await message.reply(
             banned_text.format(warned_user.mention, warn_mode_text),
             disable_web_page_preview=True,
@@ -94,7 +94,7 @@ async def warn_func(message: Message):
         await WARNS_DB.delete_many(
             {"user_id": warned_user.id, "chat_id": message.chat.id}
         )
-        return 
+        return
 
     warn_text = f"""
 {by_user.mention} has warned {warned_user.mention} in <b>{chat_title}</b>
@@ -190,20 +190,14 @@ async def admin_check(chatx: Chat, user_id: int) -> bool:
 
 async def ban_function(message: Message, warned_user: User, warn_mode: str):
     if warn_mode == "ban":
-        await message.chat.kick_member(
-            warned_user.id
-        )
+        await message.chat.kick_member(warned_user.id)
     elif warn_mode == "mute":
         await message.chat.restrict_member(
-            user_id=warned_user.id,
-            permissions=ChatPermissions(can_send_messages=False)
+            user_id=warned_user.id, permissions=ChatPermissions(can_send_messages=False)
         )
     elif warn_mode == "kick":
-        await message.chat.kick_member(
-                    warned_user.id, until_date=int(time() + 90)
-        )
+        await message.chat.kick_member(warned_user.id, until_date=int(time() + 90))
 
-    
 
 @userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "remove warns"})
 async def totalwarns(message: Message):
@@ -270,6 +264,7 @@ if userge.has_bot:
                 caption=(warn_removed_caption.format(c_q.from_user.mention)),
                 reply_markup=None,
             )
+
 
 # TODO
 """
