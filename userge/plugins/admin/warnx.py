@@ -195,7 +195,7 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
         )
     elif warn_mode == "mute":
         await message.chat.restrict_member(
-            user_id=warned_user.id
+            user_id=warned_user.id,
             permissions=ChatPermissions(can_send_messages=False)
         )
     elif warn_mode == "mute"
