@@ -515,8 +515,8 @@ if userge.has_bot:
 
     async def inline_button_handler(message: Message):
         button_raw = message.reply_to_message.caption
-        refresh_msg = await userge.bot.get_message(
-            chat_id=message.chat.id, get_messages=message.message_id
+        refresh_msg = await userge.bot.get_messages(
+            chat_id=message.chat.id, message_ids=message.message_id
         )
         f_id, f_ref = get_file_id_and_ref(refresh_msg)
         INLINE_DB[message.message.id] = {
