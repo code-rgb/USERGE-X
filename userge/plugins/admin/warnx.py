@@ -2,7 +2,7 @@ from time import time
 
 from bson import ObjectId
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid
+# from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import (
     CallbackQuery,
     Chat,
@@ -33,25 +33,24 @@ purge_warns = "{} reset {} warns of {} in {}!"
 banned_text = "Warnings has been exceeded! {} has been {}!"
 
 
-@userge.on_cmd("warn", about={"header": "Create buttons Using bot"})
+@userge.on_cmd(
+    "warn", about={
+        "header": "warn a user",
+        'description': "Use this command to warn the user! you can mention or reply to the offended user and add reason if needed",
+        'usage': '{tr}warn [username | userid] or [reply to user] :reason (optional)'
+    },
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+    check_restrict_perm=True,
+)
 async def warn_func(message: Message):
     reply = message.reply_to_message
-    if not (message.input_str or reply):
+    warn_user_id, reason = message.extract_user_and_text
+    if not warn_user_id:
         return await message.err(no_input_reply, del_in=3)
 
-    warned_user = reply.from_user if reply else None
-
-    if message.input_str:
-        warn_input = message.input_str.split(None, 1)
-        reason = message.input_str
-        if warn_input[0].isdigit():
-            try:
-                warned_user = await message.client.get_user(warn_input[0])
-            except PeerIdInvalid:
-                return await message.err(userid_not_valid, del_in=3)
-            reason = "" if len(warn_input) == 1 else warn_input[1]
-    else:
-        reason = ""
+    warned_user = await message.client.get_users(warn_user_id)
 
     if await admin_check(message.chat, warned_user.id):
         return await message.err(user_is_admin, del_in=3)
@@ -65,26 +64,27 @@ async def warn_func(message: Message):
         warn_mode = found.get("warn_mode", "ban")
 
     else:
+        warn_mode = "ban"
         max_warns = 3  # Default
         rules = None
-    ###
+    
     by_user = message.from_user
     wcount = await WARNS_DB.count_documents(
         {"chat_id": message.chat.id, "user_id": warned_user.id}
     )
     chat_title = message.chat.title
-    ###
+    
 
     wcount += 1
 
     if wcount >= max_warns:
 
-        if warn_mode == "ban":
-            warn_mode_text = "banned"
-        elif warn_mode == "mute":
+        if warn_mode == "mute":
             warn_mode_text = "muted"
-        else:
+        elif warn_mode == "kick":
             warn_mode_text = "kicked"
+        else:
+            warn_mode_text = "banned"
 
         await message.reply(
             banned_text.format(warned_user.mention, warn_mode_text),
@@ -101,7 +101,6 @@ async def warn_func(message: Message):
 Reason: <code>{reason}</code>
 Warns: {wcount}/{max_warns}
 """
-
     warn_id = str(
         (
             await WARNS_DB.insert_one(
@@ -114,8 +113,7 @@ Warns: {wcount}/{max_warns}
             )
         ).inserted_id
     )
-
-    buttons = None
+    
     if message.client.is_bot:
         btn_row = [
             InlineKeyboardButton(
@@ -126,33 +124,67 @@ Warns: {wcount}/{max_warns}
             btn_row.append(InlineKeyboardButton("📝  Rules", url=rules))
 
         buttons = InlineKeyboardMarkup([btn_row])
+        await message.delete()
+        await message.reply(
+            warn_text,
+            disable_web_page_preview=True,
+            reply_markup=buttons,
+        )
+    else:
+        await message.edit(warn_text,
+            disable_web_page_preview=True,)
 
-    await message.reply(
-        warn_text,
-        disable_web_page_preview=True,
-        reply_markup=buttons,
-    )
 
-
-@userge.on_cmd("warnmode", about={"header": "warn_mode"})
+@userge.on_cmd("warnmode", about={"header": "warn_mode"},
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+    check_restrict_perm=True,
+)
 async def warn_mode(message: Message):
     warn_types = ["kick", "ban", "mute"]
     warn_mode = message.input_str
+    if not warn_mode and message.client.is_bot:
+        await message.delete()
+        buttons = [
+            [
+                InlineKeyboardButton("⚽️  KICK", callback_data="warnmode_type_kick"),
+                InlineKeyboardButton("🤫  MUTE", callback_data="warnmode_type_mute")
+            ],
+            [
+                InlineKeyboardButton("⚰️  BAN", callback_data="warnmode_type_ban")
+            ]
+        ]
+        await message.reply(
+            f"Choose a warn mode for:\n**Chat: {message.chat.title}**",
+            reply_markup=InlineKeyboardMarkupbuttons(buttons)
+        )
+        return
     if not (warn_mode and warn_mode in warn_types):
         return await message.err("Not a valid warm mode", del_in=5)
-
-    result = await WARN_DATA.update_one(
-        {"chat_id": message.chat.id}, {"$set": {"warn_mode": warn_mode}}, upsert=True
-    )
-    out = "{} <b>{}</b> for Chat: {}"
-    if result.upserted_id:
-        out = out.format("warn_mode", "Changed", message.chat.id)
-    else:
-        out = out.format("warn_mode", "Updated", message.chat.id)
+    out = await update_warnmode(message, warn_mode)
     await message.edit(out)
 
 
-@userge.on_cmd("maxwarns", about={"header": "maxwarns"})
+async def update_warnmode(message: Message, warn_mode: str):
+    result = await WARN_DATA.update_one(
+        {"chat_id": message.chat.id}, {"$set": {"warn_mode": warn_mode}}, upsert=True
+    )
+    out = "{} <b>{}</b> to {} for Chat: {}"
+    if result.upserted_id:
+        out = out.format("warn mode", "Changed", warn_mode, message.chat.id)
+    else:
+        out = out.format("warn mode", "Updated", warn_mode, message.chat.id)
+    return out
+
+
+@userge.on_cmd("maxwarns", about={"header": "maxwarns"},
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+   
+    check_restrict_perm=True,
+)
 async def maxwarns(message: Message):
     maxwarns = message.input_str
     result = await WARN_DATA.update_one(
@@ -168,7 +200,12 @@ async def maxwarns(message: Message):
     await message.edit(out)
 
 
-@userge.on_cmd("chatrules", about={"header": "chat rules"})
+@userge.on_cmd("chatrules", about={"header": "chat rules"},
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+    check_restrict_perm=True,
+)
 async def chat_rules(message: Message):
     rules = message.input_str
     result = await WARN_DATA.update_one(
@@ -199,7 +236,13 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
         await message.chat.kick_member(warned_user.id, until_date=int(time() + 90))
 
 
-@userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "remove warns"})
+@userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "reset warns", 'description': "This command is used to delete all the warns user got so far in the chat"},
+    name="resetwarns",
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+    check_restrict_perm=True,
+)
 async def totalwarns(message: Message):
     reply = message.reply_to_message
     if await WARNS_DB.find_one(
@@ -221,7 +264,13 @@ async def totalwarns(message: Message):
         await message.reply(no_warns_msg.format(reply.from_user.mention))
 
 
-@userge.on_cmd("warns", about={"header": "check warns of a user"})
+@userge.on_cmd("warns", about={"header": "check warns of a user"},
+    allow_private=False,
+    allow_bots=False,
+    allow_channels=False,
+   
+    check_restrict_perm=True,
+)
 async def totalwarns(message: Message):
     reply = message.reply_to_message
     count = 0
@@ -266,18 +315,19 @@ if userge.has_bot:
             )
 
 
-# TODO
-"""
+
     @userge.bot.on_callback_query(filters.regex(pattern=r"^warnmode_type_(.*)$"))
     async def remove_warn_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID:
             return await c_q.answer(permission_denied, show_alert=True)
-        obj_id = c_q.matches[0].group(1)
-        if await WARNS_DB.delete_one({"_id": ObjectId(obj_id)}):
-            await c_q.answer(warn_removed, show_alert=False)
-            await c_q.edit_message_caption(
-                caption=(warn_removed_caption.format(c_q.from_user.mention)),
-                reply_markup=None,
-            )
-"""
+        warnmode = c_q.matches[0].group(1)
+        await c_q.answer(f'Changing Warn Mode to {warnmode}...', show_alert=False)
+        out = await update_warnmode(c_q.message, warnmode)
+        await c_q.edit_message_caption(
+            caption=out,
+            reply_markup=None,
+        )
+
+       
+
