@@ -215,7 +215,7 @@ async def update_warnmode(message: Message, warn_mode: str):
 @userge.on_cmd(
     "(?:maxwarns|warnlimit)",
     about={"header": "maxwarns",
-    'description': "Not all chats want to give same maximum warns to the user, right? This command will help you to modify default maximum warns. Default is 3"
+    'description': "Not all chats want to give same maximum warns to the user, right? This command will help you to modify default maximum warns. Default is 3",
     'usage': '{tr}maxwarns [2 - 1000]',
     'examples': '{tr}maxwarns 5'
     },
