@@ -12,10 +12,10 @@ from pyrogram.raw.types import UpdateNewChannelMessage, UpdateNewMessage
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from urllib.parse import urlparse, parse_qs
 from userge import Config, Message, pool, userge
 from userge.utils import get_file_id_and_ref
-
+import wget
 from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
@@ -201,3 +201,64 @@ def _tubeDl(url: list, starttime, uid):
             CHANNEL.log(str(e))
             x = None
     return x
+
+
+#  initial version: http://stackoverflow.com/a/7936523/617185 \
+#  by Mikhail Kashkin(http://stackoverflow.com/users/85739/mikhail-kashkin)
+
+def get_yt_video_id(url):
+    """
+    Returns Video_ID extracting from the given url of Youtube
+    
+    Examples of URLs:
+      Valid:
+        'http://youtu.be/_lOT2p_FCvA',
+        'www.youtube.com/watch?v=_lOT2p_FCvA&feature=feedu',
+        'http://www.youtube.com/embed/_lOT2p_FCvA',
+        'http://www.youtube.com/v/_lOT2p_FCvA?version=3&amp;hl=en_US',
+        'https://www.youtube.com/watch?v=rTHlyTphWP0&index=6&list=PLjeDyYvG6-40qawYNR4juzvSOg-ezZ2a6',
+        'youtube.com/watch?v=_lOT2p_FCvA',
+      
+      Invalid:
+        'youtu.be/watch?v=_lOT2p_FCvA',
+    """
+    if url.startswith(('youtu', 'www')):
+        url = 'http://' + url
+        
+    query = urlparse(url)
+    
+    if 'youtube' in query.hostname:
+        if query.path == '/watch':
+            return parse_qs(query.query)['v'][0]
+        elif query.path.startswith(('/embed/', '/v/')):
+            return query.path.split('/')[2]
+    elif 'youtu.be' in query.hostname:
+        return query.path[1:]
+    else:
+        raise ValueError
+
+
+@userge.on_cmd(
+    "ytsearch",
+    about={
+        "header": "Search Youtube Video",
+        "usage": "{tr}ytsearch [text]",
+    },
+)
+async def yt_search(message: Message):
+    if not message.input_str:
+        return await message.err('Input not found', del_in=5)
+    query = message.input_str
+    await message.edit(f'🔎 Searching Youtube video for "<code>{query}</code>"')
+    ytx = await userge.get_inline_bot_results("vid", query)
+    ytp = f"<b>•> YouTube Videos for:</b>  <u>{query}</u>\n\n"
+    n = 1
+    for ytm in ytx.results:
+        ytp += f"<b>[{n}. {ytm.title}]({ytm.send_message.message})</b>\n    {ytm.description}\n"
+        if n == 10:
+            break
+        n += 1
+    thumbx = wget.download(get_ytthumb(get_yt_video_id((ytx.results)[0].send_message.message)))
+    await message.delete()
+    await message.reply_photo(thumbx, caption=ytp)
+    os.remove(thumbx)
