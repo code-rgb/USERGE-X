@@ -2,6 +2,7 @@ from time import time
 
 from bson import ObjectId
 from pyrogram import filters
+
 # from pyrogram.errors import PeerIdInvalid
 from pyrogram.types import (
     CallbackQuery,
@@ -34,10 +35,11 @@ banned_text = "Warnings has been exceeded! {} has been {}!"
 
 
 @userge.on_cmd(
-    "warn", about={
+    "warn",
+    about={
         "header": "warn a user",
-        'description': "Use this command to warn the user! you can mention or reply to the offended user and add reason if needed",
-        'usage': '{tr}warn [username | userid] or [reply to user] :reason (optional)'
+        "description": "Use this command to warn the user! you can mention or reply to the offended user and add reason if needed",
+        "usage": "{tr}warn [username | userid] or [reply to user] :reason (optional)",
     },
     allow_private=False,
     allow_bots=False,
@@ -45,7 +47,7 @@ banned_text = "Warnings has been exceeded! {} has been {}!"
     check_restrict_perm=True,
 )
 async def warn_func(message: Message):
-    reply = message.reply_to_message
+    message.reply_to_message
     warn_user_id, reason = message.extract_user_and_text
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=3)
@@ -67,13 +69,12 @@ async def warn_func(message: Message):
         warn_mode = "ban"
         max_warns = 3  # Default
         rules = None
-    
+
     by_user = message.from_user
     wcount = await WARNS_DB.count_documents(
         {"chat_id": message.chat.id, "user_id": warned_user.id}
     )
     chat_title = message.chat.title
-    
 
     wcount += 1
 
@@ -113,7 +114,7 @@ Warns: {wcount}/{max_warns}
             )
         ).inserted_id
     )
-    
+
     if message.client.is_bot:
         btn_row = [
             InlineKeyboardButton(
@@ -131,11 +132,15 @@ Warns: {wcount}/{max_warns}
             reply_markup=buttons,
         )
     else:
-        await message.edit(warn_text,
-            disable_web_page_preview=True,)
+        await message.edit(
+            warn_text,
+            disable_web_page_preview=True,
+        )
 
 
-@userge.on_cmd("warnmode", about={"header": "warn_mode"},
+@userge.on_cmd(
+    "warnmode",
+    about={"header": "warn_mode"},
     allow_private=False,
     allow_bots=False,
     allow_channels=False,
@@ -149,15 +154,13 @@ async def warn_mode(message: Message):
         buttons = [
             [
                 InlineKeyboardButton("⚽️  KICK", callback_data="warnmode_type_kick"),
-                InlineKeyboardButton("🤫  MUTE", callback_data="warnmode_type_mute")
+                InlineKeyboardButton("🤫  MUTE", callback_data="warnmode_type_mute"),
             ],
-            [
-                InlineKeyboardButton("⚰️  BAN", callback_data="warnmode_type_ban")
-            ]
+            [InlineKeyboardButton("⚰️  BAN", callback_data="warnmode_type_ban")],
         ]
         await message.reply(
             f"Choose a warn mode for:\n**Chat: {message.chat.title}**",
-            reply_markup=InlineKeyboardMarkupbuttons(buttons)
+            reply_markup=InlineKeyboardMarkupbuttons(buttons),
         )
         return
     if not (warn_mode and warn_mode in warn_types):
@@ -178,11 +181,12 @@ async def update_warnmode(message: Message, warn_mode: str):
     return out
 
 
-@userge.on_cmd("maxwarns", about={"header": "maxwarns"},
+@userge.on_cmd(
+    "maxwarns",
+    about={"header": "maxwarns"},
     allow_private=False,
     allow_bots=False,
     allow_channels=False,
-   
     check_restrict_perm=True,
 )
 async def maxwarns(message: Message):
@@ -200,7 +204,9 @@ async def maxwarns(message: Message):
     await message.edit(out)
 
 
-@userge.on_cmd("chatrules", about={"header": "chat rules"},
+@userge.on_cmd(
+    "chatrules",
+    about={"header": "chat rules"},
     allow_private=False,
     allow_bots=False,
     allow_channels=False,
@@ -236,7 +242,12 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
         await message.chat.kick_member(warned_user.id, until_date=int(time() + 90))
 
 
-@userge.on_cmd("(?:resetwarns|delwarns)", about={"header": "reset warns", 'description': "This command is used to delete all the warns user got so far in the chat"},
+@userge.on_cmd(
+    "(?:resetwarns|delwarns)",
+    about={
+        "header": "reset warns",
+        "description": "This command is used to delete all the warns user got so far in the chat",
+    },
     name="resetwarns",
     allow_private=False,
     allow_bots=False,
@@ -264,11 +275,12 @@ async def totalwarns(message: Message):
         await message.reply(no_warns_msg.format(reply.from_user.mention))
 
 
-@userge.on_cmd("warns", about={"header": "check warns of a user"},
+@userge.on_cmd(
+    "warns",
+    about={"header": "check warns of a user"},
     allow_private=False,
     allow_bots=False,
     allow_channels=False,
-   
     check_restrict_perm=True,
 )
 async def totalwarns(message: Message):
@@ -314,20 +326,15 @@ if userge.has_bot:
                 reply_markup=None,
             )
 
-
-
     @userge.bot.on_callback_query(filters.regex(pattern=r"^warnmode_type_(.*)$"))
     async def remove_warn_(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID:
             return await c_q.answer(permission_denied, show_alert=True)
         warnmode = c_q.matches[0].group(1)
-        await c_q.answer(f'Changing Warn Mode to {warnmode}...', show_alert=False)
+        await c_q.answer(f"Changing Warn Mode to {warnmode}...", show_alert=False)
         out = await update_warnmode(c_q.message, warnmode)
         await c_q.edit_message_caption(
             caption=out,
             reply_markup=None,
         )
-
-       
-
