@@ -191,7 +191,7 @@ async def update_warnmode(message: Message, warn_mode: str):
 )
 async def maxwarns(message: Message):
     maxwarns = message.input_str
-    if not (maxwarns.isdigit() and in range(2, 1001)):
+    if not (maxwarns.isdigit() and maxwarns in range(2, 1001)):
         return await message.err('Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)', del_in=5)
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id},
