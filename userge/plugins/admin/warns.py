@@ -428,11 +428,11 @@ if userge.has_bot:
     )
     async def spoiler_get(_, message: Message):
         u_user = message.from_user
-        
+
         chat_ = message.matches[0].group(1)
         log_id_ = message.matches[0].group(2)
         await CHANNEL.log(f"{chat_}\n\n{log_id_}")
-         
+
         try:
             await CHANNEL.forward_stored(
                 client=userge.bot,
