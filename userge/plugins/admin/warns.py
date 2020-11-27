@@ -388,9 +388,9 @@ async def totalwarns(message: Message):
         u_mention = (await userge.get_users(warn["by"])).mention
         warns_ += f"  \n**{count}.** {reason} by {u_mention}"
     if count == 0:
-        await message.reply(no_warns_msg.format(warned_user.mention))
+        await message.reply(no_warns_msg.format(warn_user.mention))
         return
-    warns_text = total_warns_msg.format(warned_user.mention, count, max_warns)
+    warns_text = total_warns_msg.format(warn_user.mention, count, max_warns)
     warns_text += warns_
     await message.reply(warns_text, disable_web_page_preview=True)
 
@@ -428,12 +428,11 @@ if userge.has_bot:
     )
     async def spoiler_get(_, message: Message):
         u_user = message.from_user
-        await message.reply("Work in progress xD")
+        
         chat_ = message.matches[0].group(1)
         log_id_ = message.matches[0].group(2)
         await CHANNEL.log(f"{chat_}\n\n{log_id_}")
-        if not log_id_:
-            return
+         
         try:
             await CHANNEL.forward_stored(
                 client=userge.bot,
