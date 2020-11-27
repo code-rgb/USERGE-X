@@ -13,13 +13,11 @@
 # Author: Github/code-rgb [TG- @deleteduser420]
 
 
-
 from time import time
 
 from bson import ObjectId
 from pyrogram import filters
 from pyrogram.errors import UserIsBlocked
-
 from pyrogram.types import (
     CallbackQuery,
     Chat,
@@ -102,8 +100,12 @@ async def warn_func(message: Message):
             warn_mode_text = "kicked"
         else:
             warn_mode_text = "banned"
-        
-        banned_log = r"\\**#Warn_Action**//" + "\n" + banned_text.format(warned_user.mention, warn_mode_text)
+
+        banned_log = (
+            r"\\**#Warn_Action**//"
+            + "\n"
+            + banned_text.format(warned_user.mention, warn_mode_text)
+        )
         await message.reply(
             banned_log,
             disable_web_page_preview=True,
@@ -144,16 +146,22 @@ Warns: {wcount}/{max_warns}
         ]
         if rules:
             botname = (await userge.bot.get_me()).username
-            btn_row.append(InlineKeyboardButton("📝  Rules", url=f"https://t.me/{botname}?start={rules}"))
+            btn_row.append(
+                InlineKeyboardButton(
+                    "📝  Rules", url=f"https://t.me/{botname}?start={rules}"
+                )
+            )
 
         buttons = InlineKeyboardMarkup([btn_row])
-        reply_id = message.reply_to_message.message_id if message.reply_to_message else None
+        reply_id = (
+            message.reply_to_message.message_id if message.reply_to_message else None
+        )
         await userge.bot.send_message(
             message.chat.id,
             warn_text,
             disable_web_page_preview=True,
             reply_markup=buttons,
-            reply_to_message_id=reply_id
+            reply_to_message_id=reply_id,
         )
     else:
         await message.edit(
@@ -165,9 +173,10 @@ Warns: {wcount}/{max_warns}
 
 @userge.on_cmd(
     "(?:warnmode|warnaction)",
-    about={"header": "Set the warn mode for current chat",
-    'description': "not all chats want to ban (default) users when exceed maximum warns so this command will able to modify that",
-    'usage': '{tr}warnmode [ban|kick|mute]'
+    about={
+        "header": "Set the warn mode for current chat",
+        "description": "not all chats want to ban (default) users when exceed maximum warns so this command will able to modify that",
+        "usage": "{tr}warnmode [ban|kick|mute]",
     },
     name="warnmode",
     allow_private=False,
@@ -198,26 +207,30 @@ async def warn_mode(message: Message):
     await message.edit(out)
 
 
-
 async def update_warnmode(message: Message, warn_mode: str):
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id}, {"$set": {"warn_mode": warn_mode}}, upsert=True
     )
     out = "{} <b>{}</b> to {} for {}\n**ID:** {}"
     if result.upserted_id:
-        out = out.format("Warn Mode", "Changed", warn_mode, message.chat.title, message.chat.id)
+        out = out.format(
+            "Warn Mode", "Changed", warn_mode, message.chat.title, message.chat.id
+        )
     else:
-        out = out.format("Warn Mode", "Updated", warn_mode, message.chat.title, message.chat.id)
+        out = out.format(
+            "Warn Mode", "Updated", warn_mode, message.chat.title, message.chat.id
+        )
     await CHANNEL.log(out)
     return out
 
 
 @userge.on_cmd(
     "(?:maxwarns|warnlimit)",
-    about={"header": "maxwarns",
-    'description': "Not all chats want to give same maximum warns to the user, right? This command will help you to modify default maximum warns. Default is 3",
-    'usage': '{tr}maxwarns [2 - 1000]',
-    'examples': '{tr}maxwarns 5'
+    about={
+        "header": "maxwarns",
+        "description": "Not all chats want to give same maximum warns to the user, right? This command will help you to modify default maximum warns. Default is 3",
+        "usage": "{tr}maxwarns [2 - 1000]",
+        "examples": "{tr}maxwarns 5",
     },
     name="maxwarns",
     allow_private=False,
@@ -229,7 +242,10 @@ async def maxwarns(message: Message):
     """change warn limit"""
     maxwarns = message.input_str
     if not (maxwarns.isdigit() and int(maxwarns) in range(2, 1001)):
-        return await message.err('Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)', del_in=5)
+        return await message.err(
+            "Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)",
+            del_in=5,
+        )
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id},
         {"$set": {"max_warns": int(maxwarns)}},
@@ -242,14 +258,14 @@ async def maxwarns(message: Message):
         out = out.format("Max Warns", "Updated", message.chat.title, message.chat.id)
     await message.edit(out)
     await CHANNEL.log(out)
-    
 
 
 @userge.on_cmd(
     "(?:chatrules|setrules)",
-    about={"header": "chat rules",
-    'description':"As you know, It save rules!",
-    'usage':"{tr}setrules whatever here"
+    about={
+        "header": "chat rules",
+        "description": "As you know, It save rules!",
+        "usage": "{tr}setrules whatever here",
     },
     name="setrules",
     allow_private=False,
@@ -269,7 +285,7 @@ async def chat_rules(message: Message):
         return
     mid = await CHANNEL.store(reply, content)
     chatrules = f"chatrules_{message.chat.id}_{mid}"
-    
+
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id}, {"$set": {"rules": chatrules}}, upsert=True
     )
@@ -299,13 +315,12 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
         await message.chat.kick_member(warned_user.id, until_date=int(time() + 90))
 
 
-
 @userge.on_cmd(
     "(?:resetwarns|delwarns)",
     about={
         "header": "reset warns",
         "description": "This command is used to delete all the warns user got so far in the chat",
-        'usage': "{tr}delwarns @username"
+        "usage": "{tr}delwarns @username",
     },
     name="delwarns",
     allow_private=False,
@@ -319,11 +334,8 @@ async def totalwarns(message: Message):
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=5)
     warn_user = await message.client.get_users(warn_user_id)
-    
-  
-    if await WARNS_DB.find_one(
-        {"chat_id": message.chat.id, "user_id": warn_user_id}
-        ):
+
+    if await WARNS_DB.find_one({"chat_id": message.chat.id, "user_id": warn_user_id}):
         deleted = await WARNS_DB.delete_many(
             {"chat_id": message.chat.id, "user_id": warn_user_id}
         )
@@ -342,11 +354,11 @@ async def totalwarns(message: Message):
 
 @userge.on_cmd(
     "warns",
-    about={"header": "check warns of a user",
-    'description': "Use this command to know number of warns a user got so far in the chat",
-    'usage': "{tr}warns [username|userid] or reply"
+    about={
+        "header": "check warns of a user",
+        "description": "Use this command to know number of warns a user got so far in the chat",
+        "usage": "{tr}warns [username|userid] or reply",
     },
-
     allow_private=False,
     allow_bots=False,
     allow_channels=False,
@@ -358,7 +370,7 @@ async def totalwarns(message: Message):
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=5)
     warn_user = await message.client.get_users(warn_user_id)
-    
+
     count = 0
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
     max_warns = 3
@@ -410,17 +422,13 @@ if userge.has_bot:
             caption=out,
             reply_markup=None,
         )
-        
 
     @userge.bot.on_message(
-        filters.private
-        & (
-        filters.regex(pattern=r"^/start chatrules_(.*)_(.*)")
-        )
+        filters.private & (filters.regex(pattern=r"^/start chatrules_(.*)_(.*)"))
     )
     async def spoiler_get(_, message: Message):
         u_user = message.from_user
-        await message.reply('Work in progress xD')
+        await message.reply("Work in progress xD")
         chat_ = message.matches[0].group(1)
         log_id_ = message.matches[0].group(2)
         await CHANNEL.log(f"{chat_}\n\n{log_id_}")
