@@ -95,6 +95,7 @@ async def create_button(msg: Message):
 async def inline_buttons(message: Message):
     reply = message.reply_to_message
     text_x = None
+    is_media = False
     if not reply or message.input_str:
         return await message.err("Reply to a message or give input")
     if message.input_str:
