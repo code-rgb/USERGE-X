@@ -47,7 +47,6 @@ banned_text = "Warnings has been exceeded! {} has been {}!"
     check_restrict_perm=True,
 )
 async def warn_func(message: Message):
-    message.reply_to_message
     warn_user_id, reason = message.extract_user_and_text
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=3)
@@ -160,7 +159,7 @@ async def warn_mode(message: Message):
         ]
         await message.reply(
             f"Choose a warn mode for:\n**Chat: {message.chat.title}**",
-            reply_markup=InlineKeyboardMarkupbuttons(buttons),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
         return
     if not (warn_mode and warn_mode in warn_types):
@@ -258,7 +257,7 @@ async def totalwarns(message: Message):
     reply = message.reply_to_message
     if await WARNS_DB.find_one(
         {"chat_id": message.chat.id, "user_id": reply.from_user.id}
-    ):
+        ):
         deleted = await WARNS_DB.delete_many(
             {"chat_id": message.chat.id, "user_id": reply.from_user.id}
         )
