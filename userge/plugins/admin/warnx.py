@@ -257,7 +257,7 @@ async def totalwarns(message: Message):
     reply = message.reply_to_message
     if await WARNS_DB.find_one(
         {"chat_id": message.chat.id, "user_id": reply.from_user.id}
-        ):
+    ):
         deleted = await WARNS_DB.delete_many(
             {"chat_id": message.chat.id, "user_id": reply.from_user.id}
         )
