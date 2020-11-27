@@ -124,11 +124,13 @@ Warns: {wcount}/{max_warns}
             btn_row.append(InlineKeyboardButton("📝  Rules", url=rules))
 
         buttons = InlineKeyboardMarkup([btn_row])
-        await message.delete()
-        await message.reply(
+        reply_id = message.reply_to_message.message_id if message.reply_to_message else None
+        await userge.bot.send_message(
+            message.chat.id,
             warn_text,
             disable_web_page_preview=True,
             reply_markup=buttons,
+            reply_to_message_id=reply_id
         )
     else:
         await message.edit(
@@ -149,7 +151,6 @@ async def warn_mode(message: Message):
     warn_types = ["kick", "ban", "mute"]
     warn_mode = message.input_str
     if not warn_mode and message.client.is_bot:
-        await message.delete()
         buttons = [
             [
                 InlineKeyboardButton("⚽️  KICK", callback_data="warnmode_type_kick"),
@@ -172,11 +173,11 @@ async def update_warnmode(message: Message, warn_mode: str):
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id}, {"$set": {"warn_mode": warn_mode}}, upsert=True
     )
-    out = "{} <b>{}</b> to {} for Chat: {}"
+    out = "{} <b>{}</b> to {} for {}\n**ID:** {}"
     if result.upserted_id:
-        out = out.format("warn mode", "Changed", warn_mode, message.chat.id)
+        out = out.format("Warn Mode", "Changed", warn_mode, message.chat.title, message.chat.id)
     else:
-        out = out.format("warn mode", "Updated", warn_mode, message.chat.id)
+        out = out.format("Warn Mode", "Updated", warn_mode, message.chat.title, message.chat.id)
     return out
 
 
@@ -190,16 +191,18 @@ async def update_warnmode(message: Message, warn_mode: str):
 )
 async def maxwarns(message: Message):
     maxwarns = message.input_str
+    if not (maxwarns.isdigit() and in range(2, 1001)):
+        return await message.err('Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)', del_in=5)
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id},
         {"$set": {"max_warns": int(maxwarns)}},
         upsert=True,
     )
-    out = "{} <b>{}</b> for Chat: {}"
+    out = "{} <b>{}</b> for {}\n**ID:** {}"
     if result.upserted_id:
-        out = out.format("maxwarns", "Changed", message.chat.id)
+        out = out.format("Max Warns", "Changed", message.chat.title, message.chat.id)
     else:
-        out = out.format("maxwarns", "Updated", message.chat.id)
+        out = out.format("Max Warns", "Updated", message.chat.title, message.chat.id)
     await message.edit(out)
 
 
@@ -216,11 +219,11 @@ async def chat_rules(message: Message):
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id}, {"$set": {"rules": rules}}, upsert=True
     )
-    out = "{} <b>{}</b> for Chat: {}"
+    out = "{} <b>{}</b> for {} \n**ID:** {}"
     if result.upserted_id:
-        out = out.format("Rules", "Changed", message.chat.id)
+        out = out.format("Rules", "Changed", message.chat.title, message.chat.id)
     else:
-        out = out.format("Rules", "Updated", message.chat.id)
+        out = out.format("Rules", "Updated", message.chat.title, message.chat.id)
     await message.edit(out)
 
 
@@ -254,24 +257,29 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
     check_restrict_perm=True,
 )
 async def totalwarns(message: Message):
-    reply = message.reply_to_message
+    warn_user_id = (message.extract_user_and_text)[0]
+    if not warn_user_id:
+        return await message.err(no_input_reply, del_in=5)
+    warn_user = await message.client.get_users(warn_user_id)
+    
+  
     if await WARNS_DB.find_one(
-        {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+        {"chat_id": message.chat.id, "user_id": warn_user_id}
         ):
         deleted = await WARNS_DB.delete_many(
-            {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+            {"chat_id": message.chat.id, "user_id": warn_user_id}
         )
         purged = deleted.deleted_count
         await message.reply(
             purge_warns.format(
                 message.from_user.mention,
                 purged,
-                reply.from_user.mention,
+                warn_user.mention,
                 message.chat.title,
             )
         )
     else:
-        await message.reply(no_warns_msg.format(reply.from_user.mention))
+        await message.edit(no_warns_msg.format(warn_user.mention))
 
 
 @userge.on_cmd(
@@ -283,16 +291,19 @@ async def totalwarns(message: Message):
     check_restrict_perm=True,
 )
 async def totalwarns(message: Message):
-    reply = message.reply_to_message
+    warn_user_id = (message.extract_user_and_text)[0]
+    if not warn_user_id:
+        return await message.err(no_input_reply, del_in=5)
+    warn_user = await message.client.get_users(warn_user_id)
+    
     count = 0
-    warned_user = reply.from_user.mention
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
     max_warns = 3
     if found:
         max_warns = found.get("max_warns", 3)
     warns_ = ""
     async for warn in WARNS_DB.find(
-        {"chat_id": message.chat.id, "user_id": reply.from_user.id}
+        {"chat_id": message.chat.id, "user_id": warn_user.id}
     ):
         count += 1
         rsn = warn["reason"]
@@ -300,11 +311,11 @@ async def totalwarns(message: Message):
         if not rsn or rsn == "None":
             reason = "<i>No Reason</i>"
         u_mention = (await userge.get_users(warn["by"])).mention
-        warns_ += f"\n{count}- {reason} by {u_mention}"
+        warns_ += f"  \n**{count}.** {reason} by {u_mention}"
     if count == 0:
-        await message.reply(no_warns_msg.format(warned_user))
+        await message.reply(no_warns_msg.format(warned_user.mention))
         return
-    warns_text = total_warns_msg.format(warned_user, count, max_warns)
+    warns_text = total_warns_msg.format(warned_user.mention, count, max_warns)
     warns_text += warns_
     await message.reply(warns_text, disable_web_page_preview=True)
 
