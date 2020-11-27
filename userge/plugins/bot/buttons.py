@@ -7,7 +7,7 @@ import os
 import re
 
 from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
-
+from ..help import inline_button_handler
 from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
@@ -93,6 +93,7 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
+    """
     reply = message.reply_to_message
     text_x = None
     is_media = False
@@ -121,8 +122,11 @@ async def inline_buttons(message: Message):
 
     InlineDB.save_msg(msg_id, text_x, is_media)
     await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
+
+    """
+    key = await inline_button_handler(message)
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, f"btn_{msg_id}")
+    x = await userge.get_inline_bot_results(bot.username, f"btn_{key}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,

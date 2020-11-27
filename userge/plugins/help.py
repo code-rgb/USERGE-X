@@ -34,6 +34,9 @@ from .bot.utube_inline import get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
+
+
+INLINE_DB = {}
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
 PATH = "userge/xcache"
@@ -512,6 +515,16 @@ if userge.has_bot:
                 return
             MEDIA_URL = [f_id, f_ref]
 
+
+    async def inline_button_handler(message: Message):
+        button_raw = message.reply_to_message.caption
+        refresh_msg = await userge.bot.get_message(chat_id=message.chat.id, get_messages=message.message_id)
+        f_id, f_ref = get_file_id_and_ref(refresh_msg)
+        INLINE_DB[message.message.id] = {'button_raw': button_raw, 'f_id': f_id, 'f_ref': f_ref}
+        return message.message.id
+
+
+
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
@@ -941,6 +954,22 @@ if userge.has_bot:
                 )
 
             if str_y[0] == "btn" or "btn_" in str_y[0]:
+                msg_id = (str_y[0])[4:]
+                data = INLINE_DB[msg_id]
+               # {'button_raw': button_raw, 'f_id': f_id, 'f_ref': f_ref}
+                textx, buttonx = pb(data['button_raw'])
+                results.append(
+                                InlineQueryResultCachedDocument(
+                                    title=textx,
+                                    file_id=data['f_id'],
+                                    file_ref=data['f_ref'],
+                                    caption=textx,
+                                    description="Inline Button",
+                                    reply_markup=buttonsx,
+                                )
+                )
+
+                """
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
                     view_db = json.load(open(inline_db_path))
@@ -988,6 +1017,7 @@ if userge.has_bot:
                                 reply_markup=buttonsx,
                             )
                         )
+            """
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
