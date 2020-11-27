@@ -124,13 +124,15 @@ Warns: {wcount}/{max_warns}
             btn_row.append(InlineKeyboardButton("📝  Rules", url=rules))
 
         buttons = InlineKeyboardMarkup([btn_row])
-        reply_id = message.reply_to_message.message_id if message.reply_to_message else None
+        reply_id = (
+            message.reply_to_message.message_id if message.reply_to_message else None
+        )
         await userge.bot.send_message(
             message.chat.id,
             warn_text,
             disable_web_page_preview=True,
             reply_markup=buttons,
-            reply_to_message_id=reply_id
+            reply_to_message_id=reply_id,
         )
     else:
         await message.edit(
@@ -175,9 +177,13 @@ async def update_warnmode(message: Message, warn_mode: str):
     )
     out = "{} <b>{}</b> to {} for {}\n**ID:** {}"
     if result.upserted_id:
-        out = out.format("Warn Mode", "Changed", warn_mode, message.chat.title, message.chat.id)
+        out = out.format(
+            "Warn Mode", "Changed", warn_mode, message.chat.title, message.chat.id
+        )
     else:
-        out = out.format("Warn Mode", "Updated", warn_mode, message.chat.title, message.chat.id)
+        out = out.format(
+            "Warn Mode", "Updated", warn_mode, message.chat.title, message.chat.id
+        )
     return out
 
 
@@ -192,7 +198,10 @@ async def update_warnmode(message: Message, warn_mode: str):
 async def maxwarns(message: Message):
     maxwarns = message.input_str
     if not (maxwarns.isdigit() and int(maxwarns) in range(2, 1001)):
-        return await message.err('Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)', del_in=5)
+        return await message.err(
+            "Invalid Input! Choose a number between 2 - 1000 \n(min. 2, max. 1000)",
+            del_in=5,
+        )
     result = await WARN_DATA.update_one(
         {"chat_id": message.chat.id},
         {"$set": {"max_warns": int(maxwarns)}},
@@ -261,11 +270,8 @@ async def totalwarns(message: Message):
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=5)
     warn_user = await message.client.get_users(warn_user_id)
-    
-  
-    if await WARNS_DB.find_one(
-        {"chat_id": message.chat.id, "user_id": warn_user_id}
-        ):
+
+    if await WARNS_DB.find_one({"chat_id": message.chat.id, "user_id": warn_user_id}):
         deleted = await WARNS_DB.delete_many(
             {"chat_id": message.chat.id, "user_id": warn_user_id}
         )
@@ -295,7 +301,7 @@ async def totalwarns(message: Message):
     if not warn_user_id:
         return await message.err(no_input_reply, del_in=5)
     warn_user = await message.client.get_users(warn_user_id)
-    
+
     count = 0
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
     max_warns = 3
