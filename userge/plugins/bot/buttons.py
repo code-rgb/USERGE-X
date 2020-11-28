@@ -119,7 +119,6 @@ async def inline_buttons(message: Message):
     InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
     #await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
     bot = await userge.bot.get_me()
-    key = await inline_button_handler(message)
     x = await userge.get_inline_bot_results(bot.username, f"btn_{rnd_id}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
