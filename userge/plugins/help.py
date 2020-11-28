@@ -513,15 +513,15 @@ if userge.has_bot:
                 return
             MEDIA_URL = [f_id, f_ref]
 
-    async def inline_button_handler(message: Message):
-        button_raw = message.reply_to_message.caption
+   # async def inline_button_handler(message: Message):
+    #    button_raw = message.reply_to_message.caption
 
-        INLINE_DB[str(message.message_id)] = {
-            "button_raw": button_raw,
-            "chat_id": message.chat.id,
-        }
-        return message.message_id
-
+    #    INLINE_DB[str(message.message_id)] = {
+    #        "button_raw": button_raw,
+    #        "chat_id": message.chat.id,
+   #     }
+      #  return message.message_id
+#
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
@@ -951,14 +951,11 @@ if userge.has_bot:
                 )
 
             if str_y[0] == "btn" or "btn_" in str_y[0]:
-                msg_id = (str_y[0])[4:]
-                data = INLINE_DB[msg_id]
-                refresh_msg = await userge.bot.get_messages(data["chat_id"], msg_id)
-                f_id, f_ref = get_file_id_and_ref(refresh_msg)
-                await CHANNEL.log(str(INLINE_DB))
-                await CHANNEL.log(str(refresh_msg))
-                # {'button_raw': button_raw, 'f_id': f_id, 'f_ref': f_ref}
-                textx, buttonx = pb(data["button_raw"])
+                msg_split = str_y[0].split('_', 2)
+                msg_data = await userge.bot.get_messages(int(msg_split[1]), int(msg_split[2]))
+                f_id, f_ref = get_file_id_and_ref(msg_data)
+                textx, buttonx = pb(msg_data.caption)
+
                 results.append(
                     InlineQueryResultCachedDocument(
                         title=textx,
