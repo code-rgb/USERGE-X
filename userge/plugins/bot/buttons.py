@@ -26,8 +26,8 @@ class Inline_DB:
             json.dump(d, open(PATH, "w"))
         self.db = json.load(open(PATH))
 
-    def save_msg(self, msg_id: int, msg_data: str, is_media: bool):
-        self.db[msg_id] = {"is_media": is_media, "msg_data": msg_data}
+    def save_msg(self, rnd_id: int, msg_content: str, media_valid: bool, media_id: int):
+        self.db[rnd_id] = {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
         self.save()
 
     def save(self):
@@ -93,46 +93,38 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
-    """
     reply = message.reply_to_message
-    text_x = None
-    is_media = False
-    if not reply or message.input_str:
-        return await message.err("Reply to a message or give input")
+    msg_content = None
+    media_valid = False
+    media_id = 0
+    if reply:
+        media_valid = bool(get_file_id_and_ref(reply)[0])
+
     if message.input_str:
-        msg_id = message.message_id
-        text_x = message.input_str
-        if reply and reply.media:
-            f_id, f_ref = get_file_id_and_ref(reply)
-            is_media = True if f_id else False
+        msg_content = message.input_str
+        if media_valid:
+            media_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
+
     elif reply:
-        msg_id = reply.message_id
-        f_id, f_ref = get_file_id_and_ref(reply)
-        if f_id and reply.caption:
-            is_media = True
-            text_x = reply.caption.html
+        if media_valid:
+            media_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
+            msg_content = reply.caption.html if reply.caption else None
         elif reply.text:
-            text_x = reply.text.html
+            msg_content = reply.text.html
+    
+    if not msg_content:
+        return await message.err('Content not found', del_in=5)
 
-    if not text_x:
-        return await message.err("Reply to a message or give input")
-
-    if is_media:
-        msg_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
-
-    InlineDB.save_msg(msg_id, text_x, is_media)
-    await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
-
-    """
-    replied = message.reply_to_message
+    rnd_id = userge.rnd_id()
+    InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
+    #await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
     bot = await userge.bot.get_me()
     key = await inline_button_handler(message)
-    x = await userge.get_inline_bot_results(bot.username, f"btn_{key}")
+    x = await userge.get_inline_bot_results(bot.username, f"btn_{rnd_id}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,
         result_id=x.results[0].id,
-        reply_to_message_id=replied.message_id,
     )
     await message.delete()
 

@@ -513,13 +513,7 @@ if userge.has_bot:
                 return
             MEDIA_URL = [f_id, f_ref]
 
-    async def inline_button_handler(message: Message):
-        button_raw = message.reply_to_message.caption
-        INLINE_DB[str(message.reply_to_message.message_id)] = {
-            "button_raw": str(button_raw),
-            "chat_id": message.chat.id,
-        }
-        return str(message.reply_to_message.message_id)
+   
 
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
@@ -949,47 +943,25 @@ if userge.has_bot:
                     )
                 )
 
-            if str_y[0] == "btn" or "btn_" in str_y[0]:
-
-                msg_split = str_y[0].split("_", 1)
-                data = INLINE_DB[msg_split[1]]
-                msg_data = await userge.bot.get_messages(
-                    int(msg_split[1]), int(data["chat_id"])
-                )
-                f_id, f_ref = get_file_id_and_ref(msg_data)
-                textx, buttonx = pb(data["button_raw"])
-
-                results.append(
-                    InlineQueryResultCachedDocument(
-                        title=textx,
-                        file_id=f_id,
-                        file_ref=f_ref,
-                        caption=textx,
-                        description="Inline Button",
-                        reply_markup=buttonx,
-                    )
-                )
-
-                """
+            if "btn_" in str_y[0]:
+                rnd_id = int((str_y[0].split('_', 1))[1])
+                #  {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
                     view_db = json.load(open(inline_db_path))
                     await CHANNEL.log(str(view_db))
-
                     if len(view_db) != 0:
-                        msg_id = (str_y[0])[4:]
-                        print(msg_id)
-                        inline_db = view_db.get(msg_id, None)
+                        inline_db = view_db.get(rnd_id, None)
                         if inline_db:
-                            if inline_db["is_media"]:
+                            if inline_db['media_valid'] and len(int(inline_db['media_id'])) != 0:
                                 saved_msg = await userge.bot.get_messages(
-                                    Config.LOG_CHANNEL_ID, msg_id
+                                    Config.LOG_CHANNEL_ID, int(inline_db['media_id'])
                                 )
                                 media_data = get_file_id_and_ref(saved_msg)
+                                
+                            textx, buttonsx = pb(inline_db['msg_content'])
 
-                            textx, buttonsx = pb(inline_db["msg_data"])
-
-                    if inline_db["is_media"]:
+                    if inline_db['media_valid']:
                         if saved_msg.photo:
                             results.append(
                                 InlineQueryResultCachedPhoto(
@@ -1018,7 +990,7 @@ if userge.has_bot:
                                 reply_markup=buttonsx,
                             )
                         )
-            """
+          
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
