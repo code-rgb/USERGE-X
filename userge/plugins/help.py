@@ -519,7 +519,7 @@ if userge.has_bot:
             chat_id=message.chat.id, message_ids=message.message_id
         )
         f_id, f_ref = get_file_id_and_ref(refresh_msg)
-        INLINE_DB[message.message_id] = {
+        INLINE_DB[str(message.message_id)] = {
             "button_raw": button_raw,
             "f_id": f_id,
             "f_ref": f_ref,
