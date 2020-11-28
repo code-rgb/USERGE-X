@@ -7,7 +7,7 @@ RUN sudo apt-get update \
         mediainfo \
         neofetch \
         ffmpeg \
-        ibasound2-dev \
+        libasound2-dev \
         libgtk-3-dev \
         libnss3-dev \
         curl \
