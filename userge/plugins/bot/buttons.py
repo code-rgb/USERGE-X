@@ -27,7 +27,11 @@ class Inline_DB:
         self.db = json.load(open(PATH))
 
     def save_msg(self, rnd_id: int, msg_content: str, media_valid: bool, media_id: int):
-        self.db[rnd_id] = {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
+        self.db[rnd_id] = {
+            "msg_content": msg_content,
+            "media_valid": media_valid,
+            "media_id": media_id,
+        }
         self.save()
 
     def save(self):
@@ -111,15 +115,15 @@ async def inline_buttons(message: Message):
             msg_content = reply.caption.html if reply.caption else None
         elif reply.text:
             msg_content = reply.text.html
-    
+
     if not msg_content:
-        return await message.err('Content not found', del_in=5)
+        return await message.err("Content not found", del_in=5)
 
     rnd_id = userge.rnd_id()
     InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
-    #await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
+    # await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
     bot = await userge.bot.get_me()
-    key = await inline_button_handler(message)
+    await inline_button_handler(message)
     x = await userge.get_inline_bot_results(bot.username, f"btn_{rnd_id}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
