@@ -966,7 +966,7 @@ if userge.has_bot:
                         file_ref=data["f_ref"],
                         caption=textx,
                         description="Inline Button",
-                        reply_markup=buttonsx,
+                        reply_markup=buttonx,
                     )
                 )
 
