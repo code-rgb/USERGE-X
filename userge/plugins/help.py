@@ -513,8 +513,6 @@ if userge.has_bot:
                 return
             MEDIA_URL = [f_id, f_ref]
 
-   
-
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
         results = []
@@ -944,7 +942,7 @@ if userge.has_bot:
                 )
 
             if "btn_" in str_y[0]:
-                rnd_id = int((str_y[0].split('_', 1))[1])
+                rnd_id = int((str_y[0].split("_", 1))[1])
                 #  {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
@@ -953,15 +951,18 @@ if userge.has_bot:
                     if len(view_db) != 0:
                         inline_db = view_db.get(rnd_id, None)
                         if inline_db:
-                            if inline_db['media_valid'] and len(int(inline_db['media_id'])) != 0:
+                            if (
+                                inline_db["media_valid"]
+                                and len(int(inline_db["media_id"])) != 0
+                            ):
                                 saved_msg = await userge.bot.get_messages(
-                                    Config.LOG_CHANNEL_ID, int(inline_db['media_id'])
+                                    Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
                                 )
                                 media_data = get_file_id_and_ref(saved_msg)
-                                
-                            textx, buttonsx = pb(inline_db['msg_content'])
 
-                    if inline_db['media_valid']:
+                            textx, buttonsx = pb(inline_db["msg_content"])
+
+                    if inline_db["media_valid"]:
                         if saved_msg.photo:
                             results.append(
                                 InlineQueryResultCachedPhoto(
@@ -990,7 +991,6 @@ if userge.has_bot:
                                 reply_markup=buttonsx,
                             )
                         )
-          
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
