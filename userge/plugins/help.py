@@ -954,9 +954,11 @@ if userge.has_bot:
                 msg_id = (str_y[0])[4:]
                 data = INLINE_DB[msg_id]
                 refresh_msg = await userge.bot.get_messages(
-                    chat_id=int(data["chat_id"]), message_ids=int(msg_id)
+                    data["chat_id"], msg_id
                 )
                 f_id, f_ref = get_file_id_and_ref(refresh_msg)
+                await CHANNEL.log(str(INLINE_DB))
+                await CHANNEL.log(str(refresh_msg))
                 # {'button_raw': button_raw, 'f_id': f_id, 'f_ref': f_ref}
                 textx, buttonx = pb(data["button_raw"])
                 results.append(
