@@ -127,9 +127,7 @@ async def inline_buttons(message: Message):
     replied = message.reply_to_message
     bot = await userge.bot.get_me()
     key = await inline_button_handler(message)
-    x = await userge.get_inline_bot_results(
-        bot.username, f"btn_{key}"
-    )
+    x = await userge.get_inline_bot_results(bot.username, f"btn_{key}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,
