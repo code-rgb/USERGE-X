@@ -942,18 +942,18 @@ if userge.has_bot:
                 )
 
             if "btn_" in str_y[0]:
-                rnd_id = int((str_y[0].split("_", 1))[1])
+                rnd_id = (str_y[0].split("_", 1))[1]
                 #  {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
                     view_db = json.load(open(inline_db_path))
                     await CHANNEL.log(str(view_db))
                     if len(view_db) != 0:
-                        inline_db = view_db.get(rnd_id, None)
+                        inline_db = view_db.get(str(rnd_id), None)
                         if inline_db:
                             if (
                                 inline_db["media_valid"]
-                                and len(int(inline_db["media_id"])) != 0
+                                and int(inline_db["media_id"]) != 0
                             ):
                                 saved_msg = await userge.bot.get_messages(
                                     Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
