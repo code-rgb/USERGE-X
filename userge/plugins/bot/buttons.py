@@ -12,8 +12,6 @@ from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
 
-from ..help import inline_button_handler
-
 BUTTON_BASE = get_collection("TEMP_BUTTON")
 BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 BTNX = re.compile(BTN)
@@ -126,9 +124,11 @@ async def inline_buttons(message: Message):
     await CHANNEL.log(f"{msg_id}\n\n{text_x}\n\n{is_media}")
 
     """
-    reply = message.reply_to_message
+    message.reply_to_message
     bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, f"btn_{message.chat.id}_{message.reply_to_message.message_id}")
+    x = await userge.get_inline_bot_results(
+        bot.username, f"btn_{message.chat.id}_{message.reply_to_message.message_id}"
+    )
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
         query_id=x.query_id,
