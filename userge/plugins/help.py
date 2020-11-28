@@ -515,14 +515,9 @@ if userge.has_bot:
 
     async def inline_button_handler(message: Message):
         button_raw = message.reply_to_message.caption
-        refresh_msg = await userge.bot.get_messages(
-            chat_id=message.chat.id, message_ids=message.message_id
-        )
-        f_id, f_ref = get_file_id_and_ref(refresh_msg)
+       
         INLINE_DB[str(message.message_id)] = {
-            "button_raw": button_raw,
-            "f_id": f_id,
-            "f_ref": f_ref,
+            "button_raw": button_raw, 'chat_id': message.chat.id
         }
         return message.message_id
 
@@ -957,19 +952,23 @@ if userge.has_bot:
             if str_y[0] == "btn" or "btn_" in str_y[0]:
                 msg_id = (str_y[0])[4:]
                 data = INLINE_DB[msg_id]
+                refresh_msg = await userge.bot.get_messages(
+                    chat_id=int(data['chat_id']), message_ids=int(msg_id)
+                )
+                f_id, f_ref = get_file_id_and_ref(refresh_msg)
                 # {'button_raw': button_raw, 'f_id': f_id, 'f_ref': f_ref}
                 textx, buttonx = pb(data["button_raw"])
                 results.append(
                     InlineQueryResultCachedDocument(
                         title=textx,
-                        file_id=data["f_id"],
-                        file_ref=data["f_ref"],
+                        file_id=f_id,
+                        file_ref=f_ref,
                         caption=textx,
                         description="Inline Button",
                         reply_markup=buttonx,
                     )
                 )
-
+                
                 """
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
