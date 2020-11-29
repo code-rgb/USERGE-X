@@ -952,7 +952,7 @@ if userge.has_bot:
                     reverse_list.reverse()
                     for butt_ons in reverse_list:
                         if data_count_n > 15:
-                            data.pop(butt_ons, None)
+                            view_db.pop(butt_ons, None)
                         data_count_n += 1
 
                     with open(inline_db_path, "w") as data_file:
