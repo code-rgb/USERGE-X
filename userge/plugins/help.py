@@ -34,6 +34,8 @@ from .bot.utube_inline import get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
+INLINE_DB = {}
+CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
 PATH = "userge/xcache"
 _CATEGORY = {
@@ -49,7 +51,6 @@ _CATEGORY = {
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
-BUTTON_BASE = get_collection("TEMP_BUTTON")  # TODO use json cache
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
@@ -939,28 +940,78 @@ if userge.has_bot:
                     )
                 )
 
-            if string == "buttonnn":
-                async for data in BUTTON_BASE.find():
-                    button_data = data["msg_data"]
-                text, buttons = pb(button_data)
-                try:
-                    photo_url = data["photo_url"]
-                except KeyError:
-                    photo_url = None
-                if photo_url:
-                    results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=photo_url, caption=text, reply_markup=buttons
-                        )
-                    )
-                else:
-                    results.append(
-                        InlineQueryResultArticle(
-                            title=text,
-                            input_message_content=InputTextMessageContent(text),
-                            reply_markup=buttons,
-                        )
-                    )
+            if "btn_" in str_y[0] or str_y[0] == "btn":
+
+                inline_db_path = "./userge/xcache/inline_db.json"
+                if os.path.exists(inline_db_path):
+                    with open(inline_db_path, "r") as data_file:
+                        view_db = json.load(data_file)
+
+                    data_count_n = 1
+                    reverse_list = list(view_db)
+                    reverse_list.reverse()
+                    for butt_ons in reverse_list:
+                        if data_count_n > 15:
+                            view_db.pop(butt_ons, None)
+                        data_count_n += 1
+
+                    with open(inline_db_path, "w") as data_file:
+                        json.dump(view_db, data_file)
+
+                    if str_y[0] == "btn":
+                        inline_storage = list(view_db)
+                    else:
+                        rnd_id = (str_y[0].split("_", 1))[1]
+                        inline_storage = [rnd_id]
+
+                    if len(inline_storage) == 0:
+                        return
+
+                    for inline_content in inline_storage:
+                        inline_db = view_db.get(inline_content, None)
+                        if inline_db:
+                            if (
+                                inline_db["media_valid"]
+                                and int(inline_db["media_id"]) != 0
+                            ):
+                                saved_msg = await userge.bot.get_messages(
+                                    Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
+                                )
+                                media_data = get_file_id_and_ref(saved_msg)
+
+                            textx, buttonsx = pb(inline_db["msg_content"])
+
+                            if inline_db["media_valid"]:
+                                if saved_msg.photo:
+                                    results.append(
+                                        InlineQueryResultCachedPhoto(
+                                            file_id=media_data[0],
+                                            file_ref=media_data[1],
+                                            caption=textx,
+                                            reply_markup=buttonsx,
+                                        )
+                                    )
+                                else:
+                                    results.append(
+                                        InlineQueryResultCachedDocument(
+                                            title=textx,
+                                            file_id=media_data[0],
+                                            file_ref=media_data[1],
+                                            caption=textx,
+                                            description="Inline Button",
+                                            reply_markup=buttonsx,
+                                        )
+                                    )
+                            else:
+                                results.append(
+                                    InlineQueryResultArticle(
+                                        title=textx,
+                                        input_message_content=InputTextMessageContent(
+                                            textx
+                                        ),
+                                        reply_markup=buttonsx,
+                                    )
+                                )
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
