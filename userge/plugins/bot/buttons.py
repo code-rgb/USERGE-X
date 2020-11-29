@@ -96,7 +96,7 @@ async def create_button(msg: Message):
     },
 )
 async def inline_buttons(message: Message):
-    await message.edit('<code>Creating an Inline Button...</code>')
+    await message.edit("<code>Creating an Inline Button...</code>")
     reply = message.reply_to_message
     msg_content = None
     media_valid = False
