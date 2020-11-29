@@ -56,6 +56,10 @@ COMMANDS = {
         "help_txt": "**Send Saved Spoiler Via Inline**\n For more info see `.help spoiler`\n\n>>>  `spoiler [ID]`",
         "i_q": "spoiler",
     },
+    "btn": {
+        "help_txt": "**Get your 15 recently creeated inline message in the inline query, so you can post it in any channel or group effortlessly**\n For Creating inline messages see `.help .ibutton`\n\n>>>  `btn`",
+        "i_q": "btn",
+    },
 }
 
 
