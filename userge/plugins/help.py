@@ -51,7 +51,6 @@ _CATEGORY = {
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
-BUTTON_BASE = get_collection("TEMP_BUTTON")  # TODO use json cache
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
