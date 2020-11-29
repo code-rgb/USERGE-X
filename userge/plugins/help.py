@@ -941,15 +941,33 @@ if userge.has_bot:
                     )
                 )
 
-            if "btn_" in str_y[0]:
-                rnd_id = (str_y[0].split("_", 1))[1]
-                #  {'msg_content': msg_content, 'media_valid': media_valid, 'media_id': media_id}
+            if "btn_" in str_y[0] or str_y[0] == "btn":
+
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
-                    view_db = json.load(open(inline_db_path))
-                    await CHANNEL.log(str(view_db))
-                    if len(view_db) != 0:
-                        inline_db = view_db.get(str(rnd_id), None)
+                    with open(inline_db_path, 'r') as data_file:
+                        view_db = json.load(data_file)
+
+                    data_count_n = 1
+                    for butt_ons in list(view_db):
+                        if data_count_n > 10:
+                            data.pop(butt_ons, None)
+                        data_count_n += 1
+
+                    with open(inline_db_path, 'w') as data_file:
+                        json.dump(view_db, data_file)
+
+                    if str_y[0] == "btn":
+                        inline_storage = list(view_db)
+                    else:
+                        rnd_id = (str_y[0].split("_", 1))[1]
+                        inline_storage = [rnd_id]
+
+                    if len(inline_storage) == 0:
+                        return
+
+                    for inline_content in inline_storage:
+                        inline_db = view_db.get(inline_content, None)
                         if inline_db:
                             if (
                                 inline_db["media_valid"]
@@ -962,35 +980,36 @@ if userge.has_bot:
 
                             textx, buttonsx = pb(inline_db["msg_content"])
 
-                    if inline_db["media_valid"]:
-                        if saved_msg.photo:
-                            results.append(
-                                InlineQueryResultCachedPhoto(
-                                    file_id=media_data[0],
-                                    file_ref=media_data[1],
-                                    caption=textx,
-                                    reply_markup=buttonsx,
+                            if inline_db["media_valid"]:
+                                if saved_msg.photo:
+                                    results.append(
+                                        InlineQueryResultCachedPhoto(
+                                            file_id=media_data[0],
+                                            file_ref=media_data[1],
+                                            caption=textx,
+                                            reply_markup=buttonsx,
+                                        )
+                                    )
+                                else:
+                                    results.append(
+                                        InlineQueryResultCachedDocument(
+                                            title=textx,
+                                            file_id=media_data[0],
+                                            file_ref=media_data[1],
+                                            caption=textx,
+                                            description="Inline Button",
+                                            reply_markup=buttonsx,
+                                        )
+                                    )
+                            else:
+                                results.append(
+                                    InlineQueryResultArticle(
+                                        title=textx,
+                                        input_message_content=InputTextMessageContent(textx),
+                                        reply_markup=buttonsx,
+                                    )
                                 )
-                            )
-                        else:
-                            results.append(
-                                InlineQueryResultCachedDocument(
-                                    title=textx,
-                                    file_id=media_data[0],
-                                    file_ref=media_data[1],
-                                    caption=textx,
-                                    description="Inline Button",
-                                    reply_markup=buttonsx,
-                                )
-                            )
-                    else:
-                        results.append(
-                            InlineQueryResultArticle(
-                                title=textx,
-                                input_message_content=InputTextMessageContent(textx),
-                                reply_markup=buttonsx,
-                            )
-                        )
+
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
