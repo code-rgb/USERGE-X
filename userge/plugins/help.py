@@ -949,8 +949,10 @@ if userge.has_bot:
                         view_db = json.load(data_file)
 
                     data_count_n = 1
-                    for butt_ons in list(view_db):
-                        if data_count_n > 10:
+                    reverse_list = list(view_db)
+                    reverse_list.reverse()
+                    for butt_ons in reverse_list:
+                        if data_count_n > 15:
                             data.pop(butt_ons, None)
                         data_count_n += 1
 
