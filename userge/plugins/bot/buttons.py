@@ -12,7 +12,6 @@ from userge import Config, Message, userge
 from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
 
-
 BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 BTNX = re.compile(BTN)
 PATH = "./userge/xcache/inline_db.json"
@@ -122,7 +121,7 @@ async def inline_buttons(message: Message):
     rnd_id = userge.rnd_id()
     msg_content = check_brackets(msg_content)
     InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
- 
+
     bot = await userge.bot.get_me()
 
     x = await userge.get_inline_bot_results(bot.username, f"btn_{rnd_id}")
