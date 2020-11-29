@@ -945,7 +945,7 @@ if userge.has_bot:
 
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
-                    with open(inline_db_path, 'r') as data_file:
+                    with open(inline_db_path, "r") as data_file:
                         view_db = json.load(data_file)
 
                     data_count_n = 1
@@ -954,7 +954,7 @@ if userge.has_bot:
                             data.pop(butt_ons, None)
                         data_count_n += 1
 
-                    with open(inline_db_path, 'w') as data_file:
+                    with open(inline_db_path, "w") as data_file:
                         json.dump(view_db, data_file)
 
                     if str_y[0] == "btn":
@@ -1005,11 +1005,12 @@ if userge.has_bot:
                                 results.append(
                                     InlineQueryResultArticle(
                                         title=textx,
-                                        input_message_content=InputTextMessageContent(textx),
+                                        input_message_content=InputTextMessageContent(
+                                            textx
+                                        ),
                                         reply_markup=buttonsx,
                                     )
                                 )
-
 
             if str_y[0].lower() == "stylish":
                 if len(str_y) == 2:
