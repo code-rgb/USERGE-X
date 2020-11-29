@@ -57,7 +57,7 @@ COMMANDS = {
         "i_q": "spoiler",
     },
     "btn": {
-        "help_txt": "**Get your upto 15 most recently created inline messages in the inline query, so you can post it in any channel or group effortlessly**\n For Creating inline messages see `.help .ibutton`\n\n>>>  `btn`",
+        "help_txt": "**Get upto 15 of your most recently created inline messages in the inline query, so you can post it in any channel or group effortlessly**\n For Creating inline messages see `.help .ibutton`\n\n>>>  `btn`",
         "i_q": "btn",
     },
 }
