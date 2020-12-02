@@ -16,7 +16,7 @@ instaloader
 jikanpy
 motor
 natsort
-nekos.py
+git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 oauth2client
 Pillow==7.1.0
 psutil
