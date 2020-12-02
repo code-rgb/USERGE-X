@@ -1,11 +1,12 @@
-
-
-from userge import Message, userge
 import os
-from .nsfw import age_verification
+
 from anekos import NekosLifeClient, NSFWImageTags, SFWImageTags
 from pyrogram.errors import MediaEmpty
 from wget import download
+
+from userge import Message, userge
+
+from .nsfw import age_verification
 
 client = NekosLifeClient()
 
@@ -48,14 +49,13 @@ async def neko_life(message: Message):
         link = (await client.random_image()).url
 
     await message.delete()
-    
+
     try:
         await send_nekos(message, link)
     except MediaEmpty:
         link = download(link)
         await send_nekos(message, link)
         os.remove(link)
-        
 
 
 async def send_nekos(message: Message, link: str):
