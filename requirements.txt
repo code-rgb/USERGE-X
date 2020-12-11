@@ -17,7 +17,7 @@ jikanpy
 motor
 natsort
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-oauth2client
+oauth2-client>=1.2.1
 Pillow==7.1.0
 psutil>=5.7.3
 pybase64>=1.1.1
