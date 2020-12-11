@@ -14,7 +14,7 @@ class AioHttp:
                 status_ = resp.status
                 data_ = await resp.json()
             await session.close()
-                return status_, data_
+        return status_, data_
 
     @staticmethod
     async def get_text(link):
@@ -23,7 +23,7 @@ class AioHttp:
                 status_ = resp.status
                 data_ = await resp.text()
             await session.close()
-                return status_, data_
+        return status_, data_
 
     @staticmethod
     async def get_raw(link):
@@ -32,4 +32,4 @@ class AioHttp:
                 status_ = resp.status
                 data_ = await resp.read()
             await session.close()
-                return status_, data_
+        return status_, data_
