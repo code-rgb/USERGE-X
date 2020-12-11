@@ -15,7 +15,7 @@ html-telegraph-poster
 instaloader
 jikanpy
 motor
-natsort
+natsort>=7.1.0
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 oauth2-client>=1.2.1
 Pillow==7.1.0
