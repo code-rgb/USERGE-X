@@ -11,16 +11,25 @@ class AioHttp:
     async def get_json(link):
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as resp:
-                return [resp.status, await resp.json()]
+                status_ = resp.status
+                data_ = await resp.json()
+            await session.close()
+                return status_, data_
 
     @staticmethod
     async def get_text(link):
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as resp:
-                return [resp.status, await resp.text()]
+                status_ = resp.status
+                data_ = await resp.text()
+            await session.close()
+                return status_, data_
 
     @staticmethod
     async def get_raw(link):
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as resp:
-                return [resp.status, await resp.read()]
+                status_ = resp.status
+                data_ = await resp.read()
+            await session.close()
+                return status_, data_
