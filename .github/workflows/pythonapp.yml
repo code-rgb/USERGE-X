@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v1
@@ -21,7 +21,7 @@ jobs:
       run: |
         sudo apt-get install libpq-dev
         python -m pip install --upgrade pip
-        pip install --use-feature=2020-resolver -r requirements.txt
+        pip install -r requirements.txt
         pip install flake8 flake8-print flake8-quotes
     - name: Check for showstoppers
       run: |
