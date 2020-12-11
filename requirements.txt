@@ -12,8 +12,8 @@ googletrans==3.1.0a0
 hachoir
 heroku3
 html-telegraph-poster
-instaloader
-jikanpy
+instaloader>=4.5.5
+jikanpy>=4.2.2
 motor>=2.3.0
 natsort>=7.1.0
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
@@ -32,7 +32,7 @@ removebg>=0.04
 requests>=2.25.0
 search-engine-parser==0.6.2
 selenium==3.141.0
-setuptools>=40.3.0
+setuptools>=51.0.0
 spamwatch
 speedtest-cli
 stagger
