@@ -1,7 +1,7 @@
 import os
 
 from anekos import NekosLifeClient, NSFWImageTags, SFWImageTags
-from pyrogram.errors import MediaEmpty
+from pyrogram.errors import MediaEmpty, WebpageCurlFailed
 from wget import download
 
 from userge import Message, userge
@@ -57,7 +57,7 @@ async def neko_life(message: Message):
 
     try:
         await send_nekos(message, link)
-    except MediaEmpty:
+    except (MediaEmpty, WebpageCurlFailed):
         link = download(link)
         await send_nekos(message, link)
         os.remove(link)
