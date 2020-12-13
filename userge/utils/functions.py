@@ -5,14 +5,13 @@ from .progress import progress
 import re
 import html
 import random
-from pySmartDL import SmartDL
 
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
 async def media_to_image(message):
     replied = message.reply_to_message
-    if not (replied.photo or replied.sticker or replied.animation or replied.video):
+    if not (replied.photo or replied.sticker or replied.animation or replied.video or replied.audio):
         await message.err("`Media Type Is Invalid ! See HELP.`")
         return
     if not os.path.isdir(Config.DOWN_PATH):
@@ -51,6 +50,14 @@ async def media_to_image(message):
             await message.err("This Gif is Gey (｡ì _ í｡), Task Failed Successfully !")
             return
         dls_loc = jpg_file
+    elif replied.audio:
+        await message.edit('`Trying to Get thumb from the audio ...`')
+        jpg_file = os.path.join(Config.DOWN_PATH, "image.jpg")
+        await thumb_from_audio(dls_loc, jpg_file)
+        if not os.path.lexists(jpg_file):
+            await message.err("`This Audio has no thumbnail, Task Failed Successfully ...`")
+            return
+        dls_loc = jpg_file
     await message.edit("`Almost Done ...`")
     return dls_loc
 
@@ -76,7 +83,7 @@ def deEmojify(inputString: str) -> str:
     """Remove emojis and other non-safe characters from string"""
     return re.sub(EMOJI_PATTERN, '', inputString)
 
-# from NANA-REMIX --------
+
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
     return re.sub(cleanr, '', raw_html)
@@ -95,7 +102,6 @@ def mention_html(user_id, name):
 def mention_markdown(user_id, name):
     return u'[{}](tg://user?id={})'.format(escape_markdown(name), user_id)
 
-#------------------------
 
 async def thumb_from_audio(audio_path, output):
     await runcmd(f'ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}')
@@ -104,9 +110,3 @@ async def thumb_from_audio(audio_path, output):
 def rand_array(array):
     random_num = random.choice(array) 
     return (str(random_num))
-
-
-async def download_link(url):
-    dest = Config.DOWN_PATH
-    obj = SmartDL(url, dest)
-    return obj.get_dest()
