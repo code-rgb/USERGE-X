@@ -69,7 +69,9 @@ async def crop_vid(input_vid: str, final_path: str):
             width = track.width
     if aspect_ratio != 1:
         crop_by = width if (height > width) else height
-        await runcmd(f'ffmpeg -i {input_vid} -vf "crop={crop_by}:{crop_by}" {final_path}')
+        await runcmd(
+            f'ffmpeg -i {input_vid} -vf "crop={crop_by}:{crop_by}" {final_path}'
+        )
         os.remove(input_vid)
     else:
         os.rename(input_vid, final_path)
