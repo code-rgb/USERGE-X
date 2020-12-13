@@ -4,7 +4,7 @@
 
 
 import os
-import shutil
+from shutil import rmtree
 
 from pymediainfo import MediaInfo
 
@@ -31,8 +31,9 @@ async def video_note(message: Message):
     if not (reply.video or reply.animation or reply.audio):
         await message.err("Only videos, gifs and audio are Supported", del_in=10)
         return
-    if not os.path.exists(CACHE):
-        os.mkdir(CACHE)
+    if os.path.exists(CACHE):
+        rmtree(CACHE, ignore_errors=True)
+    os.mkdir(CACHE)
     await message.edit("`Processing ...`")
     if reply.video or reply.animation:
         note = await reply.download()
@@ -57,7 +58,7 @@ async def video_note(message: Message):
     if os.path.exists(PATH):
         await message.client.send_video_note(message.chat.id, PATH)
     await message.delete()
-    shutil.rmtree(CACHE)
+    rmtree(CACHE, ignore_errors=True)
 
 
 async def crop_vid(input_vid: str, final_path: str):
