@@ -60,7 +60,10 @@ async def media_to_image(message):
     elif replied.audio:
         await message.edit("`Trying to Get thumb from the audio ...`")
         jpg_file = os.path.join(Config.DOWN_PATH, "image.jpg")
-        await thumb_from_audio(dls_loc, jpg_file)
+        song_file = os.path.join(Config.DOWN_PATH, "song.mp3")
+        os.rename(dls_loc, song_file)
+        await thumb_from_audio(song_file, jpg_file)
+        os.remove(song_file)
         if not os.path.lexists(jpg_file):
             await message.err(
                 "`This Audio has no thumbnail, Task Failed Successfully ...`"
