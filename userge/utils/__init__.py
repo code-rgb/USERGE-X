@@ -11,7 +11,6 @@
 from .functions import (
     cleanhtml,
     deEmojify,
-    download_link,
     escape_markdown,
     media_to_image,
     mention_html,
