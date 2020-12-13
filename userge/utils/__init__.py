@@ -8,21 +8,25 @@
 #
 # All rights reserved.
 
+from .functions import (
+    cleanhtml,
+    deEmojify,
+    download_link,
+    escape_markdown,
+    media_to_image,
+    mention_html,
+    mention_markdown,
+    rand_array,
+    thumb_from_audio,
+)
 from .progress import progress  # noqa
-from .sys_tools import SafeDict, get_import_path, secure_text, terminate # noqa
-from .tools import (get_file_id_and_ref,
-                    humanbytes,
-                    time_formatter,
-                    post_to_telegraph,
-                    runcmd,
-                    take_screen_shot,
-                    parse_buttons)
-from .functions import (deEmojify, 
-                        media_to_image,
-                        mention_markdown,
-                        mention_html,
-                        escape_markdown,
-                        cleanhtml,
-                        thumb_from_audio,
-                        rand_array,
-                        download_link)
+from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
+from .tools import (
+    get_file_id_and_ref,
+    humanbytes,
+    parse_buttons,
+    post_to_telegraph,
+    runcmd,
+    take_screen_shot,
+    time_formatter,
+)

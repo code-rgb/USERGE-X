@@ -15,17 +15,20 @@ from typing import Dict, Tuple
 from pyrogram.errors.exceptions import FloodWait
 
 import userge
+
 from .tools import humanbytes, time_formatter
 
 _TASKS: Dict[str, Tuple[int, int]] = {}
 
 
-async def progress(current: int,
-                   total: int,
-                   message: 'userge.Message',
-                   ud_type: str,
-                   file_name: str = '',
-                   delay: int = userge.Config.EDIT_SLEEP_TIMEOUT) -> None:
+async def progress(
+    current: int,
+    total: int,
+    message: "userge.Message",
+    ud_type: str,
+    file_name: str = "",
+    delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
+) -> None:
     """ progress function """
     if message.process_is_canceled:
         await message.client.stop_transmission()
@@ -49,24 +52,25 @@ async def progress(current: int,
         percentage = current * 100 / total
         speed = current / elapsed_time
         time_to_completion = time_formatter(int((total - current) / speed))
-        progress_str = \
-            "__{}__ : `{}`\n" + \
-            "```[{}{}]```\n" + \
-            "**Progress** : `{}%`\n" + \
-            "**Completed** : `{}`\n" + \
-            "**Total** : `{}`\n" + \
-            "**Speed** : `{}/s`\n" + \
-            "**ETA** : `{}`"
+        progress_str = (
+            "__{}__ : `{}`\n"
+            + "```[{}{}]```\n"
+            + "**Progress** : `{}%`\n"
+            + "**Completed** : `{}`\n"
+            + "**Total** : `{}`\n"
+            + "**Speed** : `{}/s`\n"
+            + "**ETA** : `{}`"
+        )
         progress_str = progress_str.format(
             ud_type,
             file_name,
-            ''.join(
+            "".join(
                 (
                     userge.Config.FINISHED_PROGRESS_STR
                     for i in range(floor(percentage / 5))
                 )
             ),
-            ''.join(
+            "".join(
                 (
                     userge.Config.UNFINISHED_PROGRESS_STR
                     for i in range(20 - floor(percentage / 5))

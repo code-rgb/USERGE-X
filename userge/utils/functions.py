@@ -1,17 +1,24 @@
-import os
-from ..config import Config
-from .tools import take_screen_shot, runcmd
-from .progress import progress
-import re
 import html
+import os
 import random
+import re
+
+from ..config import Config
+from .progress import progress
+from .tools import runcmd, take_screen_shot
 
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
 async def media_to_image(message):
     replied = message.reply_to_message
-    if not (replied.photo or replied.sticker or replied.animation or replied.video or replied.audio):
+    if not (
+        replied.photo
+        or replied.sticker
+        or replied.animation
+        or replied.video
+        or replied.audio
+    ):
         await message.err("`Media Type Is Invalid ! See HELP.`")
         return
     if not os.path.isdir(Config.DOWN_PATH):
@@ -21,7 +28,7 @@ async def media_to_image(message):
         message=message.reply_to_message,
         file_name=Config.DOWN_PATH,
         progress=progress,
-        progress_args=(message, "`Trying to Posses given content`")
+        progress_args=(message, "`Trying to Posses given content`"),
     )
     dls_loc = os.path.join(Config.DOWN_PATH, os.path.basename(dls))
     if replied.sticker and replied.sticker.file_name.endswith(".tgs"):
@@ -51,11 +58,13 @@ async def media_to_image(message):
             return
         dls_loc = jpg_file
     elif replied.audio:
-        await message.edit('`Trying to Get thumb from the audio ...`')
+        await message.edit("`Trying to Get thumb from the audio ...`")
         jpg_file = os.path.join(Config.DOWN_PATH, "image.jpg")
         await thumb_from_audio(dls_loc, jpg_file)
         if not os.path.lexists(jpg_file):
-            await message.err("`This Audio has no thumbnail, Task Failed Successfully ...`")
+            await message.err(
+                "`This Audio has no thumbnail, Task Failed Successfully ...`"
+            )
             return
         dls_loc = jpg_file
     await message.edit("`Almost Done ...`")
@@ -75,38 +84,39 @@ EMOJI_PATTERN = re.compile(
     "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
     "\U0001FA00-\U0001FA6F"  # Chess Symbols
     "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
-    "\U00002702-\U000027B0"  # Dingbats 
-    "]+")
+    "\U00002702-\U000027B0"  # Dingbats
+    "]+"
+)
 
 # RETURNS a "string" so don't use with await
 def deEmojify(inputString: str) -> str:
     """Remove emojis and other non-safe characters from string"""
-    return re.sub(EMOJI_PATTERN, '', inputString)
+    return re.sub(EMOJI_PATTERN, "", inputString)
 
 
 def cleanhtml(raw_html):
-    cleanr = re.compile('<.*?>')
-    return re.sub(cleanr, '', raw_html)
+    cleanr = re.compile("<.*?>")
+    return re.sub(cleanr, "", raw_html)
 
 
 def escape_markdown(text):
     """Helper function to escape telegram markup symbols."""
-    escape_chars = r'\*_`\['
-    return re.sub(r'([%s])' % escape_chars, r'\\\1', text)
+    escape_chars = r"\*_`\["
+    return re.sub(r"([%s])" % escape_chars, r"\\\1", text)
 
 
 def mention_html(user_id, name):
-    return u'<a href="tg://user?id={}">{}</a>'.format(user_id, html.escape(name))
+    return '<a href="tg://user?id={}">{}</a>'.format(user_id, html.escape(name))
 
 
 def mention_markdown(user_id, name):
-    return u'[{}](tg://user?id={})'.format(escape_markdown(name), user_id)
+    return "[{}](tg://user?id={})".format(escape_markdown(name), user_id)
 
 
 async def thumb_from_audio(audio_path, output):
-    await runcmd(f'ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}')
+    await runcmd(f"ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}")
 
 
 def rand_array(array):
-    random_num = random.choice(array) 
-    return (str(random_num))
+    random_num = random.choice(array)
+    return str(random_num)

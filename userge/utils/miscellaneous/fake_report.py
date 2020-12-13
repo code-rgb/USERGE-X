@@ -9,12 +9,13 @@ from PIL import Image, ImageDraw, ImageFont
 from requests import get
 
 
-
 async def reported_user_image(u_name: str):
     """reported user"""
     text1 = "Block " + u_name
     text2 = f"Do you want to block {u_name} from messaging and calling you on Telegram?"
-    in_memory = BytesIO(get("https://telegra.ph/file/886e00818c68f53d24f92.jpg").content)
+    in_memory = BytesIO(
+        get("https://telegra.ph/file/886e00818c68f53d24f92.jpg").content
+    )
     photo = Image.open(in_memory)
     drawing = ImageDraw.Draw(photo)
     white = (255, 255, 255)
@@ -26,6 +27,6 @@ async def reported_user_image(u_name: str):
         drawing.text(xy=(132, 305 + x), text=u_text, font=font1, fill=white)
         x += 53
     new_pic = BytesIO()
-    photo.save(new_pic, format='JPEG')
+    photo.save(new_pic, format="JPEG")
     new_pic.name = "Blocked.jpg"
     return new_pic

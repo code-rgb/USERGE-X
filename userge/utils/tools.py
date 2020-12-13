@@ -8,12 +8,12 @@
 #
 # All rights reserved.
 
+import asyncio
 import os
 import re
 import shlex
-import asyncio
 from os.path import basename
-from typing import Tuple, List, Optional
+from typing import List, Optional, Tuple
 
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -25,12 +25,20 @@ _LOG = userge.logging.getLogger(__name__)
 _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\[buttonurl:(?:/{0,2})(.+?)(:same)?\])")
 
 
-
-def get_file_id_and_ref(message: 'userge.Message') -> Tuple[Optional[str], Optional[str]]:
+def get_file_id_and_ref(
+    message: "userge.Message",
+) -> Tuple[Optional[str], Optional[str]]:
     """ get file_id and file_ref """
-    file_ = message.audio or message.animation or message.photo \
-        or message.sticker or message.voice or message.video_note \
-        or message.video or message.document
+    file_ = (
+        message.audio
+        or message.animation
+        or message.photo
+        or message.sticker
+        or message.voice
+        or message.video_note
+        or message.video
+        or message.document
+    )
     if file_:
         return file_.file_id, file_.file_ref
     return None, None
@@ -42,7 +50,7 @@ def humanbytes(size: float) -> str:
         return ""
     power = 1024
     t_n = 0
-    power_dict = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+    power_dict = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
     while size > power:
         size /= power
         t_n += 1
@@ -54,10 +62,12 @@ def time_formatter(seconds: float) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = ((str(days) + "d, ") if days else "") + \
-        ((str(hours) + "h, ") if hours else "") + \
-        ((str(minutes) + "m, ") if minutes else "") + \
-        ((str(seconds) + "s, ") if seconds else "")
+    tmp = (
+        ((str(days) + "d, ") if days else "")
+        + ((str(hours) + "h, ") if hours else "")
+        + ((str(minutes) + "m, ") if minutes else "")
+        + ((str(seconds) + "s, ") if seconds else "")
+    )
     return tmp[:-2]
 
 
@@ -71,29 +81,39 @@ def post_to_telegraph(a_title: str, content: str) -> str:
         title=a_title,
         author=auth_name,
         author_url="https://t.me/x_xtests",
-        text=content
+        text=content,
     )
-    return post_page['url']
+    return post_page["url"]
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
     """ run command in terminal """
     args = shlex.split(cmd)
-    process = await asyncio.create_subprocess_exec(*args,
-                                                   stdout=asyncio.subprocess.PIPE,
-                                                   stderr=asyncio.subprocess.PIPE)
+    process = await asyncio.create_subprocess_exec(
+        *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    )
     stdout, stderr = await process.communicate()
-    return (stdout.decode('utf-8', 'replace').strip(),
-            stderr.decode('utf-8', 'replace').strip(),
-            process.returncode,
-            process.pid)
+    return (
+        stdout.decode("utf-8", "replace").strip(),
+        stderr.decode("utf-8", "replace").strip(),
+        process.returncode,
+        process.pid,
+    )
 
 
-async def take_screen_shot(video_file: str, duration: int, path: str = '') -> Optional[str]:
+async def take_screen_shot(
+    video_file: str, duration: int, path: str = ""
+) -> Optional[str]:
     """ take a screenshot """
-    _LOG.info('[[[Extracting a frame from %s ||| Video duration => %s]]]', video_file, duration)
+    _LOG.info(
+        "[[[Extracting a frame from %s ||| Video duration => %s]]]",
+        video_file,
+        duration,
+    )
     ttl = duration // 2
-    thumb_image_path = path or os.path.join(userge.Config.DOWN_PATH, f"{basename(video_file)}.jpg")
+    thumb_image_path = path or os.path.join(
+        userge.Config.DOWN_PATH, f"{basename(video_file)}.jpg"
+    )
     command = f'''ffmpeg -ss {ttl} -i "{video_file}" -vframes 1 "{thumb_image_path}"'''
     err = (await runcmd(command))[1]
     if err:
@@ -114,7 +134,7 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
             to_check -= 1
         if n_escapes % 2 == 0:
             buttons.append((match.group(2), match.group(3), bool(match.group(4))))
-            note_data += markdown_note[prev:match.start(1)]
+            note_data += markdown_note[prev : match.start(1)]
             prev = match.end(1)
         else:
             note_data += markdown_note[prev:to_check]
