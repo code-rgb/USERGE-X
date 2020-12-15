@@ -1,35 +1,28 @@
-"""
-From Nana-Remix (https://github.com/pokurt/Nana-Remix)
-Author: https://github.com/pokurt
-"""
-
 import aiohttp
 
 
 class AioHttp:
+    # From Nana-Remix (https://github.com/pokurt/Nana-Remix)
     @staticmethod
-    async def get_json(link):
+    async def get_json(link: str, params: dict = None):
         async with aiohttp.ClientSession() as session:
-            async with session.get(link) as resp:
-                status_ = resp.status
-                data_ = await resp.json()
+            async with session.get(link, params=params) as resp:
+                data = await resp.json() if resp.status == 200 else None
             await session.close()
-        return status_, data_
+        return data
 
     @staticmethod
-    async def get_text(link):
+    async def get_text(link: str, params: dict = None):
         async with aiohttp.ClientSession() as session:
-            async with session.get(link) as resp:
-                status_ = resp.status
-                data_ = await resp.text()
+            async with session.get(link, params=params) as resp:
+                data = await resp.text() if resp.status == 200 else None
             await session.close()
-        return status_, data_
+        return data
 
     @staticmethod
-    async def get_raw(link):
+    async def get_raw(link: str, params: dict = None):
         async with aiohttp.ClientSession() as session:
-            async with session.get(link) as resp:
-                status_ = resp.status
-                data_ = await resp.read()
+            async with session.get(link, params=params) as resp:
+                data = await resp.read() if resp.status == 200 else None
             await session.close()
-        return status_, data_
+        return data

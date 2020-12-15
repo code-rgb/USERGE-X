@@ -29,3 +29,6 @@ from .tools import (
     take_screen_shot,
     time_formatter,
 )
+from .rawbotapi import XBot, AioHttp
+# bot api class
+xbot = XBot()
