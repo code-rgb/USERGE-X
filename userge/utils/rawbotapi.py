@@ -18,16 +18,16 @@ class XBot:
         text: str,
         reply_markup: list = None,
         parse_mode: str = "HTML",
-        disable_web_page_preview: bool = False
+        disable_web_page_preview: bool = False,
     ):
         method = self.api + "/editMessageText"
         params = {
             "inline_message_id": inline_message_id,
             "text": text,
             "parse_mode": parse_mode,
-            "disable_web_page_preview": disable_web_page_preview
+            "disable_web_page_preview": disable_web_page_preview,
         }
-        if reply_markup: # :: Optional ::
+        if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await AioHttp.get_json(method, params)
 
@@ -43,9 +43,9 @@ class XBot:
             "inline_message_id": inline_message_id,
             "parse_mode": parse_mode,
         }
-        if caption: # :: Optional ::
+        if caption:  # :: Optional ::
             params["caption"] = caption
-        if reply_markup: # :: Optional ::
+        if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await AioHttp.get_json(method, params)
 
@@ -56,11 +56,8 @@ class XBot:
         reply_markup: list = None,
     ):
         method = self.api + "/editMessageMedia"
-        params = {
-            "inline_message_id": inline_message_id,
-            "media": media
-        }
-        if reply_markup: # :: Optional ::
+        params = {"inline_message_id": inline_message_id, "media": media}
+        if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await AioHttp.get_json(method, params)
 
@@ -73,6 +70,6 @@ class XBot:
         params = {
             "inline_message_id": inline_message_id,
         }
-        if reply_markup: # :: Optional ::
+        if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await AioHttp.get_json(method, params)
