@@ -15,12 +15,16 @@ from userge import Config, Message, userge
 if not os.path.exists("userge/xcache"):
     os.mkdir("userge/xcache")
 PATH = "userge/xcache/emoji_data.txt"
+CHANNEL = userge.getCLogger(__name__)
 
 
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)$"))
     async def choice_cb(_, c_q: CallbackQuery):
+        # Logger
+        await CHANNEL.log(str(c_q))
+        #
         if not os.path.exists(PATH):
             await c_q.answer("𝑶𝒑𝒊𝒏𝒊𝒐𝒏 𝒅𝒂𝒕𝒂 𝒅𝒐𝒏'𝒕 𝒆𝒙𝒊𝒔𝒕 𝒂𝒏𝒚𝒎𝒐𝒓𝒆.", show_alert=True)
             return
