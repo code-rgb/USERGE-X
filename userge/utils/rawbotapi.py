@@ -27,7 +27,7 @@ class XBot:
         }
         if reply_markup:
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return json.loads(await AioHttp.get_json(method, params))
+        return await AioHttp.get_json(method, params)
 
     async def editMessageCaption(
         self,
@@ -44,7 +44,7 @@ class XBot:
         }
         if reply_markup:
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return json.loads(await AioHttp.get_json(method, params))
+        return await AioHttp.get_json(method, params)
 
 
 # TODO editMessageMedia, editMessageReplyMarkup
