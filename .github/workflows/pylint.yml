@@ -24,12 +24,12 @@ jobs:
           autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports .
       - name: lint with isort and black
         run: |
-          isort userge/plugins/
-          black userge/plugins/
+          isort userge/plugins/ userge/utils/
+          black userge/plugins/ userge/utils/
       # commit changes
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'Black code autoformat and fixes'
+          commit_message: 'black autoformat'
           commit_options: '--no-verify'
           repository: .
           commit_user_name: code-rgb
