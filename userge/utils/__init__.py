@@ -19,6 +19,7 @@ from .functions import (
     thumb_from_audio,
 )
 from .progress import progress  # noqa
+from .rawbotapi import AioHttp, XBot
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
 from .tools import (
     get_file_id_and_ref,
@@ -29,6 +30,6 @@ from .tools import (
     take_screen_shot,
     time_formatter,
 )
-from .rawbotapi import XBot, AioHttp
+
 # bot api class
 xbot = XBot()
