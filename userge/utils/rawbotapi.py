@@ -16,6 +16,7 @@ class XBot:
         return await AioHttp.get_json(f"{self.api}/{method}", params)
 
     async def edit_inline_text(
+        self,
         inline_message_id: str,
         text: str,
         reply_markup: list = None,
@@ -30,9 +31,10 @@ class XBot:
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await post_("editMessageText", params)
+        return await self.post_("editMessageText", params)
 
     async def edit_inline_caption(
+        self,
         inline_message_id: str,
         caption: str,
         reply_markup: list = None,
@@ -45,9 +47,10 @@ class XBot:
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await post_("editMessageCaption", params)
+        return await self.post_("editMessageCaption", params)
 
     async def edit_inline_media(
+        self,
         inline_message_id: str,
         media: str,
         reply_markup: list = None,
@@ -55,9 +58,10 @@ class XBot:
         params = {"inline_message_id": inline_message_id, "media": media}
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await post_("editMessageMedia", params)
+        return await self.post_("editMessageMedia", params)
 
     async def edit_inline_reply_markup(
+        self,
         inline_message_id: str,
         reply_markup: list = None,
     ):
@@ -66,7 +70,7 @@ class XBot:
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await post_("editMessageReplyMarkup", params)
+        return await self.post_("editMessageReplyMarkup", params)
 
 
 class XMediaTypes:

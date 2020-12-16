@@ -96,26 +96,26 @@ if userge.has_bot:
             [InlineKeyboardButton("📊 Stats", callback_data=f"opresult_{opinion_id}")],
         ]
         """
-
+        mkrp = [
+            [
+                {"text": agree_data, "callback_data": f"op_y_{opinion_id}"},
+                {
+                    "text": disagree_data,
+                    "callback_data": f"op_n_{opinion_id}"
+                }
+            ],
+            [
+                {
+                    "text": "📊 Stats",
+                    "callback_data": f"opresult_{opinion_id}"
+                }
+            ]
+        ]
         await CHANNEL.log(
             str(
                 await xbot.edit_inline_reply_markup(
-                    inline_message_id=c_q.inline_message_id,
-                    reply_markup=[
-                        [
-                            {"text": agree_data, "callback_data": f"op_y_{opinion_id}"},
-                            {
-                                "text": disagree_data,
-                                "callback_data": f"op_n_{opinion_id}",
-                            },
-                        ],
-                        [
-                            {
-                                "text": "📊 Stats",
-                                "callback_data": f"opresult_{opinion_id}",
-                            }
-                        ],
-                    ],
+                    c_q.inline_message_id,
+                    mkrp
                 )
             )
         )
@@ -148,7 +148,7 @@ if userge.has_bot:
             await CHANNEL.log(
                 str(
                     await xbot.edit_inline_text(
-                        inline_message_id=c_q.inline_message_id, text=msg
+                        c_q.inline_message_id, msg
                     )
                 )
             )
