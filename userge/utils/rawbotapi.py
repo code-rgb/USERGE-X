@@ -15,7 +15,7 @@ class XBot:
     async def post_(self, method: str, params: dict):
         return await AioHttp.get_json(f"{self.api}/{method}", params)
 
-    async def editMessageText(
+    async def edit_inline_text(
         inline_message_id: str,
         text: str,
         reply_markup: list = None,
@@ -32,23 +32,22 @@ class XBot:
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await post_("editMessageText", params)
 
-    async def editMessageCaption(
+    async def edit_inline_caption(
         inline_message_id: str,
-        caption: str = None,
+        caption: str,
         reply_markup: list = None,
         parse_mode: str = "HTML",
     ):
         params = {
             "inline_message_id": inline_message_id,
+            "caption": caption,
             "parse_mode": parse_mode,
         }
-        if caption:  # :: Optional ::
-            params["caption"] = caption
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await post_("editMessageCaption", params)
 
-    async def editMessageMedia(
+    async def edit_inline_media(
         inline_message_id: str,
         media: str,
         reply_markup: list = None,
@@ -58,7 +57,7 @@ class XBot:
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await post_("editMessageMedia", params)
 
-    async def editMessageReplyMarkup(
+    async def edit_inline_reply_markup(
         inline_message_id: str,
         reply_markup: list = None,
     ):
