@@ -2,16 +2,14 @@
 # All rights reserved.
 
 
-import asyncio
 import json
 import os
 
-from userge.utils import xbot
 from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import CallbackQuery
 
 from userge import Config, Message, userge
+from userge.utils import xbot
 
 if not os.path.exists("userge/xcache"):
     os.mkdir("userge/xcache")
@@ -98,19 +96,29 @@ if userge.has_bot:
             [InlineKeyboardButton("📊 Stats", callback_data=f"opresult_{opinion_id}")],
         ]
         """
-        
-        await CHANNEL.log(str(await xbot.edit_inline_reply_markup(
-            inline_message_id=c_q.inline_message_id,
-            reply_markup=[
-                [
-                    {"text": agree_data, "callback_data": f"op_y_{opinion_id}"},
-                    {"text": disagree_data, "callback_data": f"op_n_{opinion_id}"}
-                ],
-                [
-                    {"text": "📊 Stats", "callback_data": f"opresult_{opinion_id}"}
-                ]
-            ]
-        )))
+
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_reply_markup(
+                    inline_message_id=c_q.inline_message_id,
+                    reply_markup=[
+                        [
+                            {"text": agree_data, "callback_data": f"op_y_{opinion_id}"},
+                            {
+                                "text": disagree_data,
+                                "callback_data": f"op_n_{opinion_id}",
+                            },
+                        ],
+                        [
+                            {
+                                "text": "📊 Stats",
+                                "callback_data": f"opresult_{opinion_id}",
+                            }
+                        ],
+                    ],
+                )
+            )
+        )
 
         #    await userge.bot.edit_inline_reply_markup(
         #        c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
@@ -137,9 +145,13 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
-            await CHANNEL.log(str(
-                await xbot.edit_inline_text(inline_message_id=c_q.inline_message_id, text=msg)
-            ))
+            await CHANNEL.log(
+                str(
+                    await xbot.edit_inline_text(
+                        inline_message_id=c_q.inline_message_id, text=msg
+                    )
+                )
+            )
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
         else:
