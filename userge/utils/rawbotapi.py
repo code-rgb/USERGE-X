@@ -53,11 +53,8 @@ class XBot:
         media: str,
         reply_markup: list = None,
     ):
-        params = {
-            "inline_message_id": inline_message_id,
-            "media": media
-        }
-        if reply_markup: # :: Optional ::
+        params = {"inline_message_id": inline_message_id, "media": media}
+        if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
         return await post_("editMessageMedia", params)
 
@@ -74,25 +71,24 @@ class XBot:
 
 
 class XMediaTypes:
-
     @staticmethod
     def InputMediaPhoto(file_id: str, caption: str = None, parse_mode: str = "HTML"):
-        media = {
-            "type": "photo",
-            "media": file_id,
-            "parse_mode": parse_mode
-        }
+        media = {"type": "photo", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
         return json.dumps(media)
 
     @staticmethod
-    def InputMediaAnimation(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", width: int = None, height: int = None, duration: int = None):
-        media = {
-            "type": "animation",
-            "media": file_id,
-            "parse_mode": parse_mode
-        }
+    def InputMediaAnimation(
+        file_id: str,
+        thumb: str = None,
+        caption: str = None,
+        parse_mode: str = "HTML",
+        width: int = None,
+        height: int = None,
+        duration: int = None,
+    ):
+        media = {"type": "animation", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
         if thumb:
@@ -104,14 +100,16 @@ class XMediaTypes:
         if duration:
             media["duration"] = duration
         return json.dumps(media)
-    
+
     @staticmethod
-    def InputMediaDocument(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", disable_content_type_detection: bool = None):
-        media = {
-            "type": "document",
-            "media": file_id,
-            "parse_mode": parse_mode
-        }
+    def InputMediaDocument(
+        file_id: str,
+        thumb: str = None,
+        caption: str = None,
+        parse_mode: str = "HTML",
+        disable_content_type_detection: bool = None,
+    ):
+        media = {"type": "document", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
         if thumb:
@@ -121,12 +119,16 @@ class XMediaTypes:
         return json.dumps(media)
 
     @staticmethod
-    def InputMediaAudio(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", performer: str = None, title: str = None, duration: int = None):
-        media = {
-            "type": "audio",
-            "media": file_id,
-            "parse_mode": parse_mode
-        }
+    def InputMediaAudio(
+        file_id: str,
+        thumb: str = None,
+        caption: str = None,
+        parse_mode: str = "HTML",
+        performer: str = None,
+        title: str = None,
+        duration: int = None,
+    ):
+        media = {"type": "audio", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
         if thumb:
@@ -140,12 +142,21 @@ class XMediaTypes:
         return json.dumps(media)
 
     @staticmethod
-    def InputMediaVideo(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", width: int = None, height: int = None, duration: int = None, supports_streaming: bool = True):
+    def InputMediaVideo(
+        file_id: str,
+        thumb: str = None,
+        caption: str = None,
+        parse_mode: str = "HTML",
+        width: int = None,
+        height: int = None,
+        duration: int = None,
+        supports_streaming: bool = True,
+    ):
         media = {
             "type": "video",
             "media": file_id,
             "parse_mode": parse_mode,
-            "supports_streaming": supports_streaming
+            "supports_streaming": supports_streaming,
         }
         if caption:
             media["caption"] = caption
