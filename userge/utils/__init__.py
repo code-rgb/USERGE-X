@@ -19,7 +19,8 @@ from .functions import (
     thumb_from_audio,
 )
 from .progress import progress  # noqa
-from .rawbotapi import AioHttp, XBot
+from .rawbotapi import AioHttp, XBot, 
+from .rawbotapi import XMediaTypes as xmedia
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
 from .tools import (
     get_file_id_and_ref,

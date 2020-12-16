@@ -12,15 +12,16 @@ class XBot:
             return
         self.api = "https://api.telegram.org/bot" + token
 
+    async def post_(self, method: str, params: dict):
+        return await AioHttp.get_json(f"{self.api}/{method}", params)
+
     async def editMessageText(
-        self,
         inline_message_id: str,
         text: str,
         reply_markup: list = None,
         parse_mode: str = "HTML",
         disable_web_page_preview: bool = False,
     ):
-        method = self.api + "/editMessageText"
         params = {
             "inline_message_id": inline_message_id,
             "text": text,
@@ -29,16 +30,14 @@ class XBot:
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await AioHttp.get_json(method, params)
+        return await post_("editMessageText", params)
 
     async def editMessageCaption(
-        self,
         inline_message_id: str,
         caption: str = None,
         reply_markup: list = None,
         parse_mode: str = "HTML",
     ):
-        method = self.api + "/editMessageCaption"
         params = {
             "inline_message_id": inline_message_id,
             "parse_mode": parse_mode,
@@ -47,29 +46,115 @@ class XBot:
             params["caption"] = caption
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await AioHttp.get_json(method, params)
+        return await post_("editMessageCaption", params)
 
     async def editMessageMedia(
-        self,
         inline_message_id: str,
         media: str,
         reply_markup: list = None,
     ):
-        method = self.api + "/editMessageMedia"
-        params = {"inline_message_id": inline_message_id, "media": media}
-        if reply_markup:  # :: Optional ::
+        params = {
+            "inline_message_id": inline_message_id,
+            "media": media
+        }
+        if reply_markup: # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await AioHttp.get_json(method, params)
+        return await post_("editMessageMedia", params)
 
     async def editMessageReplyMarkup(
-        self,
         inline_message_id: str,
         reply_markup: list = None,
     ):
-        method = self.api + "/editMessageReplyMarkup"
         params = {
             "inline_message_id": inline_message_id,
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        return await AioHttp.get_json(method, params)
+        return await post_("editMessageReplyMarkup", params)
+
+
+class XMediaTypes:
+
+    @staticmethod
+    def InputMediaPhoto(file_id: str, caption: str = None, parse_mode: str = "HTML")
+        media = {
+            "type": "photo",
+            "media": file_id,
+            "parse_mode": parse_mode
+        }
+        if caption:
+            media["caption"] = caption
+        return json.dumps(media)
+
+    @staticmethod
+    def InputMediaAnimation(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", width: int = None, height: int = None, duration: int = None):
+        media = {
+            "type": "animation",
+            "media": file_id,
+            "parse_mode": parse_mode
+        }
+        if caption:
+            media["caption"] = caption
+        if thumb:
+            media["thumb"] = thumb
+        if width:
+            media["width"] = width
+        if height:
+            media["height"] = height
+        if duration:
+            media["duration"] = duration
+        return json.dumps(media)
+    
+    @staticmethod
+    def InputMediaDocument(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", disable_content_type_detection: bool = None)
+        media = {
+            "type": "document",
+            "media": file_id,
+            "parse_mode": parse_mode
+        }
+        if caption:
+            media["caption"] = caption
+        if thumb:
+            media["thumb"] = thumb
+        if isinstance(disable_content_type_detection, bool):
+            media["disable_content_type_detection"] = disable_content_type_detection
+        return json.dumps(media)
+
+    @staticmethod
+    def InputMediaAudio(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", performer: str = None, title: str = None, duration: int = None)
+        media = {
+            "type": "audio",
+            "media": file_id,
+            "parse_mode": parse_mode
+        }
+        if caption:
+            media["caption"] = caption
+        if thumb:
+            media["thumb"] = thumb
+        if performer:
+            media["performer"] = performer
+        if duration:
+            media["duration"] = duration
+        if title:
+            media["title"] = title
+        return json.dumps(media)
+
+    @staticmethod
+    def InputMediaVideo(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", width: int = None, height: int = None, duration: int = None, supports_streaming: bool = True):
+        media = {
+            "type": "video",
+            "media": file_id,
+            "parse_mode": parse_mode,
+            "supports_streaming": supports_streaming
+        }
+        if caption:
+            media["caption"] = caption
+        if thumb:
+            media["thumb"] = thumb
+        if width:
+            media["width"] = width
+        if height:
+            media["height"] = height
+        if duration:
+            media["duration"] = duration
+        return json.dumps(media)
