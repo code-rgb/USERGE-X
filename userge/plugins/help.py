@@ -5,7 +5,6 @@ import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
 
-from userge.utils import xbot, xmedia
 import requests
 import youtube_dl as ytdl
 from html_telegraph_poster import TelegraphPoster

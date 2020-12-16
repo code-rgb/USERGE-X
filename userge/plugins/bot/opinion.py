@@ -100,9 +100,8 @@ if userge.has_bot:
             ],
             [{"text": "📊 Stats", "callback_data": f"opresult_{opinion_id}"}],
         ]
-        
+
         await xbot.edit_inline_reply_markup(c_q.inline_message_id, mkrp)
-        
 
         #    await userge.bot.edit_inline_reply_markup(
         #        c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
@@ -129,9 +128,7 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
-         
             await xbot.edit_inline_text(c_q.inline_message_id, msg)
-            
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
         else:

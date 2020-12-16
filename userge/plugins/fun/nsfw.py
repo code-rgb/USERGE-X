@@ -1,11 +1,6 @@
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    InputMediaPhoto,
-)
+from pyrogram.types import CallbackQuery
+
 from userge import Config, userge
 from userge.utils import get_file_id_and_ref, xbot, xmedia
 
@@ -39,9 +34,16 @@ if userge.has_bot:
             c_q.inline_message_id,
             media=xmedia.InputMediaPhoto(
                 file_id=f_id,
-                caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin"
+                caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
             ),
-            reply_markup=[[{"text": "Unsure / Change of Decision ❔", "callback_data": "chg_of_decision_"}]]
+            reply_markup=[
+                [
+                    {
+                        "text": "Unsure / Change of Decision ❔",
+                        "callback_data": "chg_of_decision_",
+                    }
+                ]
+            ],
         )
         """
         buttons = [
@@ -81,12 +83,16 @@ if userge.has_bot:
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text = "GO AWAY KID !"
         await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=xmedia.InputMediaPhoto(
-                    file_id=f_id,
-                    caption=img_text
-                ),
-                reply_markup=[[{"text": "Unsure / Change of Decision ❔", "callback_data": "chg_of_decision_"}]]
+            c_q.inline_message_id,
+            media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
+            reply_markup=[
+                [
+                    {
+                        "text": "Unsure / Change of Decision ❔",
+                        "callback_data": "chg_of_decision_",
+                    }
+                ]
+            ],
         )
         """
         buttons = [
@@ -120,11 +126,13 @@ if userge.has_bot:
         img_text = "<b>ARE YOU OLD ENOUGH FOR THIS ?</b>"
         await xbot.edit_inline_media(
             c_q.inline_message_id,
-            media=xmedia.InputMediaPhoto(
-                file_id=f_id,
-                caption=img_text
-            ),
-            reply_markup=[[{"text": "Yes I'm 18+", "callback_data": "age_verification_true"},{"text": "No I'm Not", "callback_data": "age_verification_false"}]]
+            media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
+            reply_markup=[
+                [
+                    {"text": "Yes I'm 18+", "callback_data": "age_verification_true"},
+                    {"text": "No I'm Not", "callback_data": "age_verification_false"},
+                ]
+            ],
         )
         """
         buttons = [
