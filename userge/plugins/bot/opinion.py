@@ -99,25 +99,12 @@ if userge.has_bot:
         mkrp = [
             [
                 {"text": agree_data, "callback_data": f"op_y_{opinion_id}"},
-                {
-                    "text": disagree_data,
-                    "callback_data": f"op_n_{opinion_id}"
-                }
+                {"text": disagree_data, "callback_data": f"op_n_{opinion_id}"},
             ],
-            [
-                {
-                    "text": "📊 Stats",
-                    "callback_data": f"opresult_{opinion_id}"
-                }
-            ]
+            [{"text": "📊 Stats", "callback_data": f"opresult_{opinion_id}"}],
         ]
         await CHANNEL.log(
-            str(
-                await xbot.edit_inline_reply_markup(
-                    c_q.inline_message_id,
-                    mkrp
-                )
-            )
+            str(await xbot.edit_inline_reply_markup(c_q.inline_message_id, mkrp))
         )
 
         #    await userge.bot.edit_inline_reply_markup(
@@ -146,11 +133,7 @@ if userge.has_bot:
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
             await CHANNEL.log(
-                str(
-                    await xbot.edit_inline_text(
-                        c_q.inline_message_id, msg
-                    )
-                )
+                str(await xbot.edit_inline_text(c_q.inline_message_id, msg))
             )
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
