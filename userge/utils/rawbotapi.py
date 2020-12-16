@@ -76,7 +76,7 @@ class XBot:
 class XMediaTypes:
 
     @staticmethod
-    def InputMediaPhoto(file_id: str, caption: str = None, parse_mode: str = "HTML")
+    def InputMediaPhoto(file_id: str, caption: str = None, parse_mode: str = "HTML"):
         media = {
             "type": "photo",
             "media": file_id,
@@ -106,7 +106,7 @@ class XMediaTypes:
         return json.dumps(media)
     
     @staticmethod
-    def InputMediaDocument(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", disable_content_type_detection: bool = None)
+    def InputMediaDocument(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", disable_content_type_detection: bool = None):
         media = {
             "type": "document",
             "media": file_id,
@@ -121,7 +121,7 @@ class XMediaTypes:
         return json.dumps(media)
 
     @staticmethod
-    def InputMediaAudio(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", performer: str = None, title: str = None, duration: int = None)
+    def InputMediaAudio(file_id: str, thumb: str = None, caption: str = None, parse_mode: str = "HTML", performer: str = None, title: str = None, duration: int = None):
         media = {
             "type": "audio",
             "media": file_id,
