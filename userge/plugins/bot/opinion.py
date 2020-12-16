@@ -21,9 +21,6 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^op_(y|n)_(\d+)$"))
     async def choice_cb(_, c_q: CallbackQuery):
-        # Logger
-        await CHANNEL.log(str(c_q))
-        #
         if not os.path.exists(PATH):
             await c_q.answer("𝑶𝒑𝒊𝒏𝒊𝒐𝒏 𝒅𝒂𝒕𝒂 𝒅𝒐𝒏'𝒕 𝒆𝒙𝒊𝒔𝒕 𝒂𝒏𝒚𝒎𝒐𝒓𝒆.", show_alert=True)
             return
@@ -103,9 +100,9 @@ if userge.has_bot:
             ],
             [{"text": "📊 Stats", "callback_data": f"opresult_{opinion_id}"}],
         ]
-        await CHANNEL.log(
-            str(await xbot.edit_inline_reply_markup(c_q.inline_message_id, mkrp))
-        )
+        
+        await xbot.edit_inline_reply_markup(c_q.inline_message_id, mkrp)
+        
 
         #    await userge.bot.edit_inline_reply_markup(
         #        c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
@@ -132,9 +129,9 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
-            await CHANNEL.log(
-                str(await xbot.edit_inline_text(c_q.inline_message_id, msg))
-            )
+         
+            await xbot.edit_inline_text(c_q.inline_message_id, msg)
+            
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
         else:
