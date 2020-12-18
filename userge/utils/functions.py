@@ -3,10 +3,12 @@ import os
 import random
 import re
 
+from pySmartDL import SmartDL
+
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
-from pySmartDL import SmartDL
+
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
