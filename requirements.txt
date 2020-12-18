@@ -1,5 +1,5 @@
 aiofiles>=0.6.0
-aiohttp>=3.6.2
+aiohttp>=3.7.3
 beautifulsoup4>=4.9.1
 covid>=2.4.0
 cowpy>=1.1.0
@@ -27,7 +27,7 @@ pytz>=2020.4
 rarfile>=4.0
 removebg>=0.4
 requests>=2.25.0
-search-engine-parser>=0.6.2
+git+https://github.com/code-rgb/search-engine-parser
 selenium==3.141.0
 setuptools>=40.3.0
 spamwatch>=0.3.0
