@@ -1,8 +1,9 @@
-import ujson
-import aiohttp
-from userge.config import Config
 from typing import Optional
 
+import aiohttp
+import ujson
+
+from userge.config import Config
 
 
 class XBot:
@@ -14,9 +15,7 @@ class XBot:
         self._session: Optional[aiohttp.ClientSession] = None
 
     def get_new_session(self) -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(
-            json_serialize=ujson.dumps
-        )
+        return aiohttp.ClientSession(json_serialize=ujson.dumps)
 
     @property
     def session(self) -> Optional[aiohttp.ClientSession]:
