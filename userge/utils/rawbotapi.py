@@ -21,16 +21,17 @@ class XBot:
         text: str,
         reply_markup: list = None,
         parse_mode: str = "HTML",
-        disable_web_page_preview: bool = False,
+        disable_web_page_preview: str = "False",
     ):
         params = {
             "inline_message_id": inline_message_id,
             "text": text,
             "parse_mode": parse_mode,
-            "disable_web_page_preview": disable_web_page_preview,
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
+        if disable_web_page_preview.lower() == "true":
+            params["disable_web_page_preview"] = "True"
         return await self.post_("editMessageText", params)
 
     async def edit_inline_caption(
