@@ -1,8 +1,8 @@
-import json
-
+import ujson
+import aiohttp
 from userge.config import Config
+from typing import Optional
 
-from .helper import AioHttp
 
 
 class XBot:
@@ -11,9 +11,29 @@ class XBot:
         if not token:
             return
         self.api = "https://api.telegram.org/bot" + token
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    def get_new_session(self) -> aiohttp.ClientSession:
+        return aiohttp.ClientSession(
+            json_serialize=ujson.dumps
+        )
+
+    @property
+    def session(self) -> Optional[aiohttp.ClientSession]:
+        if self._session is None:
+            self._session = self.get_new_session()
+        return self._session
 
     async def post_(self, method: str, params: dict):
-        return await AioHttp.get_json(f"{self.api}/{method}", params)
+        session = self.session
+        link = f"{self.api}/{method}"
+        try:
+            async with session.get(link, params=params) as resp:
+                data = await resp.json()
+        except aiohttp.ClientError as e:
+            print(e)
+            return
+        return data
 
     async def edit_inline_text(
         self,
@@ -21,7 +41,7 @@ class XBot:
         text: str,
         reply_markup: list = None,
         parse_mode: str = "HTML",
-        disable_web_page_preview: str = "False",
+        disable_web_page_preview: bool = False,
     ):
         params = {
             "inline_message_id": inline_message_id,
@@ -29,8 +49,8 @@ class XBot:
             "parse_mode": parse_mode,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
-        if disable_web_page_preview.lower() == "true":
+            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
+        if disable_web_page_preview:
             params["disable_web_page_preview"] = "True"
         return await self.post_("editMessageText", params)
 
@@ -47,7 +67,7 @@ class XBot:
             "parse_mode": parse_mode,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
         return await self.post_("editMessageCaption", params)
 
     async def edit_inline_media(
@@ -58,7 +78,7 @@ class XBot:
     ):
         params = {"inline_message_id": inline_message_id, "media": media}
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
         return await self.post_("editMessageMedia", params)
 
     async def edit_inline_reply_markup(
@@ -70,7 +90,7 @@ class XBot:
             "inline_message_id": inline_message_id,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = json.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
         return await self.post_("editMessageReplyMarkup", params)
 
 
@@ -80,7 +100,7 @@ class XMediaTypes:
         media = {"type": "photo", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
-        return json.dumps(media)
+        return ujson.dumps(media)
 
     @staticmethod
     def InputMediaAnimation(
@@ -103,7 +123,7 @@ class XMediaTypes:
             media["height"] = height
         if duration:
             media["duration"] = duration
-        return json.dumps(media)
+        return ujson.dumps(media)
 
     @staticmethod
     def InputMediaDocument(
@@ -111,7 +131,7 @@ class XMediaTypes:
         thumb: str = None,
         caption: str = None,
         parse_mode: str = "HTML",
-        disable_content_type_detection: bool = None,
+        disable_content_type_detection: bool = "None",
     ):
         media = {"type": "document", "media": file_id, "parse_mode": parse_mode}
         if caption:
@@ -120,7 +140,7 @@ class XMediaTypes:
             media["thumb"] = thumb
         if isinstance(disable_content_type_detection, bool):
             media["disable_content_type_detection"] = disable_content_type_detection
-        return json.dumps(media)
+        return ujson.dumps(media)
 
     @staticmethod
     def InputMediaAudio(
@@ -143,7 +163,7 @@ class XMediaTypes:
             media["duration"] = duration
         if title:
             media["title"] = title
-        return json.dumps(media)
+        return ujson.dumps(media)
 
     @staticmethod
     def InputMediaVideo(
@@ -160,8 +180,10 @@ class XMediaTypes:
             "type": "video",
             "media": file_id,
             "parse_mode": parse_mode,
-            "supports_streaming": supports_streaming,
+            "supports_streaming": "True",
         }
+        if not supports_streaming:
+            media["supports_streaming"] = "False"
         if caption:
             media["caption"] = caption
         if thumb:
@@ -172,4 +194,4 @@ class XMediaTypes:
             media["height"] = height
         if duration:
             media["duration"] = duration
-        return json.dumps(media)
+        return ujson.dumps(media)
