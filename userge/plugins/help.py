@@ -26,14 +26,14 @@ from pyrogram.types import (
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id_and_ref, xbot, xmedia
+from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
+from userge.utils import xbot, xmedia
 
 from .bot.alive import check_media_link
 from .bot.utube_inline import get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
-
 
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -208,7 +208,10 @@ if userge.has_bot:
             )
         elif len(pos_list) == 3:
             _, buttons = plugin_data(cur_pos, p_num)
-        await xbot.edit_message_reply_markup(callback_query.inline_message_id, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)))
+        await xbot.edit_message_reply_markup(
+            callback_query.inline_message_id,
+            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+        )
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -228,7 +231,11 @@ if userge.has_bot:
             text, buttons = category_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
-        await xbot.edit_inline_text(callback_query.inline_message_id, text=text, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)))
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -244,7 +251,11 @@ if userge.has_bot:
             text, buttons = plugin_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
-        await xbot.edit_inline_text(callback_query.inline_message_id, text=text, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)))
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -268,7 +279,11 @@ if userge.has_bot:
             plg = userge.manager.plugins[pos_list[-1]]
             await getattr(plg, task)()
             text, buttons = plugin_data(cur_pos)
-        await xbot.edit_inline_text(callback_query.inline_message_id, text=text, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)))
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -276,7 +291,13 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^mm$"))
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
-        await xbot.edit_inline_text(callback_query.inline_message_id, text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ", reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(main_menu_buttons())))
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+            reply_markup=xmedia.InlineKeyboard(
+                InlineKeyboardMarkup(main_menu_buttons())
+            ),
+        )
         # await callback_query.edit_message_text(
         #     " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
@@ -294,7 +315,12 @@ if userge.has_bot:
             {"$set": {"is_user": Config.USE_USER_FOR_CLIENT_CHECKS}},
             upsert=True,
         )
-        await xbot.edit_inline_reply_markup(callback_query.inline_message_id, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(main_menu_buttons())))
+        await xbot.edit_inline_reply_markup(
+            callback_query.inline_message_id,
+            reply_markup=xmedia.InlineKeyboard(
+                InlineKeyboardMarkup(main_menu_buttons())
+            ),
+        )
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
         # )
@@ -308,7 +334,11 @@ if userge.has_bot:
             text, buttons = filter_data(cur_pos)
         else:
             text, buttons = plugin_data(cur_pos)
-        await xbot.edit_inline_text(callback_query.inline_message_id, text=text, reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)))
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
