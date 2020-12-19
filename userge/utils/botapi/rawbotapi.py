@@ -1,7 +1,8 @@
 from typing import Optional
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
 import aiohttp
 import ujson
+from pyrogram.types import InlineKeyboardMarkup
 
 from userge.config import Config
 
@@ -203,7 +204,7 @@ class XMediaTypes:
             btn = str(InlineKeyboardMarkup(mkrp))
         else:
             return
-        mkrp = ujson.loads(btn)['inline_keyboard']
+        mkrp = ujson.loads(btn)["inline_keyboard"]
         return ujson.dumps({"inline_keyboard": XMediaTypes.clean_markup(mkrp)})
 
     @staticmethod
@@ -212,9 +213,7 @@ class XMediaTypes:
         b = []
         for rows in btn_array:
             for cell in rows:
-                b.append({key:val for key, val in cell.items() if key != '_'})
+                b.append({key: val for key, val in cell.items() if key != "_"})
             a.append(b)
             b = []
         return a
-
-

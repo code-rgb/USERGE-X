@@ -84,7 +84,7 @@ if userge.has_bot:
 
         agree_data += f"  {view_data[1]['agree']}"
         disagree_data += f"  {view_data[1]['disagree']}"
-        
+
         opinion_data = [
             [
                 InlineKeyboardButton(agree_data, callback_data=f"op_y_{opinion_id}"),
@@ -93,8 +93,9 @@ if userge.has_bot:
             [InlineKeyboardButton("📊 Stats", callback_data=f"opresult_{opinion_id}")],
         ]
 
-
-        await xbot.edit_inline_reply_markup(c_q.inline_message_id, xmedia.InlineKeyboard(opinion_data))
+        await xbot.edit_inline_reply_markup(
+            c_q.inline_message_id, xmedia.InlineKeyboard(opinion_data)
+        )
 
         #    await userge.bot.edit_inline_reply_markup(
         #        c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
@@ -121,7 +122,9 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
-            await xbot.edit_inline_text(c_q.inline_message_id, msg, parse_mode="Markdown")
+            await xbot.edit_inline_text(
+                c_q.inline_message_id, msg, parse_mode="Markdown"
+            )
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
         else:

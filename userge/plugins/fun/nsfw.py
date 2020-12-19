@@ -31,7 +31,6 @@ if userge.has_bot:
         msg = await userge.bot.get_messages("useless_x", 19)
         f_id, f_ref = get_file_id_and_ref(msg)
 
-    
         buttons = [
             [
                 InlineKeyboardButton(
@@ -46,8 +45,7 @@ if userge.has_bot:
                 file_id=f_id,
                 caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
             ),
-            reply_markup=xmedia.InlineKeyboard(buttons)
-          
+            reply_markup=xmedia.InlineKeyboard(buttons),
         )
         """
         try:
@@ -79,7 +77,6 @@ if userge.has_bot:
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text = "GO AWAY KID !"
 
-        
         buttons = [
             [
                 InlineKeyboardButton(
@@ -91,9 +88,9 @@ if userge.has_bot:
         await xbot.edit_inline_media(
             c_q.inline_message_id,
             media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
-            reply_markup=xmedia.InlineKeyboard(buttons)
+            reply_markup=xmedia.InlineKeyboard(buttons),
         )
-        
+
         """
         try:
             await c_q.edit_message_media(
@@ -117,7 +114,6 @@ if userge.has_bot:
         f_id, f_ref = get_file_id_and_ref(msg)
         img_text = "<b>ARE YOU OLD ENOUGH FOR THIS ?</b>"
 
-
         buttons = [
             [
                 InlineKeyboardButton(
@@ -131,7 +127,7 @@ if userge.has_bot:
         await xbot.edit_inline_media(
             c_q.inline_message_id,
             media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
-            reply_markup=xmedia.InlineKeyboard(buttons)
+            reply_markup=xmedia.InlineKeyboard(buttons),
         )
         """
         try:
