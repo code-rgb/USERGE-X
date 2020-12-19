@@ -6,7 +6,7 @@ import json
 import os
 
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import CallbackQuery, InlineKeyboardButton
 
 from userge import Config, Message, userge
 from userge.utils import xbot, xmedia

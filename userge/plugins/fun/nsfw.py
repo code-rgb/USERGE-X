@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import CallbackQuery, InlineKeyboardButton
 
 from userge import Config, userge
 from userge.utils import get_file_id_and_ref, xbot, xmedia
