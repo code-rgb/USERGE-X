@@ -13,7 +13,7 @@ from typing import Dict
 
 from userge import Config, Message, filters, get_collection, userge
 from userge.utils import SafeDict
-from userge.utils.miscellaneous import reported_user_image
+from userge.utils.extras import reported_user_image
 
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
