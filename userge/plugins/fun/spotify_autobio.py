@@ -58,7 +58,6 @@ if (
             await asyncio.sleep(5)
             database = Database()
 
-
     @userge.on_cmd(
         "spotify_bio",
         about={"header": "enable / disable Spotify Bio"},
@@ -88,7 +87,6 @@ if (
             upsert=True,
         )
 
-
     def ms_converter(millis):
         millis = int(millis)
         seconds = (millis / 1000) % 60
@@ -100,7 +98,6 @@ if (
         minutes = (millis / (1000 * 60)) % 60
         minutes = int(minutes)
         return str(minutes) + ":" + str(seconds)
-
 
     async def spotify_db_loader():
         sdb = await SPOTIFY_DB.find_one({"_id": "SPOTIFY_DB"})
@@ -148,11 +145,9 @@ if (
                     upsert=True,
                 )
 
-
     # to stop unwanted spam, we sent these type of message only once. So we have a variable in our database which we check
     # for in return_info. When we send a message, we set this variable to true. After a successful update
     # (or a closing of spotify), we reset that variable to false.
-
 
     def save_spam(which, what):
         global database
@@ -177,7 +172,6 @@ if (
         # if True wasn't returned before, we can return False now so our test fails and we dont send a message
         return False
 
-
     async def spotify_biox():
         global database
         while Config.SPOTIFY_MODE:
@@ -195,7 +189,9 @@ if (
                     to_insert["title"] = received["item"]["name"]
                     to_insert["progress"] = ms_converter(received["progress_ms"])
                     to_insert["interpret"] = received["item"]["artists"][0]["name"]
-                    to_insert["duration"] = ms_converter(received["item"]["duration_ms"])
+                    to_insert["duration"] = ms_converter(
+                        received["item"]["duration_ms"]
+                    )
                     to_insert["link"] = received["item"]["external_urls"]["spotify"]
                     to_insert["image"] = received["item"]["album"]["images"][1]["url"]
                     if save_spam("spotify", False):
@@ -395,7 +391,6 @@ if (
             if not skip:
                 await asyncio.sleep(30)
 
-
     @userge.on_cmd("now_playing", about={"header": "Now Playing Spotify Song"})
     async def now_playing_(message: Message):
         """Spotify Now Playing"""
@@ -411,7 +406,6 @@ if (
 
         await message.edit(spolink)
 
-
     @userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
     async def sp_info_(message: Message):
         """Spotify Device Info"""
@@ -423,7 +417,9 @@ if (
         )
 
         # =====================================GET_DEVICE_INFO==============================================#
-        device = requests.get("https://api.spotify.com/v1/me/player/devices", headers=oauth)
+        device = requests.get(
+            "https://api.spotify.com/v1/me/player/devices", headers=oauth
+        )
 
         # =====================================GET_FIVE_RECETLY_PLAYED_SONGS=================================#
         oauth = {"Authorization": "Bearer " + database.return_token()}
@@ -452,7 +448,9 @@ if (
             device_vol = g_dlist["volume_percent"]
             # ==================PLAYING_SONGS_INFO=======================================#
             currently_playing_song = f"{spotify_biox.title} - {spotify_biox.interpret}"
-            currently_playing_song_dur = f"{spotify_biox.progress}/{spotify_biox.duration}"
+            currently_playing_song_dur = (
+                f"{spotify_biox.progress}/{spotify_biox.duration}"
+            )
             # ==================ASSINGING_VAR_VLAUE=======================================#
             status_pn = f"""
         **Device name:** {device_name} ({device_type}) 
@@ -462,7 +460,6 @@ if (
         **Recently played songs:** \n{recent_p}"""
 
         await message.edit(status_pn)
-
 
     @userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
     async def sp_profile_(message: Message):
@@ -481,7 +478,6 @@ if (
         if country:
             profile_text += f"\n**Country:** {country}"
         await message.edit(profile_text)
-
 
     @userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
     async def sp_recents_(message: Message):
