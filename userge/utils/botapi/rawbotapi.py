@@ -204,8 +204,8 @@ class XMediaTypes:
             btn = str(InlineKeyboardMarkup(mkrp))
         else:
             return
-        mkrp = ujson.loads(btn)["inline_keyboard"]
-        return ujson.dumps({"inline_keyboard": XMediaTypes.clean_markup(mkrp)})
+        buttons = ujson.loads(btn)["inline_keyboard"]
+        return ujson.dumps({"inline_keyboard": XMediaTypes.clean_markup(buttons)})
 
     @staticmethod
     def clean_markup(btn_array: list):
