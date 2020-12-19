@@ -1,5 +1,5 @@
 from typing import Optional
-
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import aiohttp
 import ujson
 
@@ -48,7 +48,7 @@ class XBot:
             "parse_mode": parse_mode,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = reply_markup
         if disable_web_page_preview:
             params["disable_web_page_preview"] = "True"
         return await self.post_("editMessageText", params)
@@ -66,7 +66,7 @@ class XBot:
             "parse_mode": parse_mode,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = reply_markup
         return await self.post_("editMessageCaption", params)
 
     async def edit_inline_media(
@@ -77,7 +77,7 @@ class XBot:
     ):
         params = {"inline_message_id": inline_message_id, "media": media}
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = reply_markup
         return await self.post_("editMessageMedia", params)
 
     async def edit_inline_reply_markup(
@@ -89,7 +89,7 @@ class XBot:
             "inline_message_id": inline_message_id,
         }
         if reply_markup:  # :: Optional ::
-            params["reply_markup"] = ujson.dumps({"inline_keyboard": reply_markup})
+            params["reply_markup"] = reply_markup
         return await self.post_("editMessageReplyMarkup", params)
 
 
@@ -194,3 +194,27 @@ class XMediaTypes:
         if duration:
             media["duration"] = duration
         return ujson.dumps(media)
+
+    @staticmethod
+    def InlineKeyboard(mkrp):
+        if isinstance(mkrp, InlineKeyboardMarkup):
+            btn = str(btn)
+        elif isinstance(mkrp, list):
+            btn = str(InlineKeyboardMarkup(mkrp))
+        else:
+            return
+        mkrp = ujson.loads(btn)['inline_keyboard']
+        return ujson.dumps({"inline_keyboard": XMediaTypes.clean_markup(mkrp)})
+
+    @staticmethod
+    def clean_markup(btn_array: list):
+        a = []
+        b = []
+        for rows in btn_array:
+            for cell in rows:
+                b.append({key:val for key, val in cell.items() if key != '_'})
+            a.append(b)
+            b = []
+        return a
+
+
