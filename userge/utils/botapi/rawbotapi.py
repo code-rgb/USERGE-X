@@ -52,7 +52,7 @@ class XBot:
             params["reply_markup"] = reply_markup
         if disable_web_page_preview:
             params["disable_web_page_preview"] = "True"
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return await self.post_("editMessageText", params)
 
@@ -70,7 +70,7 @@ class XBot:
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = reply_markup
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return await self.post_("editMessageCaption", params)
 
@@ -104,7 +104,7 @@ class XMediaTypes:
         media = {"type": "photo", "media": file_id, "parse_mode": parse_mode}
         if caption:
             media["caption"] = caption
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return ujson.dumps(media)
 
@@ -129,7 +129,7 @@ class XMediaTypes:
             media["height"] = height
         if duration:
             media["duration"] = duration
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return ujson.dumps(media)
 
@@ -148,7 +148,7 @@ class XMediaTypes:
             media["thumb"] = thumb
         if isinstance(disable_content_type_detection, bool):
             media["disable_content_type_detection"] = disable_content_type_detection
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return ujson.dumps(media)
 
@@ -173,7 +173,7 @@ class XMediaTypes:
             media["duration"] = duration
         if title:
             media["title"] = title
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return ujson.dumps(media)
 
@@ -206,7 +206,7 @@ class XMediaTypes:
             media["height"] = height
         if duration:
             media["duration"] = duration
-        if parse_mode.lower() in ("md","markdown"):
+        if parse_mode.lower() in ("md", "markdown"):
             params["parse_mode"] = "Markdown"
         return ujson.dumps(media)
 
