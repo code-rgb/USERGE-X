@@ -294,15 +294,19 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^mm$"))
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
-# DEBUG
-        await CHANNEL.log(str(await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
-            reply_markup=xmedia.InlineKeyboard(
-                InlineKeyboardMarkup(main_menu_buttons()),
-            ),
-            parse_mode="md",
-        )))
+        # DEBUG
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_text(
+                    callback_query.inline_message_id,
+                    text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+                    reply_markup=xmedia.InlineKeyboard(
+                        InlineKeyboardMarkup(main_menu_buttons()),
+                    ),
+                    parse_mode="md",
+                )
+            )
+        )
         # await callback_query.edit_message_text(
         #     " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
@@ -339,15 +343,17 @@ if userge.has_bot:
             text, buttons = filter_data(cur_pos)
         else:
             text, buttons = plugin_data(cur_pos)
-# DEBUG
-        await CHANNEL.log(str(
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
-            parse_mode="md",
+        # DEBUG
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_text(
+                    callback_query.inline_message_id,
+                    text=text,
+                    reply_markup=xmedia.InlineKeyboard(InlineKeyboardMarkup(buttons)),
+                    parse_mode="md",
+                )
+            )
         )
-        ))
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
