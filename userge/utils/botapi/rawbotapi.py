@@ -199,7 +199,7 @@ class XMediaTypes:
     @staticmethod
     def InlineKeyboard(mkrp):
         if isinstance(mkrp, InlineKeyboardMarkup):
-            btn = str(btn)
+            btn = str(mkrp)
         elif isinstance(mkrp, list):
             btn = str(InlineKeyboardMarkup(mkrp))
         else:
