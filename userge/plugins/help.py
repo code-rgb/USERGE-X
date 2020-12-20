@@ -302,7 +302,7 @@ if userge.has_bot:
                     text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
                     reply_markup=
                         InlineKeyboardMarkup(main_menu_buttons()),
-                    ,
+                    
                     
                 )
             )
