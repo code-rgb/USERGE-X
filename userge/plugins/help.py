@@ -350,12 +350,12 @@ if userge.has_bot:
             text, buttons = filter_data(cur_pos)
         else:
             text, buttons = plugin_data(cur_pos)
-        
-        response  = await xbot.edit_inline_text(
-                callback_query.inline_message_id,
-                text=text,
-                reply_markup=InlineKeyboardMarkup(buttons),
-            )
+
+        response = await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=InlineKeyboardMarkup(buttons),
+        )
         errors = response.get("description", None)
         if errors:
             if "not modified:" in errors:
