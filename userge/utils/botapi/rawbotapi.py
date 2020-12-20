@@ -5,7 +5,9 @@ import ujson
 from pyrogram.types import InlineKeyboardMarkup
 
 from userge.config import Config
+
 from .XParser import mixed_to_html
+
 
 class XBot:
     def __init__(self):
@@ -45,8 +47,9 @@ class XBot:
     ):
         params = {
             "inline_message_id": inline_message_id,
-            "text": await mixed_to_html(text) if parse_mode.lower() == "mixed" else text,
-            
+            "text": await mixed_to_html(text)
+            if parse_mode.lower() == "mixed"
+            else text,
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = XBot.InlineKeyboard(reply_markup)
@@ -67,8 +70,9 @@ class XBot:
     ):
         params = {
             "inline_message_id": inline_message_id,
-            "caption": await mixed_to_html(caption) if parse_mode.lower() == "mixed" else caption,
-            
+            "caption": await mixed_to_html(caption)
+            if parse_mode.lower() == "mixed"
+            else caption,
         }
         if reply_markup:  # :: Optional ::
             params["reply_markup"] = XBot.InlineKeyboard(reply_markup)
@@ -124,10 +128,11 @@ class XBot:
         return a
 
 
-
 class XMediaTypes:
     @staticmethod
-    async def InputMediaPhoto(file_id: str, caption: str = None, parse_mode: str = "mixed"):
+    async def InputMediaPhoto(
+        file_id: str, caption: str = None, parse_mode: str = "mixed"
+    ):
         media = {"type": "photo", "media": file_id, "parse_mode": parse_mode}
         if caption:
             if parse_mode.lower() == "mixed":
@@ -218,7 +223,7 @@ class XMediaTypes:
             params["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
             params["parse_mode"] = "HTML"
-        
+
         return ujson.dumps(media)
 
     @staticmethod
@@ -258,4 +263,3 @@ class XMediaTypes:
             params["parse_mode"] = "HTML"
 
         return ujson.dumps(media)
-

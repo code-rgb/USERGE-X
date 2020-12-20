@@ -2,14 +2,14 @@
 # All rights reserved.
 
 
-import ujson
 import os
 
+import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
-from userge.utils import xbot, xmedia
+from userge.utils import xbot
 
 if not os.path.exists("userge/xcache"):
     os.mkdir("userge/xcache")
@@ -122,9 +122,7 @@ if userge.has_bot:
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
-            await xbot.edit_inline_text(
-                c_q.inline_message_id, msg
-            )
+            await xbot.edit_inline_text(c_q.inline_message_id, msg)
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
         else:

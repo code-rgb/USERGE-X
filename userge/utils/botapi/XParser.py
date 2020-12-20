@@ -49,7 +49,7 @@ RAW_ENTITIES_TO_TYPE = {
     raw.types.MessageEntityTextUrl: MessageEntityType.TEXT_LINK,
     raw.types.MessageEntityMentionName: MessageEntityType.TEXT_MENTION,
     raw.types.MessageEntityPhone: MessageEntityType.PHONE_NUMBER,
-    raw.types.InputMessageEntityMentionName: MessageEntityType.TEXT_MENTION, # <- HACKS
+    raw.types.InputMessageEntityMentionName: MessageEntityType.TEXT_MENTION,  # <- HACKS
 }
 
 

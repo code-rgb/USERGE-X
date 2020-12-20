@@ -28,7 +28,7 @@ from userge import Config, Message, get_collection, get_version, userge, version
 from userge.core.ext import RawClient
 from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
-from userge.utils import xbot, xmedia
+from userge.utils import xbot
 
 from .bot.alive import check_media_link
 from .bot.utube_inline import get_ytthumb, ytdl_btn_generator
@@ -235,7 +235,6 @@ if userge.has_bot:
             callback_query.inline_message_id,
             text=text,
             reply_markup=InlineKeyboardMarkup(buttons),
-            
         )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
@@ -256,7 +255,6 @@ if userge.has_bot:
             callback_query.inline_message_id,
             text=text,
             reply_markup=InlineKeyboardMarkup(buttons),
-            
         )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
@@ -285,7 +283,6 @@ if userge.has_bot:
             callback_query.inline_message_id,
             text=text,
             reply_markup=InlineKeyboardMarkup(buttons),
-            
         )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
@@ -300,10 +297,7 @@ if userge.has_bot:
                 await xbot.edit_inline_text(
                     callback_query.inline_message_id,
                     text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
-                    reply_markup=
-                        InlineKeyboardMarkup(main_menu_buttons()),
-                    
-                    
+                    reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
                 )
             )
         )
@@ -326,9 +320,7 @@ if userge.has_bot:
         )
         await xbot.edit_inline_reply_markup(
             callback_query.inline_message_id,
-            reply_markup=
-                InlineKeyboardMarkup(main_menu_buttons())
-            ,
+            reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
@@ -350,7 +342,6 @@ if userge.has_bot:
                     callback_query.inline_message_id,
                     text=text,
                     reply_markup=InlineKeyboardMarkup(buttons),
-                    
                 )
             )
         )

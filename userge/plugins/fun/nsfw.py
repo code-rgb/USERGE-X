@@ -41,10 +41,12 @@ if userge.has_bot:
         ]
         await xbot.edit_inline_media(
             c_q.inline_message_id,
-            media=(await xmedia.InputMediaPhoto(
-                file_id=f_id,
-                caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
-            )),
+            media=(
+                await xmedia.InputMediaPhoto(
+                    file_id=f_id,
+                    caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
+                )
+            ),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
         """
