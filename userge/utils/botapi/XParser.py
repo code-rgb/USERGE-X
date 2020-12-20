@@ -80,7 +80,7 @@ async def get_user(entity):
 async def mixed_to_html(text: str):
     pyro_entity = types.List()
     x = Parser(userge)
-    y = await x.parse(text, mode="combined")
+    y = await x.parse(text, mode="markdown")
     for i in y["entities"]:
         ent = await e_gen(i, userge)
         if ent:
