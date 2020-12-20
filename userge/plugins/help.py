@@ -735,7 +735,7 @@ if userge.has_bot:
                 rick = [
                     [
                         InlineKeyboardButton(
-                            text="🔍", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            text="🔍", callback_data="mm"
                         )
                     ]
                 ]
