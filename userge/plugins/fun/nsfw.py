@@ -1,5 +1,5 @@
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, userge
 from userge.utils import get_file_id_and_ref, xbot, xmedia
@@ -41,11 +41,11 @@ if userge.has_bot:
         ]
         await xbot.edit_inline_media(
             c_q.inline_message_id,
-            media=xmedia.InputMediaPhoto(
+            media=(await xmedia.InputMediaPhoto(
                 file_id=f_id,
                 caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
-            ),
-            reply_markup=xmedia.InlineKeyboard(buttons),
+            )),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
         """
         try:
@@ -87,8 +87,8 @@ if userge.has_bot:
         ]
         await xbot.edit_inline_media(
             c_q.inline_message_id,
-            media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
-            reply_markup=xmedia.InlineKeyboard(buttons),
+            media=(await xmedia.InputMediaPhoto(file_id=f_id, caption=img_text)),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
 
         """
@@ -126,8 +126,8 @@ if userge.has_bot:
         ]
         await xbot.edit_inline_media(
             c_q.inline_message_id,
-            media=xmedia.InputMediaPhoto(file_id=f_id, caption=img_text),
-            reply_markup=xmedia.InlineKeyboard(buttons),
+            media=(await xmedia.InputMediaPhoto(file_id=f_id, caption=img_text)),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
         """
         try:

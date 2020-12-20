@@ -2,11 +2,11 @@
 # All rights reserved.
 
 
-import json
+import ujson
 import os
 
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
 from userge.utils import xbot, xmedia
@@ -27,7 +27,7 @@ if userge.has_bot:
         opinion_id = c_q.matches[0].group(2)
         ids = c_q.from_user.id
         counter = c_q.matches[0].group(1)
-        data = json.load(open(PATH))
+        data = ujson.load(open(PATH))
         view_data = data[str(opinion_id)]
         agree_data = "👍"
         disagree_data = "👎"
@@ -69,7 +69,7 @@ if userge.has_bot:
                     disagree = view_data[1]["disagree"] + 1
                 view_data[1] = {"agree": agree, "disagree": disagree}
             data[str(opinion_id)] = view_data
-            json.dump(data, open(PATH, "w"))
+            ujson.dump(data, open(PATH, "w"))
         else:
             if len(view_data) == 1:
                 # Answering Query First then moving forward
@@ -80,7 +80,7 @@ if userge.has_bot:
                 if counter == "n":
                     view_data = [{ids: "n"}, {"agree": 0, "disagree": 1}]
                 data[str(opinion_id)] = view_data
-                json.dump(data, open(PATH, "w"))
+                ujson.dump(data, open(PATH, "w"))
 
         agree_data += f"  {view_data[1]['agree']}"
         disagree_data += f"  {view_data[1]['disagree']}"
@@ -94,7 +94,7 @@ if userge.has_bot:
         ]
 
         await xbot.edit_inline_reply_markup(
-            c_q.inline_message_id, xmedia.InlineKeyboard(opinion_data)
+            c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
         )
 
         #    await userge.bot.edit_inline_reply_markup(
@@ -110,7 +110,7 @@ if userge.has_bot:
         u_id = c_q.from_user.id
         opinion_id = c_q.matches[0].group(1)
         if u_id in Config.OWNER_ID:
-            data = json.load(open(PATH))
+            data = ujson.load(open(PATH))
             view_data = data[str(opinion_id)]
             total = len(view_data[0])
             ag = view_data[1]["agree"]
@@ -123,7 +123,7 @@ if userge.has_bot:
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
 
             await xbot.edit_inline_text(
-                c_q.inline_message_id, msg, parse_mode="Markdown"
+                c_q.inline_message_id, msg
             )
 
             # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)

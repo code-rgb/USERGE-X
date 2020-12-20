@@ -49,7 +49,7 @@ RAW_ENTITIES_TO_TYPE = {
     raw.types.MessageEntityTextUrl: MessageEntityType.TEXT_LINK,
     raw.types.MessageEntityMentionName: MessageEntityType.TEXT_MENTION,
     raw.types.MessageEntityPhone: MessageEntityType.PHONE_NUMBER,
-    raw.types.InputMessageEntityMentionName: MessageEntityType.TEXT_MENTION,
+    raw.types.InputMessageEntityMentionName: MessageEntityType.TEXT_MENTION, # <- HACKS
 }
 
 
@@ -64,7 +64,7 @@ async def e_gen(entity, client):
         length=entity.length,
         url=getattr(entity, "url", None),
         user=(await get_user(entity)),
-        # language=getattr(entity, "language", None),
+        language=getattr(entity, "language", None),
         client=client,
     )
 
