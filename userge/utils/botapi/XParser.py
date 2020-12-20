@@ -5,7 +5,7 @@ from pyrogram.parser.parser import Parser
 from pyrogram.raw.functions.users import GetUsers
 from pyrogram.types.messages_and_media.message_entity import MessageEntity
 
-from userge import userge
+from userge.core.ext.raw_client import RawClient as userge
 
 
 class AutoName(Enum):
