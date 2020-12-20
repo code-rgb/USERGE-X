@@ -732,13 +732,7 @@ if userge.has_bot:
                 return
 
             if string == "rick":
-                rick = [
-                    [
-                        InlineKeyboardButton(
-                            text="🔍", callback_data="mm"
-                        )
-                    ]
-                ]
+                rick = [[InlineKeyboardButton(text="🔍", callback_data="mm")]]
                 results.append(
                     InlineQueryResultArticle(
                         title="Not a Rick Roll",
