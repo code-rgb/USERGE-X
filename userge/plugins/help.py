@@ -231,11 +231,12 @@ if userge.has_bot:
             text, buttons = category_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
-        await xbot.edit_inline_text(
+        # DEBUG
+        await CHANNEL.log(str(await xbot.edit_inline_text(
             callback_query.inline_message_id,
             text=text,
             reply_markup=InlineKeyboardMarkup(buttons),
-        )
+        )))
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -251,11 +252,14 @@ if userge.has_bot:
             text, buttons = plugin_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
-        )
+        # DEBUG
+        await CHANNEL.log(str(
+            await xbot.edit_inline_text(
+                callback_query.inline_message_id,
+                text=text,
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        ))
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -318,10 +322,11 @@ if userge.has_bot:
             {"$set": {"is_user": Config.USE_USER_FOR_CLIENT_CHECKS}},
             upsert=True,
         )
-        await xbot.edit_inline_reply_markup(
+        # DEBUG
+        await CHANNEL.log(str(await xbot.edit_inline_reply_markup(
             callback_query.inline_message_id,
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
-        )
+        )))
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
         # )

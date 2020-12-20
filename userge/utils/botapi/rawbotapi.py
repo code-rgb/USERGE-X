@@ -133,15 +133,15 @@ class XMediaTypes:
     async def InputMediaPhoto(
         file_id: str, caption: str = None, parse_mode: str = "mixed"
     ):
-        media = {"type": "photo", "media": file_id, "parse_mode": parse_mode}
+        media = {"type": "photo", "media": file_id}
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
             media["caption"] = caption
         if parse_mode.lower() in ("md", "markdown"):
-            params["parse_mode"] = "Markdown"
+            media["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
-            params["parse_mode"] = "HTML"
+            media["parse_mode"] = "HTML"
         return ujson.dumps(media)
 
     @staticmethod
@@ -154,7 +154,7 @@ class XMediaTypes:
         height: int = None,
         duration: int = None,
     ):
-        media = {"type": "animation", "media": file_id, "parse_mode": parse_mode}
+        media = {"type": "animation", "media": file_id}
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
@@ -168,9 +168,9 @@ class XMediaTypes:
         if duration:
             media["duration"] = duration
         if parse_mode.lower() in ("md", "markdown"):
-            params["parse_mode"] = "Markdown"
+            media["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
-            params["parse_mode"] = "HTML"
+            media["parse_mode"] = "HTML"
         return ujson.dumps(media)
 
     @staticmethod
@@ -181,7 +181,7 @@ class XMediaTypes:
         parse_mode: str = "mixed",
         disable_content_type_detection: bool = "None",
     ):
-        media = {"type": "document", "media": file_id, "parse_mode": parse_mode}
+        media = {"type": "document", "media": file_id}
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
@@ -191,9 +191,9 @@ class XMediaTypes:
         if isinstance(disable_content_type_detection, bool):
             media["disable_content_type_detection"] = disable_content_type_detection
         if parse_mode.lower() in ("md", "markdown"):
-            params["parse_mode"] = "Markdown"
+            media["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
-            params["parse_mode"] = "HTML"
+            media["parse_mode"] = "HTML"
         return ujson.dumps(media)
 
     @staticmethod
@@ -206,7 +206,7 @@ class XMediaTypes:
         title: str = None,
         duration: int = None,
     ):
-        media = {"type": "audio", "media": file_id, "parse_mode": parse_mode}
+        media = {"type": "audio", "media": file_id}
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
@@ -220,9 +220,9 @@ class XMediaTypes:
         if title:
             media["title"] = title
         if parse_mode.lower() in ("md", "markdown"):
-            params["parse_mode"] = "Markdown"
+            media["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
-            params["parse_mode"] = "HTML"
+            media["parse_mode"] = "HTML"
 
         return ujson.dumps(media)
 
@@ -258,8 +258,8 @@ class XMediaTypes:
             media["duration"] = duration
 
         if parse_mode.lower() in ("md", "markdown"):
-            params["parse_mode"] = "Markdown"
+            media["parse_mode"] = "Markdown"
         elif parse_mode.lower() in ("html", "mixed"):
-            params["parse_mode"] = "HTML"
+            media["parse_mode"] = "HTML"
 
         return ujson.dumps(media)
