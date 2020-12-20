@@ -58,13 +58,14 @@ async def e_gen(entity, client):
     if type is None:
         return None
 
+    # language=getattr(entity, "language", None),
     return MessageEntity(
         type=type.value,
         offset=entity.offset,
         length=entity.length,
         url=getattr(entity, "url", None),
         user=(await get_user(entity)),
-        language=getattr(entity, "language", None),
+        
         client=client,
     )
 
