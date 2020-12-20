@@ -350,16 +350,18 @@ if userge.has_bot:
             text, buttons = filter_data(cur_pos)
         else:
             text, buttons = plugin_data(cur_pos)
-        # DEBUG
-        await CHANNEL.log(
-            str(
-                await xbot.edit_inline_text(
-                    callback_query.inline_message_id,
-                    text=text,
-                    reply_markup=InlineKeyboardMarkup(buttons),
-                )
+        
+        response  = await xbot.edit_inline_text(
+                callback_query.inline_message_id,
+                text=text,
+                reply_markup=InlineKeyboardMarkup(buttons),
             )
-        )
+        errors = response.get("description", None)
+        if errors:
+            if "not modified:" in errors:
+                raise MessageNotModified
+            elif "MESSAGE_ID_INVALID" in errors:
+                raise MessageIdInvalid
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
