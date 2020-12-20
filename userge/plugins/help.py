@@ -509,12 +509,12 @@ if userge.has_bot:
 ✅ **Loaded** : `{flt.is_loaded}`
 ➕ **Enabled** : `{flt.is_enabled}`"""
         if hasattr(flt, "about"):
-            text = f"""**--Command Status--**
+            text = f"""<b><u>Command Status</u></b>
 {flt_data}
 {flt.about}
 """
         else:
-            text = f"""⚖ **--Filter Status--** ⚖
+            text = f"""⚖ <b><u>Filter Status</u></b> ⚖
 {flt_data}
 """
         buttons = default_buttons(cur_pos)
