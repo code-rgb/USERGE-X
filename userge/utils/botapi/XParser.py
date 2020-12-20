@@ -65,7 +65,6 @@ async def e_gen(entity, client):
         length=entity.length,
         url=getattr(entity, "url", None),
         user=(await get_user(entity)),
-        
         client=client,
     )
 
