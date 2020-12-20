@@ -4,7 +4,7 @@ from pyrogram import raw, types
 from pyrogram.parser.parser import Parser
 from pyrogram.raw.functions.users import GetUsers
 from pyrogram.types.messages_and_media.message_entity import MessageEntity
-
+from bs4 import BeautifulSoup as soup
 from userge.core.ext.raw_client import RawClient as userge
 
 
@@ -80,9 +80,10 @@ async def get_user(entity):
 async def mixed_to_html(text: str):
     pyro_entity = types.List()
     x = Parser(userge)
-    y = await x.parse(text, mode="markdown")
+    y = await x.parse(text, mode="combined")
     for i in y["entities"]:
         ent = await e_gen(i, userge)
         if ent:
             pyro_entity.append(ent)
-    return x.unparse(y["message"], pyro_entity, is_html=True)
+    out = x.unparse(y["message"], pyro_entity, is_html=True)
+    return str(soup(out, "html.parser"))
