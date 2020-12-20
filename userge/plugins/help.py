@@ -232,11 +232,15 @@ if userge.has_bot:
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
         # DEBUG
-        await CHANNEL.log(str(await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
-        )))
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_text(
+                    callback_query.inline_message_id,
+                    text=text,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                )
+            )
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -253,13 +257,15 @@ if userge.has_bot:
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
         # DEBUG
-        await CHANNEL.log(str(
-            await xbot.edit_inline_text(
-                callback_query.inline_message_id,
-                text=text,
-                reply_markup=InlineKeyboardMarkup(buttons)
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_text(
+                    callback_query.inline_message_id,
+                    text=text,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                )
             )
-        ))
+        )
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -323,10 +329,14 @@ if userge.has_bot:
             upsert=True,
         )
         # DEBUG
-        await CHANNEL.log(str(await xbot.edit_inline_reply_markup(
-            callback_query.inline_message_id,
-            reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
-        )))
+        await CHANNEL.log(
+            str(
+                await xbot.edit_inline_reply_markup(
+                    callback_query.inline_message_id,
+                    reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
+                )
+            )
+        )
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
         # )
