@@ -114,7 +114,7 @@ class XBot:
         else:
             return None
         buttons = ujson.loads(btn)["inline_keyboard"]
-        return ujson.dumps({"inline_keyboard": XMediaTypes.clean_markup(buttons)})
+        return ujson.dumps({"inline_keyboard": XBot.clean_markup(buttons)})
 
     @staticmethod
     def clean_markup(btn_array: list):
