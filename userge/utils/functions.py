@@ -3,7 +3,6 @@ import os
 import random
 import re
 
-
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
