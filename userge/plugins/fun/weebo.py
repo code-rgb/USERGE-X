@@ -83,7 +83,7 @@ async def formatJSON(outData):
         if f"{jsonData['isAdult']}" == "True":
             msg += "\n**Rating** : <code>Rx - 18+</code>"
         msg += "\n**Genres** : "
-        monog = ", ".join([str(i) for i in jsonData["genres"]])
+        monog = ", ".join(str(i) for i in jsonData["genres"])
         msg += f"<code>{monog}</code>"
         if f"{jsonData['status']}" == "FINISHED":
             msg += f"\n**Status** : <code>{jsonData['status']} ({jsonData['endDate']['year']})</code>"
@@ -228,9 +228,7 @@ async def manga_(message: Message):
         volumes = manga.get("volumes")
         chapters = manga.get("chapters")
         genre_lst = manga.get("genres")
-        genres = ""
-        for genre in genre_lst:
-            genres += genre.get("name") + ", "
+        genres = "".join(genre.get("name") + ", " for genre in genre_lst)
         genres = genres[:-2]
         synopsis = manga.get("synopsis")
         image = manga.get("image_url")
