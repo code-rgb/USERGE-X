@@ -328,7 +328,7 @@ async def ban_function(message: Message, warned_user: User, warn_mode: str):
     allow_channels=False,
     check_restrict_perm=True,
 )
-async def totalwarns(message: Message):
+async def resetwarns(message: Message):
     """reset all warns of a user"""
     warn_user_id = (message.extract_user_and_text)[0]
     if not warn_user_id:
