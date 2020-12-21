@@ -153,15 +153,15 @@ async def upload_path(message: Message, path: Path, del_path):
             break
 
 
-async def upload(message: Message, path: Path, del_path: bool = False, extra: str = ""):
+async def upload(message: Message, path: Path, del_path: bool = False, extra: str = "", logvid: bool = True):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
-        return await vid_upload(message, path, del_path, extra)
+        return await vid_upload(message, path, del_path, extra, logvid)
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
-        await audio_upload(message, path, del_path, extra)
+        return await audio_upload(message, path, del_path, extra, logvid)
     elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
         "d" not in message.flags
     ):
@@ -201,7 +201,7 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
             os.remove(strpath)
 
 
-async def vid_upload(message: Message, path, del_path: bool = False, extra: str = ""):
+async def vid_upload(message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True):
     strpath = str(path)
     thumb = await get_thumb(strpath)
     duration = 0
@@ -233,13 +233,14 @@ async def vid_upload(message: Message, path, del_path: bool = False, extra: str 
     else:
         await sent.delete()
         await remove_thumb(thumb)
-        await finalize(message, msg, start_t)
+        if logvid:
+            await finalize(message, msg, start_t)
         if os.path.exists(str(path)) and del_path:
             os.remove(str(path))
     return msg
 
 
-async def audio_upload(message: Message, path, del_path: bool = False, extra: str = ""):
+async def audio_upload(message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True):
     title = None
     artist = None
     thumb = None
@@ -291,12 +292,14 @@ async def audio_upload(message: Message, path, del_path: bool = False, extra: st
         raise u_e
     else:
         await sent.delete()
-        await finalize(message, msg, start_t)
+        if logvid:
+            await finalize(message, msg, start_t)
         if os.path.exists(str(path)) and del_path:
             os.remove(str(path))
     finally:
         if os.path.lexists("album_cover.jpg"):
             os.remove("album_cover.jpg")
+    return msg
 
 
 async def photo_upload(message: Message, path, del_path: bool = False, extra: str = ""):
