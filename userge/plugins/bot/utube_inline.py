@@ -178,7 +178,6 @@ if userge.has_bot:
             ),
             reply_markup=None,
         )
-        
 
 
 @pool.run_in_thread
