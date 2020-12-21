@@ -153,7 +153,7 @@ if userge.has_bot:
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
-        uploaded_vid = await upload(upload_msg, Path(_fpath))
+        uploaded_vid = await upload(upload_msg, Path(_fpath), logvid=False)
         if not inline_mode:
             return
         refresh_vid = await userge.bot.get_messages(
@@ -178,7 +178,7 @@ if userge.has_bot:
             ),
             reply_markup=None,
         )
-        await uploaded_vid.delete()
+        
 
 
 @pool.run_in_thread
