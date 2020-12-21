@@ -17,7 +17,8 @@ class XBot:
         self.api = "https://api.telegram.org/bot" + token
         self._session: Optional[aiohttp.ClientSession] = None
 
-    def get_new_session(self) -> aiohttp.ClientSession:
+    @staticmethod
+    def get_new_session() -> aiohttp.ClientSession:
         return aiohttp.ClientSession(json_serialize=ujson.dumps)
 
     @property
