@@ -102,17 +102,17 @@ async def purgeme_(message: Message):
     start_t = datetime.datetime.now()
     number = min(int(message.input_str), 100)
     mid = message.message_id
-    msg_list = []
     # https://t.me/pyrogramchat/266224
     # search_messages takes some minutes to index new messages
     # so using iter_history to get messages newer than 5 mins.
     old_msg = (start_t - datetime.timedelta(minutes=5)).timestamp()
 
-    async for msg in userge.search_messages(
-        message.chat.id, "", limit=number, from_user="me"
-    ):
-        msg_list.append(msg.message_id)
-
+    msg_list = [
+        msg.message_id
+        for msg in userge.search_messages(
+            message.chat.id, "", limit=number, from_user="me"
+        )
+    ]
     async for new_msg in userge.iter_history(message.chat.id, offset_id=mid, offset=0):
         if new_msg.from_user.is_self:
             msg_list.append(new_msg.message_id)

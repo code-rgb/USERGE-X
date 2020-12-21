@@ -70,7 +70,7 @@ async def warn_func(message: Message):
 
     if await admin_check(message.chat, warned_user.id):
         return await message.err(user_is_admin, del_in=3)
-    elif warned_user.id in Config.OWNER_ID or warned_user.id in Config.SUDO_USERS:
+    if warned_user.id in Config.OWNER_ID or warned_user.id in Config.SUDO_USERS:
         return await message.err(owner_or_sudo, del_in=3)
 
     found = await WARN_DATA.find_one({"chat_id": message.chat.id})
@@ -411,7 +411,7 @@ if userge.has_bot:
             )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^warnmode_type_(.*)$"))
-    async def remove_warn_(_, c_q: CallbackQuery):
+    async def warn_mode_type(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID:
             return await c_q.answer(permission_denied, show_alert=True)

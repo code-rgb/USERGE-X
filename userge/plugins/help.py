@@ -348,7 +348,7 @@ if userge.has_bot:
         if errors:
             if "not modified:" in errors:
                 raise MessageNotModified
-            elif "MESSAGE_ID_INVALID" in errors:
+            if "MESSAGE_ID_INVALID" in errors:
                 raise MessageIdInvalid
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)

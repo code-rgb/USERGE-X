@@ -3,8 +3,6 @@ import os
 import random
 import re
 
-from pySmartDL import SmartDL
-
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
@@ -122,13 +120,6 @@ async def thumb_from_audio(audio_path, output):
     await runcmd(f"ffmpeg -i {audio_path} -filter:v scale=500:500 -an {output}")
 
 
-def rand_array(array):
+def rand_array(array: list, string: bool = True):
     random_num = random.choice(array)
-    return str(random_num)
-
-
-async def download_url(url: str, path: str = Config.DOWN_PATH):
-    if not os.path.exists(path):
-        os.mkdir(path)
-    obj = SmartDL(url, path)
-    return obj.get_dest()
+    return str(random_num) if string else random_num

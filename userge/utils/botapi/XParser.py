@@ -55,13 +55,13 @@ RAW_ENTITIES_TO_TYPE = {
 
 
 async def e_gen(entity, client):
-    type = RAW_ENTITIES_TO_TYPE.get(entity.__class__, None)
-    if type is None:
+    entity_type = RAW_ENTITIES_TO_TYPE.get(entity.__class__)
+    if entity_type is None:
         return None
 
     # language=getattr(entity, "language", None),
     return MessageEntity(
-        type=type.value,
+        type=entity_type.value,
         offset=entity.offset,
         length=entity.length,
         url=getattr(entity, "url", None),
