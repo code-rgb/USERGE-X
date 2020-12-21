@@ -42,3 +42,4 @@ youtube_dl>=2020.12.12
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 PyYAML>=5.3.1
 pymediainfo>=5.0.3
+ujson>=4.0.1

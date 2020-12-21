@@ -18,37 +18,36 @@ t.create_api_token("userge-X")
 async def anime_call_api(search_str):
     query = """
     query ($id: Int,$search: String) { 
-      Media (id: $id, type: ANIME,search: $search) { 
-        id
-        title {
-          romaji
-          native
+        Media (id: $id, type: ANIME,search: $search) { 
+            id
+            title {
+                romaji
+                native
+            }
+            description (asHtml: false)
+            startDate{
+                year
+            }
+            endDate{
+                year
+            }
+            episodes
+            chapters
+            volumes
+            season
+            type
+            format
+            status
+            duration
+            averageScore
+            genres
+            bannerImage
+            isAdult
+            season
+            coverImage{
+                extraLarge
+            }
         }
-        description (asHtml: false)
-        startDate{
-            year
-          }
-          endDate{
-            year
-          }
-          episodes
-          chapters
-          volumes
-          season
-          type
-          format
-          status
-          duration
-          averageScore
-          genres
-          bannerImage
-          isAdult
-          season
-          coverImage{
-              extraLarge
-         }
-
-      }
     }
     """
     variables = {"search": search_str}
