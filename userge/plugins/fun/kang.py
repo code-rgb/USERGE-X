@@ -295,7 +295,7 @@ KANGING_STR = (
     },
 )
 async def sticker_search(message: Message):
-    """search sticker packs"""
+    # search sticker packs
     reply = message.reply_to_message
     query_ = None
     if message.input_str:
