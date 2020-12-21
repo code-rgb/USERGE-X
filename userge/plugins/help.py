@@ -422,8 +422,8 @@ if userge.has_bot:
             )
             if len(cur_pos.split("|")) > 2:
                 tmp_btns.append(
-                    InlineKeyboardButton("🖥 Main Menu", callback_data="mm") 
-# .encode()
+                    InlineKeyboardButton("🖥 Main Menu", callback_data="mm")
+                    # .encode()
                 )
                 tmp_btns.append(
                     InlineKeyboardButton(
@@ -435,8 +435,8 @@ if userge.has_bot:
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
-                    callback_data="chgclnt" 
-# .encode()
+                    callback_data="chgclnt"
+                    # .encode()
                 )
             )
         return [tmp_btns]
