@@ -54,7 +54,7 @@ async def gen_meme(message: Message):
                 "Choose a number between (0 - 93) only !", del_in=5
             )
     else:
-        meme_choice = eval(rand_array(view_data))
+        meme_choice = rand_array(view_data, string=False)
     choice_id = meme_choice["id"]
     await message.edit(f"<code>Generating a meme for ...</code>\n{meme_choice['name']}")
     username = Config.IMGFLIP_ID
