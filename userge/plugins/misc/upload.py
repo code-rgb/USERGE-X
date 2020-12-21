@@ -153,7 +153,13 @@ async def upload_path(message: Message, path: Path, del_path):
             break
 
 
-async def upload(message: Message, path: Path, del_path: bool = False, extra: str = "", logvid: bool = True):
+async def upload(
+    message: Message,
+    path: Path,
+    del_path: bool = False,
+    extra: str = "",
+    logvid: bool = True,
+):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
@@ -201,7 +207,9 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
             os.remove(strpath)
 
 
-async def vid_upload(message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True):
+async def vid_upload(
+    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+):
     strpath = str(path)
     thumb = await get_thumb(strpath)
     duration = 0
@@ -240,7 +248,9 @@ async def vid_upload(message: Message, path, del_path: bool = False, extra: str 
     return msg
 
 
-async def audio_upload(message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True):
+async def audio_upload(
+    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+):
     title = None
     artist = None
     thumb = None
