@@ -107,9 +107,12 @@ async def purgeme_(message: Message):
     # so using iter_history to get messages newer than 5 mins.
     old_msg = (start_t - datetime.timedelta(minutes=5)).timestamp()
 
-    msg_list = [msg.message_id for msg in userge.search_messages(
-        message.chat.id, "", limit=number, from_user="me"
-    )]
+    msg_list = [
+        msg.message_id
+        for msg in userge.search_messages(
+            message.chat.id, "", limit=number, from_user="me"
+        )
+    ]
     async for new_msg in userge.iter_history(message.chat.id, offset_id=mid, offset=0):
         if new_msg.from_user.is_self:
             msg_list.append(new_msg.message_id)
