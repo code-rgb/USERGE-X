@@ -52,7 +52,6 @@ if userge.has_bot:
         # """
         # try:
 
-        
         #     await c_q.edit_message_media(
         #         media=InputMediaPhoto(
         #             media=f_id,
@@ -61,7 +60,7 @@ if userge.has_bot:
         #         ),
         #         reply_markup=InlineKeyboardMarkup(buttons),
         #     )
-            
+
         # except MessageNotModified:
         #     pass
         # """
