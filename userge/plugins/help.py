@@ -232,14 +232,12 @@ if userge.has_bot:
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
 
-
         await xbot.edit_inline_text(
             callback_query.inline_message_id,
             text=text,
             reply_markup=InlineKeyboardMarkup(buttons),
         )
-            
-    
+
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -255,8 +253,7 @@ if userge.has_bot:
             text, buttons = plugin_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
-  
-          
+
         await xbot.edit_inline_text(
             callback_query.inline_message_id,
             text=text,
