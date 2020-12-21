@@ -231,16 +231,15 @@ if userge.has_bot:
             text, buttons = category_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
-        # DEBUG
-        await CHANNEL.log(
-            str(
-                await xbot.edit_inline_text(
-                    callback_query.inline_message_id,
-                    text=text,
-                    reply_markup=InlineKeyboardMarkup(buttons),
-                )
-            )
+
+
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
+            
+    
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -256,16 +255,14 @@ if userge.has_bot:
             text, buttons = plugin_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
-        # DEBUG
-        await CHANNEL.log(
-            str(
-                await xbot.edit_inline_text(
-                    callback_query.inline_message_id,
-                    text=text,
-                    reply_markup=InlineKeyboardMarkup(buttons),
-                )
-            )
+  
+          
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=text,
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
+
         # await callback_query.edit_message_text(
         #     text, reply_markup=InlineKeyboardMarkup(buttons)
         # )
@@ -301,16 +298,13 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^mm$"))
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
-        # DEBUG
-        await CHANNEL.log(
-            str(
-                await xbot.edit_inline_text(
-                    callback_query.inline_message_id,
-                    text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
-                    reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
-                )
-            )
+
+        await xbot.edit_inline_text(
+            callback_query.inline_message_id,
+            text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+            reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
+
         # await callback_query.edit_message_text(
         #     " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
@@ -328,15 +322,12 @@ if userge.has_bot:
             {"$set": {"is_user": Config.USE_USER_FOR_CLIENT_CHECKS}},
             upsert=True,
         )
-        # DEBUG
-        await CHANNEL.log(
-            str(
-                await xbot.edit_inline_reply_markup(
-                    callback_query.inline_message_id,
-                    reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
-                )
-            )
+
+        await xbot.edit_inline_reply_markup(
+            callback_query.inline_message_id,
+            reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
+
         # await callback_query.edit_message_reply_markup(
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
         # )

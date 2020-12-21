@@ -29,8 +29,6 @@ class XBot:
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
-        # DEBUG
-        print(params)
         try:
             async with session.get(link, params=params) as resp:
                 data = await resp.json()
