@@ -65,7 +65,7 @@ async def pm_logger_(message: Message):
     & ~filters.edited
     & ~allowAllFilter
     & allowPmLoggingFilter,
-    group=1
+    group=1,
 )
 async def pm_logger(_, message: Message):
     u_id = message.from_user.id
