@@ -29,7 +29,7 @@ if userge.has_bot:
             )
         await c_q.answer("Yes I'm 18+", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 19)
-        f_id, f_ref = get_file_id_and_ref(msg)
+        f_id = get_file_id_and_ref(msg)[0]
 
         buttons = [
             [
@@ -49,22 +49,22 @@ if userge.has_bot:
             ),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
-        """
-        try:
+        # """
+        # try:
 
         
-            await c_q.edit_message_media(
-                media=InputMediaPhoto(
-                    media=f_id,
-                    file_ref=f_ref,
-                    caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
-                ),
-                reply_markup=InlineKeyboardMarkup(buttons),
-            )
+        #     await c_q.edit_message_media(
+        #         media=InputMediaPhoto(
+        #             media=f_id,
+        #             file_ref=f_ref,
+        #             caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
+        #         ),
+        #         reply_markup=InlineKeyboardMarkup(buttons),
+        #     )
             
-        except MessageNotModified:
-            pass
-        """
+        # except MessageNotModified:
+        #     pass
+        # """
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def age_verification_false(_, c_q: CallbackQuery):
@@ -76,7 +76,7 @@ if userge.has_bot:
             )
         await c_q.answer("No I'm Not", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 20)
-        f_id, f_ref = get_file_id_and_ref(msg)
+        f_id = get_file_id_and_ref(msg)[0]
         img_text = "GO AWAY KID !"
 
         buttons = [
@@ -93,15 +93,15 @@ if userge.has_bot:
             reply_markup=InlineKeyboardMarkup(buttons),
         )
 
-        """
-        try:
-            await c_q.edit_message_media(
-                media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
-                reply_markup=InlineKeyboardMarkup(buttons),
-            )
-        except MessageNotModified:
-            return
-        """
+        # """
+        # try:
+        #     await c_q.edit_message_media(
+        #         media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
+        #         reply_markup=InlineKeyboardMarkup(buttons),
+        #     )
+        # except MessageNotModified:
+        #     return
+        # """
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
     async def chg_of_decision_(_, c_q: CallbackQuery):
@@ -113,7 +113,7 @@ if userge.has_bot:
             )
         await c_q.answer("Unsure", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 21)
-        f_id, f_ref = get_file_id_and_ref(msg)
+        f_id = get_file_id_and_ref(msg)[0]
         img_text = "<b>ARE YOU OLD ENOUGH FOR THIS ?</b>"
 
         buttons = [
@@ -131,12 +131,12 @@ if userge.has_bot:
             media=(await xmedia.InputMediaPhoto(file_id=f_id, caption=img_text)),
             reply_markup=InlineKeyboardMarkup(buttons),
         )
-        """
-        try:
-            await c_q.edit_message_media(
-                media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
-                reply_markup=InlineKeyboardMarkup(buttons),
-            )
-        except MessageNotModified:
-            pass
-        """
+        # """
+        # try:
+        #     await c_q.edit_message_media(
+        #         media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
+        #         reply_markup=InlineKeyboardMarkup(buttons),
+        #     )
+        # except MessageNotModified:
+        #     pass
+        # """
