@@ -310,9 +310,8 @@ def extract_content(msg: Message):  # Modified a bound method
 )
 async def list_bot_banned(message: Message):
     """ view Bot Banned users """
-    msg = ""
-    async for c in BOT_BAN.find():
-        msg += (
+    msg = "".join(
+        (
             "**User** : "
             + str(c["firstname"])
             + "-> with **User ID** -> "
@@ -321,6 +320,8 @@ async def list_bot_banned(message: Message):
             + str(c["reason"])
             + "\n\n"
         )
+        for c in BOT_BAN.find()
+    )
     await message.edit_or_send_as_file(
         f"**--Bot Banned Users List--**\n\n{msg}" if msg else "`bblist empty!`"
     )
