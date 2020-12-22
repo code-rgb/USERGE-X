@@ -1,4 +1,4 @@
-from . import xbot
+from userge.utils import xbot
 
 
 class get_response:
