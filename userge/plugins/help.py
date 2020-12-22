@@ -6,7 +6,6 @@ from math import ceil
 from typing import Any, Callable, Dict, List, Union
 
 import requests
-import youtube_dl as ytdl
 from html_telegraph_poster import TelegraphPoster
 from pymediainfo import MediaInfo
 from pyrogram import filters
@@ -31,6 +30,7 @@ from userge.utils import parse_buttons as pb
 from userge.utils import xbot
 
 from .bot.alive import check_media_link
+
 # from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link

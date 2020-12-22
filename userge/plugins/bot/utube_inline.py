@@ -1,30 +1,18 @@
-import datetime
-import glob
 import os
-from pathlib import Path
-from time import time
-from urllib.parse import parse_qs, urlparse, urlencode
+from urllib.parse import parse_qs, urlencode, urlparse
+
 import ujson
-import requests
-import wget
-import youtube_dl
-from pyrogram import filters
-from pyrogram.errors import MessageIdInvalid
+from pyrogram.types import InlineKeyboardButton
 
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
-from wget import download
-from youtube_dl.utils import DownloadError
+from userge import Message, userge
 from userge.utils import get_response
-from userge import Config, Message, pool, userge
-from userge.utils import get_file_id_and_ref
-
-from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
 YT_SEARCH_API = "http://youtube-scrape.herokuapp.com/api/search?"
 PATH = "./userge/xcache/ytsearch.json"
+
 
 class YT_Search_X:
     def __init__(self):
@@ -41,7 +29,9 @@ class YT_Search_X:
         with open(PATH, "w") as outfile:
             ujson.dump(self.db, outfile, indent=4)
 
+
 ytsearch_data = YT_Search_X()
+
 
 async def get_ytthumb(videoid: str):
     thumb_quality = [
@@ -98,13 +88,13 @@ async def iytdl_inline(message: Message):
         elif reply.caption:
             input_url = reply.caption
 
-    resp = (await get_response.json(ytsearch_url(input_url)))['results']
+    resp = (await get_response.json(ytsearch_url(input_url)))["results"]
     if len(resp) == 0:
         return
-    
+
     resp = resp[:10]
     ytsearch_data.store_(userge.rnd_id(), await result_formatter(resp))
-    
+
     # if not input_url:
     #     return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
@@ -113,6 +103,7 @@ async def iytdl_inline(message: Message):
     # y = await userge.send_inline_bot_result(
     #     chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
     # )
+
 
 """
 if userge.has_bot:
@@ -203,7 +194,7 @@ def _tubeDl(url: list, starttime, uid):
 
 #  initial version: http://stackoverflow.com/a/7936523/617185 \
 #  by Mikhail Kashkin (http://stackoverflow.com/users/85739/mikhail-kashkin)
-# 
+#
 # Returns Video_ID extracting from the given url of Youtube
 # Examples of URLs:
 #     Valid:
@@ -216,6 +207,7 @@ def _tubeDl(url: list, starttime, uid):
 #
 #     Invalid:
 #     'youtu.be/watch?v=_lOT2p_FCvA'
+
 
 def get_yt_video_id(url: str):
     if url.startswith(("youtu", "www")):
@@ -242,11 +234,10 @@ async def result_formatter(results: list):
         out += f'<b>• Duration:</b> {rvid["duration"]}\n'
         out += f'<b>• Views:</b> {rvid["views"]}\n'
         out += f'<b>• Upload date:</b> {rvid["upload_date"]}\n'
-        out += '<b>• Uploader:</b> '
+        out += "<b>• Uploader:</b> "
         if upld["verified"]:
             out += "✅ "
         out += f'<a href={updl["url"]}>{upld["username"]}</a>\n\n'
         out += f'<code>{rvid["snippet"]}</code>'
         output[index] = {"message": out, "thumb": thumb}
     return output
-
