@@ -265,3 +265,6 @@ class XMediaTypes:
             media["parse_mode"] = "HTML"
 
         return ujson.dumps(media)
+
+# bot api class
+xbot = XBot()
