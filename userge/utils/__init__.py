@@ -1,5 +1,5 @@
 from .aiohttp_helper import get_response
-from .botapi import XBot
+from .botapi import xbot
 from .botapi import XMediaTypes as xmedia
 from .functions import (
     cleanhtml,
@@ -22,6 +22,3 @@ from .tools import (
     take_screen_shot,
     time_formatter,
 )
-
-# bot api class
-xbot = XBot()
