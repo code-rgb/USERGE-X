@@ -208,12 +208,12 @@ def _tubeDl(url: list, starttime, uid):
 #  by Mikhail Kashkin(http://stackoverflow.com/users/85739/mikhail-kashkin)
 
 
-def get_yt_video_id(url):
+def get_yt_video_id(url: str):
     """
     Returns Video_ID extracting from the given url of Youtube
 
     Examples of URLs:
-      Valid:
+        Valid:
         'http://youtu.be/_lOT2p_FCvA',
         'www.youtube.com/watch?v=_lOT2p_FCvA&feature=feedu',
         'http://www.youtube.com/embed/_lOT2p_FCvA',
@@ -221,7 +221,7 @@ def get_yt_video_id(url):
         'https://www.youtube.com/watch?v=rTHlyTphWP0&index=6&list=PLjeDyYvG6-40qawYNR4juzvSOg-ezZ2a6',
         'youtube.com/watch?v=_lOT2p_FCvA',
 
-      Invalid:
+        Invalid:
         'youtu.be/watch?v=_lOT2p_FCvA',
     """
     if url.startswith(("youtu", "www")):

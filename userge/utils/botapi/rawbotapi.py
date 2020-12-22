@@ -23,7 +23,7 @@ class XBot:
 
     @property
     def session(self) -> Optional[aiohttp.ClientSession]:
-        if self._session is None:
+        if self._session is None or self._session.closed:
             self._session = self.get_new_session()
         return self._session
 
@@ -33,8 +33,9 @@ class XBot:
         try:
             async with session.get(link, params=params) as resp:
                 data = await resp.json()
-        except aiohttp.ClientError as e:
-            print(e)
+        except (aiohttp.ClientError, TimeoutError) as ex:
+            await session.close()
+            print(ex)
             return
         return data
 
