@@ -3,18 +3,18 @@ import glob
 import os
 from pathlib import Path
 from time import time
-from urllib.parse import parse_qs, urlparse
-
+from urllib.parse import parse_qs, urlparse, urlencode
+import ujson
 import requests
 import wget
 import youtube_dl
 from pyrogram import filters
 from pyrogram.errors import MessageIdInvalid
-from pyrogram.raw.types import UpdateNewChannelMessage, UpdateNewMessage
+
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from userge.utils import get_response
 from userge import Config, Message, pool, userge
 from userge.utils import get_file_id_and_ref
 
@@ -22,22 +22,40 @@ from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-STORE_DATA = {}
+BASE_YT_URL = "https://www.youtube.com/watch?v="
+YT_SEARCH_API = "http://youtube-scrape.herokuapp.com/api/search?"
+PATH = "./userge/xcache/ytsearch.json"
 
+class YT_Search_X:
+    def __init__(self):
+        if not os.path.exists(PATH):
+            d = {}
+            ujson.dump(d, open(PATH, "w"))
+        self.db = ujson.load(open(PATH))
 
-def get_ytthumb(videoid):
+    def store_(self, rnd_id: int, results: dict):
+        self.db[str(rnd_id)] = results
+        self.save()
+
+    def save(self):
+        with open(PATH, "w") as outfile:
+            ujson.dump(self.db, outfile, indent=4)
+
+ytsearch_data = YT_Search_X()
+
+async def get_ytthumb(videoid: str):
     thumb_quality = [
-        "maxresdefault.jpg",
+        "maxresdefault.jpg",  # Best quality
         "hqdefault.jpg",
         "sddefault.jpg",
         "mqdefault.jpg",
-        "default.jpg",
+        "default.jpg",  # Worst quality
     ]
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        r = requests.get(link)
-        if r.status_code == 200:
+        r = await get_response.status(link)
+        if r == 200:
             thumb_link = link
             break
     return thumb_link
@@ -58,14 +76,8 @@ def ytdl_btn_generator(array, code, i_q_id):
     return btn
 
 
-def date_formatter(date_):
-    if len(date_) != 8:  # TODO change it according to the input
-        return date_
-    year, day, month = date_[:4], date_[4:6], date_[6:]
-    if int(month) > 12:
-        return date_
-    x = datetime.datetime(int(year), int(month), int(day))
-    return str(x.strftime("%d-%b-%Y"))
+def ytsearch_url(query: str):
+    return YT_SEARCH_API + urlencode({"q": query})
 
 
 @userge.on_cmd(
@@ -86,43 +98,40 @@ async def iytdl_inline(message: Message):
         elif reply.caption:
             input_url = reply.caption
 
-    if not input_url:
-        return await message.err("Input or reply to a valid youtube URL", del_in=5)
+    resp = (await get_response.json(ytsearch_url(input_url)))['results']
+    if len(resp) == 0:
+        return
+    
+    resp = resp[:10]
+    ytsearch_data.store_(userge.rnd_id(), await result_formatter(resp))
+    
+    # if not input_url:
+    #     return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
-    bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url}")
-    y = await userge.send_inline_bot_result(
-        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
-    )
-    for i in y.updates:
-        if isinstance(i, (UpdateNewMessage, UpdateNewChannelMessage)):
-            datax = (
-                (
-                    (i["message"].reply_markup.rows[0].buttons[0].data).decode("utf-8")
-                ).split("|")
-            )[2]
-            break
-    await message.delete()
-    STORE_DATA[datax] = {"chat_id": message.chat.id, "msg_id": y.updates[0].id}
+    # bot = await userge.bot.get_me()
+    # x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
+    # y = await userge.send_inline_bot_result(
+    #     chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+    # )
 
 
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl(\S+)\|(\d+)\|(\d+)$"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r""))
     async def ytdl_callback(_, c_q: CallbackQuery):
         startTime = time()
-        inline_mode = True
+        
         u_id = c_q.from_user.id
         if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
             return await c_q.answer("𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
-        choice_id = c_q.matches[0].group(2)
-        i_q_id = c_q.matches[0].group(3)
+        # choice_id = c_q.matches[0].group(2)
+       
         callback_continue = "Downloading Video Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_code = c_q.matches[0].group(1)
-        yt_url = f"https://www.youtube.com/watch?v={yt_code}"
+        yt_url = BASE_YT_URL + yt_code
         try:
             await c_q.edit_message_caption(
                 caption=(
@@ -131,17 +140,6 @@ if userge.has_bot:
                 ),
                 reply_markup=None,
             )
-        except MessageIdInvalid:
-            inline_mode = False
-            todelete = STORE_DATA.get(i_q_id)
-            if todelete:
-                bad_msg = await userge.get_messages(
-                    todelete["chat_id"], todelete["msg_id"]
-                )
-                await bad_msg.delete()
-                upload_msg = await userge.send_message(
-                    todelete["chat_id"], "Uploading ..."
-                )
 
         retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode != 0:
@@ -154,8 +152,7 @@ if userge.has_bot:
             await upload_msg.err("nothing found !")
             return
         uploaded_vid = await upload(upload_msg, Path(_fpath), logvid=False)
-        if not inline_mode:
-            return
+
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_vid.message_id
         )
@@ -166,7 +163,7 @@ if userge.has_bot:
                 refresh_vid.video.thumbs[0].file_id
             )
         else:
-            video_thumb = download(get_ytthumb(yt_code))
+            video_thumb = download(await get_ytthumb(yt_code))
 
         await c_q.edit_message_media(
             media=InputMediaVideo(
@@ -205,30 +202,25 @@ def _tubeDl(url: list, starttime, uid):
 
 
 #  initial version: http://stackoverflow.com/a/7936523/617185 \
-#  by Mikhail Kashkin(http://stackoverflow.com/users/85739/mikhail-kashkin)
-
+#  by Mikhail Kashkin (http://stackoverflow.com/users/85739/mikhail-kashkin)
+# 
+# Returns Video_ID extracting from the given url of Youtube
+# Examples of URLs:
+#     Valid:
+#     'http://youtu.be/_lOT2p_FCvA',
+#     'www.youtube.com/watch?v=_lOT2p_FCvA&feature=feedu',
+#     'http://www.youtube.com/embed/_lOT2p_FCvA',
+#     'http://www.youtube.com/v/_lOT2p_FCvA?version=3&amp;hl=en_US',
+#     'https://www.youtube.com/watch?v=rTHlyTphWP0&index=6&list=PLjeDyYvG6-40qawYNR4juzvSOg-ezZ2a6',
+#     'youtube.com/watch?v=_lOT2p_FCvA',
+#
+#     Invalid:
+#     'youtu.be/watch?v=_lOT2p_FCvA'
 
 def get_yt_video_id(url: str):
-    """
-    Returns Video_ID extracting from the given url of Youtube
-
-    Examples of URLs:
-        Valid:
-        'http://youtu.be/_lOT2p_FCvA',
-        'www.youtube.com/watch?v=_lOT2p_FCvA&feature=feedu',
-        'http://www.youtube.com/embed/_lOT2p_FCvA',
-        'http://www.youtube.com/v/_lOT2p_FCvA?version=3&amp;hl=en_US',
-        'https://www.youtube.com/watch?v=rTHlyTphWP0&index=6&list=PLjeDyYvG6-40qawYNR4juzvSOg-ezZ2a6',
-        'youtube.com/watch?v=_lOT2p_FCvA',
-
-        Invalid:
-        'youtu.be/watch?v=_lOT2p_FCvA',
-    """
     if url.startswith(("youtu", "www")):
         url = "http://" + url
-
     query = urlparse(url)
-
     if "youtube" in query.hostname:
         if query.path == "/watch":
             return parse_qs(query.query)["v"][0]
@@ -240,29 +232,21 @@ def get_yt_video_id(url: str):
         raise ValueError
 
 
-@userge.on_cmd(
-    "ytsearch",
-    about={
-        "header": "Search Youtube Video",
-        "usage": "{tr}ytsearch [text]",
-    },
-)
-async def yt_search(message: Message):
-    if not message.input_str:
-        return await message.err("Input not found", del_in=5)
-    query = message.input_str
-    await message.edit(f'🔎 Searching Youtube video for "<code>{query}</code>"')
-    ytx = await userge.get_inline_bot_results("vid", query)
-    ytp = f"<b>•> YouTube Videos for:</b>  <u>{query}</u>\n\n"
-    n = 1
-    for ytm in ytx.results:
-        ytp += f"<b>[{n}. {ytm.title}]({ytm.send_message.message})</b>\n    {ytm.description}\n"
-        if n == 10:
-            break
-        n += 1
-    thumbx = wget.download(
-        get_ytthumb(get_yt_video_id((ytx.results)[0].send_message.message))
-    )
-    await message.delete()
-    await message.reply_photo(thumbx, caption=ytp)
-    os.remove(thumbx)
+async def result_formatter(results: list):
+    output = {}
+    for index, r in enumerate(results, start=1)
+        thumb = await get_ytthumb(rvid["id"])
+        rvid = r["video"]
+        upld = r["uploader"]
+        out = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
+        out += f'<b>• Duration:</b> {rvid["duration"]}\n'
+        out += f'<b>• Views:</b> {rvid["views"]}\n'
+        out += f'<b>• Upload date:</b> {rvid["upload_date"]}\n'
+        out += '<b>• Uploader:</b> '
+        if upld["verified"]:
+            out += "✅ "
+        out += f'<a href={updl["url"]}>{upld["username"]}</a>\n\n'
+        out += f'<code>{rvid["snippet"]}</code>'
+        output[index] = {"message": out, "thumb": thumb}
+    return output
+

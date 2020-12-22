@@ -24,3 +24,10 @@ class get_response:
         async with session.get(link, params=params) as resp:
             assert resp.status == 200
             return await resp.read()
+    
+    # Just returns the Header
+    @staticmethod
+    async def status(link: str):
+        session = xbot.session
+        async with session.get(link) as resp:
+            return resp.status
