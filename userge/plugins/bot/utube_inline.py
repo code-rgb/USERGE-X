@@ -114,7 +114,7 @@ async def iytdl_inline(message: Message):
     #     chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
     # )
 
-
+"""
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r""))
@@ -199,7 +199,7 @@ def _tubeDl(url: list, starttime, uid):
             CHANNEL.log(str(e))
             x = None
     return x
-
+"""
 
 #  initial version: http://stackoverflow.com/a/7936523/617185 \
 #  by Mikhail Kashkin (http://stackoverflow.com/users/85739/mikhail-kashkin)
