@@ -102,17 +102,17 @@ async def purgeme_(message: Message):
     start_t = datetime.datetime.now()
     number = min(int(message.input_str), 100)
     mid = message.message_id
+    msg_list = []
     # https://t.me/pyrogramchat/266224
     # search_messages takes some minutes to index new messages
     # so using iter_history to get messages newer than 5 mins.
     old_msg = (start_t - datetime.timedelta(minutes=5)).timestamp()
 
-    msg_list = [
-        msg.message_id
-        for msg in userge.search_messages(
-            message.chat.id, "", limit=number, from_user="me"
-        )
-    ]
+    async for msg in userge.search_messages(
+        message.chat.id, "", limit=number, from_user="me"
+    ):
+        msg_list.append(msg.message_id)
+
     async for new_msg in userge.iter_history(message.chat.id, offset_id=mid, offset=0):
         if new_msg.from_user.is_self:
             msg_list.append(new_msg.message_id)
@@ -124,11 +124,11 @@ async def purgeme_(message: Message):
     if mid in del_list:
         del_list.remove(mid)
     del_list.reverse()
-    del_list = del_list[:number]
+    del_list_ = del_list[:number]
 
-    await userge.delete_messages(message.chat.id, message_ids=del_list)
+    await userge.delete_messages(message.chat.id, message_ids=del_list_)
 
     end_t = datetime.datetime.now()
     time_taken_s = (end_t - start_t).seconds
-    out = f"<u>purged</u> {len(del_list)} messages in {time_taken_s} seconds."
+    out = f"<u>purged</u> {len(del_list_)} messages in {time_taken_s} seconds."
     await message.edit(out, del_in=3)
