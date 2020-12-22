@@ -266,5 +266,6 @@ class XMediaTypes:
 
         return ujson.dumps(media)
 
+
 # bot api class
 xbot = XBot()
