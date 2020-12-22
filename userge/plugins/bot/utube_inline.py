@@ -91,9 +91,9 @@ async def iytdl_inline(message: Message):
     resp = (await get_response.json(ytsearch_url(input_url)))["results"]
     if len(resp) == 0:
         return
-
-    resp = resp[:10]
-    ytsearch_data.store_(userge.rnd_id(), await result_formatter(resp))
+    outdata = await result_formatter(resp[:10])
+    ytsearch_data.store_(userge.rnd_id(), outdata)
+    await message.reply(str(outdata[1]))
 
     # if not input_url:
     #     return await message.err("Input or reply to a valid youtube URL", del_in=5)
@@ -227,8 +227,8 @@ def get_yt_video_id(url: str):
 async def result_formatter(results: list):
     output = {}
     for index, r in enumerate(results, start=1):
-        thumb = await get_ytthumb(rvid["id"])
         rvid = r["video"]
+        thumb = await get_ytthumb(rvid["id"])
         upld = r["uploader"]
         out = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
         out += f'<b>• Duration:</b> {rvid["duration"]}\n'
