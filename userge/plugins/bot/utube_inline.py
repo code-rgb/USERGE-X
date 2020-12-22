@@ -234,7 +234,7 @@ def get_yt_video_id(url: str):
 
 async def result_formatter(results: list):
     output = {}
-    for index, r in enumerate(results, start=1)
+    for index, r in enumerate(results, start=1):
         thumb = await get_ytthumb(rvid["id"])
         rvid = r["video"]
         upld = r["uploader"]
