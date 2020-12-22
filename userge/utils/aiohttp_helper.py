@@ -1,9 +1,8 @@
-import aiohttp
 from . import xbot
 
+
 class get_response:
-    
-    @staticmethod 
+    @staticmethod
     # Can be used without initialising
     async def json(link: str, params: dict = None):
         session = xbot.session
@@ -11,7 +10,7 @@ class get_response:
             assert resp.status == 200
             # Raises an AssertionError if status != 200
             return await resp.json()
-            
+
     @staticmethod
     async def text(link: str, params: dict = None):
         session = xbot.session
@@ -25,4 +24,3 @@ class get_response:
         async with session.get(link, params=params) as resp:
             assert resp.status == 200
             return await resp.read()
-

@@ -31,7 +31,7 @@ from userge.utils import parse_buttons as pb
 from userge.utils import xbot
 
 from .bot.alive import check_media_link
-from .bot.utube_inline import get_ytthumb, ytdl_btn_generator, get_yt_video_id
+from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
@@ -612,7 +612,9 @@ if userge.has_bot:
                         vid_title = x.get("title", None)
                         # upload_date = date_formatter(str(x.get('upload_date', None)))
                         vid_thumb = get_ytthumb(ytlink_code)
-                        buttons = ytdl_btn_generator(formats, ytlink_code, inline_query.id)
+                        buttons = ytdl_btn_generator(
+                            formats, ytlink_code, inline_query.id
+                        )
                         caption_text = f"**{vid_title}**"
                         # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
                         # caption_text += f"📹 : [{uploader}]({channel_url})"
