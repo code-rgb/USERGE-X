@@ -237,7 +237,7 @@ async def result_formatter(results: list):
         out += "<b>• Uploader:</b> "
         if upld["verified"]:
             out += "✅ "
-        out += f'<a href={updl["url"]}>{upld["username"]}</a>\n\n'
+        out += f'<a href={upld["url"]}>{upld["username"]}</a>\n\n'
         out += f'<code>{rvid["snippet"]}</code>'
         output[index] = {"message": out, "thumb": thumb}
     return output
