@@ -603,7 +603,7 @@ if userge.has_bot:
                     link = str_y[1]
                     try:
                         get_yt_video_id(link)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         resp = (await get_response.json(ytsearch_url(link)))["results"]
                         if len(resp) == 0:
                             return
