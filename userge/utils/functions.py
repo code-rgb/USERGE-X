@@ -2,11 +2,12 @@ import html
 import os
 import random
 import re
+from uuid import uuid4
 
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
-from uuid import uuid4
+
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".

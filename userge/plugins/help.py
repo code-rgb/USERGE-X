@@ -25,10 +25,17 @@ from pyrogram.types import (
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id_and_ref, rand_key, get_response, xbot
+from userge.utils import get_file_id_and_ref, get_response
 from userge.utils import parse_buttons as pb
-from .bot.utube_inline import result_formatter, ytsearch_data, ytsearch_url, get_yt_video_id
+from userge.utils import rand_key, xbot
+
 from .bot.alive import check_media_link
+from .bot.utube_inline import (
+    get_yt_video_id,
+    result_formatter,
+    ytsearch_data,
+    ytsearch_url,
+)
 
 # from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
@@ -595,7 +602,7 @@ if userge.has_bot:
                 if len(str_y) == 2:
                     link = str_y[1]
                     try:
-                        ytvid_id = get_yt_video_id(link)
+                        get_yt_video_id(link)
                     except ValueError:
                         resp = (await get_response.json(ytsearch_url(link)))["results"]
                         if len(resp) == 0:
@@ -604,42 +611,45 @@ if userge.has_bot:
                         key_ = rand_key()
                         ytsearch_data.store_(key_, outdata)
                         # Search Query is given instead of url
-                        #return
-                    #else:
-            #             link = "https://www.youtube.com/watch?v=" + ytvid_id
-            #             x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
-            #                 link, download=False
-            #             )
-            #             formats = x.get("formats", [x])
-            #             ytlink_code = x.get("id", None)
-            #             # uploader = x.get('uploader', None)
-            #             # channel_url = x.get('channel_url', None)
-            #             vid_title = x.get("title", None)
-            #             # upload_date = date_formatter(str(x.get('upload_date', None)))
-            #             vid_thumb = get_ytthumb(ytlink_code)
-            #             buttons = ytdl_btn_generator(
-            #                 formats, ytlink_code, inline_query.id
-            #             )
-            #             caption_text = f"**{vid_title}**"
-            #             # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
-            #             # caption_text += f"📹 : [{uploader}]({channel_url})"
+                        # return
+                        # else:
+                        #             link = "https://www.youtube.com/watch?v=" + ytvid_id
+                        #             x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
+                        #                 link, download=False
+                        #             )
+                        #             formats = x.get("formats", [x])
+                        #             ytlink_code = x.get("id", None)
+                        #             # uploader = x.get('uploader', None)
+                        #             # channel_url = x.get('channel_url', None)
+                        #             vid_title = x.get("title", None)
+                        #             # upload_date = date_formatter(str(x.get('upload_date', None)))
+                        #             vid_thumb = get_ytthumb(ytlink_code)
+                        #             buttons = ytdl_btn_generator(
+                        #                 formats, ytlink_code, inline_query.id
+                        #             )
+                        #             caption_text = f"**{vid_title}**"
+                        #             # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
+                        #             # caption_text += f"📹 : [{uploader}]({channel_url})"
                         buttons = [
                             [
                                 InlineKeyboardButton(
                                     text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
                                 ),
                                 InlineKeyboardButton(
-                                    text=f"1 / {len(outdata)}", callback_data=f"ytdl_next_{key_}_1"
-                                )
+                                    text=f"1 / {len(outdata)}",
+                                    callback_data=f"ytdl_next_{key_}_1",
+                                ),
                             ],
                             [
                                 InlineKeyboardButton(
-                                    text="📜  List all", callback_data=f"ytdl_listall_{key_}_1"
+                                    text="📜  List all",
+                                    callback_data=f"ytdl_listall_{key_}_1",
                                 ),
                                 InlineKeyboardButton(
-                                    text="⬇️  Download", callback_data=f"ytdl_download_{key_}_1"
-                                )
-                            ]
+                                    text="⬇️  Download",
+                                    callback_data=f"ytdl_download_{key_}_1",
+                                ),
+                            ],
                         ]
 
                         results.append(
