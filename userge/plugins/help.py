@@ -654,10 +654,10 @@ if userge.has_bot:
 
                         results.append(
                             InlineQueryResultPhoto(
-                                photo_url=outdata["1"]["thumb"],
+                                photo_url=outdata[1]["thumb"],
                                 title=link,
                                 description="⬇️ Click to Download",
-                                caption=outdata["1"]["message"],
+                                caption=outdata[1]["message"],
                                 reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
