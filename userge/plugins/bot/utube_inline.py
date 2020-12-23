@@ -95,8 +95,8 @@ async def iytdl_inline(message: Message):
     ytsearch_data.store_(rand_key(), outdata)
     await message.reply(str(outdata[1]))
 
-        if not input_url:
-            return await message.err("Input or reply to a valid youtube URL", del_in=5)
+    if not input_url:
+        return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
     # bot = await userge.bot.get_me()
     # x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
