@@ -5,7 +5,7 @@ import ujson
 from pyrogram.types import InlineKeyboardButton
 
 from userge import Message, userge
-from userge.utils import get_response
+from userge.utils import get_response, rand_key
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -21,8 +21,8 @@ class YT_Search_X:
             ujson.dump(d, open(PATH, "w"))
         self.db = ujson.load(open(PATH))
 
-    def store_(self, rnd_id: int, results: dict):
-        self.db[str(rnd_id)] = results
+    def store_(self, rnd_id: str, results: dict):
+        self.db[rnd_id] = results
         self.save()
 
     def save(self):
@@ -92,11 +92,11 @@ async def iytdl_inline(message: Message):
     if len(resp) == 0:
         return
     outdata = await result_formatter(resp[:10])
-    ytsearch_data.store_(userge.rnd_id(), outdata)
+    ytsearch_data.store_(rand_key(), outdata)
     await message.reply(str(outdata[1]))
 
-    # if not input_url:
-    #     return await message.err("Input or reply to a valid youtube URL", del_in=5)
+        if not input_url:
+            return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
     # bot = await userge.bot.get_me()
     # x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
@@ -231,13 +231,13 @@ async def result_formatter(results: list):
         thumb = await get_ytthumb(rvid["id"])
         upld = r["uploader"]
         out = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
-        out += f'<b>• Duration:</b> {rvid["duration"]}\n'
-        out += f'<b>• Views:</b> {rvid["views"]}\n'
-        out += f'<b>• Upload date:</b> {rvid["upload_date"]}\n'
-        out += "<b>• Uploader:</b> "
+        out += "<code>{}</code>\n\n".format(rvid["snippet"])
+        out += f'<b>❯ Duration:</b> {rvid["duration"]}\n'
+        out += f'<b>❯ Views:</b> {rvid["views"]}\n'
+        out += f'<b>❯ Upload date:</b> {rvid["upload_date"]}\n'
+        out += "<b>❯ Uploader:</b> "
         if upld["verified"]:
             out += "✅ "
-        out += f'<a href={upld["url"]}>{upld["username"]}</a>\n\n'
-        out += f'<code>{rvid["snippet"]}</code>'
+        out += f'<a href={upld["url"]}>{upld["username"]}</a>'
         output[index] = {"message": out, "thumb": thumb}
     return output

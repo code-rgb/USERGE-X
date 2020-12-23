@@ -25,10 +25,9 @@ from pyrogram.types import (
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id_and_ref
+from userge.utils import get_file_id_and_ref, rand_key, get_response, xbot
 from userge.utils import parse_buttons as pb
-from userge.utils import xbot
-
+from .bot.utube_inline import result_formatter, ytsearch_data, ytsearch_url, get_yt_video_id
 from .bot.alive import check_media_link
 
 # from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
@@ -592,15 +591,21 @@ if userge.has_bot:
                     )
                 )
 
-            # if str_y[0] == "ytdl":
-            #     if len(str_y) == 2:
-            #         link = str_y[1]
-            #         try:
-            #             ytvid_id = get_yt_video_id(link)
-            #         except ValueError:
-            #             # Search Query is given instead of url
-            #             return
-            #         else:
+            if str_y[0] == "ytdl":
+                if len(str_y) == 2:
+                    link = str_y[1]
+                    try:
+                        ytvid_id = get_yt_video_id(link)
+                    except ValueError:
+                        resp = (await get_response.json(ytsearch_url(link)))["results"]
+                        if len(resp) == 0:
+                            return
+                        outdata = await result_formatter(resp[:10])
+                        key_ = rand_key()
+                        ytsearch_data.store_(key_, outdata)
+                        # Search Query is given instead of url
+                        #return
+                    #else:
             #             link = "https://www.youtube.com/watch?v=" + ytvid_id
             #             x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
             #                 link, download=False
@@ -618,16 +623,34 @@ if userge.has_bot:
             #             caption_text = f"**{vid_title}**"
             #             # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
             #             # caption_text += f"📹 : [{uploader}]({channel_url})"
+                        buttons = [
+                            [
+                                InlineKeyboardButton(
+                                    text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
+                                ),
+                                InlineKeyboardButton(
+                                    text=f"1 / {len(outdata)}", callback_data=f"ytdl_next_{key_}_1"
+                                )
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    text="📜  List all", callback_data=f"ytdl_listall_{key_}_1"
+                                ),
+                                InlineKeyboardButton(
+                                    text="⬇️  Download", callback_data=f"ytdl_download_{key_}_1"
+                                )
+                            ]
+                        ]
 
-            #         results.append(
-            #             InlineQueryResultPhoto(
-            #                 photo_url=vid_thumb,
-            #                 title=vid_title,
-            #                 description="⬇️ Click to Download",
-            #                 caption=caption_text,
-            #                 reply_markup=InlineKeyboardMarkup(buttons),
-            #             )
-            #         )
+                        results.append(
+                            InlineQueryResultPhoto(
+                                photo_url=outdata["1"]["thumb"],
+                                title=link,
+                                description="⬇️ Click to Download",
+                                caption=outdata["1"]["message"],
+                                reply_markup=InlineKeyboardMarkup(buttons),
+                            )
+                        )
 
             if string == "age_verification_alert":
                 buttons = [

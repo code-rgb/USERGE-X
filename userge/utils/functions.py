@@ -6,7 +6,7 @@ import re
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
-
+from uuid import uuid4
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
@@ -123,3 +123,7 @@ async def thumb_from_audio(audio_path, output):
 def rand_array(array: list, string: bool = True):
     random_num = random.choice(array)
     return str(random_num) if string else random_num
+
+
+def rand_key():
+    return str(uuid4())[:8]

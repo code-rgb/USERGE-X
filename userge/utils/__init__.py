@@ -10,6 +10,7 @@ from .functions import (
     mention_markdown,
     rand_array,
     thumb_from_audio,
+    rand_key
 )
 from .progress import progress  # noqa
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
