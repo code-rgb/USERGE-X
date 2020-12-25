@@ -2,6 +2,7 @@ from .aiohttp_helper import get_response
 from .botapi import XMediaTypes as xmedia
 from .botapi import xbot
 from .functions import (
+    check_owner,
     cleanhtml,
     deEmojify,
     escape_markdown,
@@ -11,7 +12,6 @@ from .functions import (
     rand_array,
     rand_key,
     thumb_from_audio,
-    check_owner
 )
 from .progress import progress  # noqa
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa

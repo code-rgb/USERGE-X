@@ -603,7 +603,7 @@ if userge.has_bot:
                     link = get_yt_video_id(str_y[1])
                     if link is None:
                         try:
-                            resp = (await get_response.json(ytsearch_url(link)))
+                            resp = await get_response.json(ytsearch_url(link))
                         except AssertionError:  # Unoffcial Yt Api is Down
                             pass
                         else:
@@ -635,7 +635,6 @@ if userge.has_bot:
                         #             # caption_text += f"📹 : [{uploader}]({channel_url})"
                     buttons = [
                         [
-
                             InlineKeyboardButton(
                                 text=f"1 / {len(outdata)}",
                                 callback_data=f"ytdl_next_{key_}_1",

@@ -3,7 +3,9 @@ import os
 import random
 import re
 from uuid import uuid4
+
 from pyrogram.types import CallbackQuery
+
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
@@ -134,9 +136,16 @@ if bool(Config.BOT_TOKEN):
 
     def check_owner(func):
         async def wrapper(_, c_q: CallbackQuery):
-            if not (c_q.from_user and (c_q.from_user.id in Config.OWNER_ID or c_q.from_user.id in Config.SUDO_USERS)):
+            if not (
+                c_q.from_user
+                and (
+                    c_q.from_user.id in Config.OWNER_ID
+                    or c_q.from_user.id in Config.SUDO_USERS
+                )
+            ):
                 await c_q.answer(
                     f"Only My Master can Access This ...\n\n𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
-                    show_alert=True
+                    show_alert=True,
                 )
+
         return wrapper
