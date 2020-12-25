@@ -2,7 +2,7 @@ import os
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import ujson
-from program import filters
+from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, userge
