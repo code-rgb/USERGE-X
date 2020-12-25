@@ -2,10 +2,11 @@ import os
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import ujson
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, userge
-from userge.utils import get_response, rand_key, check_owner
+from userge.utils import get_response, rand_key, check_owner, xbot, xmedia
+
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -246,14 +247,89 @@ async def result_formatter(results: list):
     return output
 
 
-    @check_owner
+if userge.has_bot:
+
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_([a-z]+)_([a-z0-9]+)(?:_(\d+))?"))
+    @check_owner
     async def ytdl_callback(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
         choosen_btn = c_q.matches[0].group(1)
         if choosen_btn in ["back", "next", "listall"]:
             data_key = c_q.matches[0].group(2)
             page = c_q.matches[0].group(3)
+            if os.path.exists(PATH):
+                with open(PATH) as f:
+                    view_data = ujson.load(f)
+                    search_data = view_data.get(data_key)
+            else:
+                return await c_q.answer("Search data doesn't exists anymore, please perform search again ...", show_alert=True)
 
-        elif choosen_btn == "download":
-     
+            if choosen_btn == "back":
+                index = int(page) - 1
+                del_back = True if index == 1 else False
+                back_vid = search_data.get(str(index))
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(await xmedia.InputMediaPhoto(
+                        file_id=back_vid.get("thumb"), caption=back_vid.get("message"), parse_mode="html"
+                    )),
+                    reply_markup=yt_search_btns(
+                        del_back=del_back, data_key=data_key, page=index, vid=back_vid.get("video_id")
+                    )
+                )
+            elif choosen_btn == "next":
+                index = int(page) + 1
+                if index == len(search_data)
+                    return await c_q.answer("No more Videos available", show_alert=True)
+
+                front_vid = search_data.get(str(index))
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(await xmedia.InputMediaPhoto(
+                        file_id=front_vid.get("thumb"), caption=front_vid.get("message"), parse_mode="html"
+                    )),
+                    reply_markup=yt_search_btns(
+                        data_key=data_key, page=index, vid=front_vid.get("video_id")
+                    )
+                )
+            # else: # list all
+            #     pass
+                
+
+
+        # elif choosen_btn == "download":
+        #     # TODO
+        #     return
+        # else:
+        #     return
+
+# InlineKeyboardButton(
+#     text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
+# ),
+
+def yt_search_btns(del_back: bool = False, data_key: str, page: int, vid: str):
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=f"⬅️  Back",
+                callback_data=f"ytdl_back_{data_key}_{page}",
+            ),
+            InlineKeyboardButton(
+                text=f"1 / {len(outdata)}",
+                callback_data=f"ytdl_next_{data_key}_{page}",
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="📜  List all",
+                callback_data=f"ytdl_listall_{data_key}_{page}",
+            ),
+            InlineKeyboardButton(
+                text="⬇️  Download",
+                callback_data=f'ytdl_download_{vid}',
+            ),
+        ],
+    ]
+    if del_back:
+        buttons[0].pop(0)
+    return InlineKeyboardMarkup(buttons)

@@ -633,37 +633,35 @@ if userge.has_bot:
                         #             caption_text = f"**{vid_title}**"
                         #             # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
                         #             # caption_text += f"📹 : [{uploader}]({channel_url})"
-                        buttons = [
-                            [
-                                InlineKeyboardButton(
-                                    text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
-                                ),
-                                InlineKeyboardButton(
-                                    text=f"1 / {len(outdata)}",
-                                    callback_data=f"ytdl_next_{key_}_1",
-                                ),
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text="📜  List all",
-                                    callback_data=f"ytdl_listall_{key_}_1",
-                                ),
-                                InlineKeyboardButton(
-                                    text="⬇️  Download",
-                                    callback_data=f'ytdl_download_{outdata[1]["video_id"]}',
-                                ),
-                            ],
-                        ]
+                    buttons = [
+                        [
 
-                        results.append(
-                            InlineQueryResultPhoto(
-                                photo_url=outdata[1]["thumb"],
-                                title=link,
-                                description="⬇️ Click to Download",
-                                caption=outdata[1]["message"],
-                                reply_markup=InlineKeyboardMarkup(buttons),
+                            InlineKeyboardButton(
+                                text=f"1 / {len(outdata)}",
+                                callback_data=f"ytdl_next_{key_}_1",
                             )
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text="📜  List all",
+                                callback_data=f"ytdl_listall_{key_}_1",
+                            ),
+                            InlineKeyboardButton(
+                                text="⬇️  Download",
+                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}',
+                            ),
+                        ],
+                    ]
+
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=outdata[1]["thumb"],
+                            title=link,
+                            description="⬇️ Click to Download",
+                            caption=outdata[1]["message"],
+                            reply_markup=InlineKeyboardMarkup(buttons),
                         )
+                    )
 
             if string == "age_verification_alert":
                 buttons = [
