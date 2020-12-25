@@ -279,7 +279,7 @@ if userge.has_bot:
                 )
             elif choosen_btn == "next":
                 index = int(page) + 1
-                if index == len(search_data)
+                if index == len(search_data):
                     return await c_q.answer("No more Videos available", show_alert=True)
 
                 front_vid = search_data.get(str(index))
