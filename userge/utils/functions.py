@@ -137,6 +137,6 @@ if bool(Config.BOT_TOKEN):
             if not (c_q.from_user and (c_q.from_user.id in Config.OWNER_ID or c_q.from_user.id in Config.SUDO_USERS)):
                 await c_q.answer(
                     f"Only My Master can Access This ...\n\n𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
-                    show_alert=True,
+                    show_alert=True
                 )
         return wrapper
