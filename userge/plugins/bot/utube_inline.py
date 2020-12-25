@@ -3,7 +3,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 
 import ujson
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 from userge import Message, userge
 from userge.utils import check_owner, get_response, rand_key, xbot, xmedia
