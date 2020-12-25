@@ -5,7 +5,7 @@ import ujson
 from pyrogram.types import InlineKeyboardButton
 
 from userge import Message, userge
-from userge.utils import get_response, rand_key
+from userge.utils import get_response, rand_key, check_owner
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -212,17 +212,20 @@ def _tubeDl(url: list, starttime, uid):
 def get_yt_video_id(url: str):
     if url.startswith(("youtu", "www")):
         url = "http://" + url
-    query = urlparse(url)
-    if "youtube" in query.hostname:
-        if query.path == "/watch":
-            return parse_qs(query.query)["v"][0]
-        if query.path.startswith(("/embed/", "/v/")):
-            return query.path.split("/")[2]
-    elif "youtu.be" in query.hostname:
-        return query.path[1:]
-    else:
-        raise ValueError
-
+    yt_link = None
+    try:
+        query = urlparse(url)
+        if "youtube" in query.hostname:
+            if query.path == "/watch":
+                yt_link = parse_qs(query.query)["v"][0]
+            if query.path.startswith(("/embed/", "/v/")):
+                yt_link = query.path.split("/")[2]
+        elif "youtu.be" in query.hostname:
+            yt_link = query.path[1:]
+    except TypeError:
+        pass
+    return yt_link
+        
 
 async def result_formatter(results: list):
     output = {}
@@ -239,5 +242,18 @@ async def result_formatter(results: list):
         if upld["verified"]:
             out += "✅ "
         out += f'<a href={upld["url"]}>{upld["username"]}</a>'
-        output[index] = {"message": out, "thumb": thumb}
+        output[index] = {"message": out, "thumb": thumb, "video_id": rvid["id"]}
     return output
+
+
+    @check_owner
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_([a-z]+)_([a-z0-9]+)(?:_(\d+))?"))
+    async def ytdl_callback(_, c_q: CallbackQuery):
+        u_id = c_q.from_user.id
+        choosen_btn = c_q.matches[0].group(1)
+        if choosen_btn in ["back", "next", "listall"]:
+            data_key = c_q.matches[0].group(2)
+            page = c_q.matches[0].group(3)
+
+        elif choosen_btn == "download":
+     

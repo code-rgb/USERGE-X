@@ -600,16 +600,19 @@ if userge.has_bot:
 
             if str_y[0] == "ytdl":
                 if len(str_y) == 2:
-                    link = str_y[1]
-                    try:
-                        get_yt_video_id(link)
-                    except (ValueError, TypeError):
-                        resp = (await get_response.json(ytsearch_url(link)))["results"]
-                        if len(resp) == 0:
-                            return
-                        outdata = await result_formatter(resp[:10])
-                        key_ = rand_key()
-                        ytsearch_data.store_(key_, outdata)
+                    link = get_yt_video_id(str_y[1])
+                    if link is None:
+                        try:
+                            resp = (await get_response.json(ytsearch_url(link)))
+                        except AssertionError:  # Unoffcial Yt Api is Down
+                            pass
+                        else:
+                            resp = resp["results"]
+                            if len(resp) == 0:
+                                return
+                            outdata = await result_formatter(resp[:10])
+                            key_ = rand_key()
+                            ytsearch_data.store_(key_, outdata)
                         # Search Query is given instead of url
                         # return
                         # else:
@@ -647,7 +650,7 @@ if userge.has_bot:
                                 ),
                                 InlineKeyboardButton(
                                     text="⬇️  Download",
-                                    callback_data=f"ytdl_download_{key_}_1",
+                                    callback_data=f'ytdl_download_{outdata[1]["video_id"]}',
                                 ),
                             ],
                         ]
