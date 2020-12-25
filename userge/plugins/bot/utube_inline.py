@@ -307,7 +307,7 @@ if userge.has_bot:
 #     text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
 # ),
 
-def yt_search_btns(del_back: bool = False, data_key: str, page: int, vid: str):
+def yt_search_btns(data_key: str, page: int, vid: str, del_back: bool = False):
     buttons = [
         [
             InlineKeyboardButton(
