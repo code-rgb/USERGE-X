@@ -234,31 +234,31 @@ async def result_formatter(results: list):
         rvid = r["video"]
         thumb = await get_ytthumb(rvid["id"])
         upld = r["uploader"]
-        out = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
-        out += "<code>{}</code>\n\n".format(rvid["snippet"])
-        out += f'<b>❯ Duration:</b> {rvid["duration"]}\n'
-        out += f'<b>❯ Views:</b> {rvid["views"]}\n'
-        out += f'<b>❯ Upload date:</b> {rvid["upload_date"]}\n'
-        out += "<b>❯ Uploader:</b> "
+        title = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
+        out = title
+        out += "{}\n\n".format(rvid["snippet"])
+        out += f'<b>❯  Duration:</b> {rvid["duration"]}\n'
+        views = f'<b>❯  Views:</b> {rvid["views"]}\n'
+        out += views
+        out += f'<b>❯  Upload date:</b> {rvid["upload_date"]}\n'
+        out += "<b>❯  Uploader:</b> "
         if upld["verified"]:
             out += "✅ "
         out += f'<a href={upld["url"]}>{upld["username"]}</a>'
-        output[index] = {"message": out, "thumb": thumb, "video_id": rvid["id"]}
+        output[index] = {"message": out, "thumb": thumb, "video_id": rvid["id"], "list_view": f"{index}. {title}{views}"}
     return output
 
 
 if userge.has_bot:
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_(listall|back|next)_([a-z0-9]+)_(\d+)")
+        filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(\d+)")
     )
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
-        await CHANNEL.log(str(c_q))
         choosen_btn = c_q.matches[0].group(1)
         data_key = c_q.matches[0].group(2)
         page = c_q.matches[0].group(3)
-        await CHANNEL.log(str(data_key))
         if os.path.exists(PATH):
             with open(PATH) as f:
                 view_data = ujson.load(f)
@@ -291,7 +291,7 @@ if userge.has_bot:
             )
         elif choosen_btn == "next":
             index = int(page) + 1
-            if index == total:
+            if index > total:
                 return await c_q.answer("that's all folks", show_alert=True)
 
             front_vid = search_data.get(str(index))
@@ -310,9 +310,47 @@ if userge.has_bot:
                     total=total,
                 ),
             )
-        else:
-            pass
-            # TODO list all
+
+        elif choosen_btn == "listall":
+            list_res = "Showing all videos\n\n"
+            for vid_s in search_data:
+                list_res += search_data.get(vid_s).get("list_view")
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=search_data.get(vid_s).get("1").get("thumb"),
+                        caption=list_res,
+                    )
+                ),
+                reply_markup=buttons = InlineKeyboardMarkup(
+                    [[InlineKeyboardButton(
+                        text="📰  Detailed View",
+                        callback_data=f"ytdl_detail_{data_key}_{page}",
+                    )]]
+                )
+            )
+        else: # Detailed
+            index = 1
+            first = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=first.get("thumb"),
+                        caption=first.get("message"),
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    del_back=True,
+                    data_key=data_key,
+                    page=index,
+                    vid=first.get("video_id"),
+                    total=total,
+                ),
+            )
+
+        
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)"))
     @check_owner
