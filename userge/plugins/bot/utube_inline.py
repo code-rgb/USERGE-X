@@ -432,13 +432,13 @@ def download_button(vid: str):
 
 
 
-    for i in array:
-        name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
-        call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
-        b.append(InlineKeyboardButton(name, callback_data=call_back))
-        if len(b) == 3:  # no. of columns
-            btn.append(b)
-            b = []
-    if len(b) != 0:
-        btn.append(b)  # buttons in the last row
-    return btn
+    # for i in array:
+    #     name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
+    #     call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
+    #     b.append(InlineKeyboardButton(name, callback_data=call_back))
+    #     if len(b) == 3:  # no. of columns
+    #         btn.append(b)
+    #         b = []
+    # if len(b) != 0:
+    #     btn.append(b)  # buttons in the last row
+    # return btn
