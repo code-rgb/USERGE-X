@@ -4,7 +4,7 @@ import random
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
-from youtubesearchpython import VideosSearch
+
 import requests
 from html_telegraph_poster import TelegraphPoster
 from pymediainfo import MediaInfo
@@ -22,20 +22,16 @@ from pyrogram.types import (
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
+from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id_and_ref, get_response
+from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
-from .bot.utube_inline import (
-    get_yt_video_id,
-    result_formatter,
-    ytsearch_data,
-    ytsearch_url,
-)
+from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
 
 # from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
@@ -613,7 +609,7 @@ if userge.has_bot:
                                     ),
                                     description="INVALID",
                                 )
-                            )                            
+                            )
                         else:
                             outdata = await result_formatter(resp[:20])
                             key_ = rand_key()

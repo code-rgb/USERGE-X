@@ -235,7 +235,9 @@ async def result_formatter(results: list):
         upld = r.get("channel")
         title = f'<a href={r.get("link")}><b>{r.get("title")}</b></a>\n'
         out = title
-        out += "{}\n\n".format("".join(x.get("text") for x in r.get("descriptionSnippet")))
+        out += "{}\n\n".format(
+            "".join(x.get("text") for x in r.get("descriptionSnippet"))
+        )
         out += f'<b>❯  Duration:</b> {r.get("accessibility").get("duration")}\n'
         views = f'<b>❯  Views:</b> {r.get("viewCount").get("short")}\n'
         out += views
@@ -247,7 +249,7 @@ async def result_formatter(results: list):
             message=out,
             thumb=thumb,
             video_id=r.get("id"),
-            list_view=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n'
+            list_view=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n',
         )
     return output
 
