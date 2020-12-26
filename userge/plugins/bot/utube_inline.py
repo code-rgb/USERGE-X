@@ -231,26 +231,24 @@ def get_yt_video_id(url: str):
 async def result_formatter(results: list):
     output = {}
     for index, r in enumerate(results, start=1):
-        rvid = r["video"]
-        thumb = await get_ytthumb(rvid["id"])
-        upld = r["uploader"]
-        title = f'<a href={rvid["url"]}><b>{rvid["title"]}</b></a>\n'
+        thumb = await get_ytthumb(r.get("id"))
+        upld = r.get("channel")
+        title = f'<a href={r.get("link")}><b>{r.get("title")}</b></a>\n'
         out = title
-        out += "{}\n\n".format(rvid["snippet"])
-        out += f'<b>❯  Duration:</b> {rvid["duration"]}\n'
-        views = f'<b>❯  Views:</b> {rvid["views"]}\n'
+        out += "{}\n\n".format("".join(x.get("text") for x in r.get("descriptionSnippet")))
+        out += f'<b>❯  Duration:</b> {r.get("accessibility").get("duration")}\n'
+        views = f'<b>❯  Views:</b> {r.get("viewCount").get("short")}\n'
         out += views
-        out += f'<b>❯  Upload date:</b> {rvid["upload_date"]}\n'
-        out += "<b>❯  Uploader:</b> "
-        if upld["verified"]:
-            out += "✅ "
-        out += f'<a href={upld["url"]}>{upld["username"]}</a>'
-        output[index] = {
-            "message": out,
-            "thumb": thumb,
-            "video_id": rvid["id"],
-            "list_view": f"{index}. {title}{views}",
-        }
+        out += f'<b>❯  Upload date:</b> {r.get("publishedTime")}\n'
+        if upld:
+            out += "<b>❯  Uploader:</b> "
+            out += f'<a href={upld.get("link")}>{upld.get("name")}</a>'
+        output[index] = dict(
+            "message"=out,
+            "thumb"=thumb,
+            "video_id"=r.get("id"),
+            "list_view"=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n',
+        )
     return output
 
 

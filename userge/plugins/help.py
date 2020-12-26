@@ -4,7 +4,7 @@ import random
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
-
+from youtubesearchpython import VideosSearch
 import requests
 from html_telegraph_poster import TelegraphPoster
 from pymediainfo import MediaInfo
@@ -602,16 +602,20 @@ if userge.has_bot:
                 if len(str_y) == 2:
                     link = get_yt_video_id(str_y[1])
                     if link is None:
-                        try:
-                            resp = await get_response.json(ytsearch_url(str_y[1]))
-                        except AssertionError:  # Unoffcial Yt Api is Down
-                            pass
+                        search = VideosSearch(str_y[1], limit=20)
+                        resp = (search.result()).get("result")
+                        if len(resp) == 0:
+                            results.append(
+                                InlineQueryResultArticle(
+                                    title="not Found",
+                                    input_message_content=InputTextMessageContent(
+                                        f"No Results found for '{str_y[1]}'"
+                                    ),
+                                    description="INVALID",
+                                )
+                            )                            
                         else:
-                            resp = resp["results"]
-                            if len(resp) == 0:
-                                # TODO Not Found
-                                return
-                            outdata = await result_formatter(resp[:10])
+                            outdata = await result_formatter(resp[:20])
                             key_ = rand_key()
                             ytsearch_data.store_(key_, outdata)
                         # Search Query is given instead of url
