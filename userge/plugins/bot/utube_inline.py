@@ -327,20 +327,17 @@ if userge.has_bot:
         elif choosen_btn == "listall":
             if page.isdigit():
                 list_res = ""
-                print(search_data)
                 for vid_s in search_data:
                     list_res += search_data.get(vid_s).get("list_view")
                 telegraph = post_to_telegraph(
                     a_title=f"Showing {total} youtube video results for the given query ...",
                     content=list_res,
                 )
-                print(telegraph)
                 page = (telegraph.split("ph/", 1))[1]
-                print(page)
-            else:
-                list_res = "<a href={}><b>{}</b></a>".format(
-                    "https://telegra.ph/" + page, "Click to View"
-                )
+
+            list_res = "<a href={}><b>{}</b></a>".format(
+                "https://telegra.ph/" + page, "Click to View"
+            )
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
