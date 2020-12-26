@@ -285,7 +285,7 @@ if userge.has_bot:
                     data_key=data_key,
                     page=index,
                     vid=back_vid.get("video_id"),
-                    total=total
+                    total=total,
                 ),
             )
         elif choosen_btn == "next":
@@ -304,24 +304,25 @@ if userge.has_bot:
                     )
                 ),
                 reply_markup=yt_search_btns(
-                    data_key=data_key, page=index, vid=front_vid.get("video_id"), total=total
+                    data_key=data_key,
+                    page=index,
+                    vid=front_vid.get("video_id"),
+                    total=total,
                 ),
             )
         else:
             pass
-            #TODO list all
+            # TODO list all
 
-
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_download_(.*)")
-    )
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)"))
     @check_owner
     async def download_ytdlvid(_, c_q: CallbackQuery):
-        video_id = c_q.matches[0].group(1)
+        c_q.matches[0].group(1)
 
 
-
-def yt_search_btns(data_key: str, page: int, vid: str, total: int, del_back: bool = False):
+def yt_search_btns(
+    data_key: str, page: int, vid: str, total: int, del_back: bool = False
+):
     buttons = [
         [
             InlineKeyboardButton(

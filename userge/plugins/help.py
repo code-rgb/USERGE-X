@@ -609,7 +609,7 @@ if userge.has_bot:
                         else:
                             resp = resp["results"]
                             if len(resp) == 0:
-                                #TODO Not Found
+                                # TODO Not Found
                                 return
                             outdata = await result_formatter(resp[:10])
                             key_ = rand_key()
