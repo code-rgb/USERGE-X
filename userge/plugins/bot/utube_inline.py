@@ -322,25 +322,27 @@ if userge.has_bot:
                 list_res += search_data.get(vid_s).get("list_view")
             print(list_res)
             print(c_q)
-            print(await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=search_data.get("1").get("thumb"),
-                        caption=list_res,
-                    )
-                ),
-                reply_markup=InlineKeyboardMarkup(
-                    [
+            print(
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(
+                        await xmedia.InputMediaPhoto(
+                            file_id=search_data.get("1").get("thumb"),
+                            caption=list_res,
+                        )
+                    ),
+                    reply_markup=InlineKeyboardMarkup(
                         [
-                            InlineKeyboardButton(
-                                text="📰  Detailed View",
-                                callback_data=f"ytdl_detail_{data_key}_{page}",
-                            )
+                            [
+                                InlineKeyboardButton(
+                                    text="📰  Detailed View",
+                                    callback_data=f"ytdl_detail_{data_key}_{page}",
+                                )
+                            ]
                         ]
-                    ]
-                ),
-            ))
+                    ),
+                )
+            )
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
