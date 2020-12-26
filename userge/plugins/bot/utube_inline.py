@@ -253,7 +253,7 @@ if userge.has_bot:
         filters.regex(pattern=r"^ytdl_(listall|back|next)_([a-z0-9]+)_(\d+)")
     )
     @check_owner
-    async def ytdl_callback(_, c_q: CallbackQuery):
+    async def ytdl_callback(c_q: CallbackQuery):
         await CHANNEL.log(str(c_q))
         choosen_btn = c_q.matches[0].group(1)
         data_key = c_q.matches[0].group(2)
@@ -318,7 +318,7 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)"))
     @check_owner
-    async def download_ytdlvid(_, c_q: CallbackQuery):
+    async def download_ytdlvid(c_q: CallbackQuery):
         c_q.matches[0].group(1)
 
 
