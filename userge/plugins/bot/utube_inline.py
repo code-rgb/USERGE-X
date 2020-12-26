@@ -330,7 +330,7 @@ if userge.has_bot:
                 for vid_s in search_data:
                     list_res += search_data.get(vid_s).get("list_view")
                 telegraph = post_to_telegraph(
-                    title=f"Showing {total} youtube video results for the given query ...",
+                    a_title=f"Showing {total} youtube video results for the given query ...",
                     content=list_res,
                 )
                 page = (telegraph.split("ph/", 1))[1]
