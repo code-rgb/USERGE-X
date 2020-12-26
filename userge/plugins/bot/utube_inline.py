@@ -279,7 +279,6 @@ if userge.has_bot:
                     await xmedia.InputMediaPhoto(
                         file_id=back_vid.get("thumb"),
                         caption=back_vid.get("message"),
-                        parse_mode="html",
                     )
                 ),
                 reply_markup=yt_search_btns(
@@ -302,7 +301,6 @@ if userge.has_bot:
                     await xmedia.InputMediaPhoto(
                         file_id=front_vid.get("thumb"),
                         caption=front_vid.get("message"),
-                        parse_mode="html",
                     )
                 ),
                 reply_markup=yt_search_btns(
