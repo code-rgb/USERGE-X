@@ -111,7 +111,6 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)"))
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
-        time()
         yt_code = c_q.matches[0].group(1)
         choice_id = int(c_q.matches[0].group(2))
         if choice_id == 0:
@@ -332,7 +331,7 @@ if userge.has_bot:
                 page = (telegraph.split("ph/", 1))[1]
 
             list_res = "<a href={}><b>{}</b></a>".format(
-                "https://telegra.ph/" + page, "Click to View"
+                ("https://telegra.ph/" + page), "Click to View"
             )
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
