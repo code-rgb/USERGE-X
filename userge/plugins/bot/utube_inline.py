@@ -244,10 +244,10 @@ async def result_formatter(results: list):
             out += "<b>❯  Uploader:</b> "
             out += f'<a href={upld.get("link")}>{upld.get("name")}</a>'
         output[index] = dict(
-            "message"=out,
-            "thumb"=thumb,
-            "video_id"=r.get("id"),
-            "list_view"=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n',
+            message=out,
+            thumb=thumb,
+            video_id=r.get("id"),
+            list_view=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n'
         )
     return output
 
