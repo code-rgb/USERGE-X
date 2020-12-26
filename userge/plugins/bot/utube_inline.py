@@ -1,7 +1,6 @@
 import os
 from urllib.parse import parse_qs, urlencode, urlparse
-import youtube_dl
-from userge.utils import humanbytes
+
 import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -10,8 +9,8 @@ from userge import Message, userge
 from userge.utils import (
     check_owner,
     get_response,
+    humanbytes,
     post_to_telegraph,
-    rand_key,
     xbot,
     xmedia,
 )
@@ -106,20 +105,17 @@ async def iytdl_inline(message: Message):
     )
 
 
-
 if userge.has_bot:
-
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)"))
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
-        startTime = time()
+        time()
         yt_code = c_q.matches[0].group(1)
         choice_id = int(c_q.matches[0].group(2))
         if choice_id == 0:
             await xbot.edit_inline_reply_markup(
-                c_q.inline_message_id,
-                reply_markup=download_button(yt_code)
+                c_q.inline_message_id, reply_markup=download_button(yt_code)
             )
             return
         """
@@ -197,6 +193,7 @@ def _tubeDl(url: list, starttime, uid):
             x = None
     return x
 """
+
 
 #  initial version: http://stackoverflow.com/a/7936523/617185 \
 #  by Mikhail Kashkin (http://stackoverflow.com/users/85739/mikhail-kashkin)
@@ -410,7 +407,7 @@ def yt_search_btns(
     if del_back:
         buttons[0].pop(0)
     return InlineKeyboardMarkup(buttons)
-    
+
 
 def download_button(vid: str):
     x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
@@ -422,15 +419,17 @@ def download_button(vid: str):
         if i.get("ext") == "mp4":
             name = f'{i.get("format_note")} ({humanbytes(i.get("filesize"))})'
             qual_id = i.get("format_id")
-            b.append(InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_id}"))
+            b.append(
+                InlineKeyboardButton(
+                    name, callback_data=f"ytdl_download_{vid}_{qual_id}"
+                )
+            )
             if len(b) == 3:
                 btn.append(b)
                 b = []
     if len(b) != 0:
         btn.append(b)
     return InlineKeyboardMarkup(btn)
-
-
 
     # for i in array:
     #     name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
