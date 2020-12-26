@@ -6,7 +6,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, userge
-from userge.utils import check_owner, get_response, rand_key, xbot, xmedia
+from userge.utils import check_owner, get_response, rand_key, xbot, xmedia, post_to_telegraph
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -229,15 +229,16 @@ def get_yt_video_id(url: str):
 
 
 async def result_formatter(results: list):
-    output = {}
+    output = dict()
     for index, r in enumerate(results, start=1):
         thumb = await get_ytthumb(r.get("id"))
         upld = r.get("channel")
         title = f'<a href={r.get("link")}><b>{r.get("title")}</b></a>\n'
         out = title
-        out += "{}\n\n".format(
-            "".join(x.get("text") for x in r.get("descriptionSnippet"))
-        )
+        if r.get("descriptionSnippet"):
+            out += "{}\n\n".format(
+                "".join(x.get("text") for x in r.get("descriptionSnippet"))
+            )
         out += f'<b>❯  Duration:</b> {r.get("accessibility").get("duration")}\n'
         views = f'<b>❯  Views:</b> {r.get("viewCount").get("short")}\n'
         out += views
@@ -257,7 +258,7 @@ async def result_formatter(results: list):
 if userge.has_bot:
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(\d+)")
+        filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
     )
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
@@ -317,32 +318,34 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
-            list_res = "Showing all videos\n\n"
-            for vid_s in search_data:
-                list_res += search_data.get(vid_s).get("list_view")
-            print(list_res)
-            print(c_q)
-            print(
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaPhoto(
-                            file_id=search_data.get("1").get("thumb"),
-                            caption=list_res,
-                        )
-                    ),
-                    reply_markup=InlineKeyboardMarkup(
+            if page.isdigit():
+                list_res = ""
+                for vid_s in search_data:
+                    list_res += search_data.get(vid_s).get("list_view")
+                telegraph = post_to_telegraph(title=f"Showing {total} youtube video results for the given query ...", content=list_res)
+                page = (telegraph.split("ph/", 1))[1]
+            else:
+                list_res = "<a href={}><b>{}</b></a>".format("https://telegra.ph/" + page, "Click to View")
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=search_data.get("1").get("thumb"),
+                        caption=list_res,
+                    )
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    [
                         [
-                            [
-                                InlineKeyboardButton(
-                                    text="📰  Detailed View",
-                                    callback_data=f"ytdl_detail_{data_key}_{page}",
-                                )
-                            ]
+                            InlineKeyboardButton(
+                                text="📰  Detailed View",
+                                callback_data=f"ytdl_detail_{data_key}_{page}",
+                            )
                         ]
-                    ),
-                )
+                    ]
+                ),
             )
+            
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
