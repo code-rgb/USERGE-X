@@ -245,7 +245,12 @@ async def result_formatter(results: list):
         if upld["verified"]:
             out += "✅ "
         out += f'<a href={upld["url"]}>{upld["username"]}</a>'
-        output[index] = {"message": out, "thumb": thumb, "video_id": rvid["id"], "list_view": f"{index}. {title}{views}"}
+        output[index] = {
+            "message": out,
+            "thumb": thumb,
+            "video_id": rvid["id"],
+            "list_view": f"{index}. {title}{views}",
+        }
     return output
 
 
@@ -324,13 +329,17 @@ if userge.has_bot:
                     )
                 ),
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton(
-                        text="📰  Detailed View",
-                        callback_data=f"ytdl_detail_{data_key}_{page}",
-                    )]]
-                )
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="📰  Detailed View",
+                                callback_data=f"ytdl_detail_{data_key}_{page}",
+                            )
+                        ]
+                    ]
+                ),
             )
-        else: # Detailed
+        else:  # Detailed
             index = 1
             first = search_data.get(str(index))
             await xbot.edit_inline_media(
@@ -349,8 +358,6 @@ if userge.has_bot:
                     total=total,
                 ),
             )
-
-        
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)"))
     @check_owner
