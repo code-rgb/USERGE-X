@@ -324,7 +324,7 @@ if userge.has_bot:
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaPhoto(
-                        file_id=search_data.get(vid_s).get("1").get("thumb"),
+                        file_id=search_data.get("1").get("thumb"),
                         caption=list_res,
                     )
                 ),
