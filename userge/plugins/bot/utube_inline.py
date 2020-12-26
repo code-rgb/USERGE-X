@@ -320,7 +320,9 @@ if userge.has_bot:
             list_res = "Showing all videos\n\n"
             for vid_s in search_data:
                 list_res += search_data.get(vid_s).get("list_view")
-            await xbot.edit_inline_media(
+            print(list_res)
+            print(c_q)
+            print(await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaPhoto(
@@ -338,7 +340,7 @@ if userge.has_bot:
                         ]
                     ]
                 ),
-            )
+            ))
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
