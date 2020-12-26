@@ -6,7 +6,14 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, userge
-from userge.utils import check_owner, get_response, rand_key, xbot, xmedia, post_to_telegraph
+from userge.utils import (
+    check_owner,
+    get_response,
+    post_to_telegraph,
+    rand_key,
+    xbot,
+    xmedia,
+)
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -322,10 +329,15 @@ if userge.has_bot:
                 list_res = ""
                 for vid_s in search_data:
                     list_res += search_data.get(vid_s).get("list_view")
-                telegraph = post_to_telegraph(title=f"Showing {total} youtube video results for the given query ...", content=list_res)
+                telegraph = post_to_telegraph(
+                    title=f"Showing {total} youtube video results for the given query ...",
+                    content=list_res,
+                )
                 page = (telegraph.split("ph/", 1))[1]
             else:
-                list_res = "<a href={}><b>{}</b></a>".format("https://telegra.ph/" + page, "Click to View")
+                list_res = "<a href={}><b>{}</b></a>".format(
+                    "https://telegra.ph/" + page, "Click to View"
+                )
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
@@ -345,7 +357,7 @@ if userge.has_bot:
                     ]
                 ),
             )
-            
+
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
