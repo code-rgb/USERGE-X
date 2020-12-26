@@ -2,9 +2,10 @@ import os
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import ujson
+import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-import youtube_dl
+
 from userge import Message, userge
 from userge.utils import (
     check_owner,
