@@ -423,11 +423,11 @@ def download_button(vid: str):
             name = f'{i.get("format_note")} ({humanbytes(i.get("filesize"))})'
             qual_id = i.get("format_id")
             b.append(InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_id}"))
-            if len(b) == 3:  # no. of columns
+            if len(b) == 3:
                 btn.append(b)
                 b = []
     if len(b) != 0:
-    btn.append(b)
+        btn.append(b)
     return InlineKeyboardMarkup(btn)
 
 
