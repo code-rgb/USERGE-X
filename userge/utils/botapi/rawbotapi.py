@@ -5,7 +5,7 @@ import ujson
 from pyrogram.types import InlineKeyboardMarkup
 
 from userge.config import Config
-from asyncio import TimeoutError
+
 from .XParser import mixed_to_html
 
 
