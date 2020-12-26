@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlencode, urlparse
 import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+import youtube_dl
 from userge import Message, userge
 from userge.utils import (
     check_owner,
@@ -410,7 +410,7 @@ def yt_search_btns(
 
 
 def download_button(vid: str):
-    x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
+    x = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
         BASE_YT_URL + vid, download=False
     )
     btn = []
