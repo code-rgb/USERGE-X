@@ -648,7 +648,7 @@ if userge.has_bot:
                             ),
                             InlineKeyboardButton(
                                 text="⬇️  Download",
-                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}',
+                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
                             ),
                         ],
                     ]

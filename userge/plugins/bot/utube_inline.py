@@ -1,6 +1,7 @@
 import os
 from urllib.parse import parse_qs, urlencode, urlparse
-
+import youtube_dl
+from userge.utils import humanbytes
 import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -18,7 +19,6 @@ from userge.utils import (
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
-YT_SEARCH_API = "http://youtube-scrape.herokuapp.com/api/search?"
 PATH = "./userge/xcache/ytsearch.json"
 
 
@@ -96,40 +96,38 @@ async def iytdl_inline(message: Message):
         elif reply.caption:
             input_url = reply.caption
 
-    resp = (await get_response.json(ytsearch_url(input_url)))["results"]
-    if len(resp) == 0:
-        return
-    outdata = await result_formatter(resp[:10])
-    ytsearch_data.store_(rand_key(), outdata)
-    await message.reply(str(outdata[1]))
-
     if not input_url:
         return await message.err("Input or reply to a valid youtube URL", del_in=5)
 
-    # bot = await userge.bot.get_me()
-    # x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
-    # y = await userge.send_inline_bot_result(
-    #     chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
-    # )
+    bot = await userge.bot.get_me()
+    x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
+    y = await userge.send_inline_bot_result(
+        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+    )
 
 
-"""
+
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r""))
-    async def ytdl_callback(_, c_q: CallbackQuery):
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)"))
+    @check_owner
+    async def ytdl_callback(c_q: CallbackQuery):
         startTime = time()
-        
-        u_id = c_q.from_user.id
-        if u_id not in Config.OWNER_ID and u_id not in Config.SUDO_USERS:
-            return await c_q.answer("𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓", show_alert=True)
-        # choice_id = c_q.matches[0].group(2)
-       
+        yt_code = c_q.matches[0].group(1)
+        choice_id = int(c_q.matches[0].group(2))
+        if choice_id == 0:
+            await xbot.edit_inline_reply_markup(
+                c_q.inline_message_id,
+                reply_markup=download_button(yt_code)
+            )
+            return
+        """
         callback_continue = "Downloading Video Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
-        yt_code = c_q.matches[0].group(1)
+        
         yt_url = BASE_YT_URL + yt_code
         try:
             await c_q.edit_message_caption(
@@ -405,10 +403,42 @@ def yt_search_btns(
             ),
             InlineKeyboardButton(
                 text="⬇️  Download",
-                callback_data=f"ytdl_download_{vid}",
+                callback_data=f"ytdl_download_{vid}_0",
             ),
         ],
     ]
     if del_back:
         buttons[0].pop(0)
     return InlineKeyboardMarkup(buttons)
+    
+
+def download_button(vid: str):
+    x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
+        BASE_YT_URL + vid, download=False
+    )
+    btn = []
+    b = []
+    for i in x["formats"]:
+        if i.get("ext") == "mp4":
+            name = f'{i.get("format_note")} ({humanbytes(i.get("filesize"))})'
+            qual_id = i.get("format_id")
+            b.append(InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_id}"))
+            if len(b) == 3:  # no. of columns
+                btn.append(b)
+                b = []
+    if len(b) != 0:
+    btn.append(b)
+    return InlineKeyboardMarkup(btn)
+
+
+
+    for i in array:
+        name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
+        call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
+        b.append(InlineKeyboardButton(name, callback_data=call_back))
+        if len(b) == 3:  # no. of columns
+            btn.append(b)
+            b = []
+    if len(b) != 0:
+        btn.append(b)  # buttons in the last row
+    return btn
