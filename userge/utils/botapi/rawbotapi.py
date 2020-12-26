@@ -5,7 +5,7 @@ import ujson
 from pyrogram.types import InlineKeyboardMarkup
 
 from userge.config import Config
-
+from asyncio import TimeoutError
 from .XParser import mixed_to_html
 
 
@@ -30,12 +30,15 @@ class XBot:
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
+        timeout = aiohttp.ClientTimeout(total=120)
         try:
-            async with session.get(link, params=params) as resp:
+            async with session.get(link, params=params, timeout=timeout) as resp:
                 data = await resp.json()
-        except (aiohttp.ClientError, TimeoutError) as ex:
+        except aiohttp.ClientError as ex:
             await session.close()
             print(ex)
+            return
+        except asyncio.TimeoutError:
             return
         return data
 
