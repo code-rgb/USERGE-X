@@ -603,12 +603,13 @@ if userge.has_bot:
                     link = get_yt_video_id(str_y[1])
                     if link is None:
                         try:
-                            resp = await get_response.json(ytsearch_url(link))
+                            resp = await get_response.json(ytsearch_url(str_y[1]))
                         except AssertionError:  # Unoffcial Yt Api is Down
                             pass
                         else:
                             resp = resp["results"]
                             if len(resp) == 0:
+                                #TODO Not Found
                                 return
                             outdata = await result_formatter(resp[:10])
                             key_ = rand_key()

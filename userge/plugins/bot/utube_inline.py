@@ -250,80 +250,78 @@ async def result_formatter(results: list):
 if userge.has_bot:
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_([a-z]+)_([a-z0-9]+)(?:_(\d+))?")
+        filters.regex(pattern=r"^ytdl_(listall|back|next)_([a-z0-9]+)_(\d+)")
     )
     @check_owner
     async def ytdl_callback(_, c_q: CallbackQuery):
-        c_q.from_user.id
         choosen_btn = c_q.matches[0].group(1)
-        if choosen_btn in ["back", "next", "listall"]:
-            data_key = c_q.matches[0].group(2)
-            page = c_q.matches[0].group(3)
-            if os.path.exists(PATH):
-                with open(PATH) as f:
-                    view_data = ujson.load(f)
-                    search_data = view_data.get(data_key)
-            else:
-                return await c_q.answer(
-                    "Search data doesn't exists anymore, please perform search again ...",
-                    show_alert=True,
-                )
+        data_key = c_q.matches[0].group(2)
+        page = c_q.matches[0].group(3)
+        if os.path.exists(PATH):
+            with open(PATH) as f:
+                view_data = ujson.load(f)
+            search_data = view_data.get(data_key)
+            total = len(search_data)
+        else:
+            return await c_q.answer(
+                "Search data doesn't exists anymore, please perform search again ...",
+                show_alert=True,
+            )
+        if choosen_btn == "back":
+            index = int(page) - 1
+            del_back = True if index == 1 else False
+            back_vid = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=back_vid.get("thumb"),
+                        caption=back_vid.get("message"),
+                        parse_mode="html",
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    del_back=del_back,
+                    data_key=data_key,
+                    page=index,
+                    vid=back_vid.get("video_id"),
+                    total=total
+                ),
+            )
+        elif choosen_btn == "next":
+            index = int(page) + 1
+            if index == total:
+                return await c_q.answer("that's all folks", show_alert=True)
 
-            if choosen_btn == "back":
-                index = int(page) - 1
-                del_back = True if index == 1 else False
-                back_vid = search_data.get(str(index))
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaPhoto(
-                            file_id=back_vid.get("thumb"),
-                            caption=back_vid.get("message"),
-                            parse_mode="html",
-                        )
-                    ),
-                    reply_markup=yt_search_btns(
-                        del_back=del_back,
-                        data_key=data_key,
-                        page=index,
-                        vid=back_vid.get("video_id"),
-                    ),
-                )
-            elif choosen_btn == "next":
-                index = int(page) + 1
-                if index == len(search_data):
-                    return await c_q.answer("No more Videos available", show_alert=True)
-
-                front_vid = search_data.get(str(index))
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaPhoto(
-                            file_id=front_vid.get("thumb"),
-                            caption=front_vid.get("message"),
-                            parse_mode="html",
-                        )
-                    ),
-                    reply_markup=yt_search_btns(
-                        data_key=data_key, page=index, vid=front_vid.get("video_id")
-                    ),
-                )
-            # else: # list all
-            #     pass
-
-        # elif choosen_btn == "download":
-        #     # TODO
-        #     return
-        # else:
-        #     return
+            front_vid = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=front_vid.get("thumb"),
+                        caption=front_vid.get("message"),
+                        parse_mode="html",
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    data_key=data_key, page=index, vid=front_vid.get("video_id"), total=total
+                ),
+            )
+        else:
+            pass
+            #TODO list all
 
 
-# InlineKeyboardButton(
-#     text="◀️  Back", callback_data=f"ytdl_back_{key_}_1"
-# ),
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"^ytdl_download_(.*)")
+    )
+    @check_owner
+    async def download_ytdlvid(_, c_q: CallbackQuery):
+        video_id = c_q.matches[0].group(1)
 
 
-def yt_search_btns(data_key: str, page: int, vid: str, del_back: bool = False):
+
+def yt_search_btns(data_key: str, page: int, vid: str, total: int, del_back: bool = False):
     buttons = [
         [
             InlineKeyboardButton(
@@ -331,7 +329,7 @@ def yt_search_btns(data_key: str, page: int, vid: str, del_back: bool = False):
                 callback_data=f"ytdl_back_{data_key}_{page}",
             ),
             InlineKeyboardButton(
-                text=f"1 / {len(outdata)}",
+                text=f"{page} / {total}",
                 callback_data=f"ytdl_next_{data_key}_{page}",
             ),
         ],
