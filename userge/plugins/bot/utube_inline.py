@@ -254,9 +254,11 @@ if userge.has_bot:
     )
     @check_owner
     async def ytdl_callback(_, c_q: CallbackQuery):
+        await CHANNEL.log(str(c_q))
         choosen_btn = c_q.matches[0].group(1)
         data_key = c_q.matches[0].group(2)
         page = c_q.matches[0].group(3)
+        await CHANNEL.log(str(data_key))
         if os.path.exists(PATH):
             with open(PATH) as f:
                 view_data = ujson.load(f)

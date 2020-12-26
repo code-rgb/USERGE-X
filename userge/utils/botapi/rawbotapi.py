@@ -30,6 +30,8 @@ class XBot:
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
+        # LOGGER
+        print(params)
         try:
             async with session.get(link, params=params) as resp:
                 data = await resp.json()
@@ -37,6 +39,7 @@ class XBot:
             await session.close()
             print(ex)
             return
+        print(data)
         return data
 
     async def edit_inline_text(
