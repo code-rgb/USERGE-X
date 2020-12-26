@@ -323,7 +323,7 @@ if userge.has_bot:
                         caption=list_res,
                     )
                 ),
-                reply_markup=buttons = InlineKeyboardMarkup(
+                reply_markup=InlineKeyboardMarkup(
                     [[InlineKeyboardButton(
                         text="📰  Detailed View",
                         callback_data=f"ytdl_detail_{data_key}_{page}",
