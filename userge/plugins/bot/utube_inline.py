@@ -40,7 +40,7 @@ class YT_Search_X:
 
 ytsearch_data = YT_Search_X()
 
-
+"""
 async def get_ytthumb(videoid: str):
     thumb_quality = [
         "maxresdefault.jpg",  # Best quality
@@ -57,21 +57,8 @@ async def get_ytthumb(videoid: str):
             thumb_link = link
             break
     return thumb_link
+"""
 
-
-def ytdl_btn_generator(array, code, i_q_id):
-    btn = []
-    b = []
-    for i in array:
-        name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
-        call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
-        b.append(InlineKeyboardButton(name, callback_data=call_back))
-        if len(b) == 3:  # no. of columns
-            btn.append(b)
-            b = []
-    if len(b) != 0:
-        btn.append(b)  # buttons in the last row
-    return btn
 
 
 def ytsearch_url(query: str):
@@ -109,17 +96,25 @@ async def iytdl_inline(message: Message):
 if userge.has_bot:
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)(?:_(a|v))?")
+        filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+|best)(?:_(a|v))?")
     )
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
-        choice_id = int(c_q.matches[0].group(2))
-        if choice_id == 0:
-            await xbot.edit_inline_reply_markup(
-                c_q.inline_message_id, reply_markup=(await download_button(yt_code))
-            )
-            return
+        choice_id = c_q.matches[0].group(2)
+
+        if str(choice_id).isdigit():
+            choice_id = int(choice_id)
+            if choice_id == 0:
+                await xbot.edit_inline_reply_markup(
+                    c_q.inline_message_id, reply_markup=(await download_button(yt_code))
+                )
+                return
+            downtype = c_q.matches[0].group(3)
+
+        #else:
+
+
         # downtype = c_q.matches[0].group(3)
         # i.e a/b
         """
@@ -237,7 +232,8 @@ def get_yt_video_id(url: str):
 async def result_formatter(results: list):
     output = dict()
     for index, r in enumerate(results, start=1):
-        thumb = await get_ytthumb(r.get("id"))
+        thumb = (r.get("thumbnails").pop()).get("url")
+        # await get_ytthumb(r.get("id"))
         upld = r.get("channel")
         title = f'<a href={r.get("link")}><b>{r.get("title")}</b></a>\n'
         out = title
@@ -428,9 +424,9 @@ def download_button(vid: str):
         format_1440,
         format_2160,
     ) = [0 for _ in range(7)]
-    btn, b, c = list(), list(), list()
-    format_data = dict()
-    audio = dict()
+    btn = [[InlineKeyboardButton("⭐️  Best (🎵 + 📹)", callback_data=f"ytdl_download_{vid}_best")]]
+    b, c = list(), list()
+    audio, format_data = dict(), dict()
     ###
     for video in x["formats"]:
         if video.get("ext") == "mp4":
@@ -453,11 +449,11 @@ def download_button(vid: str):
 
             if video.get("acodec") != "none":
                 bitrrate = int(video.get("abr"))
-                if bitrrate >= 70:
-                    audio[
-                        bitrrate
-                    ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize"))})'
-            format_data[fr_id] = f'📹 {f_note} ({humanbytes(video.get("filesize"))})'
+                # if bitrrate >= 70:
+                audio[
+                    bitrrate
+                ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
+            format_data[fr_id] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
 
     for qual_ in (
         format_144,

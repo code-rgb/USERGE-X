@@ -598,7 +598,7 @@ if userge.has_bot:
                 if len(str_y) == 2:
                     link = get_yt_video_id(str_y[1])
                     if link is None:
-                        search = VideosSearch(str_y[1], limit=20)
+                        search = VideosSearch(str_y[1], limit=15)
                         resp = (search.result()).get("result")
                         if len(resp) == 0:
                             results.append(
@@ -611,7 +611,7 @@ if userge.has_bot:
                                 )
                             )
                         else:
-                            outdata = await result_formatter(resp[:20])
+                            outdata = await result_formatter(resp)
                             key_ = rand_key()
                             ytsearch_data.store_(key_, outdata)
                         # Search Query is given instead of url
