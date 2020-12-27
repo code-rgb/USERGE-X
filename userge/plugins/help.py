@@ -1121,53 +1121,53 @@ if userge.has_bot:
                         )
                     )
 
-            if str_y[0] == "ytdl":
-                if len(str_y) == 2:
-                    link = get_yt_video_id(str_y[1])
-                    if link is None:
-                        search = VideosSearch(str_y[1], limit=15)
-                        resp = (search.result()).get("result")
-                        if len(resp) == 0:
-                            results.append(
-                                InlineQueryResultArticle(
-                                    title="not Found",
-                                    input_message_content=InputTextMessageContent(
-                                        f"No Results found for '{str_y[1]}'"
-                                    ),
-                                    description="INVALID",
-                                )
+            if str_y[0].lower() == "ytdl" and len(str_y) == 2:
+                link = get_yt_video_id(str_y[1])
+                if link is None:
+                    search = VideosSearch(str_y[1], limit=15)
+                    resp = (search.result()).get("result")
+                    if len(resp) == 0:
+                        results.append(
+                            InlineQueryResultArticle(
+                                title="not Found",
+                                input_message_content=InputTextMessageContent(
+                                    f"No Results found for {str_y[1]}"
+                                ),
+                                description="INVALID",
                             )
-                        else:
-                            outdata = await result_formatter(resp)
-                            key_ = rand_key()
-                            ytsearch_data.store_(key_, outdata)
-                    buttons = [
-                        [
-                            InlineKeyboardButton(
-                                text=f"1 / {len(outdata)}",
-                                callback_data=f"ytdl_next_{key_}_1",
-                            )
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="📜  List all",
-                                callback_data=f"ytdl_listall_{key_}_1",
-                            ),
-                            InlineKeyboardButton(
-                                text="⬇️  Download",
-                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
-                            ),
-                        ],
-                    ]
-                    results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=outdata[1]["thumb"],
-                            title=link,
-                            description="⬇️ Click to Download",
-                            caption=outdata[1]["message"],
-                            reply_markup=InlineKeyboardMarkup(buttons),
                         )
-                    )
+                    else:
+                        outdata = await result_formatter(resp)
+                        key_ = rand_key()
+                        ytsearch_data.store_(key_, outdata)
+                        buttons = [
+                            [
+                                InlineKeyboardButton(
+                                    text=f"1 / {len(outdata)}",
+                                    callback_data=f"ytdl_next_{key_}_1",
+                                )
+                            ],
+                            [
+                                InlineKeyboardButton(
+                                    text="📜  List all",
+                                    callback_data=f"ytdl_listall_{key_}_1",
+                                ),
+                                InlineKeyboardButton(
+                                    text="⬇️  Download",
+                                    callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
+                                )
+                            ]
+                        ]
+                        results.append(
+                            InlineQueryResultPhoto(
+                                photo_url=outdata[1]["thumb"],
+                                title=link,
+                                description="⬇️ Click to Download",
+                                caption=outdata[1]["message"],
+                                reply_markup=InlineKeyboardMarkup(buttons)
+                            )
+                        )
+
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
