@@ -108,7 +108,7 @@ async def iytdl_inline(message: Message):
 
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)"))
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)(?:_(a|v))?"))
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
@@ -118,6 +118,8 @@ if userge.has_bot:
                 c_q.inline_message_id, reply_markup=(await download_button(yt_code))
             )
             return
+        # downtype = c_q.matches[0].group(3)
+        # i.e a/b
         """
         callback_continue = "Downloading Video Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id}"
@@ -424,8 +426,9 @@ def download_button(vid: str):
         format_1440,
         format_2160,
     ) = [0 for _ in range(7)]
-    btn, b = list(), list()
+    btn, b, c = list(), list()
     format_data = dict()
+    audio = dict()
     ###
     for video in x["formats"]:
         if video.get("ext") == "mp4":
@@ -445,7 +448,12 @@ def download_button(vid: str):
                 format_240 = fr_id
             if f_note in ("144p", "144p60") and fr_id > format_144:
                 format_144 = fr_id
-            format_data[fr_id] = f'{f_note} ({humanbytes(video.get("filesize"))})'
+
+            if video.get('acodec') != 'none':
+                bitrrate = video.get('abr')
+                if bitrrate >= 70:
+                    audio[bitrrate] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize"))})'
+            format_data[fr_id] = f'📹 {f_note} ({humanbytes(video.get("filesize"))})'
 
     for qual_ in (
         format_144,
@@ -459,11 +467,21 @@ def download_button(vid: str):
         if qual_ != 0:
             name = format_data.get(qual_)
             b.append(
-                InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_}")
+                InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_}_v")
             )
             if len(b) == 2:
                 btn.append(b)
                 b = []
     if len(b) != 0:
         btn.append(b)
+
+    for key_ in sorted(audio.keys()):
+        c.append(
+            InlineKeyboardButton(audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a")
+        )
+        if len(c) == 2:
+            btn.append(c)
+            c = []
+    if len(c) != 0:
+        btn.append(c)
     return InlineKeyboardMarkup(btn)
