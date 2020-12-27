@@ -246,10 +246,10 @@ class XMediaTypes:
         media = {
             "type": "video",
             "media": file_id,
-            "supports_streaming": "True",
+            "supports_streaming": True,
         }
         if not supports_streaming:
-            media["supports_streaming"] = "False"
+            media["supports_streaming"] = False
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
