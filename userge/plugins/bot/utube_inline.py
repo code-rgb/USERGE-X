@@ -271,7 +271,7 @@ if userge.has_bot:
             #list_res = "<a href={}><b>{}</b></a>".format(
             #    ("https://telegra.ph/" + page), "Click to View"
             #)
-            listres = "test 123"
+            list_res = "test 123"
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
