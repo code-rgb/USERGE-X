@@ -22,19 +22,23 @@ from pyrogram.types import (
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
-# from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
+from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
-from userge.utils import rand_key, xbot, get_file_id_and_ref
-# from userge.utils import rand_key, xbot, get_file_id_and_ref
+from userge.utils import xbot
 
 from .bot.alive import check_media_link
-#  from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
-
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
+
+# from youtubesearchpython import VideosSearch
+
+# from userge.utils import rand_key, xbot, get_file_id_and_ref
+
+#  from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
+
 
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -592,7 +596,7 @@ if userge.has_bot:
                         reply_markup=InlineKeyboardMarkup(owner),
                     )
                 )
-                
+
             if string == "age_verification_alert":
                 buttons = [
                     [
