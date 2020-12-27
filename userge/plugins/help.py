@@ -33,11 +33,11 @@ from .bot.alive import check_media_link
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
-# from youtubesearchpython import VideosSearch
+from youtubesearchpython import VideosSearch
 
-# from userge.utils import rand_key, xbot, get_file_id_and_ref
+from userge.utils import rand_key, xbot, get_file_id_and_ref
 
-#  from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
+from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
 
 
 CHANNEL = userge.getCLogger(__name__)
@@ -1122,6 +1122,54 @@ if userge.has_bot:
                             ),
                             description=f"Send Secret Message to: {user_name}",
                             thumb_url="https://i.imgur.com/c5pZebC.png",
+                            reply_markup=InlineKeyboardMarkup(buttons),
+                        )
+                    )
+                    
+            if str_y[0] == "ytdl":
+                if len(str_y) == 2:
+                    link = get_yt_video_id(str_y[1])
+                    if link is None:
+                        search = VideosSearch(str_y[1], limit=15)
+                        resp = (search.result()).get("result")
+                        if len(resp) == 0:
+                            results.append(
+                                InlineQueryResultArticle(
+                                    title="not Found",
+                                    input_message_content=InputTextMessageContent(
+                                        f"No Results found for '{str_y[1]}'"
+                                    ),
+                                    description="INVALID",
+                                )
+                            )
+                        else:
+                            outdata = await result_formatter(resp)
+                            key_ = rand_key()
+                            ytsearch_data.store_(key_, outdata)
+                    buttons = [
+                        [
+                            InlineKeyboardButton(
+                                text=f"1 / {len(outdata)}",
+                                callback_data=f"ytdl_next_{key_}_1",
+                            )
+                        ],
+                        [
+                            InlineKeyboardButton(
+                                text="📜  List all",
+                                callback_data=f"ytdl_listall_{key_}_1",
+                            ),
+                            InlineKeyboardButton(
+                                text="⬇️  Download",
+                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
+                            ),
+                        ],
+                    ]
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=outdata[1]["thumb"],
+                            title=link,
+                            description="⬇️ Click to Download",
+                            caption=outdata[1]["message"],
                             reply_markup=InlineKeyboardMarkup(buttons),
                         )
                     )
