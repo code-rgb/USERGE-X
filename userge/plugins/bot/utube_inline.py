@@ -418,7 +418,7 @@ def download_button(vid: str):
     btn = [
         [
             InlineKeyboardButton(
-                "⭐️  Best (🎵 + 📹)", callback_data=f"ytdl_download_{vid}_best"
+                "⭐️  BEST", callback_data=f"ytdl_download_{vid}_best"
             )
         ]
     ]
