@@ -592,76 +592,7 @@ if userge.has_bot:
                         reply_markup=InlineKeyboardMarkup(owner),
                     )
                 )
-"""
-            if str_y[0] == "ytdl":
-                if len(str_y) == 2:
-                    link = get_yt_video_id(str_y[1])
-                    if link is None:
-                        search = VideosSearch(str_y[1], limit=15)
-                        resp = (search.result()).get("result")
-                        if len(resp) == 0:
-                            results.append(
-                                InlineQueryResultArticle(
-                                    title="not Found",
-                                    input_message_content=InputTextMessageContent(
-                                        f"No Results found for '{str_y[1]}'"
-                                    ),
-                                    description="INVALID",
-                                )
-                            )
-                        else:
-                            outdata = await result_formatter(resp)
-                            key_ = rand_key()
-                            ytsearch_data.store_(key_, outdata)
-                        # Search Query is given instead of url
-                        # return
-                        # else:
-                        #             link = "https://www.youtube.com/watch?v=" + ytvid_id
-                        #             x = ytdl.YoutubeDL({"no-playlist": True}).extract_info(
-                        #                 link, download=False
-                        #             )
-                        #             formats = x.get("formats", [x])
-                        #             ytlink_code = x.get("id", None)
-                        #             # uploader = x.get('uploader', None)
-                        #             # channel_url = x.get('channel_url', None)
-                        #             vid_title = x.get("title", None)
-                        #             # upload_date = date_formatter(str(x.get('upload_date', None)))
-                        #             vid_thumb = get_ytthumb(ytlink_code)
-                        #             buttons = ytdl_btn_generator(
-                        #                 formats, ytlink_code, inline_query.id
-                        #             )
-                        #             caption_text = f"**{vid_title}**"
-                        #             # caption_text += f"🔗 [Link]({link})  |  📅 : {upload_date}"
-                        #             # caption_text += f"📹 : [{uploader}]({channel_url})"
-                    buttons = [
-                        [
-                            InlineKeyboardButton(
-                                text=f"1 / {len(outdata)}",
-                                callback_data=f"ytdl_next_{key_}_1",
-                            )
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="📜  List all",
-                                callback_data=f"ytdl_listall_{key_}_1",
-                            ),
-                            InlineKeyboardButton(
-                                text="⬇️  Download",
-                                callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
-                            ),
-                        ],
-                    ]
-
-                    results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=outdata[1]["thumb"],
-                            title=link,
-                            description="⬇️ Click to Download",
-                            caption=outdata[1]["message"],
-                            reply_markup=InlineKeyboardMarkup(buttons),
-                        )
-                    )
-"""
+                
             if string == "age_verification_alert":
                 buttons = [
                     [
