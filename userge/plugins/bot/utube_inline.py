@@ -108,7 +108,9 @@ async def iytdl_inline(message: Message):
 
 if userge.has_bot:
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)(?:_(a|v))?"))
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+)(?:_(a|v))?")
+    )
     @check_owner
     async def ytdl_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
@@ -449,10 +451,12 @@ def download_button(vid: str):
             if f_note in ("144p", "144p60") and fr_id > format_144:
                 format_144 = fr_id
 
-            if video.get('acodec') != 'none':
-                bitrrate = video.get('abr')
+            if video.get("acodec") != "none":
+                bitrrate = video.get("abr")
                 if bitrrate >= 70:
-                    audio[bitrrate] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize"))})'
+                    audio[
+                        bitrrate
+                    ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize"))})'
             format_data[fr_id] = f'📹 {f_note} ({humanbytes(video.get("filesize"))})'
 
     for qual_ in (
@@ -467,7 +471,9 @@ def download_button(vid: str):
         if qual_ != 0:
             name = format_data.get(qual_)
             b.append(
-                InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_}_v")
+                InlineKeyboardButton(
+                    name, callback_data=f"ytdl_download_{vid}_{qual_}_v"
+                )
             )
             if len(b) == 2:
                 btn.append(b)
@@ -477,7 +483,9 @@ def download_button(vid: str):
 
     for key_ in sorted(audio.keys()):
         c.append(
-            InlineKeyboardButton(audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a")
+            InlineKeyboardButton(
+                audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a"
+            )
         )
         if len(c) == 2:
             btn.append(c)
