@@ -168,7 +168,7 @@ if userge.has_bot:
             else:
                 _thumb = download(await get_ytthumb(yt_code))
 
-            await xbot.edit_inline_media(
+            print(await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaVideo(
@@ -177,7 +177,7 @@ if userge.has_bot:
                         caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
                     )
                 ),
-            )
+            ))
         else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
@@ -186,7 +186,7 @@ if userge.has_bot:
             else:
                 _thumb = download(await get_ytthumb(yt_code, reverse=True))
 
-            await xbot.edit_inline_media(
+            print(await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaAudio(
@@ -195,7 +195,7 @@ if userge.has_bot:
                         caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>",
                     )
                 ),
-            )
+            ))
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -272,7 +272,7 @@ if userge.has_bot:
             #    ("https://telegra.ph/" + page), "Click to View"
             # )
             list_res = "test 123"
-            await xbot.edit_inline_media(
+            print(await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaPhoto(
@@ -290,7 +290,7 @@ if userge.has_bot:
                         ]
                     ]
                 ),
-            )
+            ))
 
         else:  # Detailed
             index = 1
@@ -338,7 +338,7 @@ def _tubeDl(url: str, starttime, uid=None):
 
 
 @pool.run_in_thread
-def _mp3Dl(url, starttime, uid):
+def _mp3Dl(url: str, starttime, uid):
     _opts = {
         "outtmpl": os.path.join(Config.DOWN_PATH, str(starttime), "%(title)s.%(ext)s"),
         "logger": LOGGER,
@@ -359,7 +359,7 @@ def _mp3Dl(url, starttime, uid):
     }
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
-            dloader = ytdl.download(url)
+            dloader = ytdl.download([url])
     except Exception as y_e:  # pylint: disable=broad-except
         LOGGER.exception(y_e)
         return y_e
