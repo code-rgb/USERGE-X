@@ -168,16 +168,18 @@ if userge.has_bot:
             else:
                 _thumb = download(await get_ytthumb(yt_code))
 
-            print(await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaVideo(
-                        file_id=f_id,
-                        thumb=_thumb,
-                        caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                    )
-                ),
-            ))
+            print(
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(
+                        await xmedia.InputMediaVideo(
+                            file_id=f_id,
+                            thumb=_thumb,
+                            caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                        )
+                    ),
+                )
+            )
         else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
@@ -186,16 +188,18 @@ if userge.has_bot:
             else:
                 _thumb = download(await get_ytthumb(yt_code, reverse=True))
 
-            print(await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaAudio(
-                        file_id=f_id,
-                        thumb=_thumb,
-                        caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                    )
-                ),
-            ))
+            print(
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(
+                        await xmedia.InputMediaAudio(
+                            file_id=f_id,
+                            thumb=_thumb,
+                            caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                        )
+                    ),
+                )
+            )
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -272,25 +276,27 @@ if userge.has_bot:
             #    ("https://telegra.ph/" + page), "Click to View"
             # )
             list_res = "test 123"
-            print(await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=search_data.get("1").get("thumb"),
-                        caption=list_res,
-                    )
-                ),
-                reply_markup=InlineKeyboardMarkup(
-                    [
+            print(
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(
+                        await xmedia.InputMediaPhoto(
+                            file_id=search_data.get("1").get("thumb"),
+                            caption=list_res,
+                        )
+                    ),
+                    reply_markup=InlineKeyboardMarkup(
                         [
-                            InlineKeyboardButton(
-                                text="📰  Detailed View",
-                                callback_data=f"ytdl_detail_{data_key}_{page}",
-                            )
+                            [
+                                InlineKeyboardButton(
+                                    text="📰  Detailed View",
+                                    callback_data=f"ytdl_detail_{data_key}_{page}",
+                                )
+                            ]
                         ]
-                    ]
-                ),
-            ))
+                    ),
+                )
+            )
 
         else:  # Detailed
             index = 1
