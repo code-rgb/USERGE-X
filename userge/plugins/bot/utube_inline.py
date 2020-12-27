@@ -1,6 +1,7 @@
 import glob
 import os
 from pathlib import Path
+from time import time
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import ujson
@@ -10,7 +11,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from request import get
 from wget import download
 from youtube_dl.utils import DownloadError
-from time import time
+
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
