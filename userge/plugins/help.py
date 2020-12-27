@@ -1155,8 +1155,8 @@ if userge.has_bot:
                                 InlineKeyboardButton(
                                     text="⬇️  Download",
                                     callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
-                                )
-                            ]
+                                ),
+                            ],
                         ]
                         results.append(
                             InlineQueryResultPhoto(
@@ -1164,7 +1164,7 @@ if userge.has_bot:
                                 title=link,
                                 description="⬇️ Click to Download",
                                 caption=outdata[1]["message"],
-                                reply_markup=InlineKeyboardMarkup(buttons)
+                                reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
 
