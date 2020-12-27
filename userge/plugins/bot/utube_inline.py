@@ -1,4 +1,3 @@
-##
 import glob
 import os
 from pathlib import Path
@@ -11,7 +10,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from request import get
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from time import time
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
@@ -24,7 +23,6 @@ from userge.utils import (
 
 from ..misc.upload import upload
 
-##
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
@@ -120,6 +118,8 @@ if userge.has_bot:
                 return
         else:
             choice_id = None
+
+        startTime = time()
 
         downtype = c_q.matches[0].group(3)
 
