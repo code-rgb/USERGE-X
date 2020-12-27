@@ -8,7 +8,7 @@ import ujson
 import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from request import get
+from requests import get
 from wget import download
 from youtube_dl.utils import DownloadError
 
