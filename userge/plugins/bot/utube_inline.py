@@ -268,7 +268,7 @@ if userge.has_bot:
                 )
                 page = (telegraph.split("ph/", 1))[1]
 
-            #list_res = "<a href={}><b>{}</b></a>".format(
+            # list_res = "<a href={}><b>{}</b></a>".format(
             #    ("https://telegra.ph/" + page), "Click to View"
             #)
             list_res = "test 123"
