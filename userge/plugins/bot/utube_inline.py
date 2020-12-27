@@ -1,14 +1,34 @@
 import os
 from urllib.parse import parse_qs, urlencode, urlparse
-
+from request import get
 import ujson
 import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+from wget import download
 from userge import Message, pool, userge
 from userge.utils import check_owner, humanbytes, post_to_telegraph, xbot, xmedia
+##
+import datetime
+import glob
+import os
+from pathlib import Path
+from time import time
+from urllib.parse import parse_qs, urlparse
 
+import requests
+import wget
+import youtube_dl
+from pyrogram import filters
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
+from wget import download
+from youtube_dl.utils import DownloadError
+
+from userge import Config, Message, pool, userge
+from userge.utils import get_file_id_and_ref
+
+from ..misc.upload import upload
+##
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
@@ -33,8 +53,8 @@ class YT_Search_X:
 
 ytsearch_data = YT_Search_X()
 
-"""
-async def get_ytthumb(videoid: str):
+
+async def get_ytthumb(videoid: str, reverse: bool = False):
     thumb_quality = [
         "maxresdefault.jpg",  # Best quality
         "hqdefault.jpg",
@@ -42,15 +62,15 @@ async def get_ytthumb(videoid: str):
         "mqdefault.jpg",
         "default.jpg",  # Worst quality
     ]
+    if reverse:
+        thumb_quality.reverse()
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        r = await get_response.status(link)
-        if r == 200:
+        if get(link).status_code == 200:
             thumb_link = link
             break
     return thumb_link
-"""
 
 
 def ytsearch_url(query: str):
@@ -102,29 +122,30 @@ if userge.has_bot:
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
                 return
-            c_q.matches[0].group(3)
+        else:
+            choice_id = None
 
-        # else:
-
-        # downtype = c_q.matches[0].group(3)
-        # i.e a/b
-        """
+        downtype = c_q.matches[0].group(3)
+     
         callback_continue = "Downloading Video Please Wait..."
-        callback_continue += f"\n\nFormat Code : {choice_id}"
+        callback_continue += f"\n\nFormat Code : {choice_id or 'bestaudio/best'}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         
         yt_url = BASE_YT_URL + yt_code
-        try:
-            await c_q.edit_message_caption(
-                caption=(
-                    f"Video is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
-                    f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id}"
-                ),
-                reply_markup=None,
+        
+        await xbot.edit_inline_caption(
+            c_q.inline_message_id,
+            caption=(
+                f"{'Video' if downtype == 'v' else 'Audio'} is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
+                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id or 'bestaudio/best'}"
             )
+        )
+        if downtype == "v":
+            retcode = await _tubeDl(url=yt_url, starttime=startTime, uid=choice_id)
+        else:
+            retcode = await _mp3Dl(url=yt_url, starttime=startTime, uid=choice_id)
 
-        retcode = await _tubeDl(yt_url, startTime, choice_id)
         if retcode != 0:
             return await upload_msg.edit(str(retcode))
         _fpath = ""
@@ -139,29 +160,46 @@ if userge.has_bot:
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_vid.message_id
         )
-        f_id, f_ref = get_file_id_and_ref(refresh_vid)
-        video_thumb = None
-        if refresh_vid.video.thumbs:
-            video_thumb = await userge.bot.download_media(
-                refresh_vid.video.thumbs[0].file_id
-            )
-        else:
-            video_thumb = download(await get_ytthumb(yt_code))
+        f_id = (get_file_id_and_ref(refresh_vid))[0]
+        _thumb = None
 
-        await c_q.edit_message_media(
-            media=InputMediaVideo(
-                media=f_id,
-                file_ref=f_ref,
-                thumb=video_thumb,
-                caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                supports_streaming=True,
-            ),
-            reply_markup=None,
-        )
+        if downtype == "v":
+            if refresh_vid.video.thumbs:
+                _thumb = await userge.bot.download_media(
+                    refresh_vid.video.thumbs[0].file_id
+                )
+            else:
+                _thumb = download(await get_ytthumb(yt_code))
+
+            await xbot.edit_inline_media(
+                inline_message_id,
+                media=(await xmedia.InputMediaVideo(
+                    file_id=f_id,
+                    thumb=_thumb,
+                    caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                ))
+            )
+        else: # Audio
+            if refresh_vid.audio.thumbs:
+                _thumb = await userge.bot.download_media(
+                    refresh_vid.audio.thumbs[0].file_id
+                )
+            else:
+                _thumb = download(await get_ytthumb(yt_code, reverse=True))
+
+            await xbot.edit_inline_media(
+                inline_message_id,
+                media=(await xmedia.InputMediaAudio(
+                    file_id=f_id,
+                    thumb=_thumb,
+                    caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>"
+                ))
+            )
+
 
 
 @pool.run_in_thread
-def _tubeDl(url: list, starttime, uid):
+def _tubeDl(url: str, starttime, uid=None):
     ydl_opts = {
         "addmetadata": True,
         "geo_bypass": True,
@@ -170,19 +208,48 @@ def _tubeDl(url: list, starttime, uid):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid}+bestaudio/best",
+        "format": f"{uid}+bestaudio/best" if uid else "bestvideo+bestaudio/best",
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [{"key": "FFmpegMetadata"}],
     }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        try:
+    try:
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             x = ydl.download([url])
-        except DownloadError as e:
-            CHANNEL.log(str(e))
-            x = None
-    return x
-"""
+    except DownloadError as e:
+        CHANNEL.log(str(e))
+    else:
+        return x
+
+
+@pool.run_in_thread
+def _mp3Dl(url, starttime, uid):
+    _opts = {
+        "outtmpl": os.path.join(Config.DOWN_PATH, str(starttime), "%(title)s.%(ext)s"),
+        "logger": LOGGER,
+        "writethumbnail": True,
+        "prefer_ffmpeg": True,
+        "format": "bestaudio/best",
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": str(uid),
+            },
+            {'key': 'EmbedThumbnail'},  # ERROR: Conversion failed!
+            {"key": "FFmpegMetadata"},
+        ],
+    }
+    try:
+        with youtube_dl.YoutubeDL(_opts) as ytdl:
+            dloader = ytdl.download(url)
+    except Exception as y_e:  # pylint: disable=broad-except
+        LOGGER.exception(y_e)
+        return y_e
+    else:
+        return dloader
 
 
 #  initial version: http://stackoverflow.com/a/7936523/617185 \
@@ -416,7 +483,7 @@ def download_button(vid: str):
         format_2160,
     ) = [0 for _ in range(7)]
     btn = [
-        [InlineKeyboardButton("⭐️  BEST", callback_data=f"ytdl_download_{vid}_best")]
+        [InlineKeyboardButton("⭐️  BEST", callback_data=f"ytdl_download_{vid}_best_v")]
     ]
     b, c = list(), list()
     audio, format_data = dict(), dict()
