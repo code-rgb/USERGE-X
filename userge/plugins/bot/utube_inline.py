@@ -1,33 +1,29 @@
+##
+import glob
 import os
+from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlparse
-from request import get
+
 import ujson
 import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from wget import download
-from userge import Message, pool, userge
-from userge.utils import check_owner, humanbytes, post_to_telegraph, xbot, xmedia
-##
-import datetime
-import glob
-import os
-from pathlib import Path
-from time import time
-from urllib.parse import parse_qs, urlparse
-
-import requests
-import wget
-import youtube_dl
-from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InputMediaVideo
+from request import get
 from wget import download
 from youtube_dl.utils import DownloadError
 
 from userge import Config, Message, pool, userge
-from userge.utils import get_file_id_and_ref
+from userge.utils import (
+    check_owner,
+    get_file_id_and_ref,
+    humanbytes,
+    post_to_telegraph,
+    xbot,
+    xmedia,
+)
 
 from ..misc.upload import upload
+
 ##
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -126,20 +122,20 @@ if userge.has_bot:
             choice_id = None
 
         downtype = c_q.matches[0].group(3)
-     
+
         callback_continue = "Downloading Video Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id or 'bestaudio/best'}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
-        
+
         yt_url = BASE_YT_URL + yt_code
-        
+
         await xbot.edit_inline_caption(
             c_q.inline_message_id,
             caption=(
                 f"{'Video' if downtype == 'v' else 'Audio'} is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
                 f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id or 'bestaudio/best'}"
-            )
+            ),
         )
         if downtype == "v":
             retcode = await _tubeDl(url=yt_url, starttime=startTime, uid=choice_id)
@@ -173,13 +169,15 @@ if userge.has_bot:
 
             await xbot.edit_inline_media(
                 inline_message_id,
-                media=(await xmedia.InputMediaVideo(
-                    file_id=f_id,
-                    thumb=_thumb,
-                    caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                ))
+                media=(
+                    await xmedia.InputMediaVideo(
+                        file_id=f_id,
+                        thumb=_thumb,
+                        caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                    )
+                ),
             )
-        else: # Audio
+        else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
                     refresh_vid.audio.thumbs[0].file_id
@@ -189,13 +187,14 @@ if userge.has_bot:
 
             await xbot.edit_inline_media(
                 inline_message_id,
-                media=(await xmedia.InputMediaAudio(
-                    file_id=f_id,
-                    thumb=_thumb,
-                    caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>"
-                ))
+                media=(
+                    await xmedia.InputMediaAudio(
+                        file_id=f_id,
+                        thumb=_thumb,
+                        caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>",
+                    )
+                ),
             )
-
 
 
 @pool.run_in_thread
@@ -238,7 +237,7 @@ def _mp3Dl(url, starttime, uid):
                 "preferredcodec": "mp3",
                 "preferredquality": str(uid),
             },
-            {'key': 'EmbedThumbnail'},  # ERROR: Conversion failed!
+            {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
     }
