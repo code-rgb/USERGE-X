@@ -26,14 +26,12 @@ from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id_and_ref
 from userge.utils import parse_buttons as pb
-from userge.utils import rand_key, xbot
+from userge.utils import rand_key, xbot, get_file_id_and_ref
 
 from .bot.alive import check_media_link
 from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
 
-# from .bot.utube_inline import get_yt_video_id, get_ytthumb, ytdl_btn_generator
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
