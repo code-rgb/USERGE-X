@@ -6,7 +6,7 @@ import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Message, userge, pool
+from userge import Message, pool, userge
 from userge.utils import (
     check_owner,
     get_response,
@@ -414,8 +414,16 @@ def download_button(vid: str):
     x = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
         BASE_YT_URL + vid, download=False
     )
-    ### 
-    format_144, format_240, format_360, format_720, format_1080, format_1440, format_2160 = [0 for _ in range(7)]
+    ###
+    (
+        format_144,
+        format_240,
+        format_360,
+        format_720,
+        format_1080,
+        format_1440,
+        format_2160,
+    ) = [0 for _ in range(7)]
     btn, b = list(), list()
     format_data = dict()
     ###
@@ -439,13 +447,19 @@ def download_button(vid: str):
                 format_144 = fr_id
             format_data[fr_id] = f'{f_note} ({humanbytes(video.get("filesize"))})'
 
-    for qual_ in (format_144, format_240, format_360, format_720, format_1080, format_1440, format_2160):
+    for qual_ in (
+        format_144,
+        format_240,
+        format_360,
+        format_720,
+        format_1080,
+        format_1440,
+        format_2160,
+    ):
         if qual_ != 0:
             name = format_data.get(qual_)
             b.append(
-                InlineKeyboardButton(
-                    name, callback_data=f"ytdl_download_{vid}_{qual_}"
-                )
+                InlineKeyboardButton(name, callback_data=f"ytdl_download_{vid}_{qual_}")
             )
             if len(b) == 2:
                 btn.append(b)
