@@ -198,6 +198,122 @@ if userge.has_bot:
             )
 
 
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
+    )
+    @check_owner
+    async def ytdl_callback(c_q: CallbackQuery):
+        choosen_btn = c_q.matches[0].group(1)
+        data_key = c_q.matches[0].group(2)
+        page = c_q.matches[0].group(3)
+        if os.path.exists(PATH):
+            with open(PATH) as f:
+                view_data = ujson.load(f)
+            search_data = view_data.get(data_key)
+            total = len(search_data)
+        else:
+            return await c_q.answer(
+                "Search data doesn't exists anymore, please perform search again ...",
+                show_alert=True,
+            )
+        if choosen_btn == "back":
+            index = int(page) - 1
+            del_back = True if index == 1 else False
+            back_vid = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=back_vid.get("thumb"),
+                        caption=back_vid.get("message"),
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    del_back=del_back,
+                    data_key=data_key,
+                    page=index,
+                    vid=back_vid.get("video_id"),
+                    total=total,
+                ),
+            )
+        elif choosen_btn == "next":
+            index = int(page) + 1
+            if index > total:
+                return await c_q.answer("that's all folks", show_alert=True)
+
+            front_vid = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=front_vid.get("thumb"),
+                        caption=front_vid.get("message"),
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    data_key=data_key,
+                    page=index,
+                    vid=front_vid.get("video_id"),
+                    total=total,
+                ),
+            )
+
+        elif choosen_btn == "listall":
+            if page.isdigit():
+                list_res = ""
+                for vid_s in search_data:
+                    list_res += search_data.get(vid_s).get("list_view")
+                telegraph = post_to_telegraph(
+                    a_title=f"Showing {total} youtube video results for the given query ...",
+                    content=list_res,
+                )
+                page = (telegraph.split("ph/", 1))[1]
+
+            list_res = "<a href={}><b>{}</b></a>".format(
+                ("https://telegra.ph/" + page), "Click to View"
+            )
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=search_data.get("1").get("thumb"),
+                        caption=list_res,
+                    )
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                text="📰  Detailed View",
+                                callback_data=f"ytdl_detail_{data_key}_{page}",
+                            )
+                        ]
+                    ]
+                ),
+            )
+
+        else:  # Detailed
+            index = 1
+            first = search_data.get(str(index))
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=first.get("thumb"),
+                        caption=first.get("message"),
+                    )
+                ),
+                reply_markup=yt_search_btns(
+                    del_back=True,
+                    data_key=data_key,
+                    page=index,
+                    vid=first.get("video_id"),
+                    total=total,
+                ),
+            )
+
+
+
 @pool.run_in_thread
 def _tubeDl(url: str, starttime, uid=None):
     ydl_opts = {
@@ -315,126 +431,6 @@ async def result_formatter(results: list):
     return output
 
 
-if userge.has_bot:
-
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
-    )
-    @check_owner
-    async def ytdl_callback(c_q: CallbackQuery):
-        choosen_btn = c_q.matches[0].group(1)
-        data_key = c_q.matches[0].group(2)
-        page = c_q.matches[0].group(3)
-        if os.path.exists(PATH):
-            with open(PATH) as f:
-                view_data = ujson.load(f)
-            search_data = view_data.get(data_key)
-            total = len(search_data)
-        else:
-            return await c_q.answer(
-                "Search data doesn't exists anymore, please perform search again ...",
-                show_alert=True,
-            )
-        if choosen_btn == "back":
-            index = int(page) - 1
-            del_back = True if index == 1 else False
-            back_vid = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=back_vid.get("thumb"),
-                        caption=back_vid.get("message"),
-                    )
-                ),
-                reply_markup=yt_search_btns(
-                    del_back=del_back,
-                    data_key=data_key,
-                    page=index,
-                    vid=back_vid.get("video_id"),
-                    total=total,
-                ),
-            )
-        elif choosen_btn == "next":
-            index = int(page) + 1
-            if index > total:
-                return await c_q.answer("that's all folks", show_alert=True)
-
-            front_vid = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=front_vid.get("thumb"),
-                        caption=front_vid.get("message"),
-                    )
-                ),
-                reply_markup=yt_search_btns(
-                    data_key=data_key,
-                    page=index,
-                    vid=front_vid.get("video_id"),
-                    total=total,
-                ),
-            )
-
-        elif choosen_btn == "listall":
-            if page.isdigit():
-                list_res = ""
-                for vid_s in search_data:
-                    list_res += search_data.get(vid_s).get("list_view")
-                telegraph = post_to_telegraph(
-                    a_title=f"Showing {total} youtube video results for the given query ...",
-                    content=list_res,
-                )
-                page = (telegraph.split("ph/", 1))[1]
-
-            list_res = "<a href={}><b>{}</b></a>".format(
-                ("https://telegra.ph/" + page), "Click to View"
-            )
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=search_data.get("1").get("thumb"),
-                        caption=list_res,
-                    )
-                ),
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="📰  Detailed View",
-                                callback_data=f"ytdl_detail_{data_key}_{page}",
-                            )
-                        ]
-                    ]
-                ),
-            )
-
-        else:  # Detailed
-            index = 1
-            first = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=first.get("thumb"),
-                        caption=first.get("message"),
-                    )
-                ),
-                reply_markup=yt_search_btns(
-                    del_back=True,
-                    data_key=data_key,
-                    page=index,
-                    vid=first.get("video_id"),
-                    total=total,
-                ),
-            )
-
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^ytdl_download_(.*)"))
-    @check_owner
-    async def download_ytdlvid(c_q: CallbackQuery):
-        c_q.matches[0].group(1)
 
 
 def yt_search_btns(
