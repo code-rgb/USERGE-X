@@ -452,7 +452,7 @@ def download_button(vid: str):
                 format_144 = fr_id
 
             if video.get("acodec") != "none":
-                bitrrate = video.get("abr")
+                bitrrate = int(video.get("abr"))
                 if bitrrate >= 70:
                     audio[
                         bitrrate
