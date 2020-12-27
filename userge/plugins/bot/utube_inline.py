@@ -6,7 +6,7 @@ import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Message, userge
+from userge import Message, userge, pool
 from userge.utils import (
     check_owner,
     get_response,
@@ -115,7 +115,7 @@ if userge.has_bot:
         choice_id = int(c_q.matches[0].group(2))
         if choice_id == 0:
             await xbot.edit_inline_reply_markup(
-                c_q.inline_message_id, reply_markup=download_button(yt_code)
+                c_q.inline_message_id, reply_markup=(await download_button(yt_code))
             )
             return
         """
@@ -409,35 +409,47 @@ def yt_search_btns(
     return InlineKeyboardMarkup(buttons)
 
 
+@pool.run_in_thread
 def download_button(vid: str):
     x = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
         BASE_YT_URL + vid, download=False
     )
-    btn = []
-    b = []
-    for i in x["formats"]:
-        if i.get("ext") == "mp4":
-            name = f'{i.get("format_note")} ({humanbytes(i.get("filesize"))})'
-            qual_id = i.get("format_id")
+    ### 
+    format_144, format_240, format_360, format_720, format_1080, format_1440, format_2160 = [0 for _ in range(7)]
+    btn, b = list(), list()
+    format_data = dict()
+    ###
+    for video in x["formats"]:
+        if video.get("ext") == "mp4":
+            f_note = video.get("format_note")
+            fr_id = int(video.get("format_id"))
+            if f_note in ("2160p", "2160p60") and fr_id > format_2160:
+                format_2160 = fr_id
+            if f_note in ("1440p", "1440p60") and fr_id > format_1440:
+                format_1440 = fr_id
+            if f_note in ("1080p", "1080p60") and fr_id > format_1080:
+                format_1080 = fr_id
+            if f_note in ("720p", "720p60") and fr_id > format_720:
+                format_720 = fr_id
+            if f_note in ("360p", "360p60") and fr_id > format_360:
+                format_360 = fr_id
+            if f_note in ("240p", "240p60") and fr_id > format_240:
+                format_240 = fr_id
+            if f_note in ("144p", "144p60") and fr_id > format_144:
+                format_144 = fr_id
+            format_data[fr_id] = f'{f_note} ({humanbytes(video.get("filesize"))})'
+
+    for qual_ in (format_144, format_240, format_360, format_720, format_1080, format_1440, format_2160):
+        if qual_ != 0:
+            name = format_data.get(qual_)
             b.append(
                 InlineKeyboardButton(
-                    name, callback_data=f"ytdl_download_{vid}_{qual_id}"
+                    name, callback_data=f"ytdl_download_{vid}_{qual_}"
                 )
             )
-            if len(b) == 3:
+            if len(b) == 2:
                 btn.append(b)
                 b = []
     if len(b) != 0:
         btn.append(b)
     return InlineKeyboardMarkup(btn)
-
-    # for i in array:
-    #     name = f"{i.get('format_note', None)} ({i.get('ext', None)})"
-    #     call_back = f"ytdl{code}|{i.get('format_id', '')}|{i_q_id}"
-    #     b.append(InlineKeyboardButton(name, callback_data=call_back))
-    #     if len(b) == 3:  # no. of columns
-    #         btn.append(b)
-    #         b = []
-    # if len(b) != 0:
-    #     btn.append(b)  # buttons in the last row
-    # return btn
