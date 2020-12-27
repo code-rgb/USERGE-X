@@ -416,11 +416,7 @@ def download_button(vid: str):
         format_2160,
     ) = [0 for _ in range(7)]
     btn = [
-        [
-            InlineKeyboardButton(
-                "⭐️  BEST", callback_data=f"ytdl_download_{vid}_best"
-            )
-        ]
+        [InlineKeyboardButton("⭐️  BEST", callback_data=f"ytdl_download_{vid}_best")]
     ]
     b, c = list(), list()
     audio, format_data = dict(), dict()
