@@ -197,7 +197,6 @@ if userge.has_bot:
                 ),
             )
 
-
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
     )
@@ -311,7 +310,6 @@ if userge.has_bot:
                     total=total,
                 ),
             )
-
 
 
 @pool.run_in_thread
@@ -429,8 +427,6 @@ async def result_formatter(results: list):
             list_view=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n',
         )
     return output
-
-
 
 
 def yt_search_btns(
