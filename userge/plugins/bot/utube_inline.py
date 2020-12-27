@@ -169,7 +169,7 @@ if userge.has_bot:
                 _thumb = download(await get_ytthumb(yt_code))
 
             await xbot.edit_inline_media(
-                inline_message_id,
+                c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaVideo(
                         file_id=f_id,
@@ -187,7 +187,7 @@ if userge.has_bot:
                 _thumb = download(await get_ytthumb(yt_code, reverse=True))
 
             await xbot.edit_inline_media(
-                inline_message_id,
+                c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaAudio(
                         file_id=f_id,
@@ -268,9 +268,10 @@ if userge.has_bot:
                 )
                 page = (telegraph.split("ph/", 1))[1]
 
-            list_res = "<a href={}><b>{}</b></a>".format(
-                ("https://telegra.ph/" + page), "Click to View"
-            )
+            #list_res = "<a href={}><b>{}</b></a>".format(
+            #    ("https://telegra.ph/" + page), "Click to View"
+            #)
+            listres = "test 123"
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
