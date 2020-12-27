@@ -426,7 +426,7 @@ def download_button(vid: str):
         format_1440,
         format_2160,
     ) = [0 for _ in range(7)]
-    btn, b, c = list(), list()
+    btn, b, c = list(), list(), list()
     format_data = dict()
     audio = dict()
     ###
