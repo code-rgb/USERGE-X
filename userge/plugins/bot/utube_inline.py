@@ -7,14 +7,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, pool, userge
-from userge.utils import (
-    check_owner,
-    get_response,
-    humanbytes,
-    post_to_telegraph,
-    xbot,
-    xmedia,
-)
+from userge.utils import check_owner, humanbytes, post_to_telegraph, xbot, xmedia
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -58,7 +51,6 @@ async def get_ytthumb(videoid: str):
             break
     return thumb_link
 """
-
 
 
 def ytsearch_url(query: str):
@@ -110,10 +102,9 @@ if userge.has_bot:
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
                 return
-            downtype = c_q.matches[0].group(3)
+            c_q.matches[0].group(3)
 
-        #else:
-
+        # else:
 
         # downtype = c_q.matches[0].group(3)
         # i.e a/b
@@ -424,7 +415,13 @@ def download_button(vid: str):
         format_1440,
         format_2160,
     ) = [0 for _ in range(7)]
-    btn = [[InlineKeyboardButton("⭐️  Best (🎵 + 📹)", callback_data=f"ytdl_download_{vid}_best")]]
+    btn = [
+        [
+            InlineKeyboardButton(
+                "⭐️  Best (🎵 + 📹)", callback_data=f"ytdl_download_{vid}_best"
+            )
+        ]
+    ]
     b, c = list(), list()
     audio, format_data = dict(), dict()
     ###
@@ -453,7 +450,9 @@ def download_button(vid: str):
                 audio[
                     bitrrate
                 ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
-            format_data[fr_id] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
+            format_data[
+                fr_id
+            ] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
 
     for qual_ in (
         format_144,
