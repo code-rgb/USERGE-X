@@ -92,7 +92,7 @@ async def iytdl_inline(message: Message):
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
     await message.delete()
-    y = await userge.send_inline_bot_result(
+    await userge.send_inline_bot_result(
         chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
     )
 
@@ -103,7 +103,7 @@ if userge.has_bot:
         filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+|best)(?:_(a|v))?")
     )
     @check_owner
-    async def ytdl_callback(c_q: CallbackQuery):
+    async def ytdl_download_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
         choice_id = c_q.matches[0].group(2)
 
@@ -217,7 +217,7 @@ if userge.has_bot:
             )
         if choosen_btn == "back":
             index = int(page) - 1
-            del_back = True if index == 1 else False
+            del_back = index == 1
             back_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -346,7 +346,7 @@ def _mp3Dl(url: str, starttime, uid):
                 "preferredcodec": "mp3",
                 "preferredquality": str(uid),
             },
-            # {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
+            {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
     }
@@ -396,7 +396,7 @@ def get_yt_video_id(url: str):
 
 
 async def result_formatter(results: list):
-    output = dict()
+    output = {}
     for index, r in enumerate(results, start=1):
         thumb = (r.get("thumbnails").pop()).get("url")
         upld = r.get("channel")
@@ -428,7 +428,7 @@ def yt_search_btns(
     buttons = [
         [
             InlineKeyboardButton(
-                text=f"⬅️  Back",
+                text="⬅️  Back",
                 callback_data=f"ytdl_back_{data_key}_{page}",
             ),
             InlineKeyboardButton(
@@ -474,8 +474,8 @@ def download_button(vid: str, body: bool = False):
             )
         ]
     ]
-    b, c = list(), list()
-    audio, format_data = dict(), dict()
+    b, c = [], []
+    audio, format_data = {}, {}
     ###
     for video in x["formats"]:
         if video.get("ext") == "mp4":

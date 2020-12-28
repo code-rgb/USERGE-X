@@ -11,7 +11,8 @@ class get_response:
         async with session.get(
             link, params=params, timeout=ClientTimeout(total=120)
         ) as resp:
-            assert resp.status == 200
+            if resp.status != 200:
+                raise ValueError
             # Raises an AssertionError if status != 200
             return await resp.json()
 
@@ -21,7 +22,8 @@ class get_response:
         async with session.get(
             link, params=params, timeout=ClientTimeout(total=120)
         ) as resp:
-            assert resp.status == 200
+            if resp.status != 200:
+                raise ValueError
             return await resp.text()
 
     @staticmethod
@@ -30,7 +32,8 @@ class get_response:
         async with session.get(
             link, params=params, timeout=ClientTimeout(total=120)
         ) as resp:
-            assert resp.status == 200
+            if resp.status != 200:
+                raise ValueError
             return await resp.read()
 
     # Just returns the Header

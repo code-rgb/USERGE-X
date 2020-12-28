@@ -8,6 +8,10 @@
 #
 # All rights reserved.
 
+import asyncio
+
+from pyrogram.errors import FloodWait
+
 from userge import Config, Message, filters, get_collection, userge
 
 WELCOME_COLLECTION = get_collection("welcome")
@@ -231,13 +235,19 @@ async def viewleft(msg: Message):
 @userge.on_new_member(WELCOME_CHATS)
 async def saywel(msg: Message):
     """ welcome message handler """
-    await raw_say(msg, "Welcome", WELCOME_COLLECTION)
+    try:
+        await raw_say(msg, "Welcome", WELCOME_COLLECTION)
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 5)
 
 
 @userge.on_left_member(LEFT_CHATS)
 async def sayleft(msg: Message):
     """ left message handler """
-    await raw_say(msg, "Left", LEFT_COLLECTION)
+    try:
+        await raw_say(msg, "Left", LEFT_COLLECTION)
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 5)
 
 
 async def raw_set(message: Message, name, collection, chats):
