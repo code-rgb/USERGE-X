@@ -258,7 +258,6 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
-"""
             if page.isdigit():
                 list_res = ""
                 for vid_s in search_data:
@@ -273,7 +272,7 @@ if userge.has_bot:
             #    ("https://telegra.ph/" + page), "Click to View"
             # )
             list_res = "test 123"
-"""
+
             print(
                 await xbot.edit_inline_media(
                     c_q.inline_message_id,
