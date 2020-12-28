@@ -4,15 +4,16 @@ import asyncio
 from re import search
 
 from pyrogram import filters
+from pyrogram.errors import BadRequest, Forbidden
 from pyrogram.types import CallbackQuery
-from pyrogram.errors import Forbidden, BadRequest
+
 from userge import Config, Message, userge
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
     bot = await userge.bot.get_me()
-    
+
     try:
         x = await userge.get_inline_bot_results(bot.username, "alive")
         y = await userge.send_inline_bot_result(
