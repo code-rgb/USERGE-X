@@ -2,7 +2,7 @@ import glob
 import os
 from pathlib import Path
 from time import time
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlparse
 
 import ujson
 import youtube_dl
@@ -268,16 +268,27 @@ if userge.has_bot:
                 )
                 page = (telegraph.split("ph/", 1))[1]
 
-            print(await xbot.edit_inline_media(
-                c_q.inline_message_id,
-                media=(
-                    await xmedia.InputMediaPhoto(
-                        file_id=search_data.get("1").get("thumb"),
-                        caption=f"[**Click to view**]({'https://telegra.ph/' + page})",
-                    )
-                ),
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📰  Detailed View", callback_data=f"ytdl_detail_{data_key}_{page}")]]),
-            ))
+            print(
+                await xbot.edit_inline_media(
+                    c_q.inline_message_id,
+                    media=(
+                        await xmedia.InputMediaPhoto(
+                            file_id=search_data.get("1").get("thumb"),
+                            caption=f"[**Click to view**]({'https://telegra.ph/' + page})",
+                        )
+                    ),
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "📰  Detailed View",
+                                    callback_data=f"ytdl_detail_{data_key}_{page}",
+                                )
+                            ]
+                        ]
+                    ),
+                )
+            )
 
         else:  # Detailed
             index = 1
@@ -531,4 +542,3 @@ def download_button(vid: str):
     if len(c) != 0:
         btn.append(c)
     return InlineKeyboardMarkup(btn)
-
