@@ -268,23 +268,17 @@ if userge.has_bot:
                 )
                 page = (telegraph.split("ph/", 1))[1]
 
-            # list_res = "<a href={}><b>{}</b></a>".format(
-            #    ("https://telegra.ph/" + page), "Click to View"
-            # )
-            list_res = "test 123"
+            print(await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=search_data.get("1").get("thumb"),
+                        caption=f"[**Click to view**]({'https://telegra.ph/' + page})",
+                    )
+                ),
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("📰  Detailed View", callback_data=f"ytdl_detail_{data_key}_{page}")]]),
+            ))
 
-            print(
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaPhoto(
-                            file_id=search_data.get("1").get("thumb"),
-                            caption="hello world",
-                    ),
-                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(
-                                    text="📰  Detailed View",
-                                    callback_data=f"ytdl_detail_{data_key}_{page}")]])
-                    ))
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
@@ -537,3 +531,4 @@ def download_button(vid: str):
     if len(c) != 0:
         btn.append(c)
     return InlineKeyboardMarkup(btn)
+
