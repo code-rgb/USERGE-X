@@ -186,7 +186,6 @@ async def list_no_pm_log_users(message: Message):
     msg = ""
     async for c in NO_PM_LOG.find():
         msg += (
-        
             "**User** : "
             + str(c["firstname"])
             + "-> with **User ID** -> "
