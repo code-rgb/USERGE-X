@@ -498,14 +498,13 @@ def download_button(vid: str, body: bool = False):
             format_data[
                 fr_id
             ] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
-        
+
         if video.get("acodec") != "none":
             bitrrate = int(video.get("abr"))
             # if bitrrate >= 70:
             audio[
                 bitrrate
             ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
-
 
     for qual_ in (
         format_144,
@@ -544,12 +543,12 @@ def download_button(vid: str, body: bool = False):
     if body:
         vid_body = f"<b>[{x.get('title')}]({x.get('webpage_url')})</b>"
 
-# ERROR Media Caption Too Long
-# <code>{x.get("description")}</code>
-# ❯  <b>Duration:</b> {x.get('duration')}
-# ❯  <b>Views:</b> {x.get('view_count')}
-# ❯  <b>Upload date:</b> {x.get('upload_date')}
-# ❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
+        # ERROR Media Caption Too Long
+        # <code>{x.get("description")}</code>
+        # ❯  <b>Duration:</b> {x.get('duration')}
+        # ❯  <b>Views:</b> {x.get('view_count')}
+        # ❯  <b>Upload date:</b> {x.get('upload_date')}
+        # ❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
 
         return vid_body, InlineKeyboardMarkup(btn)
     return InlineKeyboardMarkup(btn)
