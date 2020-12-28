@@ -346,7 +346,7 @@ def _mp3Dl(url: str, starttime, uid):
                 "preferredcodec": "mp3",
                 "preferredquality": str(uid),
             },
-            # {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
+            {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
     }
