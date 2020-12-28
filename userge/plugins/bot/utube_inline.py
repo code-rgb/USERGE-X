@@ -49,7 +49,7 @@ class YT_Search_X:
 ytsearch_data = YT_Search_X()
 
 
-async def get_ytthumb(videoid: str, reverse: bool = False):
+def get_ytthumb(videoid: str, reverse: bool = False):
     thumb_quality = [
         "maxresdefault.jpg",  # Best quality
         "hqdefault.jpg",
@@ -88,9 +88,10 @@ async def iytdl_inline(message: Message):
 
     if not input_url:
         return await message.err("Input or reply to a valid youtube URL", del_in=5)
-
+    await message.edit(f"🔎 Searching Youtube for Query: <code>'{input_url}'</code>")
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
+    await message.delete()
     y = await userge.send_inline_bot_result(
         chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
     )
@@ -113,14 +114,16 @@ if userge.has_bot:
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
                 return
+                
         else:
             choice_id = None
 
         startTime = time()
 
         downtype = c_q.matches[0].group(3)
+        media_type = "Video" if downtype == "v" else "Audio"
 
-        callback_continue = "Downloading Video Please Wait..."
+        callback_continue = f"Downloading {media_type} Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id or 'bestaudio/best'}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
@@ -130,7 +133,7 @@ if userge.has_bot:
         await xbot.edit_inline_caption(
             c_q.inline_message_id,
             caption=(
-                f"{'Video' if downtype == 'v' else 'Audio'} is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
+                f"{media_type} is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
                 f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id or 'bestaudio/best'}"
             ),
         )
@@ -148,10 +151,10 @@ if userge.has_bot:
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
-        uploaded_vid = await upload(upload_msg, Path(_fpath), logvid=False)
+        uploaded_media = await upload(upload_msg, Path(_fpath), logvid=False)
 
         refresh_vid = await userge.bot.get_messages(
-            Config.LOG_CHANNEL_ID, uploaded_vid.message_id
+            Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
         f_id = (get_file_id_and_ref(refresh_vid))[0]
         _thumb = None
@@ -162,40 +165,40 @@ if userge.has_bot:
                     refresh_vid.video.thumbs[0].file_id
                 )
             else:
-                _thumb = download(await get_ytthumb(yt_code))
+                _thumb = download(get_ytthumb(yt_code))
 
-            print(
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaVideo(
-                            file_id=f_id,
-                            thumb=_thumb,
-                            caption=f"📹  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                        )
-                    ),
-                )
+          
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaVideo(
+                        file_id=f_id,
+                        thumb=_thumb,
+                        caption=f"📹  <b>[{uploaded_media.caption}]({yt_url})</b>",
+                    )
+                ),
             )
+            
         else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
                     refresh_vid.audio.thumbs[0].file_id
                 )
             else:
-                _thumb = download(await get_ytthumb(yt_code, reverse=True))
+                _thumb = download(get_ytthumb(yt_code, reverse=True))
 
-            print(
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaAudio(
-                            file_id=f_id,
-                            thumb=_thumb,
-                            caption=f"🎵  <b>[{uploaded_vid.caption}]({yt_url})</b>",
-                        )
-                    ),
-                )
+            
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaAudio(
+                        file_id=f_id,
+                        thumb=_thumb,
+                        caption=f"🎵  <b>[{uploaded_media.caption}]({yt_url})</b>",
+                    )
+                ),
             )
+            
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -258,39 +261,34 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
-            if page.isdigit():
-                list_res = ""
-                for vid_s in search_data:
-                    list_res += search_data.get(vid_s).get("list_view")
-                telegraph = post_to_telegraph(
-                    a_title=f"Showing {total} youtube video results for the given query ...",
-                    content=list_res,
-                )
-                page = (telegraph.split("ph/", 1))[1]
-
-            print(
-                await xbot.edit_inline_media(
-                    c_q.inline_message_id,
-                    media=(
-                        await xmedia.InputMediaPhoto(
-                            file_id=search_data.get("1").get("thumb"),
-                            caption=f"[**Click to view**]({'https://telegra.ph/' + page})",
-                        )
-                    ),
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
-                                    "📰  Detailed View",
-                                    callback_data=f"ytdl_detail_{data_key}_{page}".encode(
-                                        "utf-8"
-                                    ),
-                                )
-                            ]
-                        ]
-                    ),
-                )
+            list_res = ""
+            for vid_s in search_data:
+                list_res += search_data.get(vid_s).get("list_view")
+            telegraph = post_to_telegraph(
+                a_title=f"Showing {total} youtube video results for the given query ...",
+                content=list_res,
             )
+            await xbot.edit_inline_media(
+                c_q.inline_message_id,
+                media=(
+                    await xmedia.InputMediaPhoto(
+                        file_id=search_data.get("1").get("thumb"),
+                        caption=f"[**Click to view**]({telegraph})",
+                    )
+                ),
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(
+                                "📰  Detailed View",
+                                callback_data=f"ytdl_detail_{data_key}_{page}"
+                                ),
+                            )
+                        ]
+                    ]
+                ),
+            )
+        
 
         else:  # Detailed
             index = 1
@@ -353,7 +351,7 @@ def _mp3Dl(url: str, starttime, uid):
                 "preferredcodec": "mp3",
                 "preferredquality": str(uid),
             },
-            {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
+            # {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
     }
@@ -406,7 +404,6 @@ async def result_formatter(results: list):
     output = dict()
     for index, r in enumerate(results, start=1):
         thumb = (r.get("thumbnails").pop()).get("url")
-        # await get_ytthumb(r.get("id"))
         upld = r.get("channel")
         title = f'<a href={r.get("link")}><b>{r.get("title")}</b></a>\n'
         out = title
@@ -461,7 +458,7 @@ def yt_search_btns(
 
 
 @pool.run_in_thread
-def download_button(vid: str):
+def download_button(vid: str, body: bool = False):
     x = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
         BASE_YT_URL + vid, download=False
     )
@@ -476,7 +473,7 @@ def download_button(vid: str):
         format_2160,
     ) = [0 for _ in range(7)]
     btn = [
-        [InlineKeyboardButton("⭐️  BEST", callback_data=f"ytdl_download_{vid}_best_v")]
+        [InlineKeyboardButton("⭐️  BEST (Video + Audio)", callback_data=f"ytdl_download_{vid}_best_v")]
     ]
     b, c = list(), list()
     audio, format_data = dict(), dict()
@@ -531,7 +528,8 @@ def download_button(vid: str):
                 b = []
     if len(b) != 0:
         btn.append(b)
-
+    print(sorted(audio.keys()))
+    print(audio)
     for key_ in sorted(audio.keys()):
         c.append(
             InlineKeyboardButton(
@@ -543,4 +541,16 @@ def download_button(vid: str):
             c = []
     if len(c) != 0:
         btn.append(c)
+
+    if body:
+        vid_body = f"""
+<b>[{x.get('title')}]({x.get('webpage_url')})</b>
+<code>{x.get("description")}</code>
+
+❯  <b>Duration:</b> {x.get('duration')}
+❯  <b>Views:</b> {x.get('view_count')}
+❯  <b>Upload date:</b> {x.get('upload_date')}
+❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
+"""
+        return vid_body, InlineKeyboardMarkup(btn)
     return InlineKeyboardMarkup(btn)

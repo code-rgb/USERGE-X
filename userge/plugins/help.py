@@ -31,7 +31,7 @@ from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
-from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data
+from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data, download_button, get_ytthumb
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
@@ -1140,7 +1140,7 @@ if userge.has_bot:
                         outdata = await result_formatter(resp)
                         key_ = rand_key()
                         ytsearch_data.store_(key_, outdata)
-                        buttons = [
+                        buttons = InlineKeyboardMarkup([
                             [
                                 InlineKeyboardButton(
                                     text=f"1 / {len(outdata)}",
@@ -1157,16 +1157,23 @@ if userge.has_bot:
                                     callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
                                 ),
                             ],
-                        ]
-                        results.append(
-                            InlineQueryResultPhoto(
-                                photo_url=outdata[1]["thumb"],
-                                title=link,
-                                description="⬇️ Click to Download",
-                                caption=outdata[1]["message"],
-                                reply_markup=InlineKeyboardMarkup(buttons),
-                            )
-                        )
+                        ])
+                    caption = outdata[1]["message"]
+                    photo = outdata[1]["thumb"]
+                else:
+                    caption, buttons = await download_button(link, body=True)
+                    photo = get_ytthumb(link)
+
+
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url=photo,
+                        title=link,
+                        description="⬇️ Click to Download",
+                        caption=caption,
+                        reply_markup=buttons,
+                    )
+                )
 
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
