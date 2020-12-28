@@ -335,16 +335,16 @@ async def rmwhitelist(message: Message):
 )
 async def list_white(message: Message):
     """ list whitelist """
-    msg = "".join(
-        (
+    msg = ""
+    async for c in WHITELIST.find():
+        msg += (
             "**User** : "
             + str(c["firstname"])
             + "-> with **User ID** -> "
             + str(c["user_id"])
             + "\n\n"
         )
-        for c in WHITELIST.find()
-    )
+
     await message.edit_or_send_as_file(
         f"**--Whitelisted Users List--**\n\n{msg}" if msg else "`whitelist empty!`"
     )

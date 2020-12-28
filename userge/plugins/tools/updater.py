@@ -102,10 +102,11 @@ async def check_update(message: Message):
 def _get_updates(repo: Repo, branch: str) -> str:
     repo.remote(Config.UPSTREAM_REMOTE).fetch(branch)
     upst = Config.UPSTREAM_REPO.rstrip("/")
-    return "".join(
-        f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
-        for i in repo.iter_commits(f"HEAD..{Config.UPSTREAM_REMOTE}/{branch}")
-    )
+    out = ""
+    upst = Config.UPSTREAM_REPO.rstrip("/")
+    for i in repo.iter_commits(f"HEAD..{Config.UPSTREAM_REMOTE}/{branch}"):
+        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
+    return out
 
 
 async def _pull_from_repo(repo: Repo, branch: str) -> None:
