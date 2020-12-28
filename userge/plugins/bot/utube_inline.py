@@ -68,10 +68,6 @@ async def get_ytthumb(videoid: str, reverse: bool = False):
     return thumb_link
 
 
-def ytsearch_url(query: str):
-    return YT_SEARCH_API + urlencode({"q": query})
-
-
 @userge.on_cmd(
     "iytdl",
     about={
@@ -262,6 +258,7 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
+"""
             if page.isdigit():
                 list_res = ""
                 for vid_s in search_data:
@@ -276,6 +273,7 @@ if userge.has_bot:
             #    ("https://telegra.ph/" + page), "Click to View"
             # )
             list_res = "test 123"
+"""
             print(
                 await xbot.edit_inline_media(
                     c_q.inline_message_id,
@@ -283,8 +281,7 @@ if userge.has_bot:
                         await xmedia.InputMediaPhoto(
                             file_id=search_data.get("1").get("thumb"),
                             caption="hello world",
-                        )
-                    ),
+                    )
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
@@ -294,9 +291,9 @@ if userge.has_bot:
                                 )
                             ]
                         ]
-                    ),
-                )
-            )
+                    )
+                
+            ))
 
         else:  # Detailed
             index = 1
