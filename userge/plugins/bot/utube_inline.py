@@ -281,19 +281,10 @@ if userge.has_bot:
                             file_id=search_data.get("1").get("thumb"),
                             caption="hello world",
                     ),
-                    reply_markup=InlineKeyboardMarkup(
-                        [
-                            [
-                                InlineKeyboardButton(
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(
                                     text="📰  Detailed View",
-                                    callback_data=f"ytdl_detail_{data_key}_{page}",
-                                )
-                            ]
-                        ]
-                    )
-                
-            ))
-
+                                    callback_data=f"ytdl_detail_{data_key}_{page}")]])
+                    ))
         else:  # Detailed
             index = 1
             first = search_data.get(str(index))
