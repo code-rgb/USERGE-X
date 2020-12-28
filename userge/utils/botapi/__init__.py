@@ -1,1 +1,1 @@
-from .rawbotapi import XBot, XMediaTypes
+from .rawbotapi import XMediaTypes, xbot

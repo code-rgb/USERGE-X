@@ -1,6 +1,8 @@
-from .botapi import XBot
+from .aiohttp_helper import get_response
 from .botapi import XMediaTypes as xmedia
+from .botapi import xbot
 from .functions import (
+    check_owner,
     cleanhtml,
     deEmojify,
     escape_markdown,
@@ -8,6 +10,7 @@ from .functions import (
     mention_html,
     mention_markdown,
     rand_array,
+    rand_key,
     thumb_from_audio,
 )
 from .progress import progress  # noqa
@@ -21,6 +24,3 @@ from .tools import (
     take_screen_shot,
     time_formatter,
 )
-
-# bot api class
-xbot = XBot()
