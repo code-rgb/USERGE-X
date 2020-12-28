@@ -282,7 +282,7 @@ if userge.has_bot:
                             [
                                 InlineKeyboardButton(
                                     "📰  Detailed View",
-                                    callback_data=f"ytdl_detail_{data_key}_{page}",
+                                    callback_data=f"ytdl_detail_{data_key}_{page}".encode('utf-8'),
                                 )
                             ]
                         ]
