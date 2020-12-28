@@ -72,7 +72,7 @@ def get_ytthumb(videoid: str, reverse: bool = False):
     "iytdl",
     about={
         "header": "ytdl with inline buttons",
-        "usage": "{tr}iytdl [URL] or [Reply to URL]",
+        "usage": "{tr}iytdl [URL / Text] or [Reply to URL / Text]",
     },
 )
 async def iytdl_inline(message: Message):
@@ -88,7 +88,7 @@ async def iytdl_inline(message: Message):
 
     if not input_url:
         return await message.err("Input or reply to a valid youtube URL", del_in=5)
-    await message.edit(f"🔎 Searching Youtube for Query: <code>'{input_url}'</code>")
+    await message.edit(f"🔎 Searching Youtube for: <code>'{input_url}'</code>")
     bot = await userge.bot.get_me()
     x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
     await message.delete()
@@ -270,7 +270,7 @@ if userge.has_bot:
                 media=(
                     await xmedia.InputMediaPhoto(
                         file_id=search_data.get("1").get("thumb"),
-                        caption=f"[**Click to view**]({telegraph})",
+                        caption=f"<b>[Click to view]({telegraph})</b>",
                     )
                 ),
                 reply_markup=InlineKeyboardMarkup(
@@ -417,7 +417,7 @@ async def result_formatter(results: list):
             message=out,
             thumb=thumb,
             video_id=r.get("id"),
-            list_view=f'<b>{index}. {r.get("accessibility").get("title")}</b>\n',
+            list_view=f'<img src={thumb}><b><a href={r.get("link")}>{index}. {r.get("accessibility").get("title")}</a></b><br><br>',
         )
     return output
 
@@ -495,16 +495,17 @@ def download_button(vid: str, body: bool = False):
                 format_240 = fr_id
             if f_note in ("144p", "144p60") and fr_id > format_144:
                 format_144 = fr_id
-
-            if video.get("acodec") != "none":
-                bitrrate = int(video.get("abr"))
-                # if bitrrate >= 70:
-                audio[
-                    bitrrate
-                ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
             format_data[
                 fr_id
             ] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
+        
+        if video.get("acodec") != "none":
+            bitrrate = int(video.get("abr"))
+            # if bitrrate >= 70:
+            audio[
+                bitrrate
+            ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
+
 
     for qual_ in (
         format_144,
@@ -527,8 +528,7 @@ def download_button(vid: str, body: bool = False):
                 b = []
     if len(b) != 0:
         btn.append(b)
-    print(sorted(audio.keys()))
-    print(audio)
+
     for key_ in sorted(audio.keys()):
         c.append(
             InlineKeyboardButton(
@@ -542,14 +542,14 @@ def download_button(vid: str, body: bool = False):
         btn.append(c)
 
     if body:
-        vid_body = f"""
-<b>[{x.get('title')}]({x.get('webpage_url')})</b>
-<code>{x.get("description")}</code>
+        vid_body = f"<b>[{x.get('title')}]({x.get('webpage_url')})</b>"
 
-❯  <b>Duration:</b> {x.get('duration')}
-❯  <b>Views:</b> {x.get('view_count')}
-❯  <b>Upload date:</b> {x.get('upload_date')}
-❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
-"""
+# ERROR Media Caption Too Long
+# <code>{x.get("description")}</code>
+# ❯  <b>Duration:</b> {x.get('duration')}
+# ❯  <b>Views:</b> {x.get('view_count')}
+# ❯  <b>Upload date:</b> {x.get('upload_date')}
+# ❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
+
         return vid_body, InlineKeyboardMarkup(btn)
     return InlineKeyboardMarkup(btn)
