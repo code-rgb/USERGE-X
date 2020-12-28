@@ -280,7 +280,7 @@ if userge.has_bot:
                         await xmedia.InputMediaPhoto(
                             file_id=search_data.get("1").get("thumb"),
                             caption="hello world",
-                    )
+                    ),
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
