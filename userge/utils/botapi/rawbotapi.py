@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 
 import aiohttp
@@ -23,18 +24,22 @@ class XBot:
 
     @property
     def session(self) -> Optional[aiohttp.ClientSession]:
-        if self._session is None:
+        if self._session is None or self._session.closed:
             self._session = self.get_new_session()
         return self._session
 
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
+        timeout = aiohttp.ClientTimeout(total=120)
         try:
-            async with session.get(link, params=params) as resp:
+            async with session.get(link, params=params, timeout=timeout) as resp:
                 data = await resp.json()
-        except aiohttp.ClientError as e:
-            print(e)
+        except aiohttp.ClientError as ex:
+            await session.close()
+            print(ex)
+            return
+        except asyncio.TimeoutError:
             return
         return data
 
@@ -241,10 +246,10 @@ class XMediaTypes:
         media = {
             "type": "video",
             "media": file_id,
-            "supports_streaming": "True",
+            "supports_streaming": True,
         }
         if not supports_streaming:
-            media["supports_streaming"] = "False"
+            media["supports_streaming"] = False
         if caption:
             if parse_mode.lower() == "mixed":
                 caption = await mixed_to_html(caption)
@@ -264,3 +269,7 @@ class XMediaTypes:
             media["parse_mode"] = "HTML"
 
         return ujson.dumps(media)
+
+
+# bot api class
+xbot = XBot()

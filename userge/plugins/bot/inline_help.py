@@ -49,7 +49,7 @@ COMMANDS = {
         "i_q": "stylish USERGE-X",
     },
     "ytdl": {
-        "help_txt": f"**Download YouTube Videos with Buttons**\n\nTo Download video from youtube with desired quality.\n>>>  `ytdl [link]` or `{Config.CMD_TRIGGER}iytdl`",
+        "help_txt": f"**Download YouTube Videos or Audio with Buttons**\n\nTo Download Video / Audio from youtube with desired quality.\n>>>  `ytdl [URL or Text]` or `{Config.CMD_TRIGGER}iytdl` iytdl [URL / Text] or [Reply to URL / Text]",
         "i_q": "ytdl https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
     "spoiler": {
