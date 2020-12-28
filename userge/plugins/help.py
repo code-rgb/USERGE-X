@@ -31,7 +31,13 @@ from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
-from .bot.utube_inline import get_yt_video_id, result_formatter, ytsearch_data, download_button, get_ytthumb
+from .bot.utube_inline import (
+    download_button,
+    get_yt_video_id,
+    get_ytthumb,
+    result_formatter,
+    ytsearch_data,
+)
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
@@ -1140,30 +1146,31 @@ if userge.has_bot:
                         outdata = await result_formatter(resp)
                         key_ = rand_key()
                         ytsearch_data.store_(key_, outdata)
-                        buttons = InlineKeyboardMarkup([
+                        buttons = InlineKeyboardMarkup(
                             [
-                                InlineKeyboardButton(
-                                    text=f"1 / {len(outdata)}",
-                                    callback_data=f"ytdl_next_{key_}_1",
-                                )
-                            ],
-                            [
-                                InlineKeyboardButton(
-                                    text="📜  List all",
-                                    callback_data=f"ytdl_listall_{key_}_1",
-                                ),
-                                InlineKeyboardButton(
-                                    text="⬇️  Download",
-                                    callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
-                                ),
-                            ],
-                        ])
+                                [
+                                    InlineKeyboardButton(
+                                        text=f"1 / {len(outdata)}",
+                                        callback_data=f"ytdl_next_{key_}_1",
+                                    )
+                                ],
+                                [
+                                    InlineKeyboardButton(
+                                        text="📜  List all",
+                                        callback_data=f"ytdl_listall_{key_}_1",
+                                    ),
+                                    InlineKeyboardButton(
+                                        text="⬇️  Download",
+                                        callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
+                                    ),
+                                ],
+                            ]
+                        )
                     caption = outdata[1]["message"]
                     photo = outdata[1]["thumb"]
                 else:
                     caption, buttons = await download_button(link, body=True)
                     photo = get_ytthumb(link)
-
 
                 results.append(
                     InlineQueryResultPhoto(

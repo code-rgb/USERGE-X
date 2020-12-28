@@ -114,7 +114,7 @@ if userge.has_bot:
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
                 return
-                
+
         else:
             choice_id = None
 
@@ -167,7 +167,6 @@ if userge.has_bot:
             else:
                 _thumb = download(get_ytthumb(yt_code))
 
-          
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
@@ -178,7 +177,7 @@ if userge.has_bot:
                     )
                 ),
             )
-            
+
         else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
@@ -187,7 +186,6 @@ if userge.has_bot:
             else:
                 _thumb = download(get_ytthumb(yt_code, reverse=True))
 
-            
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
@@ -198,7 +196,6 @@ if userge.has_bot:
                     )
                 ),
             )
-            
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -281,13 +278,12 @@ if userge.has_bot:
                         [
                             InlineKeyboardButton(
                                 "📰  Detailed View",
-                                callback_data=f"ytdl_detail_{data_key}_{page}"
+                                callback_data=f"ytdl_detail_{data_key}_{page}",
                             )
                         ]
                     ]
                 ),
             )
-        
 
         else:  # Detailed
             index = 1
@@ -472,7 +468,11 @@ def download_button(vid: str, body: bool = False):
         format_2160,
     ) = [0 for _ in range(7)]
     btn = [
-        [InlineKeyboardButton("⭐️  BEST (Video + Audio)", callback_data=f"ytdl_download_{vid}_best_v")]
+        [
+            InlineKeyboardButton(
+                "⭐️  BEST (Video + Audio)", callback_data=f"ytdl_download_{vid}_best_v"
+            )
+        ]
     ]
     b, c = list(), list()
     audio, format_data = dict(), dict()
