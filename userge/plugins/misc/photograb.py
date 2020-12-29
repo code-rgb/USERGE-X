@@ -1,5 +1,6 @@
 """Photo grabber by Noob"""
 
+import os
 from userge import userge
 from pyrogram.types import Message
 
