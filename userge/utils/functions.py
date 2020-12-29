@@ -132,18 +132,16 @@ def rand_key():
     return str(uuid4())[:8]
 
 
-
 def check_owner(func):
     async def wrapper(_, c_q: CallbackQuery):
         if c_q.from_user and (
-                c_q.from_user.id in Config.OWNER_ID
-                or c_q.from_user.id in Config.SUDO_USERS
-            ):
+            c_q.from_user.id in Config.OWNER_ID or c_q.from_user.id in Config.SUDO_USERS
+        ):
             await func(c_q)
         else:
             await c_q.answer(
-                    "Only My Master can Access This !!\n\n   𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
-                    show_alert=True,
-                )
+                "Only My Master can Access This !!\n\n   𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
+                show_alert=True,
+            )
 
     return wrapper
