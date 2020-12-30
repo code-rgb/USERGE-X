@@ -19,7 +19,7 @@ async def photograb(message: Message):
         getphoto = await userge.download_media(getid)
         await userge.send_photo(message.chat.id,photo=getphoto)
         os.remove(getphoto)
-    elif message.chat.photo:
+    elif message.chat.photo and not message.reply_to_message:
         phid = message.chat.photo.big_file_id
         ppo = await userge.download_media(phid)
         await userge.send_photo(message.chat.id,photo=ppo)
