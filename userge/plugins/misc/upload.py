@@ -221,12 +221,22 @@ async def vid_upload(
     )
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_video")
+    width = 0
+    height = 0
+    if thumb:
+        t_m = extractMetadata(createParser(thumb))
+        if t_m and t_m.has("width"):
+            width = t_m.get("width")
+        if t_m and t_m.has("height"):
+            height = t_m.get("height")
     try:
         msg = await message.client.send_video(
             chat_id=message.chat.id,
             video=strpath,
             duration=duration,
             thumb=thumb,
+            width=width,
+            height=height,
             caption=path.name,
             parse_mode="html",
             disable_notification=True,
