@@ -53,7 +53,7 @@ async def video_note(message: Message):
         else:
             await thumb_from_audio(audio_loc, thumb_loc)
         await runcmd(
-            f"ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale='iw-mod (iw,2)':'ih-mod(ih,2)',format=yuv420p\" -shortest -movflags +faststart {PATH}"
+            f"""ffmpeg -loop 1 -i {thumb_loc} -i {audio_loc} -c:v libx264 -tune stillimage -c:a aac -b:a 192k -vf \"scale=\'iw-mod (iw,2)\':\'ih-mod(ih,2)\',format=yuv420p\" -shortest -movflags +faststart {PATH}"""
         )
     if os.path.exists(PATH):
         await message.client.send_video_note(message.chat.id, PATH)
@@ -71,7 +71,7 @@ async def crop_vid(input_vid: str, final_path: str):
     if aspect_ratio != 1:
         crop_by = width if (height > width) else height
         await runcmd(
-            f'ffmpeg -i {input_vid} -vf "crop={crop_by}:{crop_by}" {final_path}'
+            f"""ffmpeg -i {input_vid} -vf \"crop={crop_by}:{crop_by}\" {final_path}"""
         )
         os.remove(input_vid)
     else:
