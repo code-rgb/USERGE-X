@@ -140,7 +140,7 @@ def check_owner(func):
             await func(c_q)
         else:
             await c_q.answer(
-                "Only My Master can Access This !!\n\n   𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
+                "Only My Master can Access This !!\n\n   𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 Shit-𝙓",
                 show_alert=True,
             )
 
