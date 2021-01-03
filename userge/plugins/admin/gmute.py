@@ -128,7 +128,7 @@ async def ungmute_user(msg: Message):
         await msg.err("User Not Found in My GMute List")
         return
     await asyncio.gather(
-        GMUTE_USER_BASE.delete_one({"firstname": firstname, "user_id": user_id}),
+        GMUTE_USER_BASE.delete_one(found),
         msg.edit(
             r"\\**#UnGMuted_User**//"
             f"\n\n**First Name:** [{firstname}](tg://user?id={user_id})\n"

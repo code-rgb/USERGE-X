@@ -81,7 +81,6 @@ async def active_afk(message: Message) -> None:
             )
         ),
     ),
-    group=1,
     allow_via_bot=False,
 )
 async def handle_afk_incomming(message: Message) -> None:
