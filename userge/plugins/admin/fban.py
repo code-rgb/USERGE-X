@@ -141,7 +141,6 @@ async def fban_(message: Message):
             "You Don't have any feds connected!\nsee .help addf, for more info."
         )
     await message.edit(fban_arg[2])
-    
 
     if len(failed) != 0:
         status = f"Failed to fban in {len(failed)}/{total} feds.\n"
