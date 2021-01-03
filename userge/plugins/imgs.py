@@ -30,8 +30,8 @@ async def img_sampler(message: Message):
         )
     cat = await message.edit("`Processing...`")
     lim = int(message.flags.get("-l", 6))
-    if lim > x:
-        lim = int(x)
+    if lim > 100:
+        lim = int(100)
     if lim <= 0:
         lim = int(1)
     response = googleimagesdownload()
