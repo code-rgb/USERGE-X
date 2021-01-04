@@ -82,7 +82,7 @@ async def gmute_user(msg: Message):
         ),
     )
     chats = (
-        [msg.chat] if msg.client.is_bot else await msg.client.get_common_chats(user_id)
+        await userge.get_common_chats(user_id)
     )
     for chat in chats:
         try:
@@ -136,7 +136,7 @@ async def ungmute_user(msg: Message):
         ),
     )
     chats = (
-        [msg.chat] if msg.client.is_bot else await msg.client.get_common_chats(user_id)
+        await userge.get_common_chats(user_id)
     )
     for chat in chats:
         try:
@@ -190,7 +190,7 @@ async def gmute_at_entry(msg: Message):
             await asyncio.gather(
                 msg.client.restrict_chat_member(chat_id, user_id, ChatPermissions()),
                 msg.reply(
-                    r"\\**#Userge_Antispam**//"
+                    r"\\**#𝑿_Antispam**//"
                     "\n\nGlobally Muted User Detected in this Chat.\n\n"
                     f"**User:** [{first_name}](tg://user?id={user_id})\n"
                     f"**ID:** `{user_id}`\n**Reason:** `{gmuted['reason']}`\n\n"

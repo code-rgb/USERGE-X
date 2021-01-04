@@ -18,9 +18,6 @@ from userge import Message, userge
     allow_via_bot=False,
 )
 async def sticklet(message: Message):
-    # R = random.randint(0, 256)
-    # G = random.randint(0, 256)
-    # B = random.randint(0, 256)
     sticktext = message.input_or_reply_str
     if not sticktext:
         await message.edit("**Bruh** ~`I need some text to make sticklet`")
