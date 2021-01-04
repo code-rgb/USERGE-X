@@ -2,10 +2,9 @@
 
 
 import asyncio
-import json
 from typing import Union
 
-import aiohttp
+from userge.utils import get_response
 import spamwatch
 from pyrogram.errors import (
     ChannelInvalid,
@@ -167,10 +166,7 @@ async def ungban_user(message: Message):
     except PeerIdInvalid:
         await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
         deleted_user_ = f"\nRemoved [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
-        await message.edit(r"\\**#UnGbanned_User**//" + "\n" + deleted_user_)
-        await CHANNEL.log(r"\\**#Antispam_Log**//" + "\n" + deleted_user_)
-        return
-
+        return await message.edit(r"\\**#UnGbanned_User**//" + "\n" + deleted_user_, log=__name__)
     firstname = get_mem["fname"]
     user_id = get_mem["id"]
     found = await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
@@ -371,7 +367,7 @@ async def gban_at_entry(message: Message):
             await asyncio.gather(
                 message.client.kick_chat_member(chat_id, user_id),
                 message.reply(
-                    r"\\**#Userge_Antispam**//"
+                    r"\\**#𝑿_Antispam**//"
                     "\n\nGlobally Banned User Detected in this Chat.\n\n"
                     f"**User:** {mention_html(user_id, firstname)}\n"
                     f"**ID:** `{user_id}`\n**Reason:** `{gbanned['reason']}`\n\n"
@@ -392,11 +388,7 @@ async def gban_at_entry(message: Message):
                 ),
             )
         elif Config.ANTISPAM_SENTRY:
-            async with aiohttp.ClientSession() as ses:
-                async with ses.get(
-                    f"https://api.cas.chat/check?user_id={user_id}"
-                ) as resp:
-                    res = json.loads(await resp.text())
+            res = await get_response.json(f"https://api.cas.chat/check?user_id={user_id}")
             if res["ok"]:
                 reason = (
                     " | ".join(res["result"]["messages"]) if "result" in res else None
@@ -404,7 +396,7 @@ async def gban_at_entry(message: Message):
                 await asyncio.gather(
                     message.client.kick_chat_member(chat_id, user_id),
                     message.reply(
-                        r"\\**#Userge_Antispam**//"
+                        r"\\**#𝑿_Antispam**//"
                         "\n\nGlobally Banned User Detected in this Chat.\n\n"
                         "**$SENTRY CAS Federation Ban**\n"
                         f"**User:** {mention_html(user_id, firstname)}\n"
@@ -427,7 +419,7 @@ async def gban_at_entry(message: Message):
                     await asyncio.gather(
                         message.client.kick_chat_member(chat_id, user_id),
                         message.reply(
-                            r"\\**#Userge_Antispam**//"
+                            r"\\**#𝑿_Antispam**//"
                             "\n\nGlobally Banned User Detected in this Chat.\n\n"
                             "**$SENTRY SpamWatch Federation Ban**\n"
                             f"**User:** {mention_html(user_id, firstname)}\n"

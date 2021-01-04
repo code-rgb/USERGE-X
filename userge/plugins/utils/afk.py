@@ -70,6 +70,7 @@ async def active_afk(message: Message) -> None:
     & ~filters.me
     & ~filters.bot
     & ~filters.edited
+    & ~filters.user(Config.TG_IDS)
     & (
         filters.mentioned
         | (
@@ -81,6 +82,7 @@ async def active_afk(message: Message) -> None:
             )
         ),
     ),
+    group=-3
     allow_via_bot=False,
 )
 async def handle_afk_incomming(message: Message) -> None:
@@ -148,7 +150,7 @@ async def handle_afk_incomming(message: Message) -> None:
     await asyncio.gather(*coro_list)
 
 
-@userge.on_filters(IS_AFK_FILTER & filters.outgoing, group=-1, allow_via_bot=False)
+@userge.on_filters(IS_AFK_FILTER & filters.outgoing, group=-2, allow_via_bot=False)
 async def handle_afk_outgoing(message: Message) -> None:
     """ handle outgoing messages when you afk """
     global IS_AFK  # pylint: disable=global-statement

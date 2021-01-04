@@ -64,7 +64,7 @@ async def delfed_(message: Message):
     else:
         try:
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
-        except PeerIdInvalid:
+        except (PeerIdInvalid, IndexError):
             return await message.err("Provide a valid Chat ID", del_in=7)
         chat_id = chat_.id
         out = f"{chat_.title}\nChat ID: {chat_id}\n"
@@ -93,14 +93,14 @@ async def delfed_(message: Message):
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
     user, reason = message.extract_user_and_text
-    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {} Successfully</b>"]
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     error_msg = "Provide a User ID or reply to a User"
     if user is None:
         return await message.err(error_msg, del_in=7)
     try:
         user_ = await message.client.get_users(user)
-    except PeerIdInvalid:
+    except (PeerIdInvalid, IndexError):
         return await message.err(error_msg, del_in=7)
     user = user_.id
     if (
@@ -169,14 +169,14 @@ async def fban_(message: Message):
 async def unfban_(message: Message):
     """Unbans a user from connected Feds."""
     user = (message.extract_user_and_text)[0]
-    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>Un-FBanned {} Successfully</b>"]
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>Un-FBanned {}</b>"]
     await message.edit(fban_arg[0])
     error_msg = "Provide a User ID or reply to a User"
     if user is None:
         return await message.err(error_msg, del_in=7)
     try:
         user_ = await message.client.get_users(user)
-    except PeerIdInvalid:
+    except (PeerIdInvalid, IndexError):
         return await message.err(error_msg, del_in=7)
     user = user_.id
     failed = []

@@ -294,8 +294,8 @@ async def chat_rules(message: Message):
         out = out.format("Rules", "Changed", message.chat.title, message.chat.id)
     else:
         out = out.format("Rules", "Updated", message.chat.title, message.chat.id)
-    await message.edit(out)
-    await CHANNEL.log(out)
+    await message.edit(out, log=__name__)
+
 
 
 async def admin_check(chatx: Chat, user_id: int) -> bool:
@@ -426,19 +426,15 @@ if userge.has_bot:
     @userge.bot.on_message(
         filters.private & (filters.regex(pattern=r"^/start chatrules_(.*)_(.*)"))
     )
-    async def spoiler_get(_, message: Message):
-        u_user = message.from_user
-
-        chat_ = message.matches[0].group(1)
+    async def xchat_rules_(_, message: Message):
+        u_user = message.from_user.id
         log_id_ = message.matches[0].group(2)
-        await CHANNEL.log(f"{chat_}\n\n{log_id_}")
-
         try:
             await CHANNEL.forward_stored(
                 client=userge.bot,
-                message_id=log_id_,
-                user_id=u_user.id,
-                chat_id=message.chat.id,
+                message_id=int(log_id_),
+                user_id=u_user,
+                chat_id=u_user,
                 reply_to_message_id=message.message_id,
             )
         except UserIsBlocked:

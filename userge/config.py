@@ -101,6 +101,7 @@ class Config:
     ### Last FM
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME", None)
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", None)
+    TG_IDS = [777000, 1087968824]
 
 
 def get_version() -> str:
