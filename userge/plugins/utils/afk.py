@@ -1,13 +1,5 @@
 """ setup AFK mode """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
-
 import asyncio
 import time
 from random import choice, randint
@@ -69,8 +61,8 @@ async def active_afk(message: Message) -> None:
     IS_AFK_FILTER
     & ~filters.me
     & ~filters.bot
-    & ~filters.edited
     & ~filters.user(Config.TG_IDS)
+    & ~filters.edited
     & (
         filters.mentioned
         | (
@@ -80,9 +72,8 @@ async def active_afk(message: Message) -> None:
                 filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
                 | Config.ALLOWED_CHATS
             )
-        ),
+        )
     ),
-    group=-3,
     allow_via_bot=False,
 )
 async def handle_afk_incomming(message: Message) -> None:
@@ -150,7 +141,7 @@ async def handle_afk_incomming(message: Message) -> None:
     await asyncio.gather(*coro_list)
 
 
-@userge.on_filters(IS_AFK_FILTER & filters.outgoing, group=-2, allow_via_bot=False)
+@userge.on_filters(IS_AFK_FILTER & filters.outgoing, group=-1, allow_via_bot=False)
 async def handle_afk_outgoing(message: Message) -> None:
     """ handle outgoing messages when you afk """
     global IS_AFK  # pylint: disable=global-statement
