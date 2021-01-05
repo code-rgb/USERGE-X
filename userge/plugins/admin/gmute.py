@@ -81,9 +81,7 @@ async def gmute_user(msg: Message):
             f"**User ID:** `{user_id}`\n**Reason:** `{reason}`"
         ),
     )
-    chats = (
-        await userge.get_common_chats(user_id)
-    )
+    chats = await userge.get_common_chats(user_id)
     for chat in chats:
         try:
             await chat.restrict_member(user_id, ChatPermissions())
@@ -135,9 +133,7 @@ async def ungmute_user(msg: Message):
             f"**User ID:** `{user_id}`"
         ),
     )
-    chats = (
-        await userge.get_common_chats(user_id)
-    )
+    chats = await userge.get_common_chats(user_id)
     for chat in chats:
         try:
             await chat.unban_member(user_id)

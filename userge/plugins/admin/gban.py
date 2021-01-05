@@ -4,7 +4,6 @@
 import asyncio
 from typing import Union
 
-from userge.utils import get_response
 import spamwatch
 from pyrogram.errors import (
     ChannelInvalid,
@@ -15,7 +14,7 @@ from pyrogram.errors import (
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
-from userge.utils import mention_html
+from userge.utils import get_response, mention_html
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 GBAN_USER_BASE = get_collection("GBAN_USER")
@@ -166,7 +165,9 @@ async def ungban_user(message: Message):
     except PeerIdInvalid:
         await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
         deleted_user_ = f"\nRemoved [Deleted Account !](tg://openmessage?user_id={user_id}) Successfully"
-        return await message.edit(r"\\**#UnGbanned_User**//" + "\n" + deleted_user_, log=__name__)
+        return await message.edit(
+            r"\\**#UnGbanned_User**//" + "\n" + deleted_user_, log=__name__
+        )
     firstname = get_mem["fname"]
     user_id = get_mem["id"]
     found = await GBAN_USER_BASE.find_one_and_delete({"user_id": user_id})
@@ -388,7 +389,9 @@ async def gban_at_entry(message: Message):
                 ),
             )
         elif Config.ANTISPAM_SENTRY:
-            res = await get_response.json(f"https://api.cas.chat/check?user_id={user_id}")
+            res = await get_response.json(
+                f"https://api.cas.chat/check?user_id={user_id}"
+            )
             if res["ok"]:
                 reason = (
                     " | ".join(res["result"]["messages"]) if "result" in res else None

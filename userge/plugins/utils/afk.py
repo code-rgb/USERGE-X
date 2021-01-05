@@ -82,7 +82,7 @@ async def active_afk(message: Message) -> None:
             )
         ),
     ),
-    group=-3
+    group=-3,
     allow_via_bot=False,
 )
 async def handle_afk_incomming(message: Message) -> None:

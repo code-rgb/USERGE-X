@@ -297,7 +297,6 @@ async def chat_rules(message: Message):
     await message.edit(out, log=__name__)
 
 
-
 async def admin_check(chatx: Chat, user_id: int) -> bool:
     check_status = await chatx.get_member(user_id)
     admin_strings = ["creator", "administrator"]
