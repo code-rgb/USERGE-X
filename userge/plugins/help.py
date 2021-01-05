@@ -70,7 +70,7 @@ REPO_X = InlineQueryResultArticle(
                     "Alícia Dark", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "🚀 Deploy USERGE-X",
+                    "Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
                         "https://github.com/code-rgb/USERGE-X/tree/alpha"
