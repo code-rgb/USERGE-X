@@ -44,13 +44,12 @@ if userge.has_bot:
         u_n = master.username
         hello = f"""
 Hello {f_name},
-Nice To Meet You! I'm **{bot.first_name}**.
+Nice To Meet You! I'm {bot.first_name}.
 
-<b>My owner is: {master.first_name}</b>
-<i>checkout the <b>Repo</b> For more info.</i>
+<b>My owner is Alícia</b>
 """
         if Config.BOT_FORWARDS:
-            hello += "\n<b>THEGREATFOXXGODDESS: </b> "
+            hello += "\n<b>Powered by usergex</b> "
         if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
             if not found:
@@ -127,6 +126,7 @@ Nice To Meet You! I'm **{bot.first_name}**.
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
+                            InlineKeyboardButton("MÚSICA", url=f"https://t.me/THEGREATFOXXGODDESS"),
                             InlineKeyboardButton(
                                 "REPO", url="https://github.com/code-rgb/USERGE-X"
                             ),
