@@ -44,12 +44,17 @@ if userge.has_bot:
         u_n = master.username
         hello = f"""
 Hello {f_name},
-Nice To Meet You! I'm **{bot.first_name}**.
+Nice To Meet You! I'm **{bot.first_name}**, a bot.
 
-<b>My Owner is: {master.first_name}</b>
-<i>checkout the <b>Repo</b> For more info.</i>
+        <i><b>Powered by</i> [PURPLE-X](https://github.com/thewhiteharlot/purple-x)</b>
+
+<b>My Master is: {master.first_name}</b>
+<i>You can contact my <b>Master</b> and checkout the <b>Repo</b> For more info.</i>
 """
         if Config.BOT_FORWARDS:
+            hello += "\n<b>NOTE: </b> "
+            hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
+            hello += "All your messages here will be forwared to my **MASTER**"
         if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
             if not found:
@@ -126,13 +131,14 @@ Nice To Meet You! I'm **{bot.first_name}**.
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
+                            InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
                             InlineKeyboardButton(
-                                "REPO", url="https://github.com/code-rgb/USERGE-X"
+                                "REPO", url="https://github.com/thewhiteharlot/PURPLE-X"
                             ),
                         ],
                         [
                             InlineKeyboardButton(
-                                "ADD TO GROUP", callback_data="add_to_grp"
+                                "➕ ADD TO GROUP", callback_data="add_to_grp"
                             )
                         ],
                     ]
@@ -149,15 +155,15 @@ Nice To Meet You! I'm **{bot.first_name}**.
         u_id = callback_query.from_user.id
         if u_id in Config.OWNER_ID:
             botname = (await userge.bot.get_me()).username
-            msg = "**Add Your Bot to Group** \n\n <u>Note:</u>  <i>Admin Privilege Required !</i>"
+            msg = "**🤖 Add Your Bot to Group** \n\n <u>Note:</u>  <i>Admin Privilege Required !</i>"
             add_bot = f"http://t.me/{botname}?startgroup=start"
-            buttons = [[InlineKeyboardButton PRESS TO ADD", url=add_bot)]]
+            buttons = [[InlineKeyboardButton("➕ PRESS TO ADD", url=add_bot)]]
             await callback_query.edit_message_text(
                 msg, reply_markup=InlineKeyboardMarkup(buttons)
             )
         else:
             await callback_query.answer(
-                "ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓 !",
+                "ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙋𝙐𝙍𝙋𝙇𝙀-𝙓 !",
                 show_alert=True,
             )
 
