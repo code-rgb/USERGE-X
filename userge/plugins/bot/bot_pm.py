@@ -184,13 +184,4 @@ async def bot_users(message: Message):
     )
 body Does it Better`"
     )
-        msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n   <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
-
-    await message.edit_or_send_as_file(
-        f"<u><i><b>Bot PM Userlist</b></i></u>\n\n{msg}"
-        if msg
-        else "`Nobody Does it Better`"
-    )
-body Does it Better`"
-    )
-  )
+       
