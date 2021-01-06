@@ -182,6 +182,3 @@ async def bot_users(message: Message):
         if msg
         else "`Nobody Does it Better`"
     )
-body Does it Better`"
-    )
-       
