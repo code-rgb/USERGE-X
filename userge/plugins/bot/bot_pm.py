@@ -132,6 +132,8 @@ Nice To Meet You! I'm {bot.first_name}.
                             ),
                         ],
                     ]
+                 ),
+              )
         except MediaEmpty:
             if recurs_count >= 2:
                 return
