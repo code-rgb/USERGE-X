@@ -46,10 +46,10 @@ if userge.has_bot:
 Hello {f_name},
 Nice To Meet You! I'm {bot.first_name}.
 
-<b>My owner is Alícia</b>
+<b>Made by Alícia</b>
 """
         if Config.BOT_FORWARDS:
-            hello += "\n<b>Powered by usergex</b> "
+            hello += "\n<b>Powered by userge-x</b> "
         if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
             if not found:
@@ -131,14 +131,7 @@ Nice To Meet You! I'm {bot.first_name}.
                                 "REPO", url="https://github.com/code-rgb/USERGE-X"
                             ),
                         ],
-                        [
-                            InlineKeyboardButton(
-                                "ADD TO GROUP", callback_data="add_to_grp"
-                            )
-                        ],
                     ]
-                ),
-            )
         except MediaEmpty:
             if recurs_count >= 2:
                 return
