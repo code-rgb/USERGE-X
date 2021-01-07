@@ -19,7 +19,8 @@ RUN apt -qq install -y --no-install-recommends \
     gcc \
     libjpeg-dev \
     zlib1g-dev \
-    mediainfo
+    mediainfo \
+    libfreetype6-dev
 
 # clean up
 RUN rm -rf /var/lib/apt/lists/*

@@ -658,7 +658,7 @@ async def zip_(message: Message) -> None:
     about={"header": "Tar file / folder", "usage": "{tr}tar [file path | folder path]"},
 )
 async def tar_(message: Message) -> None:
-    """ tar fils """
+    """ tar files """
     await _pack_helper(message, True)
 
 

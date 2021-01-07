@@ -197,7 +197,7 @@ async def delvar_(message: Message) -> None:
     about={
         "header": "get var in heroku",
         "usage": "{tr}getvar [var_name]",
-        "examples": "{tr}getvar WORKERS 4",
+        "examples": "{tr}getvar WORKERS",
     },
 )
 async def getvar_(message: Message) -> None:
