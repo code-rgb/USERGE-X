@@ -197,7 +197,6 @@ if userge.has_bot:
             try:
                 b_id = c["user_id"]
                 await userge.bot.send_message(
-                    b_id, "🔊 You received a **new** Broadcast."
                 )
                 await userge.bot.forward_messages(
                     b_id, message.chat.id, b_msg, as_copy=to_copy
