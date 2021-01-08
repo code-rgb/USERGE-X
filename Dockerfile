@@ -24,7 +24,7 @@ RUN apt -qq install -y --no-install-recommends \
     libpng-dev \
     libtiff-dev \
     libgif-dev \
-    libwebp
+    libwebp-dev
 
 # clean up
 RUN rm -rf /var/lib/apt/lists/*
