@@ -96,13 +96,9 @@ if userge.has_bot:
                 data = json.load(open(PATH))
                 user_id = data[0][str(replied.message_id)]
                 if to_copy:
-                    await userge.bot.copy_message(
-                        user_id, message.chat.id, msg_id
-                    )              
+                    await userge.bot.copy_message(user_id, message.chat.id, msg_id)
                 else:
-                    await userge.bot.forward_messages(
-                        user_id, message.chat.id, msg_id
-                    )
+                    await userge.bot.forward_messages(user_id, message.chat.id, msg_id)
             except BadRequest:
                 return
             except:
@@ -118,13 +114,9 @@ if userge.has_bot:
             if to_user.id in Config.OWNER_ID:
                 return
             if to_copy:
-                await userge.bot.copy_message(
-                to_user.id, message.chat.id, msg_id
-                )              
+                await userge.bot.copy_message(to_user.id, message.chat.id, msg_id)
             else:
-                await userge.bot.forward_messages(
-                to_user.id, message.chat.id, msg_id
-                )
+                await userge.bot.forward_messages(to_user.id, message.chat.id, msg_id)
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
@@ -209,13 +201,9 @@ if userge.has_bot:
                     b_id, "🔊 You received a **new** Broadcast."
                 )
                 if to_copy:
-                    await userge.bot.copy_message(
-                    b_id, message.chat.id, b_msg
-                    )              
+                    await userge.bot.copy_message(b_id, message.chat.id, b_msg)
                 else:
-                    await userge.bot.forward_messages(
-                    b_id, message.chat.id, b_msg
-                    )
+                    await userge.bot.forward_messages(b_id, message.chat.id, b_msg)
 
             except FloodWait as e:
                 await asyncio.sleep(e.x)
