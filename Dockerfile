@@ -20,7 +20,8 @@ RUN apt -qq install -y --no-install-recommends \
     libjpeg-dev \
     zlib1g-dev \
     mediainfo \
-    libfreetype6-dev
+    libfreetype6-dev \
+    libwebp
 
 # clean up
 RUN rm -rf /var/lib/apt/lists/*
