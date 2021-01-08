@@ -17,10 +17,14 @@ RUN apt -qq install -y --no-install-recommends \
     apt-utils \
     python3-dev \
     gcc \
-    libjpeg-dev \
     zlib1g-dev \
     mediainfo \
-    libfreetype6-dev
+    libfreetype6-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libgif-dev \
+    libwebp-dev
 
 # clean up
 RUN rm -rf /var/lib/apt/lists/*
