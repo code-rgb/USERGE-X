@@ -197,6 +197,7 @@ if userge.has_bot:
             try:
                 b_id = c["user_id"]
                 await userge.bot.send_message(
+                    b_id, "You received a **new** Broadcast."
                 )
                 await userge.bot.forward_messages(
                     b_id, message.chat.id, b_msg, as_copy=to_copy
@@ -210,7 +211,7 @@ if userge.has_bot:
             else:
                 count += 1
 
-        b_info = f"🔊 **Successfully Broadcasted This Message to** `{count} users`"
+        b_info = f"**Successfully Broadcasted This Message to** `{count} users`"
         if len(blocked_users) != 0:
             b_info += f"\n\n😕 {len(blocked_users)} users blocked your bot recently"
         await br_cast.edit(b_info)
