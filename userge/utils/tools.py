@@ -25,7 +25,7 @@ _LOG = userge.logging.getLogger(__name__)
 _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\[buttonurl:(?:/{0,2})(.+?)(:same)?\])")
 
 
-def get_file_id_and_ref(
+def get_file_id(
     message: "userge.Message",
 ) -> Tuple[Optional[str], Optional[str]]:
     """ get file_id and file_ref """
@@ -40,8 +40,8 @@ def get_file_id_and_ref(
         or message.document
     )
     if file_:
-        return file_.file_id, file_.file_ref
-    return None, None
+        return file_.file_id
+    return None
 
 
 def humanbytes(size: float) -> str:
@@ -80,7 +80,7 @@ def post_to_telegraph(a_title: str, content: str) -> str:
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://t.me/userge_x",
+        author_url="https://t.me/x_xtest",
         text=content,
     )
     return post_page["url"]
