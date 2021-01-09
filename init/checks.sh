@@ -159,7 +159,7 @@ _checkUnoffPlugins() {
     if test $LOAD_UNOFFICIAL_PLUGINS = true; then
         editLastMessage "\tLoading USERGE-X [Extra] Plugins ..."
         replyLastMessage "\t\tClonning ..."
-        gitClone --depth=1 https://github.com/code-rgb/Userge-Plugins/tree/x21.git
+        gitClone --depth=1 https://github.com/code-rgb/Userge-Plugins.git
         editLastMessage "\t\tUpgrading PIP ..."
         upgradePip
         editLastMessage "\t\tInstalling Requirements ..."
