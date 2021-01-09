@@ -305,8 +305,9 @@ def _tubeDl(url: str, starttime, uid=None, prog=None):
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [
-            {"key": "FFmpegMetadata"},
-            {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"},
+            {"key": "FFmpegMetadata"}
+# ERROR R15: Memory quota vastly exceeded
+# {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"},
         ],
         "quiet": True,
     }
