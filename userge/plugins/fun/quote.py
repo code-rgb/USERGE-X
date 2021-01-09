@@ -59,13 +59,11 @@ async def quotecmd(message: Message):
                 await userge.send_sticker(
                     chat_id=message.chat.id,
                     sticker=quote.sticker.file_id,
-                    file_ref=quote.sticker.file_ref,
                     reply_to_message_id=message_id,
                 )
             else:
                 await userge.send_document(
                     chat_id=message.chat.id,
                     document=quote.document.file_id,
-                    file_ref=quote.document.file_ref,
                     reply_to_message_id=message_id,
                 )
