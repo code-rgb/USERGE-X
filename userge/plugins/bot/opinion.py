@@ -27,7 +27,8 @@ if userge.has_bot:
         opinion_id = c_q.matches[0].group(2)
         ids = c_q.from_user.id
         counter = c_q.matches[0].group(1)
-        data = ujson.load(open(PATH))
+        with open(PATH) as f:
+            data = ujson.load(f)
         view_data = data[str(opinion_id)]
         agree_data = "👍"
         disagree_data = "👎"
@@ -69,7 +70,8 @@ if userge.has_bot:
                     disagree = view_data[1]["disagree"] + 1
                 view_data[1] = {"agree": agree, "disagree": disagree}
             data[str(opinion_id)] = view_data
-            ujson.dump(data, open(PATH, "w"))
+            with open(PATH, "w") as outfile:
+                ujson.dump(data, outfile)
         else:
             if len(view_data) == 1:
                 # Answering Query First then moving forward
@@ -80,7 +82,8 @@ if userge.has_bot:
                 if counter == "n":
                     view_data = [{ids: "n"}, {"agree": 0, "disagree": 1}]
                 data[str(opinion_id)] = view_data
-                ujson.dump(data, open(PATH, "w"))
+                with open(PATH, "w") as outfile:
+                    ujson.dump(data, outfile)
 
         agree_data += f"  {view_data[1]['agree']}"
         disagree_data += f"  {view_data[1]['disagree']}"

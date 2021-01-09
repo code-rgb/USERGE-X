@@ -106,7 +106,6 @@ if userge.has_bot:
     async def ytdl_download_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
         choice_id = c_q.matches[0].group(2)
-
         if str(choice_id).isdigit():
             choice_id = int(choice_id)
             if choice_id == 0:
@@ -114,22 +113,16 @@ if userge.has_bot:
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
                 return
-
         else:
             choice_id = None
-
         startTime = time()
-
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
-
         callback_continue = f"Downloading {media_type} Please Wait..."
         callback_continue += f"\n\nFormat Code : {choice_id or 'bestaudio/best'}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
-
         yt_url = BASE_YT_URL + yt_code
-
         await xbot.edit_inline_caption(
             c_q.inline_message_id,
             caption=(
@@ -141,7 +134,6 @@ if userge.has_bot:
             retcode = await _tubeDl(url=yt_url, starttime=startTime, uid=choice_id)
         else:
             retcode = await _mp3Dl(url=yt_url, starttime=startTime, uid=choice_id)
-
         if retcode != 0:
             return await upload_msg.edit(str(retcode))
         _fpath = ""
@@ -152,13 +144,11 @@ if userge.has_bot:
             await upload_msg.err("nothing found !")
             return
         uploaded_media = await upload(upload_msg, Path(_fpath), logvid=False)
-
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
         f_id = get_file_id(refresh_vid)
         _thumb = None
-
         if downtype == "v":
             if refresh_vid.video.thumbs:
                 _thumb = await userge.bot.download_media(
@@ -177,7 +167,6 @@ if userge.has_bot:
                     )
                 ),
             )
-
         else:  # Audio
             if refresh_vid.audio.thumbs:
                 _thumb = await userge.bot.download_media(
@@ -185,7 +174,6 @@ if userge.has_bot:
                 )
             else:
                 _thumb = download(get_ytthumb(yt_code, reverse=True))
-
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
@@ -218,6 +206,7 @@ if userge.has_bot:
         if choosen_btn == "back":
             index = int(page) - 1
             del_back = index == 1
+            await c_q.answer(f"Previous result:  [{index} <= {page}]", show_alert=False)
             back_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -238,8 +227,9 @@ if userge.has_bot:
         elif choosen_btn == "next":
             index = int(page) + 1
             if index > total:
-                return await c_q.answer("that's all folks", show_alert=True)
-
+                return await c_q.answer("That's All Folks !", show_alert=True)
+            else:
+                await c_q.answer(f"Next result:  [{page} => {index}]", show_alert=False)
             front_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -258,6 +248,7 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
+            await c_q.answer("View Changed to:  [📜 List]", show_alert=False)
             list_res = ""
             for vid_s in search_data:
                 list_res += search_data.get(vid_s).get("list_view")
@@ -270,11 +261,18 @@ if userge.has_bot:
                 media=(
                     await xmedia.InputMediaPhoto(
                         file_id=search_data.get("1").get("thumb"),
-                        caption=f"<b>[Click to view]({telegraph})</b>",
+                        #caption=f"<b>[Click to view]({})</b>",
                     )
                 ),
                 reply_markup=InlineKeyboardMarkup(
                     [
+                        
+                        [
+                            InlineKeyboardButton(
+                                "↗️  Click To Open",
+                                url=telegraph,
+                            )
+                        ],
                         [
                             InlineKeyboardButton(
                                 "📰  Detailed View",
@@ -287,6 +285,7 @@ if userge.has_bot:
 
         else:  # Detailed
             index = 1
+            await c_q.answer("View Changed to:  [📰 Detailed]", show_alert=False)
             first = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
