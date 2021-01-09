@@ -292,7 +292,7 @@ if userge.has_bot:
 
 
 @pool.run_in_thread
-def _tubeDl(url: str, starttime, uid=None):
+def _tubeDl(url: str, starttime, uid=None, prog=None):
     ydl_opts = {
         "addmetadata": True,
         "geo_bypass": True,
@@ -313,6 +313,7 @@ def _tubeDl(url: str, starttime, uid=None):
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             x = ydl.download([url])
+            #ydl.add_progress_hook(prog)
     except DownloadError as e:
         CHANNEL.log(str(e))
     else:
@@ -320,7 +321,7 @@ def _tubeDl(url: str, starttime, uid=None):
 
 
 @pool.run_in_thread
-def _mp3Dl(url: str, starttime, uid):
+def _mp3Dl(url: str, starttime, uid, prog=None):
     _opts = {
         "outtmpl": os.path.join(Config.DOWN_PATH, str(starttime), "%(title)s.%(ext)s"),
         "logger": LOGGER,
@@ -343,6 +344,7 @@ def _mp3Dl(url: str, starttime, uid):
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
             dloader = ytdl.download([url])
+            #ytdl.add_progress_hook(prog)
     except Exception as y_e:
         LOGGER.exception(y_e)
         return y_e
