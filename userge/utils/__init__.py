@@ -16,7 +16,7 @@ from .functions import (
 from .progress import progress  # noqa
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
 from .tools import (
-    get_file_id_and_ref,
+    get_file_id,
     humanbytes,
     parse_buttons,
     post_to_telegraph,

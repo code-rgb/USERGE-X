@@ -78,7 +78,7 @@ if (
             )
             USER_INITIAL_BIO["bio"] = (
                 await userge.get_chat((await userge.get_me()).id)
-            ).description or ""
+            ).bio or ""
             Config.SPOTIFY_MODE = True
             await spotify_biox()
         await SAVED_SETTINGS.update_one(
@@ -288,7 +288,7 @@ if (
             try:
                 # full needed, since we dont get a bio with the normal request
                 full = await userge.get_chat((await userge.get_me()).id)
-                bio = full.description
+                bio = full.bio
                 # to_insert means we have a successful playback
                 if to_insert:
                     # putting our collected information's into nice variables

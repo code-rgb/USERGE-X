@@ -2,19 +2,18 @@
 
 # IMPROVED BY code-rgb
 
-import json
 import os
 import re
 
-from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
+import ujson
+from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
 
 from userge import Config, Message, userge
-from userge.utils import get_file_id_and_ref
+from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-BTN = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\])|\[([^\[]+?)\](\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
-BTNX = re.compile(BTN)
+BTN_REGEX = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 PATH = "./userge/xcache/inline_db.json"
 CHANNEL = userge.getCLogger(__name__)
 
@@ -23,8 +22,9 @@ class Inline_DB:
     def __init__(self):
         if not os.path.exists(PATH):
             d = {}
-            json.dump(d, open(PATH, "w"))
-        self.db = json.load(open(PATH))
+            ujson.dump(d, open(PATH, "w"))
+        with open(PATH) as r:
+            self.db = ujson.load(r)
 
     def save_msg(self, rnd_id: int, msg_content: str, media_valid: bool, media_id: int):
         self.db[rnd_id] = {
@@ -36,7 +36,7 @@ class Inline_DB:
 
     def save(self):
         with open(PATH, "w") as outfile:
-            json.dump(self.db, outfile, indent=4)
+            ujson.dump(self.db, outfile, indent=4)
 
 
 InlineDB = Inline_DB()
@@ -59,27 +59,46 @@ async def create_button(msg: Message):
     if Config.BOT_TOKEN is None:
         await msg.err("First Create a Bot via @Botfather to Create Buttons...")
         return
+    string = msg.input_raw
     replied = msg.reply_to_message
-    if not (replied and replied.text):
-        await msg.err("Reply a text Msg")
+    file_id = None
+    if replied:
+        if replied.caption:
+            string = replied.caption.html
+        elif replied.text:
+            string = replied.text.html
+        file_id = get_file_id(replied)
+    if not string:
+        await msg.err("`need an input!`")
         return
-    rep_txt = check_brackets(replied.text)
-    text, buttons = pb(rep_txt)
+    text, markup = pb(check_brackets(string))
+    if not text:
+        await msg.err("`need text too!`")
+        return
+    message_id = replied.message_id if replied else None
+    client = msg.client if msg.client.is_bot else msg.client.bot
     try:
-        await userge.bot.send_message(
-            chat_id=msg.chat.id,
-            text=text,
-            reply_to_message_id=replied.message_id,
-            reply_markup=buttons,
-        )
+        if replied and replied.media and file_id:
+            await client.send_cached_media(
+                chat_id=msg.chat.id,
+                file_id=file_id,
+                caption=text,
+                reply_to_message_id=message_id,
+                reply_markup=markup,
+            )
+        else:
+            await client.send_message(
+                chat_id=msg.chat.id,
+                text=text,
+                reply_to_message_id=message_id,
+                reply_markup=markup,
+            )
     except UserIsBot:
         await msg.err("oops, your Bot is not here to send Msg!")
     except BadRequest:
         await msg.err("Check Syntax of Your Message for making buttons!")
-    except MessageEmpty:
-        await msg.err("Message Object is Empty!")
     except Exception as error:
-        await msg.edit(f"`Something went Wrong! `\n\n**ERROR:** `{error}`")
+        await msg.edit(f"`Something went Wrong! 😁`\n\n**ERROR:** `{error}`")
     else:
         await msg.delete()
 
@@ -103,7 +122,7 @@ async def inline_buttons(message: Message):
     media_valid = False
     media_id = 0
     if reply:
-        media_valid = bool(get_file_id_and_ref(reply)[0])
+        media_valid = bool(get_file_id(reply))
 
     if message.input_str:
         msg_content = message.input_str
@@ -123,9 +142,7 @@ async def inline_buttons(message: Message):
     rnd_id = userge.rnd_id()
     msg_content = check_brackets(msg_content)
     InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
-
     bot = await userge.bot.get_me()
-
     x = await userge.get_inline_bot_results(bot.username, f"btn_{rnd_id}")
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
@@ -135,19 +152,15 @@ async def inline_buttons(message: Message):
     await message.delete()
 
 
-def check_brackets(text):
-    unmatch = re.sub(BTN, "", text)
+def check_brackets(text: str):
+    unmatch = re.sub(BTN_REGEX, "", text)
     textx = ""
-    for m in BTNX.finditer(text):
-        if m.group(1):
-            word = m.group(0)
-        else:
-            change = m.group(6).replace("(", "[").replace(")", "]")
-            word = "[" + m.group(5) + "]"
-            word += change
-        textx += word
-    text = unmatch + textx
-    return text
+    for m in re.finditer(BTN_REGEX, text):
+        if m.group(3):
+            textx += m.group(0)
+        elif m.group(5):
+            textx += f"[{m.group(1)}][buttonurl:{m.group(5)}]"
+    return unmatch + textx
 
 
 @userge.on_cmd(
@@ -162,10 +175,10 @@ async def noformat_message(message: Message):
     reply = message.reply_to_message
     msg_text = None
     buttons = ""
-    medias = get_file_id_and_ref(reply)
+    media = get_file_id(reply)
     if reply.text:
         msg_text = reply.text.html
-    elif medias[0]:
+    elif media:
         msg_text = reply.caption.html if reply.caption else None
     else:
         return await message.err(
@@ -190,12 +203,11 @@ async def noformat_message(message: Message):
                     else:
                         buttons += f"[{btn.text}]{lbr_}buttonurl:{btn.url}:same{rbr_}"
 
-    if medias[0]:
+    if media:
         await message.delete()
         await message.client.send_cached_media(
             chat_id=message.chat.id,
-            file_id=medias[0],
-            file_ref=medias[1],
+            file_id=media,
             caption=f"{msg_text}{buttons}",
             reply_to_message_id=reply.message_id,
             parse_mode=None,

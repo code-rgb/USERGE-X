@@ -7,9 +7,8 @@ class get_response:
     @staticmethod
     # Can be used without initialising
     async def json(link: str, params: dict = None):
-        session = xbot.session
-        async with session.get(
-            link, params=params, timeout=ClientTimeout(total=120)
+        async with xbot.session.get(
+            link, params=params, timeout=ClientTimeout(total=30)
         ) as resp:
             if resp.status != 200:
                 raise ValueError
@@ -18,9 +17,8 @@ class get_response:
 
     @staticmethod
     async def text(link: str, params: dict = None):
-        session = xbot.session
-        async with session.get(
-            link, params=params, timeout=ClientTimeout(total=120)
+        async with xbot.session.get(
+            link, params=params, timeout=ClientTimeout(total=30)
         ) as resp:
             if resp.status != 200:
                 raise ValueError
@@ -28,9 +26,8 @@ class get_response:
 
     @staticmethod
     async def read(link: str, params: dict = None):
-        session = xbot.session
-        async with session.get(
-            link, params=params, timeout=ClientTimeout(total=120)
+        async with xbot.session.get(
+            link, params=params, timeout=ClientTimeout(total=30)
         ) as resp:
             if resp.status != 200:
                 raise ValueError
@@ -39,6 +36,5 @@ class get_response:
     # Just returns the Header
     @staticmethod
     async def status(link: str):
-        session = xbot.session
-        async with session.get(link) as resp:
+        async with xbot.session.get(link) as resp:
             return resp.status

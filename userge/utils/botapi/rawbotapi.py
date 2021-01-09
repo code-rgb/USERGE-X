@@ -20,7 +20,9 @@ class XBot:
 
     @staticmethod
     def get_new_session() -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(json_serialize=ujson.dumps)
+        return aiohttp.ClientSession(
+            json_serialize=ujson.dumps, timeout=aiohttp.ClientTimeout(total=300)
+        )
 
     @property
     def session(self) -> Optional[aiohttp.ClientSession]:
@@ -31,7 +33,9 @@ class XBot:
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
-        timeout = aiohttp.ClientTimeout(total=120)
+
+        timeout = aiohttp.ClientTimeout(total=30)
+
         try:
             async with session.get(link, params=params, timeout=timeout) as resp:
                 data = await resp.json()
