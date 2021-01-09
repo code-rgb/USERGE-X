@@ -209,7 +209,12 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
 
 
 async def vid_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True, custom_thumb: str = None,
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    logvid: bool = True,
+    custom_thumb: str = None,
 ):
     strpath = str(path)
     thumb = custom_thumb or await get_thumb(strpath)

@@ -8,14 +8,14 @@ import ujson
 import youtube_dl
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from requests import get
 from wget import download
 from youtube_dl.utils import DownloadError
-from userge.utils import get_response
+
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
     get_file_id,
+    get_response,
     humanbytes,
     post_to_telegraph,
     xbot,
@@ -144,7 +144,9 @@ if userge.has_bot:
             await upload_msg.err("nothing found !")
             return
         thumb_ = str(download(await get_ytthumb(yt_code))) if downtype == "v" else None
-        uploaded_media = await upload(upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_)
+        uploaded_media = await upload(
+            upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_
+        )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
@@ -169,7 +171,6 @@ if userge.has_bot:
                     )
                 ),
             )
-
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -303,8 +304,11 @@ def _tubeDl(url: str, starttime, uid=None):
         "format": "{}+bestaudio/best".format(uid or "bestvideo"),
         "writethumbnail": True,
         "prefer_ffmpeg": True,
-        "postprocessors": [{"key": "FFmpegMetadata"}, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
-        "quiet": True
+        "postprocessors": [
+            {"key": "FFmpegMetadata"},
+            {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"},
+        ],
+        "quiet": True,
     }
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -334,7 +338,7 @@ def _mp3Dl(url: str, starttime, uid):
             {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
-        "quiet": True
+        "quiet": True,
     }
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
