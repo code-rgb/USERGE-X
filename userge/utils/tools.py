@@ -39,9 +39,7 @@ def get_file_id(
         or message.video
         or message.document
     )
-    if file_:
-        return file_.file_id
-    return None
+    return file_.file_id if file_ else None
 
 
 def humanbytes(size: float) -> str:
