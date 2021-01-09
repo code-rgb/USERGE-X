@@ -3,10 +3,10 @@
 
 
 import datetime
-import json
 import os
 from uuid import uuid1
 
+import ujson
 from pyrogram import filters
 from pyrogram.errors import MessageNotModified, UserIsBlocked
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -24,8 +24,8 @@ class Spoiler_DB:
     def __init__(self):
         if not os.path.exists(PATH):
             d = {}
-            json.dump(d, open(PATH, "w"))
-        self.db = json.load(open(PATH))
+            ujson.dump(d, open(PATH, "w"))
+        self.db = ujson.load(open(PATH))
 
     def stats_(self, rnd_id: str, user_id: int, user_name: str):
         if user_id not in Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
@@ -39,7 +39,7 @@ class Spoiler_DB:
 
     def save(self):
         with open(PATH, "w") as outfile:
-            json.dump(self.db, outfile, indent=4)
+            ujson.dump(self.db, outfile, indent=4)
 
 
 SPOILER_DB = Spoiler_DB()

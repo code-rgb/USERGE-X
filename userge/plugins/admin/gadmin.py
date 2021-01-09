@@ -627,10 +627,7 @@ async def chatpic_func(message: Message):
         if message.reply_to_message.photo:
             try:
                 img_id = message.reply_to_message.photo.file_id
-                img_ref = message.reply_to_message.photo.file_ref
-                await message.client.set_chat_photo(
-                    chat_id=chat_id, photo=img_id, file_ref=img_ref
-                )
+                await message.client.set_chat_photo(chat_id=chat_id, photo=img_id)
                 await message.delete()
                 await CHANNEL.log(
                     f"#GPIC-SET\n\nCHAT: `{message.chat.title}` (`{chat_id}`)"

@@ -16,17 +16,17 @@ from pyrogram.errors import (
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, get_collection, logging, userge
-from userge.utils import get_file_id_and_ref
+from userge.utils import get_file_id
 
 CHANNEL = userge.getCLogger(__name__)
 _LOG = logging.getLogger(__name__)
 BOT_BAN = get_collection("BOT_BAN")
 BOT_START = get_collection("BOT_START")
-LOGO_ID, LOGO_REF = None, None
+LOGO_ID = None
 _CHAT, _MSG_ID = None, None
 _DEFAULT = "https://t.me/useless_x/2"
 
-# refresh file id and file reference from TG server
+# refresh file id from TG server
 
 
 if userge.has_bot:
@@ -88,16 +88,16 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             await _send_botstart(message, hello, u_n)
 
     async def _refresh_id(message: Message) -> None:
-        global LOGO_ID, LOGO_REF  # pylint: disable=global-statement
+        global LOGO_ID
         try:
             media = await userge.bot.get_messages(_CHAT, _MSG_ID)
         except ChannelInvalid:
             _set_data(True)
             return await _refresh_id(message)
-        LOGO_ID, LOGO_REF = get_file_id_and_ref(media)
+        LOGO_ID = get_file_id(media)
 
     def _set_data(errored: bool = False) -> None:
-        global _CHAT, _MSG_ID, _DEFAULT  # pylint: disable=global-statement
+        global _CHAT, _MSG_ID, _DEFAULT
         pattern = r"^(http(?:s?):\/\/)?(www\.)?(t.me)(\/c\/(\d+)|:?\/(\w+))?\/(\d+)$"
         if Config.BOT_MEDIA and not errored:
             media_link = Config.BOT_MEDIA
@@ -120,13 +120,12 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
     async def _send_botstart(
         message: Message, caption_text: str, u_n: str, recurs_count: int = 0
     ) -> None:
-        if not (LOGO_ID and LOGO_REF):
+        if not LOGO_ID:
             await _refresh_id(message)
         try:
             await userge.bot.send_cached_media(
                 chat_id=message.chat.id,
                 file_id=LOGO_ID,
-                file_ref=LOGO_REF,
                 caption=caption_text,
                 reply_markup=InlineKeyboardMarkup(
                     [

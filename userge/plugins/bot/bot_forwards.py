@@ -95,10 +95,10 @@ if userge.has_bot:
             try:
                 data = json.load(open(PATH))
                 user_id = data[0][str(replied.message_id)]
-
-                await userge.bot.forward_messages(
-                    user_id, message.chat.id, msg_id, as_copy=to_copy
-                )
+                if to_copy:
+                    await userge.bot.copy_message(user_id, message.chat.id, msg_id)
+                else:
+                    await userge.bot.forward_messages(user_id, message.chat.id, msg_id)
             except BadRequest:
                 return
             except:
@@ -113,9 +113,10 @@ if userge.has_bot:
             # Incase message is your own forward
             if to_user.id in Config.OWNER_ID:
                 return
-            await userge.bot.forward_messages(
-                to_user.id, message.chat.id, msg_id, as_copy=to_copy
-            )
+            if to_copy:
+                await userge.bot.copy_message(to_user.id, message.chat.id, msg_id)
+            else:
+                await userge.bot.forward_messages(to_user.id, message.chat.id, msg_id)
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
@@ -199,9 +200,11 @@ if userge.has_bot:
                 await userge.bot.send_message(
                     b_id, "🔊 You received a **new** Broadcast."
                 )
-                await userge.bot.forward_messages(
-                    b_id, message.chat.id, b_msg, as_copy=to_copy
-                )
+                if to_copy:
+                    await userge.bot.copy_message(b_id, message.chat.id, b_msg)
+                else:
+                    await userge.bot.forward_messages(b_id, message.chat.id, b_msg)
+
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except BadRequest:

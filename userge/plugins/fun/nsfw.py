@@ -2,7 +2,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, userge
-from userge.utils import get_file_id_and_ref, xbot, xmedia
+from userge.utils import get_file_id, xbot, xmedia
 
 
 async def age_verification(msg):
@@ -29,7 +29,7 @@ if userge.has_bot:
             )
         await c_q.answer("Yes I'm 18+", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 19)
-        f_id = get_file_id_and_ref(msg)[0]
+        f_id = get_file_id(msg)
 
         buttons = [
             [
@@ -55,7 +55,6 @@ if userge.has_bot:
         #     await c_q.edit_message_media(
         #         media=InputMediaPhoto(
         #             media=f_id,
-        #             file_ref=f_ref,
         #             caption="Set <code>ALLOW_NSFW</code> = True in Heroku Vars to access this plugin",
         #         ),
         #         reply_markup=InlineKeyboardMarkup(buttons),
@@ -75,7 +74,7 @@ if userge.has_bot:
             )
         await c_q.answer("No I'm Not", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 20)
-        f_id = get_file_id_and_ref(msg)[0]
+        f_id = get_file_id(msg)
         img_text = "GO AWAY KID !"
 
         buttons = [
@@ -95,7 +94,7 @@ if userge.has_bot:
         # """
         # try:
         #     await c_q.edit_message_media(
-        #         media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
+        #         media=InputMediaPhoto(media=f_id, caption=img_text),
         #         reply_markup=InlineKeyboardMarkup(buttons),
         #     )
         # except MessageNotModified:
@@ -112,7 +111,7 @@ if userge.has_bot:
             )
         await c_q.answer("Unsure", show_alert=False)
         msg = await userge.bot.get_messages("useless_x", 21)
-        f_id = get_file_id_and_ref(msg)[0]
+        f_id = get_file_id(msg)
         img_text = "<b>ARE YOU OLD ENOUGH FOR THIS ?</b>"
 
         buttons = [
@@ -133,7 +132,7 @@ if userge.has_bot:
         # """
         # try:
         #     await c_q.edit_message_media(
-        #         media=InputMediaPhoto(media=f_id, file_ref=f_ref, caption=img_text),
+        #         media=InputMediaPhoto(media=f_id, caption=img_text),
         #         reply_markup=InlineKeyboardMarkup(buttons),
         #     )
         # except MessageNotModified:
