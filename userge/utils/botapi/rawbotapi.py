@@ -31,7 +31,7 @@ class XBot:
     async def post_(self, method: str, params: dict):
         session = self.session
         link = f"{self.api}/{method}"
-        timeout = aiohttp.ClientTimeout(total=120)
+        timeout = aiohttp.ClientTimeout(total=300)
         try:
             async with session.get(link, params=params, timeout=timeout) as resp:
                 data = await resp.json()
