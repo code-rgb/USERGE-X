@@ -8,7 +8,7 @@ import os
 
 import ujson
 from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid
+from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, UserIsBlocked
 
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
@@ -74,6 +74,9 @@ if userge.has_bot:
             await CHANNEL.log(
                 f"**ERROR**: can't send message to __ID__: {Config.OWNER_ID[0]}\nNote: message will be send to the first id in `OWNER_ID` only!"
             )
+            return
+        except UserIsBlocked:
+            await CHANNEL.log("**ERROR**: You Blocked your Bot !")
             return
         update = bool(os.path.exists(PATH))
         await dumper(msg_owner.message_id, message.from_user.id, update)
@@ -287,7 +290,7 @@ async def dumper(a: int, b: int, update: bool):
         data = [{a: b}]
 
     with open(PATH, "w") as outfile:
-        ujson.dump(outfile)
+        ujson.dump(data, outfile)
 
 
 def extract_content(msg: Message):  # Modified a bound method
