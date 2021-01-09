@@ -17,7 +17,7 @@ instaloader>=4.5.5
 motor>=2.3.0
 natsort>=7.1.0
 oauth2client>=4.1.3
-Pillow==7.1.0
+Pillow==8.0
 psutil>=5.7.3
 pybase64>=1.1.1
 git+https://github.com/code-rgb/pyrogram.git@x21
@@ -38,7 +38,7 @@ tgcrypto
 urbandict>=0.5
 wget>=3.2
 wikipedia>=1.4.0
-youtube_dl>=2020.12.12
+youtube_dl>=2021.1.8
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 PyYAML>=5.3.1
 pymediainfo>=5.0.3
