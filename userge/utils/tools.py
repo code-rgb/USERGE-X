@@ -28,7 +28,7 @@ _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\[buttonurl:(?:/{0,2})(.+?)(:same)?\
 def get_file_id(
     message: "userge.Message",
 ) -> Tuple[Optional[str], Optional[str]]:
-    """ get file_id and file_ref """
+    """ get file_id """
     file_ = (
         message.audio
         or message.animation
