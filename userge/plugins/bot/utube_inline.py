@@ -11,7 +11,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from requests import get
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from userge.utils import get_response
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
@@ -49,7 +49,7 @@ class YT_Search_X:
 ytsearch_data = YT_Search_X()
 
 
-def get_ytthumb(videoid: str, reverse: bool = False):
+async def get_ytthumb(videoid: str):
     thumb_quality = [
         "maxresdefault.jpg",  # Best quality
         "hqdefault.jpg",
@@ -57,12 +57,11 @@ def get_ytthumb(videoid: str, reverse: bool = False):
         "mqdefault.jpg",
         "default.jpg",  # Worst quality
     ]
-    if reverse:
-        thumb_quality.reverse()
+
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
-        if get(link).status_code == 200:
+        if await get_response.status(link) == 200:
             thumb_link = link
             break
     return thumb_link
@@ -109,6 +108,7 @@ if userge.has_bot:
         if str(choice_id).isdigit():
             choice_id = int(choice_id)
             if choice_id == 0:
+                await c_q.answer("🔄  Processing...", show_alert=False)
                 await xbot.edit_inline_reply_markup(
                     c_q.inline_message_id, reply_markup=(await download_button(yt_code))
                 )
@@ -143,47 +143,33 @@ if userge.has_bot:
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
-        uploaded_media = await upload(upload_msg, Path(_fpath), logvid=False)
+        thumb_ = str(download(await get_ytthumb(yt_code))) if downtype == "v" else None
+        uploaded_media = await upload(upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_)
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
         f_id = get_file_id(refresh_vid)
-        _thumb = None
         if downtype == "v":
-            if refresh_vid.video.thumbs:
-                _thumb = await userge.bot.download_media(
-                    refresh_vid.video.thumbs[0].file_id
-                )
-            else:
-                _thumb = download(get_ytthumb(yt_code))
-
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaVideo(
                         file_id=f_id,
-                        thumb=_thumb,
                         caption=f"📹  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
                 ),
             )
         else:  # Audio
-            if refresh_vid.audio.thumbs:
-                _thumb = await userge.bot.download_media(
-                    refresh_vid.audio.thumbs[0].file_id
-                )
-            else:
-                _thumb = download(get_ytthumb(yt_code, reverse=True))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
                 media=(
                     await xmedia.InputMediaAudio(
                         file_id=f_id,
-                        thumb=_thumb,
                         caption=f"🎵  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
                 ),
             )
+
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"^ytdl_(listall|back|next|detail)_([a-z0-9]+)_(.*)")
@@ -206,7 +192,7 @@ if userge.has_bot:
         if choosen_btn == "back":
             index = int(page) - 1
             del_back = index == 1
-            await c_q.answer(f"Previous result:  [{index} <= {page}]", show_alert=False)
+            await c_q.answer(f"🡨 Back  {index}/{total}", show_alert=False)
             back_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -229,7 +215,7 @@ if userge.has_bot:
             if index > total:
                 return await c_q.answer("That's All Folks !", show_alert=True)
             else:
-                await c_q.answer(f"Next result:  [{page} => {index}]", show_alert=False)
+                await c_q.answer(f"🡪 Next  {index}/{total}", show_alert=False)
             front_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -248,7 +234,7 @@ if userge.has_bot:
             )
 
         elif choosen_btn == "listall":
-            await c_q.answer("View Changed to:  [📜 List]", show_alert=False)
+            await c_q.answer("View Changed to:  📜  List", show_alert=False)
             list_res = ""
             for vid_s in search_data:
                 list_res += search_data.get(vid_s).get("list_view")
@@ -284,7 +270,7 @@ if userge.has_bot:
 
         else:  # Detailed
             index = 1
-            await c_q.answer("View Changed to:  [📰 Detailed]", show_alert=False)
+            await c_q.answer("View Changed to:  📰  Detailed", show_alert=False)
             first = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -314,10 +300,11 @@ def _tubeDl(url: str, starttime, uid=None):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid}+bestaudio/best" if uid else "bestvideo+bestaudio/best",
+        "format": "{}+bestaudio/best".format(uid or "bestvideo"),
         "writethumbnail": True,
         "prefer_ffmpeg": True,
-        "postprocessors": [{"key": "FFmpegMetadata"}],
+        "postprocessors": [{"key": "FFmpegMetadata"}, {"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
+        "quiet": True
     }
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -347,11 +334,12 @@ def _mp3Dl(url: str, starttime, uid):
             {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
         ],
+        "quiet": True
     }
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
             dloader = ytdl.download([url])
-    except Exception as y_e:  # pylint: disable=broad-except
+    except Exception as y_e:
         LOGGER.exception(y_e)
         return y_e
     else:

@@ -159,11 +159,12 @@ async def upload(
     del_path: bool = False,
     extra: str = "",
     logvid: bool = True,
+    custom_thumb: str = None,
 ):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
-        return await vid_upload(message, path, del_path, extra, logvid)
+        return await vid_upload(message, path, del_path, extra, logvid, custom_thumb)
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
@@ -208,10 +209,10 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
 
 
 async def vid_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True, custom_thumb: str = None,
 ):
     strpath = str(path)
-    thumb = await get_thumb(strpath)
+    thumb = custom_thumb or await get_thumb(strpath)
     duration = 0
     metadata = extractMetadata(createParser(strpath))
     if metadata and metadata.has("duration"):

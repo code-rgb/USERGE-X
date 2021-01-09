@@ -1156,7 +1156,7 @@ if userge.has_bot:
                         photo = outdata[1]["thumb"]
                 else:
                     caption, buttons = await download_button(link, body=True)
-                    photo = get_ytthumb(link)
+                    photo = await get_ytthumb(link)
 
                 if found_:
                     results.append(
