@@ -4,9 +4,9 @@
 """Bot Message forwarding"""
 
 import asyncio
-import ujson
 import os
 
+import ujson
 from pyrogram import filters
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid
 
@@ -71,7 +71,9 @@ if userge.has_bot:
                 Config.OWNER_ID[0], message.chat.id, msg_id
             )
         except MessageIdInvalid:
-            await CHANNEL.log(f"**ERROR**: can't send message to __ID__: {Config.OWNER_ID[0]}\nNote: message will be send to the first id in `OWNER_ID` only!")
+            await CHANNEL.log(
+                f"**ERROR**: can't send message to __ID__: {Config.OWNER_ID[0]}\nNote: message will be send to the first id in `OWNER_ID` only!"
+            )
             return
         update = bool(os.path.exists(PATH))
         await dumper(msg_owner.message_id, message.from_user.id, update)
@@ -98,9 +100,13 @@ if userge.has_bot:
                     data = ujson.load(f)
                 user_id = data[0][str(replied.message_id)]
                 if to_copy:
-                    await userge.bot.copy_message(chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id)
+                    await userge.bot.copy_message(
+                        chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                    )
                 else:
-                    await userge.bot.forward_messages(chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id)
+                    await userge.bot.forward_messages(
+                        chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                    )
             except BadRequest:
                 return
             except Exception as e:
@@ -117,9 +123,13 @@ if userge.has_bot:
             if to_user.id in Config.OWNER_ID:
                 return
             if to_copy:
-                await userge.bot.copy_message(chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id)
+                await userge.bot.copy_message(
+                    chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                )
             else:
-                await userge.bot.forward_messages(chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id)
+                await userge.bot.forward_messages(
+                    chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                )
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
@@ -204,9 +214,13 @@ if userge.has_bot:
                     b_id, "🔊 You received a **new** Broadcast."
                 )
                 if to_copy:
-                    await userge.bot.copy_message(chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg)
+                    await userge.bot.copy_message(
+                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
+                    )
                 else:
-                    await userge.bot.forward_messages(chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg)
+                    await userge.bot.forward_messages(
+                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
+                    )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 5)
             except BadRequest:
@@ -217,10 +231,11 @@ if userge.has_bot:
                 count += 1
                 if count % 10 == 0:
                     try:
-                        await br_cast.edit(f"`Processing ...`\n> Success: (**{count}**)")
+                        await br_cast.edit(
+                            f"`Processing ...`\n> Success: (**{count}**)"
+                        )
                     except FloodWait as e:
                         await asyncio.sleep(e.x + 5)
-                            
 
         b_info = f"🔊 **Successfully Broadcasted This Message to** `{count} users`"
         if len(blocked_users) != 0:
