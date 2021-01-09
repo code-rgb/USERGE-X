@@ -1,4 +1,3 @@
-import ujson
 import os
 import random
 import re
@@ -6,6 +5,7 @@ from math import ceil
 from typing import Any, Callable, Dict, List, Union
 
 import requests
+import ujson
 from html_telegraph_poster import TelegraphPoster
 from pymediainfo import MediaInfo
 from pyrogram import filters
@@ -26,9 +26,9 @@ from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id
+from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
-from userge.utils import rand_key, xbot, get_response
+from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
 from .bot.utube_inline import (
@@ -818,7 +818,7 @@ if userge.has_bot:
                     )
                 )
 
-            if len(string_split) == 2 and (string_split[0] == "ofox"):  
+            if len(string_split) == 2 and (string_split[0] == "ofox"):
                 codename = string_split[1]
                 t = TelegraphPoster(use_api=True)
                 t.create_api_token("Userge-X")
@@ -829,9 +829,7 @@ if userge.has_bot:
                     r = cn.json()
                 except ValueError:
                     return
-                s = requests.get(
-                    f"{api_host}{codename}/releases/stable/last"
-                ).json()
+                s = requests.get(f"{api_host}{codename}/releases/stable/last").json()
                 info = f"📱 **Device**: {r['fullname']}\n"
                 info += f"👤 **Maintainer**: {r['maintainer']['name']}\n\n"
                 recovery = f"🦊 <code>{s['file_name']}</code>\n"
@@ -853,9 +851,7 @@ if userge.has_bot:
                         ]
                     ]
                 else:
-                    buttons = [
-                        [InlineKeyboardButton(text="⬇️ DOWNLOAD", url=s["url"])]
-                    ]
+                    buttons = [[InlineKeyboardButton(text="⬇️ DOWNLOAD", url=s["url"])]]
 
                 results.append(
                     InlineQueryResultPhoto(
@@ -1097,9 +1093,7 @@ if userge.has_bot:
                     with open(secret) as outfile:
                         view_data = ujson.load(outfile)
                     # Uniquely identifies an inline message
-                    new_id = {
-                        str(inline_query.id): {"user_id": user_id, "msg": msg}
-                    }
+                    new_id = {str(inline_query.id): {"user_id": user_id, "msg": msg}}
                     view_data.update(new_id)
                 else:
                     view_data = {str(inline_query.id): {"user_id": user_id, "msg": msg}}

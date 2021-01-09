@@ -2,11 +2,11 @@
 
 # IMPROVED BY code-rgb
 
-import ujson
 import os
 import re
 
-from pyrogram.errors import BadRequest, MessageEmpty, UserIsBot
+import ujson
+from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
 
 from userge import Config, Message, userge
@@ -42,14 +42,18 @@ class Inline_DB:
 InlineDB = Inline_DB()
 
 
-@userge.on_cmd("cbutton", about={
-    'header': "Create buttons Using bot",
-    'description': "First Create a Bot via @Botfather and "
-                    "Add bot token To Config Vars",
-    'usage': "{tr}cbutton [reply to button msg]",
-    "buttons": "<code>[name][buttonurl:link] or [name](buttonurl:link)</code> - <b>add a url button</b>\n"
-                "<code>[name][buttonurl:link:same]</code> - "
-                "<b>add a url button to same row</b>"})
+@userge.on_cmd(
+    "cbutton",
+    about={
+        "header": "Create buttons Using bot",
+        "description": "First Create a Bot via @Botfather and "
+        "Add bot token To Config Vars",
+        "usage": "{tr}cbutton [reply to button msg]",
+        "buttons": "<code>[name][buttonurl:link] or [name](buttonurl:link)</code> - <b>add a url button</b>\n"
+        "<code>[name][buttonurl:link:same]</code> - "
+        "<b>add a url button to same row</b>",
+    },
+)
 async def create_button(msg: Message):
     """ Create Buttons Using Bot """
     if Config.BOT_TOKEN is None:
@@ -80,13 +84,15 @@ async def create_button(msg: Message):
                 file_id=file_id,
                 caption=text,
                 reply_to_message_id=message_id,
-                reply_markup=markup)
+                reply_markup=markup,
+            )
         else:
             await client.send_message(
                 chat_id=msg.chat.id,
                 text=text,
                 reply_to_message_id=message_id,
-                reply_markup=markup)
+                reply_markup=markup,
+            )
     except UserIsBot:
         await msg.err("oops, your Bot is not here to send Msg!")
     except BadRequest:
@@ -196,7 +202,7 @@ async def noformat_message(message: Message):
                         firstbtn = False
                     else:
                         buttons += f"[{btn.text}]{lbr_}buttonurl:{btn.url}:same{rbr_}"
-                        
+
     if media:
         await message.delete()
         await message.client.send_cached_media(

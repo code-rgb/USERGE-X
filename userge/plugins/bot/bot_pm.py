@@ -97,7 +97,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
         LOGO_ID = get_file_id(media)
 
     def _set_data(errored: bool = False) -> None:
-        global _CHAT, _MSG_ID, _DEFAULT 
+        global _CHAT, _MSG_ID, _DEFAULT
         pattern = r"^(http(?:s?):\/\/)?(www\.)?(t.me)(\/c\/(\d+)|:?\/(\w+))?\/(\d+)$"
         if Config.BOT_MEDIA and not errored:
             media_link = Config.BOT_MEDIA
