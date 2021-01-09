@@ -261,12 +261,11 @@ if userge.has_bot:
                 media=(
                     await xmedia.InputMediaPhoto(
                         file_id=search_data.get("1").get("thumb"),
-                        #caption=f"<b>[Click to view]({})</b>",
+                        # caption=f"<b>[Click to view]({})</b>",
                     )
                 ),
                 reply_markup=InlineKeyboardMarkup(
                     [
-                        
                         [
                             InlineKeyboardButton(
                                 "↗️  Click To Open",
@@ -278,7 +277,7 @@ if userge.has_bot:
                                 "📰  Detailed View",
                                 callback_data=f"ytdl_detail_{data_key}_{page}",
                             )
-                        ]
+                        ],
                     ]
                 ),
             )
