@@ -313,7 +313,7 @@ def _tubeDl(url: str, starttime, uid=None, prog=None):
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             x = ydl.download([url])
-            #ydl.add_progress_hook(prog)
+            # ydl.add_progress_hook(prog)
     except DownloadError as e:
         CHANNEL.log(str(e))
     else:
@@ -344,7 +344,7 @@ def _mp3Dl(url: str, starttime, uid, prog=None):
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
             dloader = ytdl.download([url])
-            #ytdl.add_progress_hook(prog)
+            # ytdl.add_progress_hook(prog)
     except Exception as y_e:
         LOGGER.exception(y_e)
         return y_e
