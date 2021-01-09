@@ -20,7 +20,9 @@ class XBot:
 
     @staticmethod
     def get_new_session() -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(json_serialize=ujson.dumps, timeout=aiohttp.ClientTimeout(total=120))
+        return aiohttp.ClientSession(
+            json_serialize=ujson.dumps, timeout=aiohttp.ClientTimeout(total=120)
+        )
 
     @property
     def session(self) -> Optional[aiohttp.ClientSession]:
