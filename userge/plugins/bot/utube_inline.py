@@ -15,7 +15,7 @@ from youtube_dl.utils import DownloadError
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
-    get_file_id_and_ref,
+    get_file_id,
     humanbytes,
     post_to_telegraph,
     xbot,
@@ -156,7 +156,7 @@ if userge.has_bot:
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
-        f_id = (get_file_id_and_ref(refresh_vid))[0]
+        f_id = get_file_id(refresh_vid)
         _thumb = None
 
         if downtype == "v":
