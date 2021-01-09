@@ -9,20 +9,17 @@
 # All rights reserved.
 
 declare -r minPVer=8
-declare -r maxPVer=9
+declare -r maxPVer=10
 
 getPythonVersion() {
-    local -i count
-    local tmp found
-    [[ $DYNO ]] && count=$maxPVer || count=$minPVer
+    local -i count=$minPVer
+    local tmp
     while true; do
         tmp=$(python3.$count -V 2> /dev/null)
-        found=$(grep "^Python 3." <<< "$tmp")
-        [[ -n $found ]] && break
+        [[ -n $tmp || $count -gt $maxPVer ]] && break
         count+=1
-        [[ $count -gt $maxPVer ]] && break
     done
-    declare -gr pVer=$(sed -E 's/Python (3\.[0-9]{1,2}\.[0-9]{1,2}).*/\1/g' <<< "$tmp")
+    declare -gr pVer=$(sed -E 's/Python (3\.[0-9]{1,2}\.[0-9]{1,2}).*/\1/g' <<< $tmp)
 }
 
 log() {
@@ -95,7 +92,7 @@ upgradePip() {
 }
 
 installReq() {
-    pip3 install --no-cache-dir -r $1/requirements.txt &> /dev/null
+    pip3 install --use-feature=2020-resolver -r $1/requirements.txt &> /dev/null
 }
 
 printLine() {
