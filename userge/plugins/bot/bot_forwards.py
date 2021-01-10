@@ -101,7 +101,9 @@ if userge.has_bot:
             try:
                 with open(PATH) as f:
                     data = ujson.load(f)
+                await CHANNEL.log(data)
                 user_id = data[0][str(replied.message_id)]
+                
                 if to_copy:
                     await userge.bot.copy_message(
                         chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
@@ -113,7 +115,7 @@ if userge.has_bot:
             except BadRequest:
                 return
             except Exception:
-                # await CHANNEL.log(str(e))
+                await CHANNEL.log(str(e))
                 await userge.bot.send_message(
                     message.chat.id,
                     "`You can't reply to old messages with if user's"
