@@ -280,7 +280,12 @@ async def vid_upload(
 
 
 async def audio_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True, inline_id: str = None
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    logvid: bool = True,
+    inline_id: str = None,
 ):
     title = None
     artist = None
@@ -316,7 +321,13 @@ async def audio_upload(
         if logvid:
             progress_args = (message, f"uploading {extra}", str(path.name))
         else:
-            progress_args = (message, inline_id, f"uploading {extra}", str(path.name), "caption")
+            progress_args = (
+                message,
+                inline_id,
+                f"uploading {extra}",
+                str(path.name),
+                "caption",
+            )
         msg = await message.client.send_audio(
             chat_id=message.chat.id,
             audio=strpath,

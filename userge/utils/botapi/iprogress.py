@@ -29,17 +29,16 @@ async def inline_progress(
             return
         del _TASKS[task_id]
         if edit_type == "text":
-            
+
             await xbot.edit_inline_text(
                 inline_id, text="<code>Uploading to telegram...</code>"
             )
-            
+
         else:
-            
+
             await xbot.edit_inline_caption(
                 inline_id, caption="<code>Uploading to telegram ...</code>"
             )
-            
 
     now = time.time()
     if task_id not in _TASKS:

@@ -19,7 +19,6 @@ from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
 from userge import Config, Message, userge
-
 from userge.utils import get_response
 
 
@@ -312,9 +311,14 @@ async def sticker_search(message: Message):
     titlex = f'<b>Sticker Packs For:</b> "<u>{query_}</u>"\n'
     sticker_pack = ""
     try:
-        text = await get_response.text(f"https://combot.org/telegram/stickers?q={query_}")
+        text = await get_response.text(
+            f"https://combot.org/telegram/stickers?q={query_}"
+        )
     except ValueError:
-        return await message.err("Response was not 200!, Api is having some issues\n Please try again later.", del_in=5)
+        return await message.err(
+            "Response was not 200!, Api is having some issues\n Please try again later.",
+            del_in=5,
+        )
     soup = bs(text[1], "lxml")
     results = soup.find_all("div", {"class": "sticker-pack__header"})
     for pack in results:
