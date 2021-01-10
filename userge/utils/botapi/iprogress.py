@@ -13,9 +13,9 @@ async def inline_progress(
     current: int,
     total: int,
     inline_id: str,
-    edit_type: str = "text",
     ud_type: str,
     file_name: str = "",
+    edit_type: str = "text",
     delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
 ) -> None:
     """ progress function """
