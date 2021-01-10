@@ -220,8 +220,7 @@ if userge.has_bot:
             index = int(page) + 1
             if index > total:
                 return await c_q.answer("That's All Folks !", show_alert=True)
-            else:
-                await c_q.answer(f"➡️  Next  {index}/{total}", show_alert=False)
+            await c_q.answer(f"➡️  Next  {index}/{total}", show_alert=False)
             front_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
