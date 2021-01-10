@@ -1,2 +1,2 @@
-from .rawbotapi import XMediaTypes, xbot
 from .iprogress import inline_progress
+from .rawbotapi import XMediaTypes, xbot

@@ -3,9 +3,10 @@ from math import floor
 from typing import Dict, Tuple
 
 import userge
-
 from userge.utils.tools import humanbytes, time_formatter
+
 from .rawbotapi import xbot
+
 _TASKS: Dict[str, Tuple[int, int]] = {}
 
 
@@ -27,15 +28,17 @@ async def inline_progress(
             return
         del _TASKS[task_id]
         if edit_type == "text":
-            print(await xbot.edit_inline_text(
-                inline_id,
-                text="<code>finalizing process ...</code>"
-            ))
+            print(
+                await xbot.edit_inline_text(
+                    inline_id, text="<code>finalizing process ...</code>"
+                )
+            )
         else:
-            print(await xbot.edit_inline_caption(
-                inline_id,
-                caption="<code>finalizing process ...</code>"
-            ))
+            print(
+                await xbot.edit_inline_caption(
+                    inline_id, caption="<code>finalizing process ...</code>"
+                )
+            )
 
     now = time.time()
     if task_id not in _TASKS:
@@ -79,12 +82,6 @@ async def inline_progress(
         )
 
         if edit_type == "text":
-            print(await xbot.edit_inline_text(
-                inline_id,
-                text=progress_str
-            ))
+            print(await xbot.edit_inline_text(inline_id, text=progress_str))
         else:
-            print(await xbot.edit_inline_caption(
-                inline_id,
-                caption=progress_str
-            ))
+            print(await xbot.edit_inline_caption(inline_id, caption=progress_str))

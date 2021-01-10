@@ -7,7 +7,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from userge.utils.botapi import inline_progress
+
 import stagger
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -17,6 +17,7 @@ from pyrogram.errors.exceptions import FloodWait
 from userge import Config, Message, userge
 from userge.plugins.misc.download import tg_download, url_download
 from userge.utils import humanbytes, progress, take_screen_shot
+from userge.utils.botapi import inline_progress
 from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
@@ -160,12 +161,14 @@ async def upload(
     extra: str = "",
     logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None
+    inline_id: str = None,
 ):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
-        return await vid_upload(message, path, del_path, extra, logvid, custom_thumb, inline_id)
+        return await vid_upload(
+            message, path, del_path, extra, logvid, custom_thumb, inline_id
+        )
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
@@ -216,7 +219,7 @@ async def vid_upload(
     extra: str = "",
     logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None
+    inline_id: str = None,
 ):
     strpath = str(path)
     thumb = custom_thumb or await get_thumb(strpath)

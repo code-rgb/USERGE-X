@@ -146,7 +146,11 @@ if userge.has_bot:
             return
         thumb_ = str(download(await get_ytthumb(yt_code))) if downtype == "v" else None
         uploaded_media = await upload(
-            upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_, inline_id=c_q.inline_message_id
+            upload_msg,
+            Path(_fpath),
+            logvid=False,
+            custom_thumb=thumb_,
+            inline_id=c_q.inline_message_id,
         )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
@@ -544,6 +548,3 @@ def download_button(vid: str, body: bool = False):
 
         return vid_body, InlineKeyboardMarkup(btn)
     return InlineKeyboardMarkup(btn)
-
-
-
