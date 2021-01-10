@@ -20,7 +20,7 @@ from pyrogram.raw.types import InputStickerSetShortName
 
 from userge import Config, Message, userge
 
-# from userge.utils.helper import AioHttp
+from userge.utils import get_response
 
 
 @userge.on_cmd(
@@ -284,7 +284,7 @@ KANGING_STR = (
     "Mr.Steal Your Sticker is stealing this sticker... ",
 )
 
-"""
+
 # Based on:
 # https://github.com/AnimeKaizoku/SaitamaRobot/blob/10291ba0fc27f920e00f49bc61fcd52af0808e14/SaitamaRobot/modules/stickers.py#L42
 @userge.on_cmd(
@@ -311,7 +311,10 @@ async def sticker_search(message: Message):
     await message.edit(f'🔎 Searching for sticker packs for "`{query_}`"...')
     titlex = f'<b>Sticker Packs For:</b> "<u>{query_}</u>"\n'
     sticker_pack = ""
-    text = await AioHttp.get_text(f"https://combot.org/telegram/stickers?q={query_}")
+    try:
+        text = await get_response.text(f"https://combot.org/telegram/stickers?q={query_}")
+    except ValueError:
+        return await message.err("Response was not 200!, Api is having some issues\n Please try again later.", del_in=5)
     soup = bs(text[1], "lxml")
     results = soup.find_all("div", {"class": "sticker-pack__header"})
     for pack in results:
@@ -322,4 +325,3 @@ async def sticker_search(message: Message):
     if not sticker_pack:
         sticker_pack = "`❌ Not Found!`"
     await message.edit((titlex + sticker_pack), disable_web_page_preview=True)
-"""

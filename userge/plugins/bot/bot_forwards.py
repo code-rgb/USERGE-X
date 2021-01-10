@@ -113,7 +113,7 @@ if userge.has_bot:
             except BadRequest:
                 return
             except Exception as e:
-                await CHANNEL.log(str(e))
+                #await CHANNEL.log(str(e))
                 await userge.bot.send_message(
                     message.chat.id,
                     "`You can't reply to old messages with if user's"

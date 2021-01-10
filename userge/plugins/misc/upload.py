@@ -172,7 +172,7 @@ async def upload(
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
-        return await audio_upload(message, path, del_path, extra, logvid)
+        return await audio_upload(message, path, del_path, extra, logvid, inline_id)
     elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
         "d" not in message.flags
     ):
@@ -274,7 +274,7 @@ async def vid_upload(
 
 
 async def audio_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True, inline_id: str = None
 ):
     title = None
     artist = None
@@ -307,6 +307,10 @@ async def audio_upload(
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_audio")
     try:
+        if logvid:
+            progress_args = (message, f"uploading {extra}", str(path.name))
+        else:
+            progress_args = (message, inline_id, f"uploading {extra}", str(path.name), "caption")
         msg = await message.client.send_audio(
             chat_id=message.chat.id,
             audio=strpath,
@@ -317,8 +321,8 @@ async def audio_upload(
             duration=duration,
             parse_mode="html",
             disable_notification=True,
-            progress=progress,
-            progress_args=(message, f"uploading {extra}", str(path.name)),
+            progress=progress if logvid else inline_progress,
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{path}` due to {e_e}")

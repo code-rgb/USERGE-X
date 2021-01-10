@@ -127,7 +127,7 @@ if userge.has_bot:
         await xbot.edit_inline_caption(
             c_q.inline_message_id,
             caption=(
-                f"{media_type} is now being ⬇️ Downloaded, for progress see:\nLog Channel:  [<b>click here</b>]({upload_msg.link})"
+                f"**⬇️ Downloadeding {media_type}, Uploading will start soon...**"
                 f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id or 'bestaudio/best'}"
             ),
         )
