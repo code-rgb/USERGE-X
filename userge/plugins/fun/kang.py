@@ -11,7 +11,7 @@
 import io
 import os
 import random
-
+from bs4 import BeautifulSoup as soup
 import emoji
 from PIL import Image
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
