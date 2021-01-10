@@ -17,6 +17,7 @@ from pyrogram.errors.exceptions import FloodWait
 from userge import Config, Message, userge
 from userge.plugins.misc.download import tg_download, url_download
 from userge.utils import humanbytes, progress, take_screen_shot
+from userge.utils.botapi import inline_progress
 from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
@@ -159,15 +160,19 @@ async def upload(
     del_path: bool = False,
     extra: str = "",
     logvid: bool = True,
+    custom_thumb: str = None,
+    inline_id: str = None,
 ):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
-        return await vid_upload(message, path, del_path, extra, logvid)
+        return await vid_upload(
+            message, path, del_path, extra, logvid, custom_thumb, inline_id
+        )
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
-        return await audio_upload(message, path, del_path, extra, logvid)
+        return await audio_upload(message, path, del_path, extra, logvid, inline_id)
     elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
         "d" not in message.flags
     ):
@@ -208,10 +213,16 @@ async def doc_upload(message: Message, path, del_path: bool = False, extra: str 
 
 
 async def vid_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    logvid: bool = True,
+    custom_thumb: str = None,
+    inline_id: str = None,
 ):
     strpath = str(path)
-    thumb = await get_thumb(strpath)
+    thumb = custom_thumb or await get_thumb(strpath)
     duration = 0
     metadata = extractMetadata(createParser(strpath))
     if metadata and metadata.has("duration"):
@@ -230,6 +241,16 @@ async def vid_upload(
         if t_m and t_m.has("height"):
             height = t_m.get("height")
     try:
+        if logvid:
+            progress_args = (message, f"uploading {extra}", str(path.name))
+        else:
+            progress_args = (
+                message,
+                inline_id,
+                f"uploading {extra}",
+                str(path.name),
+                "caption",
+            )
         msg = await message.client.send_video(
             chat_id=message.chat.id,
             video=strpath,
@@ -240,8 +261,8 @@ async def vid_upload(
             caption=path.name,
             parse_mode="html",
             disable_notification=True,
-            progress=progress,
-            progress_args=(message, f"uploading {extra}", str(path.name)),
+            progress=progress if logvid else inline_progress,
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{path}` due to {e_e}")
@@ -259,7 +280,12 @@ async def vid_upload(
 
 
 async def audio_upload(
-    message: Message, path, del_path: bool = False, extra: str = "", logvid: bool = True
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    logvid: bool = True,
+    inline_id: str = None,
 ):
     title = None
     artist = None
@@ -292,6 +318,16 @@ async def audio_upload(
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_audio")
     try:
+        if logvid:
+            progress_args = (message, f"uploading {extra}", str(path.name))
+        else:
+            progress_args = (
+                message,
+                inline_id,
+                f"uploading {extra}",
+                str(path.name),
+                "caption",
+            )
         msg = await message.client.send_audio(
             chat_id=message.chat.id,
             audio=strpath,
@@ -302,8 +338,8 @@ async def audio_upload(
             duration=duration,
             parse_mode="html",
             disable_notification=True,
-            progress=progress,
-            progress_args=(message, f"uploading {extra}", str(path.name)),
+            progress=progress if logvid else inline_progress,
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{path}` due to {e_e}")

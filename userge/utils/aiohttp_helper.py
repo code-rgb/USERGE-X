@@ -35,6 +35,6 @@ class get_response:
 
     # Just returns the Header
     @staticmethod
-    async def status(link: str):
-        async with xbot.session.get(link) as resp:
+    async def status(link: str, wait: int = 5):
+        async with xbot.session.get(link, timeout=ClientTimeout(total=wait)) as resp:
             return resp.status

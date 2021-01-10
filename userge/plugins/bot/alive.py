@@ -13,7 +13,6 @@ from userge import Config, Message, userge
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
     bot = await userge.bot.get_me()
-
     try:
         x = await userge.get_inline_bot_results(bot.username, "alive")
         y = await userge.send_inline_bot_result(
@@ -21,7 +20,6 @@ async def alive_inline(message: Message):
         )
     except (Forbidden, BadRequest) as ex:
         return await message.err(str(ex), del_in=5)
-
     await message.delete()
     await asyncio.sleep(90)
     await userge.delete_messages(message.chat.id, y.updates[0].id)

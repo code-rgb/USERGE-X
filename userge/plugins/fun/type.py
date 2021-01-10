@@ -6,8 +6,8 @@
 #
 # All rights reserved.
 
+import asyncio
 import random
-import time
 
 from pyrogram.errors.exceptions import FloodWait
 
@@ -26,15 +26,17 @@ async def type_(message: Message):
     typing_symbol = "|"
     old_text = ""
     await message.edit(typing_symbol)
-    time.sleep(s_time)
+    await asyncio.sleep(s_time)
     for character in text:
         s_t = s_time / random.randint(1, 100)
         old_text += character
         typing_text = old_text + typing_symbol
         try:
-            await message.try_to_edit(typing_text, sudo=False)
-            time.sleep(s_t)
-            await message.try_to_edit(old_text, sudo=False)
-            time.sleep(s_t)
+            await asyncio.gather(
+                message.try_to_edit(typing_text, sudo=False),
+                asyncio.sleep(s_t),
+                message.try_to_edit(old_text, sudo=False),
+                asyncio.sleep(s_t),
+            )
         except FloodWait as x_e:
-            time.sleep(x_e.x)
+            await asyncio.sleep(x_e.x)
