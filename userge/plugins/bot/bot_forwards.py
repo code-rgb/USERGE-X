@@ -103,7 +103,7 @@ if userge.has_bot:
                     data = ujson.load(f)
                 await CHANNEL.log(data)
                 user_id = data[0][str(replied.message_id)]
-                
+
                 if to_copy:
                     await userge.bot.copy_message(
                         chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
