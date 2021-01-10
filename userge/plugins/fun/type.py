@@ -6,9 +6,8 @@
 #
 # All rights reserved.
 
-import random
-
 import asyncio
+import random
 
 from pyrogram.errors.exceptions import FloodWait
 
