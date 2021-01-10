@@ -101,7 +101,8 @@ if userge.has_bot:
             try:
                 with open(PATH) as f:
                     data = ujson.load(f)
-                await CHANNEL.log(data)
+                await CHANNEL.log(str(data))
+                await CHANNEL.log(str(replied.message_id))
                 user_id = data[0][str(replied.message_id)]
 
                 if to_copy:
@@ -114,7 +115,7 @@ if userge.has_bot:
                     )
             except BadRequest:
                 return
-            except Exception:
+            except Exception as e:
                 await CHANNEL.log(str(e))
                 await userge.bot.send_message(
                     message.chat.id,
