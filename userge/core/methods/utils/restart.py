@@ -25,7 +25,7 @@ _LOG_STR = "<<<!  #####  %s  #####  !>>>"
 class Restart(RawClient):  # pylint: disable=missing-class-docstring
     async def restart(self, update_req: bool = False) -> None:  # pylint: disable=arguments-differ
         """ Restart the AbstractUserge """
-        _LOG.info(_LOG_STR, "Restarting Userge")
+        _LOG.info(_LOG_STR, "Restarting USERGE-X")
         await self.stop()
         try:
             c_p = psutil.Process(os.getpid())
@@ -35,6 +35,9 @@ class Restart(RawClient):  # pylint: disable=missing-class-docstring
             print(_LOG_STR % c_e)
         if update_req:
             print(_LOG_STR % "Installing Requirements...")
-            os.system("pip3 install -U pip && pip3 install -r requirements.txt")  # nosec
+            # nosec
+            os.system(
+                "pip3 install -U pip && pip3 install --no-cache-dir -r requirements.txt"
+            )
         os.execl(sys.executable, sys.executable, '-m', 'userge')  # nosec
         sys.exit()

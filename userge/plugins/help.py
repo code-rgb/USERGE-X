@@ -636,77 +636,77 @@ if userge.has_bot:
                         InlineQueryResultArticle(
                             title="Reddit Api is Down !",
                             input_message_content=InputTextMessageContent(
-                                f"**Error Code: Status != 200**"
+                                "**Error Code: Status != 200**"
                             ),
-                            thumb_url="https://i.imgur.com/7a7aPVa.png",
-                        )
-                    )
-                    return
-                if "code" in r:
-                    bool_is_gallery = False
-                    code = r["code"]
-                    code_message = r["message"]
-                    results.append(
-                        InlineQueryResultArticle(
-                            title=str(code),
-                            input_message_content=InputTextMessageContent(
-                                f"**Error Code: {code}**\n`{code_message}`"
-                            ),
-                            description="Enter A Valid Subreddit Name !",
                             thumb_url="https://i.imgur.com/7a7aPVa.png",
                         )
                     )
                 else:
-                    bool_is_gallery = True
-                    for post in r["memes"]:
-                        if "url" in post:
-                            postlink = post["postLink"]
-                            subreddit = post["subreddit"]
-                            title = post["title"]
-                            media_url = post["url"]
-                            author = post["author"]
-                            upvote = post["ups"]
-                            captionx = f"<b>{title}</b>\n"
-                            captionx += f"`Posted by u/{author}`\n"
-                            captionx += f"↕️ <code>{upvote}</code>\n"
-                            thumbnail = reddit_thumb_link(post["preview"])
-                            if post["spoiler"]:
-                                captionx += "⚠️ Post marked as SPOILER\n"
-                            if post["nsfw"]:
-                                captionx += "🔞 Post marked Adult \n"
-                            buttons = [
-                                [
-                                    InlineKeyboardButton(
-                                        f"Source: r/{subreddit}", url=postlink
-                                    )
+                    if "code" in r:
+                        bool_is_gallery = False
+                        code = r["code"]
+                        code_message = r["message"]
+                        results.append(
+                            InlineQueryResultArticle(
+                                title=str(code),
+                                input_message_content=InputTextMessageContent(
+                                    f"**Error Code: {code}**\n`{code_message}`"
+                                ),
+                                description="Enter A Valid Subreddit Name !",
+                                thumb_url="https://i.imgur.com/7a7aPVa.png",
+                            )
+                        )
+                    else:
+                        bool_is_gallery = True
+                        for post in r["memes"]:
+                            if "url" in post:
+                                postlink = post["postLink"]
+                                subreddit = post["subreddit"]
+                                title = post["title"]
+                                media_url = post["url"]
+                                author = post["author"]
+                                upvote = post["ups"]
+                                captionx = f"<b>{title}</b>\n"
+                                captionx += f"`Posted by u/{author}`\n"
+                                captionx += f"↕️ <code>{upvote}</code>\n"
+                                thumbnail = reddit_thumb_link(post["preview"])
+                                if post["spoiler"]:
+                                    captionx += "⚠️ Post marked as SPOILER\n"
+                                if post["nsfw"]:
+                                    captionx += "🔞 Post marked Adult \n"
+                                buttons = [
+                                    [
+                                        InlineKeyboardButton(
+                                            f"Source: r/{subreddit}", url=postlink
+                                        )
+                                    ]
                                 ]
-                            ]
-                            if media_url.endswith(".gif"):
-                                results.append(
-                                    InlineQueryResultAnimation(
-                                        animation_url=media_url,
-                                        thumb_url=thumbnail,
-                                        caption=captionx,
-                                        reply_markup=InlineKeyboardMarkup(buttons),
+                                if media_url.endswith(".gif"):
+                                    results.append(
+                                        InlineQueryResultAnimation(
+                                            animation_url=media_url,
+                                            thumb_url=thumbnail,
+                                            caption=captionx,
+                                            reply_markup=InlineKeyboardMarkup(buttons),
+                                        )
                                     )
-                                )
-                            else:
-                                results.append(
-                                    InlineQueryResultPhoto(
-                                        photo_url=media_url,
-                                        thumb_url=thumbnail,
-                                        caption=captionx,
-                                        reply_markup=InlineKeyboardMarkup(buttons),
+                                else:
+                                    results.append(
+                                        InlineQueryResultPhoto(
+                                            photo_url=media_url,
+                                            thumb_url=thumbnail,
+                                            caption=captionx,
+                                            reply_markup=InlineKeyboardMarkup(buttons),
+                                        )
                                     )
-                                )
-                await inline_query.answer(
-                    results=results,
-                    cache_time=1,
-                    is_gallery=bool_is_gallery,
-                    switch_pm_text="Available Commands",
-                    switch_pm_parameter="inline",
-                )
-                return
+                    await inline_query.answer(
+                        results=results,
+                        cache_time=1,
+                        is_gallery=bool_is_gallery,
+                        switch_pm_text="Available Commands",
+                        switch_pm_parameter="inline",
+                    )
+                    return
 
             # if string == "rick":
             #     rick = [[InlineKeyboardButton(text="🔍", callback_data="mm")]]
@@ -901,7 +901,7 @@ if userge.has_bot:
                         view_db = ujson.load(fo)
                         fo.close()
                         if len(view_db) != 0:
-                            for num, spoilerr in enumerate(view_db, start=1):
+                            for numm, spoilerr in enumerate(view_db, start=1):
                                 buttons = [
                                     [
                                         InlineKeyboardButton(
@@ -1122,19 +1122,12 @@ if userge.has_bot:
 
             if str_y[0].lower() == "ytdl" and len(str_y) == 2:
                 link = get_yt_video_id(str_y[1])
+                found_ = True
                 if link is None:
                     search = VideosSearch(str_y[1], limit=15)
                     resp = (search.result()).get("result")
                     if len(resp) == 0:
-                        results.append(
-                            InlineQueryResultArticle(
-                                title="not Found",
-                                input_message_content=InputTextMessageContent(
-                                    f"No Results found for {str_y[1]}"
-                                ),
-                                description="INVALID",
-                            )
-                        )
+                        found_ = False
                     else:
                         outdata = await result_formatter(resp)
                         key_ = rand_key()
@@ -1163,17 +1156,28 @@ if userge.has_bot:
                         photo = outdata[1]["thumb"]
                 else:
                     caption, buttons = await download_button(link, body=True)
-                    photo = get_ytthumb(link)
+                    photo = await get_ytthumb(link)
 
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url=photo,
-                        title=link,
-                        description="⬇️ Click to Download",
-                        caption=caption,
-                        reply_markup=buttons,
+                if found_:
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=photo,
+                            title=link,
+                            description="⬇️ Click to Download",
+                            caption=caption,
+                            reply_markup=buttons,
+                        )
                     )
-                )
+                else:
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="not Found",
+                            input_message_content=InputTextMessageContent(
+                                f"No Results found for `{str_y[1]}`"
+                            ),
+                            description="INVALID",
+                        )
+                    )
 
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
