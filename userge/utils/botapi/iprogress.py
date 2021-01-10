@@ -13,6 +13,7 @@ _TASKS: Dict[str, Tuple[int, int]] = {}
 async def inline_progress(
     current: int,
     total: int,
+    message: "userge.Message",
     inline_id: str,
     ud_type: str,
     file_name: str = "",

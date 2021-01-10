@@ -244,7 +244,7 @@ async def vid_upload(
         if logvid:
             progress_args = (message, f"uploading {extra}", str(path.name))
         else:
-            progress_args = (inline_id, f"uploading {extra}", str(path.name), "caption")
+            progress_args = (message, inline_id, f"uploading {extra}", str(path.name), "caption")
         msg = await message.client.send_video(
             chat_id=message.chat.id,
             video=strpath,
