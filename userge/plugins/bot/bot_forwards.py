@@ -113,7 +113,6 @@ if userge.has_bot:
             except BadRequest:
                 return
             except Exception:
-                # await CHANNEL.log(str(e))
                 await userge.bot.send_message(
                     message.chat.id,
                     "`You can't reply to old messages with if user's"
@@ -127,11 +126,11 @@ if userge.has_bot:
                 return
             if to_copy:
                 await userge.bot.copy_message(
-                    chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                    chat_id=to_user.id, from_chat_id=message.chat.id, message_id=msg_id
                 )
             else:
                 await userge.bot.forward_messages(
-                    chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
+                    chat_id=to_user.id, from_chat_id=message.chat.id, message_id=msg_id
                 )
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
@@ -275,7 +274,6 @@ if userge.has_bot:
         elif fwd:
             usr = fwd.mention
             user_id = fwd.id
-
         if not (user_id and usr):
             return await message.err("Not Found", del_in=3)
         await info_msg.edit(f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr}")
