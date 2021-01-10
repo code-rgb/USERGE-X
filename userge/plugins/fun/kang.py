@@ -11,8 +11,9 @@
 import io
 import os
 import random
-from bs4 import BeautifulSoup as bs
+
 import emoji
+from bs4 import BeautifulSoup as bs
 from PIL import Image
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
