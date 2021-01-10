@@ -7,7 +7,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-
+from userge.utils.botapi import inline_progress
 import stagger
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -160,11 +160,12 @@ async def upload(
     extra: str = "",
     logvid: bool = True,
     custom_thumb: str = None,
+    inline_id: str = None
 ):
     if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
         "d" not in message.flags
     ):
-        return await vid_upload(message, path, del_path, extra, logvid, custom_thumb)
+        return await vid_upload(message, path, del_path, extra, logvid, custom_thumb, inline_id)
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
@@ -215,6 +216,7 @@ async def vid_upload(
     extra: str = "",
     logvid: bool = True,
     custom_thumb: str = None,
+    inline_id: str = None
 ):
     strpath = str(path)
     thumb = custom_thumb or await get_thumb(strpath)
@@ -236,6 +238,10 @@ async def vid_upload(
         if t_m and t_m.has("height"):
             height = t_m.get("height")
     try:
+        if logvid:
+            progress_args = (message, f"uploading {extra}", str(path.name))
+        else:
+            progress_args = (inline_id, "caption", f"uploading {extra}", str(path.name))
         msg = await message.client.send_video(
             chat_id=message.chat.id,
             video=strpath,
@@ -246,8 +252,8 @@ async def vid_upload(
             caption=path.name,
             parse_mode="html",
             disable_notification=True,
-            progress=progress,
-            progress_args=(message, f"uploading {extra}", str(path.name)),
+            progress=progress if logvid else inline_progress,
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{path}` due to {e_e}")

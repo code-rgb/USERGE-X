@@ -115,6 +115,7 @@ if userge.has_bot:
                 return
         else:
             choice_id = None
+
         startTime = time()
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
@@ -145,7 +146,7 @@ if userge.has_bot:
             return
         thumb_ = str(download(await get_ytthumb(yt_code))) if downtype == "v" else None
         uploaded_media = await upload(
-            upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_
+            upload_msg, Path(_fpath), logvid=False, custom_thumb=thumb_, inline_id=c_q.inline_message_id
         )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
@@ -193,7 +194,7 @@ if userge.has_bot:
         if choosen_btn == "back":
             index = int(page) - 1
             del_back = index == 1
-            await c_q.answer(f"🡨 Back  {index}/{total}", show_alert=False)
+            await c_q.answer(f"⬅️  Back  {index}/{total}", show_alert=False)
             back_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -216,7 +217,7 @@ if userge.has_bot:
             if index > total:
                 return await c_q.answer("That's All Folks !", show_alert=True)
             else:
-                await c_q.answer(f"🡪 Next  {index}/{total}", show_alert=False)
+                await c_q.answer(f"➡️  Next  {index}/{total}", show_alert=False)
             front_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -292,7 +293,7 @@ if userge.has_bot:
 
 
 @pool.run_in_thread
-def _tubeDl(url: str, starttime, uid=None, prog=None):
+def _tubeDl(url: str, starttime, uid=None):
     ydl_opts = {
         "addmetadata": True,
         "geo_bypass": True,
@@ -314,7 +315,6 @@ def _tubeDl(url: str, starttime, uid=None, prog=None):
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             x = ydl.download([url])
-            # ydl.add_progress_hook(prog)
     except DownloadError as e:
         CHANNEL.log(str(e))
     else:
@@ -322,7 +322,7 @@ def _tubeDl(url: str, starttime, uid=None, prog=None):
 
 
 @pool.run_in_thread
-def _mp3Dl(url: str, starttime, uid, prog=None):
+def _mp3Dl(url: str, starttime, uid):
     _opts = {
         "outtmpl": os.path.join(Config.DOWN_PATH, str(starttime), "%(title)s.%(ext)s"),
         "logger": LOGGER,
@@ -345,7 +345,6 @@ def _mp3Dl(url: str, starttime, uid, prog=None):
     try:
         with youtube_dl.YoutubeDL(_opts) as ytdl:
             dloader = ytdl.download([url])
-            # ytdl.add_progress_hook(prog)
     except Exception as y_e:
         LOGGER.exception(y_e)
         return y_e
@@ -545,3 +544,6 @@ def download_button(vid: str, body: bool = False):
 
         return vid_body, InlineKeyboardMarkup(btn)
     return InlineKeyboardMarkup(btn)
+
+
+
