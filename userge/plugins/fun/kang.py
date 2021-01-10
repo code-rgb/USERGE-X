@@ -11,7 +11,7 @@
 import io
 import os
 import random
-
+from bs4 import BeautifulSoup as bs
 import emoji
 from PIL import Image
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
@@ -319,7 +319,7 @@ async def sticker_search(message: Message):
             "Response was not 200!, Api is having some issues\n Please try again later.",
             del_in=5,
         )
-    soup = bs(text[1], "lxml")
+    soup = bs(text, "lxml")
     results = soup.find_all("div", {"class": "sticker-pack__header"})
     for pack in results:
         if pack.button:
