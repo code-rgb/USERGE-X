@@ -733,9 +733,9 @@ if userge.has_bot:
                 alive_info = f"""
     **[Paimon](https://telegram.dog/x_xtests) is Up and Running**
 
- •  Python :  `v{versions.__python_version__}`
- •  Pyrogram :  `v{versions.__pyro_version__}`
- •  X :  `v{get_version()}`
+   Python   :  `v{versions.__python_version__}`
+   Pyrogram :  `v{versions.__pyro_version__}`
+   X        :  `v{get_version()}`
 
 {_get_mode()}  |  : {userge.uptime}
 """
