@@ -724,18 +724,18 @@ if userge.has_bot:
                 buttons = [
                     [
                         InlineKeyboardButton(
-                            "🔧 SETTINGS", callback_data="settings_btn"
+                            "SETTINGS", callback_data="settings_btn"
                         ),
-                        InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO),
+                        InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
                     ]
                 ]
 
                 alive_info = f"""
-    **[USERGE-X](https://telegram.dog/x_xtests) is Up and Running**
+    **[Paimon](https://telegram.dog/x_xtests) is Up and Running**
 
  •  Python :  `v{versions.__python_version__}`
  •  Pyrogram :  `v{versions.__pyro_version__}`
- •  𝑿 :  `v{get_version()}`
+ •  X :  `v{get_version()}`
 
 {_get_mode()}  |  : {userge.uptime}
 """
