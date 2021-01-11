@@ -5,13 +5,14 @@
 
 import asyncio
 import os
+from time import time
 
 import ujson
 from pyrogram import filters
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, UserIsBlocked
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import mention_html
+from userge.utils import mention_html, time_formatter
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -204,7 +205,8 @@ if userge.has_bot:
                 message.chat.id, "Reply to a message for BROADCAST"
             )
             return
-        br_cast = await message.reply_text("`Broadcasting ...`", quote=True)
+        start_ = time()
+        br_cast = await replied.reply("`Broadcasting ...`")
         b_msg = replied.message_id
         blocked_users = []
         count = 0
@@ -223,25 +225,30 @@ if userge.has_bot:
                     await userge.bot.forward_messages(
                         chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
                     )
+                await asyncio.sleep(0.05)
+                # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
-                await asyncio.sleep(e.x + 5)
+                await asyncio.sleep(e.x)
             except BadRequest:
                 blocked_users.append(
                     b_id
                 )  # Collect the user id and removing them later
+            except Exception as err:
+                await CHANNEL.log(str(err))
             else:
                 count += 1
-                if count % 10 == 0:
+                if count % 5 == 0:
                     try:
                         await br_cast.edit(
-                            f"`Processing ...`\n> Success: (**{count}**)"
+                            f"`Broadcasting ...`\n\n• ✔️ Success:  **{count}**\n• ✖️ Failed:  **{len(blocked_users)}**"
                         )
                     except FloodWait as e:
-                        await asyncio.sleep(e.x + 5)
-
-        b_info = f"🔊 **Successfully Broadcasted This Message to** `{count} users`"
+                        await asyncio.sleep(e.x)
+        end_ = time()
+        b_info = f"🔊  Successfully broadcasted message to ➜  <b>{count} users.</b>"
         if len(blocked_users) != 0:
-            b_info += f"\n\n😕 {len(blocked_users)} users blocked your bot recently"
+            b_info += f"\n🚫  <b>{len(blocked_users)} users</b> blocked your bot recently, so have been removed."
+        b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
         await br_cast.edit(b_info, log=__name__)
         if blocked_users:
             for buser in blocked_users:
