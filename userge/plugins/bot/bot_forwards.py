@@ -6,6 +6,7 @@
 import asyncio
 import os
 from time import time
+
 import ujson
 from pyrogram import filters
 from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, UserIsBlocked
@@ -224,7 +225,7 @@ if userge.has_bot:
                     await userge.bot.forward_messages(
                         chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
                     )
-                await asyncio.sleep(.05)
+                await asyncio.sleep(0.05)
                 # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
                 await asyncio.sleep(e.x)
