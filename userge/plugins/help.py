@@ -893,7 +893,6 @@ if userge.has_bot:
                     await inline_query.answer(
                         results=results[:50],
                         cache_time=1,
-   
                         switch_pm_text="Available Commands",
                         switch_pm_parameter="inline",
                     )
