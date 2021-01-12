@@ -1,19 +1,20 @@
-# For USERGE-X 
+# For USERGE-X
 # Author: github.com/code-rgb
 # (C) All Rights Reserved
 
-from userge.utils import get_response
-from bs4 import BeautifulSoup as soup
 from urllib.parse import quote
-from userge import Config
-from selenium import webdriver
+
+from bs4 import BeautifulSoup as soup
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from selenium import webdriver
+
+from userge import Config
+from userge.utils import get_response
 
 GOGO = "https://gogoanime.so"
 
 
 class Anime:
-
     @staticmethod
     async def _get_html(link: str, down_link: bool = False):
         if not down_link:
@@ -26,16 +27,13 @@ class Anime:
         page = await Anime._get_html("/search.html?keyword=" + quote(query))
         out = []
         for i in page.find("ul", {"class": "items"}).findAll("li"):
-            image = i.div.a.img.get("src")
+            i.div.a.img.get("src")
             result_ = i.find("p", {"class": "name"})
             title = result_.a.text.strip()
             release = i.find("p", {"class": "released"}).text.strip()
             result_url = GOGO + result_.a.get("href")
-            out.append(
-                {"title": title, "release": release, "result_url": result_url}
-            )
+            out.append({"title": title, "release": release, "result_url": result_url})
         return out
-
 
     @staticmethod
     async def get_eps(link: str):
@@ -50,7 +48,9 @@ class Anime:
         chrome_options.add_argument("--disable-gpu")
         driver = webdriver.Chrome(chrome_options=chrome_options)
         driver.get(link)
-        html = driver.find_element_by_xpath('//*[@id="episode_related"]').get_attribute('innerHTML')
+        html = driver.find_element_by_xpath('//*[@id="episode_related"]').get_attribute(
+            "innerHTML"
+        )
         driver.close()
         page = soup(html, "lxml")
         out = {}
