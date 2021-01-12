@@ -23,7 +23,7 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 from youtubesearchpython import VideosSearch
-
+from .fun.gogo import Anime
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.utils import get_file_id, get_response
@@ -866,6 +866,27 @@ if userge.has_bot:
 
             if string == "repo":
                 results.append(REPO_X)
+
+            if len(str_y) == 2 and str_y[0] == "anime":
+                for i in await Anime.search(str_y[1]):
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=i.get("image"),
+                            title=i.get("title"),
+                            description=i.get("release"),
+                            caption=f'**{i.get("title")}**\n{i.get("release")}',
+                            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="⬇️  Download", url=i.get("result_url"))]])
+                        )
+                    )
+                if len(results) != 0:
+                    await inline_query.answer(
+                        results=results,
+                        cache_time=1,
+                        is_gallery=True,
+                        switch_pm_text="Available Commands",
+                        switch_pm_parameter="inline",
+                    )
+                    return
 
             if str_y[0] == "spoiler":
                 if not os.path.exists("./userge/xcache/spoiler_db.json"):
