@@ -874,8 +874,8 @@ if userge.has_bot:
                         InlineQueryResultArticle(
                             title=i.get("title"),
                             input_message_content=InputTextMessageContent(
-                                f'[\u200C]({i.get("image")})**{i.get("title")}**\n{i.get("release")}'
-                            )
+                                f'[\u200c]({i.get("image")})**{i.get("title")}**\n{i.get("release")}'
+                            ),
                             description=i.get("release"),
                             thumb_url=i.get("image"),
                             reply_markup=InlineKeyboardMarkup(
