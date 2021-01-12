@@ -62,9 +62,10 @@ class Anime:
 
     @staticmethod
     async def get_quality(endpoint: str):
-        page = await Anime._get_html(endpoint)
-        link = page.find("li", {"class": "dowloads"}).a.get("href")
-        await Anime._get_html(link, down_link=True)
+        page_ = await Anime._get_html(endpoint)
+        link_ = page_.find("li", {"class": "dowloads"}).a.get("href")
+        # get qualities from download page
+        page = await Anime._get_html(link_, down_link=True)
         btn_, row_ = [], []
         for i in page.findAll("div", {"class": "dowload"}):
             qual = i.a
