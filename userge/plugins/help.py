@@ -871,11 +871,13 @@ if userge.has_bot:
             if len(str_y) == 2 and str_y[0] == "anime":
                 for i in await Anime.search(str_y[1]):
                     results.append(
-                        InlineQueryResultPhoto(
-                            photo_url=i.get("image"),
+                        InlineQueryResultArticle(
                             title=i.get("title"),
+                            input_message_content=InputTextMessageContent(
+                                f'[\u200C]({i.get("image")})**{i.get("title")}**\n{i.get("release")}'
+                            )
                             description=i.get("release"),
-                            caption=f'**{i.get("title")}**\n{i.get("release")}',
+                            thumb_url=i.get("image"),
                             reply_markup=InlineKeyboardMarkup(
                                 [
                                     [
@@ -889,9 +891,9 @@ if userge.has_bot:
                     )
                 if len(results) != 0:
                     await inline_query.answer(
-                        results=results,
+                        results=results[:50],
                         cache_time=1,
-                        is_gallery=True,
+   
                         switch_pm_text="Available Commands",
                         switch_pm_parameter="inline",
                     )
