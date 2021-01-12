@@ -23,7 +23,7 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 from youtubesearchpython import VideosSearch
-from .fun.gogo import Anime
+
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.utils import get_file_id, get_response
@@ -38,6 +38,7 @@ from .bot.utube_inline import (
     result_formatter,
     ytsearch_data,
 )
+from .fun.gogo import Anime
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
@@ -875,7 +876,15 @@ if userge.has_bot:
                             title=i.get("title"),
                             description=i.get("release"),
                             caption=f'**{i.get("title")}**\n{i.get("release")}',
-                            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="⬇️  Download", url=i.get("result_url"))]])
+                            reply_markup=InlineKeyboardMarkup(
+                                [
+                                    [
+                                        InlineKeyboardButton(
+                                            text="⬇️  Download", url=i.get("result_url")
+                                        )
+                                    ]
+                                ]
+                            ),
                         )
                     )
                 if len(results) != 0:

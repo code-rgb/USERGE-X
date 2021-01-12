@@ -33,7 +33,14 @@ class Anime:
             release = i.find("p", {"class": "released"}).text.strip()
             result_url = GOGO + result_.a.get("href")
             image = i.div.a.img.get("src")
-            out.append({"title": title, "release": release, "result_url": result_url, "image": image})
+            out.append(
+                {
+                    "title": title,
+                    "release": release,
+                    "result_url": result_url,
+                    "image": image,
+                }
+            )
         return out
 
     @staticmethod
