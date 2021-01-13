@@ -48,9 +48,9 @@ class Anime:
     @staticmethod
     async def get_eps(link: str):
         page = await Anime._get_html(link, add_pre=False)
-        end_ = int(page.find("ul", {"id": "episode_page"}).findAll("li")[-1].a.get("ep_end")))
+        end_ = page.find("ul", {"id": "episode_page"}).findAll("li")[-1].a.get("ep_end")
         name_ = "/" + (link.rsplit("/", 1))[1]
-        return {'total': end_, "name": name_}
+        return {'total': int(end_), "name": name_}
 
     @staticmethod
     async def get_quality(anime_: str, episode):
