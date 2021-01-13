@@ -7,7 +7,7 @@ from urllib.parse import quote
 from bs4 import BeautifulSoup as soup
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge.utils import get_response, rand_key, check_owner
+from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 GOGO_DB = {"results": {}}
@@ -78,8 +78,6 @@ class Anime:
         return InlineKeyboardMarkup(row_)
 
 
-
-
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern="get_eps(.*)"))
@@ -92,16 +90,20 @@ if userge.has_bot:
         res = await Anime.get_eps(url_)
         btn_, row_ = [], []
         for i in range(1, int(res) + 1):
-            btn_.append(InlineKeyboardButton("EP "+ str(i), callback_data=f"gogo_get_qual{key_}_{i}"))
+            btn_.append(
+                InlineKeyboardButton(
+                    "EP " + str(i), callback_data=f"gogo_get_qual{key_}_{i}"
+                )
+            )
             if len(btn_) == 8:
                 row_.append(btn)
         if len(btn_) != 0:
             row_.append(btn)
-        await c_q.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(row_)
-        )
+        await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(row_))
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)"))
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
+    )
     @check_owner
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
@@ -111,5 +113,5 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.edit_message_text(
             text=f"**>> Episode: {episode}**\n\n📹  Choose Quality",
-            reply_markup=(await Anime.get_quality(url=url_, episode=episode))
+            reply_markup=(await Anime.get_quality(url=url_, episode=episode)),
         )
