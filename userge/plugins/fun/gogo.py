@@ -95,7 +95,7 @@ if userge.has_bot:
                     "EP " + str(i), callback_data=f"gogo_get_qual{key_}_{i}"
                 )
             )
-            if len(btn_) == 8:
+            if len(btn_) == 5:
                 row_.append(btn_)
                 btn_ = []
         if len(btn_) != 0:
