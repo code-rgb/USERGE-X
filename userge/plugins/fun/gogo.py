@@ -96,7 +96,7 @@ if userge.has_bot:
                 )
             )
             if len(btn_) == 8:
-                row_.append(btn)
+                row_.append(btn_)
                 btn_ = []
         if len(btn_) != 0:
             row_.append(btn)
