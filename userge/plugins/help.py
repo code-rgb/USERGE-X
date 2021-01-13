@@ -878,15 +878,15 @@ if userge.has_bot:
                             ),
                             description=i.get("release"),
                             thumb_url=i.get("image"),
-                            reply_markup=InlineKeyboardMarkup(
-                                [
-                                    [
-                                        InlineKeyboardButton(
-                                            text="⬇️  Download", url=i.get("result_url")
-                                        )
-                                    ]
-                                ]
-                            ),
+                            # reply_markup=InlineKeyboardMarkup(
+                            #     [
+                            #         [
+                            #             InlineKeyboardButton(
+                            #                 text="⬇️  Download", url=i.get("result_url")
+                            #             )
+                            #         ]
+                            #     ]
+                            # ),
                         )
                     )
                 if len(results) != 0:
