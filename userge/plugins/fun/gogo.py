@@ -75,7 +75,7 @@ class Anime:
                     row_.append(btn_)
                     btn_ = []
         if len(btn_) != 0:
-            row_.append(btn)
+            row_.append(btn_)
         return InlineKeyboardMarkup(row_)
 
 
@@ -100,7 +100,7 @@ if userge.has_bot:
                 row_.append(btn_)
                 btn_ = []
         if len(btn_) != 0:
-            row_.append(btn)
+            row_.append(btn_)
         await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(row_))
 
     @userge.bot.on_callback_query(
