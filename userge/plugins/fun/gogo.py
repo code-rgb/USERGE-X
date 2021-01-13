@@ -97,6 +97,7 @@ if userge.has_bot:
             )
             if len(btn_) == 8:
                 row_.append(btn)
+                btn_ = []
         if len(btn_) != 0:
             row_.append(btn)
         await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(row_))
