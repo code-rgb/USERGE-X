@@ -5,10 +5,11 @@
 from urllib.parse import quote
 
 from bs4 import BeautifulSoup as soup
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram import filters
-from userge.utils import check_owner, get_response, rand_key
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
 from userge import userge
+from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 GOGO_DB = {"results": {}}
