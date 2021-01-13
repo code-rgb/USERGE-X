@@ -6,9 +6,7 @@ from urllib.parse import quote
 
 from bs4 import BeautifulSoup as soup
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from selenium import webdriver
 
-from userge import Config
 from userge.utils import get_response
 
 GOGO = "https://gogoanime.so"
@@ -50,7 +48,7 @@ class Anime:
         page = await Anime._get_html(link, add_pre=False)
         end_ = page.find("ul", {"id": "episode_page"}).findAll("li")[-1].a.get("ep_end")
         name_ = "/" + (link.rsplit("/", 1))[1]
-        return {'total': int(end_), "name": name_}
+        return {"total": int(end_), "name": name_}
 
     @staticmethod
     async def get_quality(anime_: str, episode):
