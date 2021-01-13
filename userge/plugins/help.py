@@ -882,7 +882,7 @@ if userge.has_bot:
                                 [
                                     [
                                         InlineKeyboardButton(
-                                            text="⬇️  Download", url=i.get("result_url")
+                                            text="⬇️  Download", callback_data=f'get_eps{i.get("key")}'
                                         )
                                     ]
                                 ]
