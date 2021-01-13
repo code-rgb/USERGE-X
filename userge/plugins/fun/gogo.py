@@ -27,18 +27,20 @@ class Anime:
         page = await Anime._get_html("/search.html?keyword=" + quote(query))
         out = []
         for i in page.find("ul", {"class": "items"}).findAll("li"):
-            i.div.a.img.get("src")
             result_ = i.find("p", {"class": "name"})
             title = result_.a.text.strip()
             release = i.find("p", {"class": "released"}).text.strip()
             result_url = GOGO + result_.a.get("href")
             image = i.div.a.img.get("src")
+            k_ = image.rsplit("/", 1)
+            if len(k_) == 2:
+                k_[1] = quote(k_[1])
             out.append(
                 {
                     "title": title,
                     "release": release,
                     "result_url": result_url,
-                    "image": image,
+                    "image": "/".join(k_),
                 }
             )
         return out
