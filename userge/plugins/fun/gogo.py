@@ -15,7 +15,7 @@ from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 GOGO_DB = {}
-
+CHANNEL = userge.getCLogger(__name__)
 
 class Anime:
     @staticmethod
@@ -153,6 +153,7 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
+        await CHANNEL.log(str(pages))
         p_len = len(pages)
         del_back = False
         if not pages:
@@ -176,11 +177,12 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        pg_btns_ = pages[page]
-        pg_btns_.append(button_base)
+        pages[page].append(button_base)
+        mkrp_ = pages[page]
+        await CHANNEL.log(str(mkrp_))
         try:
             await c_q.edit_message_reply_markup(
-                reply_markup=InlineKeyboardMarkup(pg_btns_)
+                reply_markup=InlineKeyboardMarkup(mkrp_)
             )
             await asyncio.sleep(0.2)
         except FloodWait as e:
