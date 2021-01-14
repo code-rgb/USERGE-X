@@ -12,7 +12,7 @@ from userge import userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
-GOGO_DB = {"results": {}}
+GOGO_DB = {}
 
 
 class Anime:
@@ -37,7 +37,7 @@ class Anime:
             if len(k_) == 2:
                 k_[1] = quote(k_[1])
             key_ = rand_key()
-            GOGO_DB["results"][key_] = result_url
+            GOGO_DB[key_] = {"url": result_url}
             out.append(
                 {
                     "key": key_,
@@ -86,11 +86,11 @@ if userge.has_bot:
     @check_owner
     async def get_eps_from_key(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
-        url_ = GOGO_DB["results"].get(key_)
+        url_ = GOGO_DB.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
         res = await Anime.get_eps(url_)
-        btn_, row_ = [], []
+        btn_, row_, paginate = [], [], []
         for i in range(1, int(res) + 1):
             btn_.append(
                 InlineKeyboardButton(
@@ -100,9 +100,18 @@ if userge.has_bot:
             if len(btn_) == 5:
                 row_.append(btn_)
                 btn_ = []
+            if len(row_) == 7:
+                paginate.append(row_)
+                row_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(row_))
+        if len(row_) != 0:
+            paginate.append(row_)
+        GOGO_DB[key_]["page"] = paginate
+        p_len = len(paginate)
+        if p_len > 1:
+            paginate[0].append([InlineKeyboardButton("1 / " + str(p_len), callback_data=f"gogo_page{key_}_0"), InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_0")])
+        await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(paginate[0]))
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
@@ -111,10 +120,33 @@ if userge.has_bot:
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
         episode = int(c_q.matches[0].group(2))
-        url_ = GOGO_DB["results"].get(key_)
+        url_ = GOGO_DB.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
         await c_q.edit_message_text(
             text=f"**>> Episode: {episode}**\n\n📹  Choose Quality",
             reply_markup=(await Anime.get_quality(url=url_, episode=episode)),
         )
+
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"gogo_(next|back)([a-z0-9]+)_([\d]+)")
+    )
+    @check_owner
+    async def gogo_paginate(c_q: CallbackQuery):
+        direction = c_q.matches[0].group(1)
+        key_ = c_q.matches[0].group(2)
+        pos = int(c_q.matches[0].group(3))
+        pages = GOGO_DB.get(key_).get("page")
+        if not pages:
+            return await c_q.answer("Not Found")
+        if direction == "next":
+            p_len = len(pages)
+            if pos >= p_len:
+                return await c_q.answer("max")
+            mkrp = pages[pos + 1].append([
+                InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{pos + 1}"),
+                InlineKeyboardButton(f"{pos + 1} / {p_len}", callback_data=f"gogo_page{key_}_{pos + 1}"),
+                InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_{pos + 1}"),
+            ])
+            await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(pages[pos + 1]))
+
