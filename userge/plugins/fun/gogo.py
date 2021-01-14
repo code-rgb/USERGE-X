@@ -160,11 +160,11 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         if direction == "next":
-            if pos >= p_len:
-                return await c_q.answer("That's All Folks !")
             page = pos + 1
+            if page >= p_len:
+                return await c_q.answer("That's All Folks !")
         elif direction == "back":
-            if page <= 1:
+            if pos == 1:
                 del_back = True
             page = pos - 1
         else:
