@@ -2,13 +2,14 @@
 # Author: github.com/code-rgb
 # (C) All Rights Reserved
 
+import asyncio
 from urllib.parse import quote
 
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.errors import FloodWait
-import asyncio
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
 from userge import userge
 from userge.utils import check_owner, get_response, rand_key
 
@@ -138,7 +139,9 @@ if userge.has_bot:
         await c_q.answer()
         await c_q.edit_message_text(
             text=f"**>> Episode: {episode}**\n\n📹  Choose Quality",
-            reply_markup=(await Anime.get_quality(url=url_, episode=episode, key_=key_)),
+            reply_markup=(
+                await Anime.get_quality(url=url_, episode=episode, key_=key_)
+            ),
         )
 
     @userge.bot.on_callback_query(
@@ -164,22 +167,17 @@ if userge.has_bot:
             if page <= 0:
                 del_back = True
 
-        
         button_base = [
-                InlineKeyboardButton(
-                    "Back", callback_data=f"gogo_back{key_}_{page}"
-                ),
-                InlineKeyboardButton(
-                    f"{page} / {p_len}",
-                    callback_data=f"gogo_page{key_}_{page}",
-                ),
-                InlineKeyboardButton(
-                    "Next", callback_data=f"gogo_next{key_}_{page}"
-                ),
+            InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
+            InlineKeyboardButton(
+                f"{page} / {p_len}",
+                callback_data=f"gogo_page{key_}_{page}",
+            ),
+            InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_{page}"),
         ]
         if del_back:
             button_base.pop(0)
-        mkrp = pages[page].append(button_base)
+        pages[page].append(button_base)
         try:
             await c_q.edit_message_reply_markup(
                 reply_markup=InlineKeyboardMarkup(pages[page])
