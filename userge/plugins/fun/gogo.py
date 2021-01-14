@@ -170,7 +170,7 @@ if userge.has_bot:
             page = pos - 1
         else:
             return
-        await CHANNEL.log(page)
+        await CHANNEL.log(str(page))
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
