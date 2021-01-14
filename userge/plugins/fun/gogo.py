@@ -161,7 +161,7 @@ if userge.has_bot:
             page = pos + 1
         else:
             page = pos - 1
-            if page =< 0:
+            if page <= 0:
                 del_back = True
 
         
