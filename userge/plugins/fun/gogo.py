@@ -154,7 +154,6 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
-        await CHANNEL.log(str(pages))
         p_len = len(pages)
         del_back = False
         if not pages:
@@ -164,23 +163,26 @@ if userge.has_bot:
             if pos >= p_len:
                 return await c_q.answer("That's All Folks !")
             page = pos + 1
-        else:
-            page = pos - 1
-            if page <= 0:
+        elif direction == "back":
+            if page <= 1:
                 del_back = True
+            page = pos - 1
+        else:
+            return
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
-                f"{page} / {p_len}",
+                f"{page + 1} / {p_len}",
                 callback_data=f"gogo_page{key_}_{page}",
             ),
             InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_{page}"),
         ]
         if del_back:
             button_base.pop(0)
+        await CHANNEL.log(str(pages[page][-1]))
         pages[page].append(button_base)
         mkrp_ = pages[page]
-        await CHANNEL.log(str(mkrp_))
+        await CHANNEL.log(str(mkrp_[-1]))
         try:
             await c_q.edit_message_reply_markup(
                 reply_markup=InlineKeyboardMarkup(mkrp_)
