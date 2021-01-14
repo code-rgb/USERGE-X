@@ -4,19 +4,40 @@
 
 import asyncio
 from urllib.parse import quote
-
+import os
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+import ujson
 from userge import userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
-GOGO_DB = {}
 CHANNEL = userge.getCLogger(__name__)
+PATH = "./userge/xcache/gogo_db.json"
 
+class GogoDB:
+    def __init__(self):
+        if not os.path.exists(PATH):
+            with open(PATH, "w") as f:
+                ujson.dump({}, f)
+        with open(PATH) as db_:
+            self.db = ujson.load(db_)
+
+    def store(self, rnd_id: str, data_: dict):
+        self.db[rnd_id] = data_
+        self.save()
+
+    def addpg(self, rnd_id: str, page_):
+        self.db[rnd_id]["page"] = page_
+        self.save()
+
+    def save(self):
+        with open(PATH, "w") as outfile:
+            ujson.dump(self.db, outfile, indent=4)
+
+gogo_db = GogoDB()
 
 class Anime:
     @staticmethod
@@ -40,7 +61,7 @@ class Anime:
             if len(k_) == 2:
                 k_[1] = quote(k_[1])
             key_ = rand_key()
-            GOGO_DB[key_] = {"url": result_url}
+            gogo_db.store(rnd_id=key_, data_={"url": result_url})
             out.append(
                 {
                     "key": key_,
@@ -90,7 +111,7 @@ if userge.has_bot:
     @check_owner
     async def get_eps_from_key(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
-        url_ = GOGO_DB.get(key_).get("url")
+        url_ = gogo_db.db.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
         await c_q.answer()
@@ -112,7 +133,7 @@ if userge.has_bot:
             row_.append(btn_)
         if len(row_) != 0:
             paginate.append(row_)
-        GOGO_DB[key_]["page"] = paginate
+        gogo_db.addpg(rnd_id=key_, page_=paginate)
         p_len = len(paginate)
         if p_len > 1:
             paginate[0].append(
@@ -134,7 +155,7 @@ if userge.has_bot:
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
         episode = int(c_q.matches[0].group(2))
-        url_ = GOGO_DB.get(key_).get("url")
+        url_ = gogo_db.db.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
         await c_q.answer()
@@ -146,15 +167,14 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"gogo_(next|back)([a-z0-9]+)_([\d]+)")
+        filters.regex(pattern=r"gogo_(next|back|page)([a-z0-9]+)_([\d]+)")
     )
     @check_owner
     async def gogo_paginate(c_q: CallbackQuery):
         direction = c_q.matches[0].group(1)
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
-        pages = GOGO_DB.get(key_).get("page")
-        test = pages
+        pages = gogo_db.db.get(key_).get("page")
         p_len = len(pages)
         del_back = False
         if not pages:
@@ -170,7 +190,6 @@ if userge.has_bot:
             page = pos - 1
         else:
             return
-        await CHANNEL.log(str(page))
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
