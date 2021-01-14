@@ -154,9 +154,9 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
-       # print(GOGO_DB)
+        # print(GOGO_DB)
         p_len = len(pages)
-        #print(p_len)
+        # print(p_len)
         del_back = False
         if not pages:
             return await c_q.answer("Not Found")
