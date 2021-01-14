@@ -7,7 +7,7 @@ from urllib.parse import quote
 
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import userge
@@ -40,7 +40,9 @@ class Anime:
             if len(k_) == 2:
                 k_[1] = quote(k_[1])
             key_ = rand_key()
-            GOGO_DB[key_] = {"url": result_url}
+            body_ = f"[\u200c]({'/'.join(k_)})**{title}**\n{release}"
+            GOGO_DB[key_] = {"url": result_url, "body": body_}
+
             out.append(
                 {
                     "key": key_,
@@ -139,7 +141,7 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"**>> Episode: {episode}**\n\n📹  Choose Quality",
+            text=f"{GOGO_DB.get(key_).get('body')}\n\n**>> Episode: {episode}**\n\n📹  Choose Quality",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
@@ -190,6 +192,8 @@ if userge.has_bot:
             await c_q.edit_message_reply_markup(
                 reply_markup=InlineKeyboardMarkup(pages[page])
             )
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.3)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
+        except MessageNotModified:
+            pass
