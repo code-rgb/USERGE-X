@@ -154,9 +154,9 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
-        print(GOGO_DB)
+       # print(GOGO_DB)
         p_len = len(pages)
-        print(p_len)
+        #print(p_len)
         del_back = False
         if not pages:
             return await c_q.answer("Not Found")
@@ -171,7 +171,7 @@ if userge.has_bot:
             page = pos - 1
         else:
             return
-        await CHANNEL.log(str(page))
+        # await CHANNEL.log(str(page))
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
@@ -182,7 +182,7 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        if pages[page][-1][-1].get("text") == "Next":
+        if pages[page][-1][-1].text == "Next":
             pages[page][-1] = button_base
         else:
             pages[page].append(button_base)
