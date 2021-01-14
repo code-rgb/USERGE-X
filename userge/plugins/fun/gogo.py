@@ -110,8 +110,17 @@ if userge.has_bot:
         GOGO_DB[key_]["page"] = paginate
         p_len = len(paginate)
         if p_len > 1:
-            paginate[0].append([InlineKeyboardButton("1 / " + str(p_len), callback_data=f"gogo_page{key_}_0"), InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_0")])
-        await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(paginate[0]))
+            paginate[0].append(
+                [
+                    InlineKeyboardButton(
+                        "1 / " + str(p_len), callback_data=f"gogo_page{key_}_0"
+                    ),
+                    InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_0"),
+                ]
+            )
+        await c_q.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(paginate[0])
+        )
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
@@ -143,10 +152,20 @@ if userge.has_bot:
             p_len = len(pages)
             if pos >= p_len:
                 return await c_q.answer("max")
-            mkrp = pages[pos + 1].append([
-                InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{pos + 1}"),
-                InlineKeyboardButton(f"{pos + 1} / {p_len}", callback_data=f"gogo_page{key_}_{pos + 1}"),
-                InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_{pos + 1}"),
-            ])
-            await c_q.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(pages[pos + 1]))
-
+            mkrp = pages[pos + 1].append(
+                [
+                    InlineKeyboardButton(
+                        "Back", callback_data=f"gogo_back{key_}_{pos + 1}"
+                    ),
+                    InlineKeyboardButton(
+                        f"{pos + 1} / {p_len}",
+                        callback_data=f"gogo_page{key_}_{pos + 1}",
+                    ),
+                    InlineKeyboardButton(
+                        "Next", callback_data=f"gogo_next{key_}_{pos + 1}"
+                    ),
+                ]
+            )
+            await c_q.edit_message_reply_markup(
+                reply_markup=InlineKeyboardMarkup(pages[pos + 1])
+            )
