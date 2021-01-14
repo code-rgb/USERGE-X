@@ -7,7 +7,8 @@ from urllib.parse import quote
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+from pyrogram.errors import FloodWait
+import asyncio
 from userge import userge
 from userge.utils import check_owner, get_response, rand_key
 
@@ -60,7 +61,7 @@ class Anime:
         return name_
 
     @staticmethod
-    async def get_quality(url: str, episode: int):
+    async def get_quality(url: str, episode: int, key_: str):
         endpoint = f"{Anime._get_name(url)}-episode-{episode}"
         page_ = await Anime._get_html(endpoint)
         link_ = page_.find("li", {"class": "dowloads"}).a.get("href")
@@ -77,6 +78,7 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
+        row_.append(InlineKeyboardButton("Back", callback_data=f"get_eps{key_}"))
         return InlineKeyboardMarkup(row_)
 
 
@@ -89,6 +91,7 @@ if userge.has_bot:
         url_ = GOGO_DB.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
+        await c_q.answer()
         res = await Anime.get_eps(url_)
         btn_, row_, paginate = [], [], []
         for i in range(1, int(res) + 1):
@@ -97,7 +100,7 @@ if userge.has_bot:
                     "EP " + str(i), callback_data=f"gogo_get_qual{key_}_{i}"
                 )
             )
-            if len(btn_) == 5:
+            if len(btn_) == 4:
                 row_.append(btn_)
                 btn_ = []
             if len(row_) == 7:
@@ -132,9 +135,10 @@ if userge.has_bot:
         url_ = GOGO_DB.get(key_).get("url")
         if not url_:
             return await c_q.answer("Not Found")
+        await c_q.answer()
         await c_q.edit_message_text(
             text=f"**>> Episode: {episode}**\n\n📹  Choose Quality",
-            reply_markup=(await Anime.get_quality(url=url_, episode=episode)),
+            reply_markup=(await Anime.get_quality(url=url_, episode=episode, key_=key_)),
         )
 
     @userge.bot.on_callback_query(
@@ -146,26 +150,40 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
+        p_len = len(pages)
+        del_back = False
         if not pages:
             return await c_q.answer("Not Found")
+        await c_q.answer()
         if direction == "next":
-            p_len = len(pages)
             if pos >= p_len:
-                return await c_q.answer("max")
-            mkrp = pages[pos + 1].append(
-                [
-                    InlineKeyboardButton(
-                        "Back", callback_data=f"gogo_back{key_}_{pos + 1}"
-                    ),
-                    InlineKeyboardButton(
-                        f"{pos + 1} / {p_len}",
-                        callback_data=f"gogo_page{key_}_{pos + 1}",
-                    ),
-                    InlineKeyboardButton(
-                        "Next", callback_data=f"gogo_next{key_}_{pos + 1}"
-                    ),
-                ]
-            )
+                return await c_q.answer("That's All Folks !")
+            page = pos + 1
+        else:
+            page = pos - 1
+            if page =< 0:
+                del_back = True
+
+        
+        button_base = [
+                InlineKeyboardButton(
+                    "Back", callback_data=f"gogo_back{key_}_{page}"
+                ),
+                InlineKeyboardButton(
+                    f"{page} / {p_len}",
+                    callback_data=f"gogo_page{key_}_{page}",
+                ),
+                InlineKeyboardButton(
+                    "Next", callback_data=f"gogo_next{key_}_{page}"
+                ),
+        ]
+        if del_back:
+            button_base.pop(0)
+        mkrp = pages[page].append(button_base)
+        try:
             await c_q.edit_message_reply_markup(
-                reply_markup=InlineKeyboardMarkup(pages[pos + 1])
+                reply_markup=InlineKeyboardMarkup(pages[page])
             )
+            await asyncio.sleep(0.2)
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
