@@ -79,7 +79,7 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        row_.append(InlineKeyboardButton("Back", callback_data=f"get_eps{key_}"))
+        row_.append([InlineKeyboardButton("Back", callback_data=f"get_eps{key_}")])
         return InlineKeyboardMarkup(row_)
 
 
@@ -166,7 +166,6 @@ if userge.has_bot:
             page = pos - 1
             if page <= 0:
                 del_back = True
-
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
@@ -177,10 +176,11 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        pages[page].append(button_base)
+        pg_btns_ = pages[page]
+        pg_btns_.append(button_base)
         try:
             await c_q.edit_message_reply_markup(
-                reply_markup=InlineKeyboardMarkup(pages[page])
+                reply_markup=InlineKeyboardMarkup(pg_btns_)
             )
             await asyncio.sleep(0.2)
         except FloodWait as e:
