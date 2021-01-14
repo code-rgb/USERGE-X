@@ -17,6 +17,7 @@ GOGO = "https://gogoanime.so"
 GOGO_DB = {}
 CHANNEL = userge.getCLogger(__name__)
 
+
 class Anime:
     @staticmethod
     async def _get_html(link: str, add_pre: bool = True):
