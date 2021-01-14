@@ -154,6 +154,7 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
+        test = pages
         p_len = len(pages)
         del_back = False
         if not pages:
@@ -169,6 +170,7 @@ if userge.has_bot:
             page = pos - 1
         else:
             return
+        await CHANNEL.log(page)
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
@@ -179,14 +181,12 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        await CHANNEL.log(str(pages[page][-1]))
         pages[page].append(button_base)
-        mkrp_ = pages[page]
-        await CHANNEL.log(str(mkrp_[-1]))
         try:
             await c_q.edit_message_reply_markup(
-                reply_markup=InlineKeyboardMarkup(mkrp_)
+                reply_markup=InlineKeyboardMarkup(pages[page])
             )
+            pages = test
             await asyncio.sleep(0.2)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
