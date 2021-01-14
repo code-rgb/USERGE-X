@@ -3,19 +3,22 @@
 # (C) All Rights Reserved
 
 import asyncio
-from urllib.parse import quote
 import os
+from urllib.parse import quote
+
+import ujson
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-import ujson
+
 from userge import userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/gogo_db.json"
+
 
 class GogoDB:
     def __init__(self):
@@ -37,7 +40,9 @@ class GogoDB:
         with open(PATH, "w") as outfile:
             ujson.dump(self.db, outfile, indent=4)
 
+
 gogo_db = GogoDB()
+
 
 class Anime:
     @staticmethod
