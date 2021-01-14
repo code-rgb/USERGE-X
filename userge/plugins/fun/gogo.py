@@ -182,7 +182,10 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        pages[page].append(button_base)
+        if pages[page][-1][-1].get("text") == "Next":
+            pages[page][-1] = button_base
+        else:
+            pages[page].append(button_base)
         try:
             await c_q.edit_message_reply_markup(
                 reply_markup=InlineKeyboardMarkup(pages[page])
