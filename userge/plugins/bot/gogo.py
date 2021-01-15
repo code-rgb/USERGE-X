@@ -116,9 +116,10 @@ if userge.has_bot:
     @check_owner
     async def get_eps_from_key(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
-        url_ = GOGO_DB.get(key_).get("url")
+        url_ = GOGO_DB.get(key_)
         if not url_:
             return await c_q.answer("Not Found")
+        url_ = url_.get("url")
         await c_q.answer()
         res = await Anime.get_eps(url_)
         btn_, row_, paginate = [], [], []
@@ -160,12 +161,13 @@ if userge.has_bot:
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
         episode = int(c_q.matches[0].group(2))
-        url_ = GOGO_DB.get(key_).get("url")
+        url_ = GOGO_DB.get(key_)
         if not url_:
             return await c_q.answer("Not Found")
+        url_ = url_.get("url")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{GOGO_DB.get(key_).get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
+            text=f"{url_.get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
@@ -179,12 +181,13 @@ if userge.has_bot:
         direction = c_q.matches[0].group(1)
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
-        pages = GOGO_DB.get(key_).get("page")
-        p_len = len(pages)
-        del_back = False
-        if not pages:
+        key_data = GOGO_DB.get(key_)
+        if not key_data:
             return await c_q.answer("Not Found")
         await c_q.answer()
+        pages = key_data.get("page")
+        p_len = len(pages)
+        del_back = False
         if direction == "next":
             page = pos + 1
             if page >= p_len:
