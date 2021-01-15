@@ -161,13 +161,13 @@ if userge.has_bot:
     async def get_qual_from_eps(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
         episode = int(c_q.matches[0].group(2))
-        url_ = GOGO_DB.get(key_)
-        if not url_:
+        key_data = GOGO_DB.get(key_)
+        if not key_data:
             return await c_q.answer("Not Found")
-        url_ = url_.get("url")
+        url_ = key_data.get("url")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{url_.get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
+            text=f"{key_data.get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
