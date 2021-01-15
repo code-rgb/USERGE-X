@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import userge, Config
+from userge import Config, userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
@@ -202,5 +202,5 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         mrkp = data_.get("current_pg")
-        body_ = data_.get('body')
-        await c_q.edit_message_text(text=body_,reply_markup=InlineKeyboardMarkup(mrkp))
+        body_ = data_.get("body")
+        await c_q.edit_message_text(text=body_, reply_markup=InlineKeyboardMarkup(mrkp))
