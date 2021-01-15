@@ -198,7 +198,7 @@ if userge.has_bot:
         if choosen_btn == "back":
             index = int(page) - 1
             del_back = index == 1
-            await c_q.answer(f"⬅️  Back  {index}/{total}", show_alert=False)
+            await c_q.answer()
             back_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
@@ -220,7 +220,7 @@ if userge.has_bot:
             index = int(page) + 1
             if index > total:
                 return await c_q.answer("That's All Folks !", show_alert=True)
-            await c_q.answer(f"➡️  Next  {index}/{total}", show_alert=False)
+            await c_q.answer()
             front_vid = search_data.get(str(index))
             await xbot.edit_inline_media(
                 c_q.inline_message_id,
