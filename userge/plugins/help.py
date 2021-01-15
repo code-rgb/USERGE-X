@@ -59,22 +59,21 @@ _CATEGORY = {
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
-    title="Repo",
-    input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/code-rgb/USERGE-X",
-    description="Setup Your Own",
-    thumb_url="https://i.imgur.com/1xsOo9o.png",
+    title="Click Me",
+    input_message_content=InputTextMessageContent("**Join These Places** "),
+    description="Click Me Fast",
+    thumb_url="https://telegra.ph/file/69e1442927cd2dddb6ef6.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "About Me", url="https://t.me/VijayXD"
                 ),
                 InlineKeyboardButton(
-                    "🚀 Deploy USERGE-X",
+                    "Group",
                     url=(
-                        "https://heroku.com/deploy?template="
-                        "https://github.com/code-rgb/USERGE-X/tree/alpha"
+                        "https://t.me"
+                        "/Public_Leechh"
                     ),
                 ),
             ]
@@ -232,7 +231,7 @@ if userge.has_bot:
             await callback_query.answer("you are in main menu", show_alert=True)
             return
         if len(pos_list) == 2:
-            text = " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨"
+            text = " **USERGE-X MAIN MENU**"
             buttons = main_menu_buttons()
         elif len(pos_list) == 3:
             text, buttons = category_data(cur_pos)
@@ -305,12 +304,12 @@ if userge.has_bot:
 
         await xbot.edit_inline_text(
             callback_query.inline_message_id,
-            text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+            text=" **USERGE-X MAIN MENU** ",
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
 
         # await callback_query.edit_message_text(
-        #     " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+        #     " **USERGE-X MAIN MENU** ",
         #     reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         # )
 
@@ -732,11 +731,11 @@ if userge.has_bot:
                 ]
 
                 alive_info = f"""
-    **[USERGE-X](https://telegram.dog/x_xtests) is Up and Running**
+    **[USERGE-X](https://github.com/Guru-25/USERGE-X) is Up and Running**
 
  • 🐍 Python :  `v{versions.__python_version__}`
  • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
- • 🧬 𝑿 :  `v{get_version()}`
+ • 🧬 **X** :  `v{get_version()}`
 
 {_get_mode()}  |  🕔: {userge.uptime}
 """
@@ -1213,7 +1212,7 @@ if userge.has_bot:
 
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
-                input_message_content=InputTextMessageContent(" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
+                input_message_content=InputTextMessageContent(" **USERGE-X MAIN MENU** "),
                 url="https://github.com/code-rgb/USERGE-X",
                 description="Userge-X Main Menu",
                 thumb_url="https://i.imgur.com/1xsOo9o.png",
