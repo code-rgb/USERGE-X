@@ -31,6 +31,7 @@ from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
+from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
     get_yt_video_id,
@@ -38,7 +39,6 @@ from .bot.utube_inline import (
     result_formatter,
     ytsearch_data,
 )
-from .bot.gogo import Anime
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 

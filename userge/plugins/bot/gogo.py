@@ -13,35 +13,32 @@ from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, userge, Message
+from userge import Config, Message, userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 GOGO_DB = {}
+
 
 @userge.on_cmd("gogo", about={"header": "Gogo Plugin Help"})
 async def gogo_h(message: Message):
     if not userge.has_bot:
         await message.err("You Need to create a bot via Bot Father", del_in=5)
         return
-    link_ = "https://t.me/{}?start=inline".format(
-        (await userge.bot.get_me()).username
-    )
+    link_ = "https://t.me/{}?start=inline".format((await userge.bot.get_me()).username)
     if message.client.is_bot:
         await userge.bot.send_message(
             message.chat.id,
             text="To know how to use this plugin,\nClick the button below",
-            reply_markup=InlineKeyboardMarkup([[
-                InlineKeyboardButton("See Help for Anime", url=link_)
-            ]])
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("See Help for Anime", url=link_)]]
+            ),
         )
         await message.delete()
     else:
         await message.edit(
-            "[**See Help for Anime**]({})".format(link_),
-            disable_web_page_preview=True
+            "[**See Help for Anime**]({})".format(link_), disable_web_page_preview=True
         )
-    
 
 
 class Anime:
