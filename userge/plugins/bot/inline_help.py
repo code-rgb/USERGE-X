@@ -93,7 +93,7 @@ if userge.has_bot:
     @userge.bot.on_message(
         filters.user(list(Config.OWNER_ID))
         & filters.private
-        & filters.command("inline")
+        & (filters.command("inline") | filters.regex(pattern=r"^/start inline$"))
     )
     async def inline_help(_, message: Message):
         await userge.bot.send_message(
