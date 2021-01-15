@@ -35,7 +35,6 @@ async def quotecmd(message: Message):
                 quote_list.append(msg.message_id)
     else:
         args = message.input_str
-        quote_list.append(replied.message_id)
     asyncio.get_event_loop().create_task(message.delete())
 
     async with userge.conversation("QuotLyBot") as conv:

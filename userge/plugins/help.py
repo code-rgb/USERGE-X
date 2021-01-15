@@ -31,6 +31,7 @@ from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
 from .bot.alive import check_media_link
+from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
     get_yt_video_id,
@@ -866,6 +867,37 @@ if userge.has_bot:
 
             if string == "repo":
                 results.append(REPO_X)
+
+            if len(str_y) == 2 and str_y[0] == "anime":
+                for i in await Anime.search(str_y[1]):
+                    results.append(
+                        InlineQueryResultArticle(
+                            title=i.get("title"),
+                            input_message_content=InputTextMessageContent(
+                                f'[\u200c]({i.get("image")})**{i.get("title")}**\n{i.get("release")}'
+                            ),
+                            description=i.get("release"),
+                            thumb_url=i.get("image"),
+                            reply_markup=InlineKeyboardMarkup(
+                                [
+                                    [
+                                        InlineKeyboardButton(
+                                            text="⬇️  Download",
+                                            callback_data=f'get_eps{i.get("key")}',
+                                        )
+                                    ]
+                                ]
+                            ),
+                        )
+                    )
+                if len(results) != 0:
+                    await inline_query.answer(
+                        results=results[:50],
+                        cache_time=1,
+                        switch_pm_text="Available Commands",
+                        switch_pm_parameter="inline",
+                    )
+                    return
 
             if str_y[0] == "spoiler":
                 if not os.path.exists("./userge/xcache/spoiler_db.json"):
