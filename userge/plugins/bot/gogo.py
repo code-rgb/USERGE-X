@@ -1,6 +1,10 @@
+"""Download Anime"""
+
 # For USERGE-X
-# Author: github.com/code-rgb
-# (C) All Rights Reserved
+# (C) 2021 All Rights Reserved
+# Idea by: [TG: @Lostb053]
+# Author: (github.com/code-rgb) [TG: @DeletedUser420]
+
 
 import asyncio
 from urllib.parse import quote
@@ -9,12 +13,35 @@ from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, userge
+from userge import Config, userge, Message
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
 GOGO_DB = {}
-CHANNEL = userge.getCLogger(__name__)
+
+@userge.on_cmd("gogo", about={"header": "Gogo Plugin Help"})
+async def gogo_h(message: Message):
+    if not userge.has_bot:
+        await message.err("You Need to create a bot via Bot Father", del_in=5)
+        return
+    link_ = "https://t.me/{}?start=inline".format(
+        (await userge.bot.get_me()).username
+    )
+    if message.client.is_bot:
+        await userge.bot.send_message(
+            message.chat.id,
+            text="To know how to use this plugin,\nClick the button below",
+            reply_markup=InlineKeyboardMarkup([[
+                InlineKeyboardButton("See Help for Anime", url=link_)
+            ]])
+        )
+        await message.delete()
+    else:
+        await message.edit(
+            "[**See Help for Anime**]({})".format(link_),
+            disable_web_page_preview=True
+        )
+    
 
 
 class Anime:
@@ -41,7 +68,6 @@ class Anime:
             key_ = rand_key()
             body_ = f"[\u200c]({'/'.join(k_)})**{title}**\n{release}"
             GOGO_DB[key_] = {"url": result_url, "body": body_}
-
             out.append(
                 {
                     "key": key_,
@@ -142,7 +168,7 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{GOGO_DB.get(key_).get('body')}\n\n**Episode: {episode}**\n\n📹  Choose the desired quality from below\n**TIP: **for uploading to TG:\n>> `{Config.CMD_TRIGGER}upload [link] | [filename].mp4` e.g video.mp4",
+            text=f"{GOGO_DB.get(key_).get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),

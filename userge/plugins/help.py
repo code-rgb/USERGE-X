@@ -38,7 +38,7 @@ from .bot.utube_inline import (
     result_formatter,
     ytsearch_data,
 )
-from .fun.gogo import Anime
+from .bot.gogo import Anime
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
 
