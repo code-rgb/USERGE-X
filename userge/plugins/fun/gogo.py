@@ -82,7 +82,9 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        row_.append([InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")])
+        row_.append(
+            [InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")]
+        )
         return InlineKeyboardMarkup(row_)
 
 
@@ -128,7 +130,6 @@ if userge.has_bot:
         await c_q.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
-
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
@@ -181,7 +182,7 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-        
+
         # Work Around for multiple nav buttons
         # idk why "pages" is acting as a global variable
         if pages[page][-1][-1].text == "Next":
@@ -200,10 +201,7 @@ if userge.has_bot:
             pass
         GOGO_DB[key_]["current_pg"] = pages[page]
 
-
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"get_currentpg(.*)")
-    )
+    @userge.bot.on_callback_query(filters.regex(pattern=r"get_currentpg(.*)"))
     @check_owner
     async def get_current_pg(c_q: CallbackQuery):
         key_ = c_q.matches[0].group(1)
@@ -212,14 +210,12 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         mrkp = data_.get("current_pg")
-        body_ = data_.get('body')
+        body_ = data_.get("body")
         try:
             await c_q.edit_message_text(
-                    text=body_,
-                    reply_markup=InlineKeyboardMarkup(mrkp)
+                text=body_, reply_markup=InlineKeyboardMarkup(mrkp)
             )
         except FloodWait as e:
             await asyncio.sleep(e.x)
         except MessageNotModified:
             pass
-    
