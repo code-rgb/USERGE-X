@@ -150,6 +150,7 @@ if userge.has_bot:
                     InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_0"),
                 ]
             )
+        GOGO_DB[key_]["current_pg"] = paginate[0]
         await c_q.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
@@ -187,11 +188,10 @@ if userge.has_bot:
         await c_q.answer()
         pages = key_data.get("page")
         p_len = len(pages)
-        del_back = False
+        del_back, del_next = False, False
         if direction == "next":
             page = pos + 1
-            if page >= p_len:
-                return await c_q.answer("That's All Folks !")
+            del_next = (page + 1) == p_len
         elif direction == "back":
             del_back = pos == 1
             page = pos - 1
@@ -207,9 +207,11 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
+        if del_next:
+            button_base.pop()
         # Work Around for multiple nav buttons
         # idk why "pages" is acting as a global variable
-        if pages[page][-1][-1].text == "Next":
+        if not "gogo_get_qual" in pages[page][-1][-1].callback_data:
             pages[page][-1] = button_base
         else:
             pages[page].append(button_base)
