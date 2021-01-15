@@ -7,10 +7,9 @@ from urllib.parse import quote
 
 from bs4 import BeautifulSoup as soup
 from pyrogram import filters
-from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import userge
+from userge import userge, Config
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
@@ -182,24 +181,17 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
-
         # Work Around for multiple nav buttons
         # idk why "pages" is acting as a global variable
         if pages[page][-1][-1].text == "Next":
             pages[page][-1] = button_base
         else:
             pages[page].append(button_base)
-
-        try:
-            await c_q.edit_message_reply_markup(
-                reply_markup=InlineKeyboardMarkup(pages[page])
-            )
-            await asyncio.sleep(0.3)
-        except FloodWait as e:
-            await asyncio.sleep(e.x + 3)
-        except MessageNotModified:
-            pass
         GOGO_DB[key_]["current_pg"] = pages[page]
+        await c_q.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(pages[page])
+        )
+        await asyncio.sleep(0.3)
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"get_currentpg(.*)"))
     @check_owner
@@ -210,12 +202,5 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         mrkp = data_.get("current_pg")
-        body_ = data_.get("body")
-        try:
-            await c_q.edit_message_text(
-                text=body_, reply_markup=InlineKeyboardMarkup(mrkp)
-            )
-        except FloodWait as e:
-            await asyncio.sleep(e.x)
-        except MessageNotModified:
-            pass
+        body_ = data_.get('body')
+        await c_q.edit_message_text(text=body_,reply_markup=InlineKeyboardMarkup(mrkp))

@@ -3,9 +3,9 @@ import os
 import random
 import re
 from uuid import uuid4
-
+import asyncio
 from pyrogram.types import CallbackQuery
-
+from pyrogram.errors import MessageNotModified, FloodWait
 from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
@@ -137,11 +137,15 @@ def check_owner(func):
         if c_q.from_user and (
             c_q.from_user.id in Config.OWNER_ID or c_q.from_user.id in Config.SUDO_USERS
         ):
-            await func(c_q)
+            try:
+                await func(c_q)
+            except FloodWait as e:
+                await asyncio.sleep(e.x + 3)
+            except MessageNotModified:
+                pass
         else:
             await c_q.answer(
-                "Only My Master can Access This !!\n\n   𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
+                "Only My Master can Access This !!\n\n     𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓",
                 show_alert=True,
             )
-
     return wrapper
