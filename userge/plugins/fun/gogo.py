@@ -82,7 +82,7 @@ class Anime:
                     btn_ = []
         if len(btn_) != 0:
             row_.append(btn_)
-        row_.append([InlineKeyboardButton("Back", callback_data=f"get_eps{key_}")])
+        row_.append([InlineKeyboardButton("Back", callback_data=f"get_currentpg{key_}")])
         return InlineKeyboardMarkup(row_)
 
 
@@ -129,6 +129,7 @@ if userge.has_bot:
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
 
+
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"gogo_get_qual([a-z0-9]+)_([\d]+)")
     )
@@ -141,7 +142,7 @@ if userge.has_bot:
             return await c_q.answer("Not Found")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{GOGO_DB.get(key_).get('body')}\n\n**>> Episode: {episode}**\n\n📹  Choose Quality",
+            text=f"{GOGO_DB.get(key_).get('body')}\n\n**Episode: {episode}**\n\n📹  Choose the desired quality from below\n**TIP: **for uploading to TG:\n>> `{Config.CMD_TRIGGER}upload [link] | [filename].mp4` e.g video.mp4",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
@@ -156,9 +157,7 @@ if userge.has_bot:
         key_ = c_q.matches[0].group(2)
         pos = int(c_q.matches[0].group(3))
         pages = GOGO_DB.get(key_).get("page")
-        # print(GOGO_DB)
         p_len = len(pages)
-        # print(p_len)
         del_back = False
         if not pages:
             return await c_q.answer("Not Found")
@@ -168,12 +167,10 @@ if userge.has_bot:
             if page >= p_len:
                 return await c_q.answer("That's All Folks !")
         elif direction == "back":
-            if pos == 1:
-                del_back = True
+            del_back = pos == 1
             page = pos - 1
         else:
             return
-        # await CHANNEL.log(str(page))
         button_base = [
             InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
@@ -184,10 +181,14 @@ if userge.has_bot:
         ]
         if del_back:
             button_base.pop(0)
+        
+        # Work Around for multiple nav buttons
+        # idk why "pages" is acting as a global variable
         if pages[page][-1][-1].text == "Next":
             pages[page][-1] = button_base
         else:
             pages[page].append(button_base)
+
         try:
             await c_q.edit_message_reply_markup(
                 reply_markup=InlineKeyboardMarkup(pages[page])
@@ -197,3 +198,28 @@ if userge.has_bot:
             await asyncio.sleep(e.x + 3)
         except MessageNotModified:
             pass
+        GOGO_DB[key_]["current_pg"] = pages[page]
+
+
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"get_currentpg(.*)")
+    )
+    @check_owner
+    async def get_current_pg(c_q: CallbackQuery):
+        key_ = c_q.matches[0].group(1)
+        data_ = GOGO_DB.get(key_)
+        if not data_:
+            return await c_q.answer("Not Found")
+        await c_q.answer()
+        mrkp = data_.get("current_pg")
+        body_ = data_.get('body')
+        try:
+            await c_q.edit_message_text(
+                    text=body_,
+                    reply_markup=InlineKeyboardMarkup(mrkp)
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+        except MessageNotModified:
+            pass
+    
