@@ -46,10 +46,8 @@ if userge.has_bot:
 Hello {f_name},
 Nice To Meet You! I'm **{bot.first_name}** A Bot.
 
-        <i><b>Powered by</i> [USERGE-X](https://t.me/x_xtests)</b>
-
 <b>My Master is: {master.first_name}</b>
-<i>You can contact my <b>Master</b> and checkout the <b>Repo</b> For more info.</i>
+<i>You can contact my <b>Master</b>
 """
         if Config.BOT_FORWARDS:
             hello += "\n<b>NOTE: </b> "
@@ -131,9 +129,6 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                     [
                         [
                             InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
-                            InlineKeyboardButton(
-                                "REPO", url="https://github.com/code-rgb/USERGE-X"
-                            ),
                         ],
                         [
                             InlineKeyboardButton(
@@ -162,7 +157,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
             )
         else:
             await callback_query.answer(
-                "ONLY MY MASTER CAN DO THAT ! \n\n 𝘿𝙚𝙥𝙡𝙤𝙮 𝙮𝙤𝙪𝙧 𝙤𝙬𝙣 𝙐𝙎𝙀𝙍𝙂𝙀-𝙓 !",
+                "ONLY MY MASTER CAN DO THAT !",
                 show_alert=True,
             )
 
