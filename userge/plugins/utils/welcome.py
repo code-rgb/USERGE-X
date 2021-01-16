@@ -245,8 +245,6 @@ async def sayleft(msg: Message):
 async def raw_set(message: Message, name, collection, chats):
     replied = message.reply_to_message
     string = message.input_or_reply_raw
-    if message.caption and not message.input_str:
-        string = ""
     if not (string or (replied and replied.media)):
         out = f"**Wrong Syntax**\ncheck `.help .set{name.lower()}`"
     else:

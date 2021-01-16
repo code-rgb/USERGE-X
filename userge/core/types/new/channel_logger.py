@@ -133,7 +133,7 @@ class ChannelLogger:
         caption = caption or ''
         file_id = None
         if message and message.caption:
-            caption = caption + message.caption.html
+            caption = (caption + message.caption.html) if caption != message.caption.html else caption
         if message:
             file_id = get_file_id(message)
         if message and message.media and file_id:
