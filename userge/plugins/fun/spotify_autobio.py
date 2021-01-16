@@ -141,7 +141,7 @@ async def spotify_setup(message: Message):
         {"$set": {"access_token": access_token, "refresh_token": refresh_token}},
         upsert=True,
     )
-    Database()
+    SP_DATABASE = Database()
 
 
 if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
@@ -162,7 +162,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 }
                 with open(PATH_, "w+") as outfile:
                     ujson.dump(to_create, outfile, indent=4)
-                Database()
+                SP_DATABASE = Database()
 
     @userge.on_cmd(
         "spotify_bio",
