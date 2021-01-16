@@ -89,7 +89,7 @@ async def setwel(msg: Message):
             "video",
         ],
         "examples": [
-            "{tr}setleft {flname}, Why you left :(\n" "or reply to supported media",
+            "{tr}setleft {flname}, Why you left :(\nor reply to supported media",
             "reply {tr}setleft to text message or supported media with text",
         ],
         "buttons": "<code>[name][buttonurl:link]</code> - <b>add a url button</b>\n"
@@ -245,6 +245,8 @@ async def sayleft(msg: Message):
 async def raw_set(message: Message, name, collection, chats):
     replied = message.reply_to_message
     string = message.input_or_reply_raw
+    if message.caption and not message.input_str:
+        string = ""
     if not (string or (replied and replied.media)):
         out = f"**Wrong Syntax**\ncheck `.help .set{name.lower()}`"
     else:
