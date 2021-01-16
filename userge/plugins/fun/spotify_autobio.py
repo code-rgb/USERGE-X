@@ -151,7 +151,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
         global SP_DATABASE
         data_ = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
         if data_:
-            Config.SPOTIFY_MODE = bool(data["is_active"])
+            Config.SPOTIFY_MODE = bool(data_["is_active"])
         if not os.path.exists(PATH_):
             db_ = await SPOTIFY_DB.find_one({"_id": "database"})
             if db_:
