@@ -12,7 +12,7 @@ __all__ = ['Config', 'get_version']
 
 import os
 from typing import Set
-
+from . import versions
 import heroku3
 from git import Repo
 from pyrogram import filters
@@ -107,6 +107,7 @@ class Config:
 
 def get_version() -> str:
     """ get USERGE-X version """
+    ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
