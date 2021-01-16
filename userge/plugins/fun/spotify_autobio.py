@@ -11,12 +11,13 @@
 
 
 import asyncio
-import ujson
 import os
 import time
+
 import requests
+import ujson
 from pyrogram.errors import AboutTooLong, FloodWait
-from pymongo import MongoClient
+
 from userge import Config, Message, get_collection, userge
 
 SPOTIFY_DB = get_collection("SP_DATA")
@@ -43,7 +44,7 @@ class Database:
     def __init__(self):
         if not os.path.exists(PATH_):
             print('Spotify Auth. required see help for "sp_setup" for more info !')
-            return 
+            return
         with open(PATH_) as f:
             self.db = ujson.load(f)
 
@@ -78,6 +79,7 @@ class Database:
         with open(PATH_, "w") as outfile:
             ujson.dump(self.db, outfile, indent=4, sort_keys=True)
 
+
 async def get_auth_():
     _authurl = (
         "https://accounts.spotify.com/authorize?client_id={}&response_type=code&redirect_uri="
@@ -91,7 +93,7 @@ async def get_auth_():
             f"your browser: {_authurl.format(Config.SPOTIFY_CLIENT_ID)} and reply the code or url"
         )
         response = await conv.get_response(mark_read=True)
-        msg_ = await conv.send_message('`Processing ...`')
+        msg_ = await conv.send_message("`Processing ...`")
         return response.text.strip(), msg_
 
 
@@ -101,12 +103,15 @@ async def get_auth_():
 )
 async def spotify_setup(message: Message):
     if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
-        await message.err("Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, please add them first !", del_in=8)
+        await message.err(
+            "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, please add them first !",
+            del_in=8,
+        )
         return
     if message.chat.id != Config.LOG_CHANNEL_ID:
         await message.err("CHAT INVALID :: Do this in your Log Channel", del_in=5)
         return
-        
+
     initial_token, msg_ = await get_auth_()
     if "code=" in initial_token:
         initial_token = (initial_token.split("code=", 1))[1]
@@ -115,43 +120,38 @@ async def spotify_setup(message: Message):
         "client_secret": Config.SPOTIFY_CLIENT_SECRET,
         "grant_type": "authorization_code",
         "redirect_uri": "https://example.com/callback",
-        "code": initial_token
+        "code": initial_token,
     }
     r = requests.post("https://accounts.spotify.com/api/token", data=body_)
     save = r.json()
-    access_token = save.get('access_token')
-    refresh_token = save.get('refresh_token')
+    access_token = save.get("access_token")
+    refresh_token = save.get("refresh_token")
     to_create = {
-        'bio':"",
-        'access_token': access_token,
-        'refresh_token': refresh_token,
-        'telegram_spam': False,
-        'spotify_spam': False
+        "bio": "",
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "telegram_spam": False,
+        "spotify_spam": False,
     }
-    with open(PATH_, 'w') as outfile:
+    with open(PATH_, "w") as outfile:
         ujson.dump(to_create, outfile, indent=4, sort_keys=True)
     await msg_.edit("Done! Setup was Successfully")
     await SPOTIFY_DB.update_one(
         {"_id": "database"},
-        {"$set": {
-            "access_token": access_token,
-            'refresh_token': refresh_token
-        }},
+        {"$set": {"access_token": access_token, "refresh_token": refresh_token}},
         upsert=True,
     )
-    SP_DATABASE = Database()
+    Database()
 
-    
-if (
-    Config.SPOTIFY_CLIENT_ID
-    and Config.SPOTIFY_CLIENT_SECRET
-):
+
+if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
+
     async def _init() -> None:
         data_ = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
         if data_:
             Config.SPOTIFY_MODE = bool(data["is_active"])
         if not os.path.exists(PATH_):
-            db_ = await SPOTIFY_DB.find_one({'_id': "database"})
+            db_ = await SPOTIFY_DB.find_one({"_id": "database"})
             if db_:
                 to_create = {
                     "bio": "",
@@ -162,14 +162,7 @@ if (
                 }
                 with open(PATH_, "w+") as outfile:
                     ujson.dump(to_create, outfile, indent=4)
-                SP_DATABASE = Database()
-            
-
-
-
-
-
-
+                Database()
 
     @userge.on_cmd(
         "spotify_bio",
@@ -212,13 +205,12 @@ if (
         minutes = int(minutes)
         return str(minutes) + ":" + str(seconds)
 
-
     # to stop unwanted spam, we sent these type of message only once. So we have a variable in our database which we check
     # for in return_info. When we send a message, we set this variable to true. After a successful update
     # (or a closing of spotify), we reset that variable to false.
 
     def save_spam(which, what):
-        
+
         # see below why
 
         # this is if False is inserted, so if spam = False, so if everything is good.
@@ -241,7 +233,7 @@ if (
         return False
 
     async def spotify_biox():
-        
+
         while Config.SPOTIFY_MODE:
             # SPOTIFY
             skip = False
@@ -462,7 +454,7 @@ if (
     @userge.on_cmd("now_playing", about={"header": "Now Playing Spotify Song"})
     async def now_playing_(message: Message):
         """Spotify Now Playing"""
-        
+
         oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         r = requests.get(
             "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
@@ -477,7 +469,7 @@ if (
     @userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
     async def sp_info_(message: Message):
         """Spotify Device Info"""
-        
+
         # =====================================GET_204=====================================================#
         oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         getplay = requests.get(
@@ -532,7 +524,7 @@ if (
     @userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
     async def sp_profile_(message: Message):
         """Spotify Profile"""
-        
+
         oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         me = requests.get("https://api.spotify.com/v1/me", headers=oauth)
         a_me = me.json()
@@ -550,7 +542,7 @@ if (
     @userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
     async def sp_recents_(message: Message):
         """Spotify Recent Songs"""
-        
+
         oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         await message.edit("`Getting recent played songs...`")
         r = requests.get(
