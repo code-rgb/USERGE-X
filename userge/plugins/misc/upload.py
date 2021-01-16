@@ -139,7 +139,7 @@ async def upload_path(message: Message, path: Path, del_path: bool):
 
 
 async def upload(message: Message, path: Path, del_path: bool = False,
-                 extra: str = '', with_thumb: bool = True
+                 extra: str = '', with_thumb: bool = True,
                      logvid: bool = True,
     custom_thumb: str = None,
     inline_id: str = None):
