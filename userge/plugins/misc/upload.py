@@ -1,37 +1,42 @@
 """ upload , rename and convert telegram files """
 
 
-import os
 import io
+import os
 import re
 import time
 from datetime import datetime
 from pathlib import Path
-from userge.utils.botapi import inline_progress
+
 import stagger
-from PIL import Image
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
+from PIL import Image
 from pyrogram.errors.exceptions import FloodWait
 
-from userge import userge, Config, Message
-from userge.utils import progress, take_screen_shot, humanbytes
-from userge.utils.exceptions import ProcessCanceled
+from userge import Config, Message, userge
 from userge.plugins.misc.download import tg_download, url_download
+from userge.utils import humanbytes, progress, take_screen_shot
+from userge.utils.botapi import inline_progress
+from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 
-LOGO_PATH = 'resources/userge.png'
+LOGO_PATH = "resources/userge.png"
 
 
-@userge.on_cmd("rename", about={
-    'header': "Rename telegram files",
-    'flags': {
-        '-d': "upload as document",
-        '-wt': "without thumb"},
-    'usage': "{tr}rename [flags] [new_name_with_extension] : reply to telegram media",
-    'examples': "{tr}rename -d test.mp4"}, del_pre=True, check_downpath=True)
+@userge.on_cmd(
+    "rename",
+    about={
+        "header": "Rename telegram files",
+        "flags": {"-d": "upload as document", "-wt": "without thumb"},
+        "usage": "{tr}rename [flags] [new_name_with_extension] : reply to telegram media",
+        "examples": "{tr}rename -d test.mp4",
+    },
+    del_pre=True,
+    check_downpath=True,
+)
 async def rename_(message: Message):
     """ rename telegram files """
     if not message.filtered_input_str:
@@ -44,28 +49,39 @@ async def rename_(message: Message):
         await message.edit("Please read `.help rename`", del_in=5)
 
 
-@userge.on_cmd("convert", about={
-    'header': "Convert telegram files",
-    'usage': "reply {tr}convert to any media"}, del_pre=True, check_downpath=True)
+@userge.on_cmd(
+    "convert",
+    about={
+        "header": "Convert telegram files",
+        "usage": "reply {tr}convert to any media",
+    },
+    del_pre=True,
+    check_downpath=True,
+)
 async def convert_(message: Message):
     """ convert telegram files """
     await message.edit("`Trying to Convert ...`")
     if message.reply_to_message and message.reply_to_message.media:
-        message.text = '' if message.reply_to_message.document else ". -d"
+        message.text = "" if message.reply_to_message.document else ". -d"
         await _handle_message(message)
     else:
         await message.edit("Please read `.help convert`", del_in=5)
 
 
-@userge.on_cmd("upload", about={
-    'header': "Upload files to telegram",
-    'flags': {
-        '-d': "upload as document",
-        '-wt': "without thumb"},
-    'usage': "{tr}upload [flags] [file or folder path | link]",
-    'examples': [
-        "{tr}upload -d https://speed.hetzner.de/100MB.bin | test.bin",
-        "{tr}upload downloads/test.mp4"]}, del_pre=True, check_downpath=True)
+@userge.on_cmd(
+    "upload",
+    about={
+        "header": "Upload files to telegram",
+        "flags": {"-d": "upload as document", "-wt": "without thumb"},
+        "usage": "{tr}upload [flags] [file or folder path | link]",
+        "examples": [
+            "{tr}upload -d https://speed.hetzner.de/100MB.bin | test.bin",
+            "{tr}upload downloads/test.mp4",
+        ],
+    },
+    del_pre=True,
+    check_downpath=True,
+)
 async def upload_to_tg(message: Message):
     """ upload to telegram """
     path_ = message.filtered_input_str
@@ -115,12 +131,14 @@ async def _handle_message(message: Message) -> None:
 async def upload_path(message: Message, path: Path, del_path: bool):
     file_paths = []
     if path.exists():
+
         def explorer(_path: Path) -> None:
             if _path.is_file() and _path.stat().st_size:
                 file_paths.append(_path)
             elif _path.is_dir():
                 for i in sorted(_path.iterdir()):
                     explorer(i)
+
         explorer(path)
     else:
         path = path.expanduser()
@@ -138,31 +156,49 @@ async def upload_path(message: Message, path: Path, del_path: bool):
             break
 
 
-async def upload(message: Message, path: Path, del_path: bool = False,
-                 extra: str = '', with_thumb: bool = True,
-                     logvid: bool = True,
+async def upload(
+    message: Message,
+    path: Path,
+    del_path: bool = False,
+    extra: str = "",
+    with_thumb: bool = True,
+    logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None):
-    if 'wt' in message.flags:
+    inline_id: str = None,
+):
+    if "wt" in message.flags:
         with_thumb = False
-    if path.name.lower().endswith(
-            (".mkv", ".mp4", ".webm")) and ('d' not in message.flags):
-        return await vid_upload(message, path, del_path, extra, with_thumb, logvid, custom_thumb, inline_id)
-    elif path.name.lower().endswith(
-            (".mp3", ".flac", ".wav", ".m4a")) and ('d' not in message.flags):
-        return await audio_upload(message, path, del_path, extra, with_thumb, logvid, inline_id)
-    elif path.name.lower().endswith(
-            (".jpg", ".jpeg", ".png", ".bmp")) and ('d' not in message.flags):
+    if path.name.lower().endswith((".mkv", ".mp4", ".webm")) and (
+        "d" not in message.flags
+    ):
+        return await vid_upload(
+            message, path, del_path, extra, with_thumb, logvid, custom_thumb, inline_id
+        )
+    elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
+        "d" not in message.flags
+    ):
+        return await audio_upload(
+            message, path, del_path, extra, with_thumb, logvid, inline_id
+        )
+    elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
+        "d" not in message.flags
+    ):
         await photo_upload(message, path, del_path, extra)
     else:
         await doc_upload(message, path, del_path, extra, with_thumb)
 
 
-async def doc_upload(message: Message, path, del_path: bool = False,
-                     extra: str = '', with_thumb: bool = True):
+async def doc_upload(
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    with_thumb: bool = True,
+):
     str_path = str(path)
     sent: Message = await message.client.send_message(
-        message.chat.id, f"`Uploading {str_path} as a doc ... {extra}`")
+        message.chat.id, f"`Uploading {str_path} as a doc ... {extra}`"
+    )
     start_t = datetime.now()
     thumb = None
     if with_thumb:
@@ -177,7 +213,7 @@ async def doc_upload(message: Message, path, del_path: bool = False,
             parse_mode="html",
             disable_notification=True,
             progress=progress,
-            progress_args=(message, f"uploading {extra}", str_path)
+            progress_args=(message, f"uploading {extra}", str_path),
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{str_path}` due to {e_e}")
@@ -191,11 +227,16 @@ async def doc_upload(message: Message, path, del_path: bool = False,
             os.remove(str_path)
 
 
-async def vid_upload(message: Message, path, del_path: bool = False,
-                     extra: str = '', with_thumb: bool = True,
-                         logvid: bool = True,
+async def vid_upload(
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    with_thumb: bool = True,
+    logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None):
+    inline_id: str = None,
+):
     str_path = str(path)
     thumb = (custom_thumb or await get_thumb(str_path)) if with_thumb else None
     duration = 0
@@ -203,7 +244,8 @@ async def vid_upload(message: Message, path, del_path: bool = False,
     if metadata and metadata.has("duration"):
         duration = metadata.get("duration").seconds
     sent: Message = await message.client.send_message(
-        message.chat.id, f"`Uploading {str_path} as a video ... {extra}`")
+        message.chat.id, f"`Uploading {str_path} as a video ... {extra}`"
+    )
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_video")
     width = 0
@@ -236,7 +278,7 @@ async def vid_upload(message: Message, path, del_path: bool = False,
             parse_mode="html",
             disable_notification=True,
             progress=progress if logvid else inline_progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{str_path}` due to {e_e}")
@@ -253,9 +295,15 @@ async def vid_upload(message: Message, path, del_path: bool = False,
     return msg
 
 
-async def audio_upload(message: Message, path, del_path: bool = False,
-                       extra: str = '', with_thumb: bool = True, logvid: bool = True,
-    inline_id: str = None):
+async def audio_upload(
+    message: Message,
+    path,
+    del_path: bool = False,
+    extra: str = "",
+    with_thumb: bool = True,
+    logvid: bool = True,
+    inline_id: str = None,
+):
     title = None
     artist = None
     thumb = None
@@ -283,7 +331,8 @@ async def audio_upload(message: Message, path, del_path: bool = False,
     if metadata and metadata.has("duration"):
         duration = metadata.get("duration").seconds
     sent: Message = await message.client.send_message(
-        message.chat.id, f"`Uploading {str_path} as audio ... {extra}`")
+        message.chat.id, f"`Uploading {str_path} as audio ... {extra}`"
+    )
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_audio")
     try:
@@ -308,7 +357,7 @@ async def audio_upload(message: Message, path, del_path: bool = False,
             parse_mode="html",
             disable_notification=True,
             progress=progress if logvid else inline_progress,
-            progress_args=progress_args
+            progress_args=progress_args,
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{str_path}` due to {e_e}")
@@ -327,10 +376,11 @@ async def audio_upload(message: Message, path, del_path: bool = False,
     return msg
 
 
-async def photo_upload(message: Message, path, del_path: bool = False, extra: str = ''):
+async def photo_upload(message: Message, path, del_path: bool = False, extra: str = ""):
     str_path = str(path)
     sent: Message = await message.client.send_message(
-        message.chat.id, f"`Uploading {path.name} as photo ... {extra}`")
+        message.chat.id, f"`Uploading {path.name} as photo ... {extra}`"
+    )
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_photo")
     try:
@@ -341,7 +391,7 @@ async def photo_upload(message: Message, path, del_path: bool = False, extra: st
             parse_mode="html",
             disable_notification=True,
             progress=progress,
-            progress_args=(message, f"uploading {extra}", str_path)
+            progress_args=(message, f"uploading {extra}", str_path),
         )
     except ValueError as e_e:
         await sent.edit(f"Skipping `{str_path}` due to {e_e}")
@@ -355,7 +405,7 @@ async def photo_upload(message: Message, path, del_path: bool = False, extra: st
             os.remove(str_path)
 
 
-async def get_thumb(path: str = ''):
+async def get_thumb(path: str = ""):
     if os.path.exists(Config.THUMB_PATH):
         return Config.THUMB_PATH
     if path:
@@ -368,22 +418,25 @@ async def get_thumb(path: str = ''):
             if os.path.exists(thumb_path):
                 if type_ != ".jpg":
                     new_thumb_path = f"{file_name}.jpg"
-                    Image.open(thumb_path).convert('RGB').save(new_thumb_path, "JPEG")
+                    Image.open(thumb_path).convert("RGB").save(new_thumb_path, "JPEG")
                     os.remove(thumb_path)
                     thumb_path = new_thumb_path
                 return thumb_path
         metadata = extractMetadata(createParser(path))
         if metadata and metadata.has("duration"):
-            return await take_screen_shot(
-                path, metadata.get("duration").seconds)
+            return await take_screen_shot(path, metadata.get("duration").seconds)
     if os.path.exists(LOGO_PATH):
         return LOGO_PATH
     return None
 
 
 async def remove_thumb(thumb: str) -> None:
-    if (thumb and os.path.exists(thumb)
-            and thumb != LOGO_PATH and thumb != Config.THUMB_PATH):
+    if (
+        thumb
+        and os.path.exists(thumb)
+        and thumb != LOGO_PATH
+        and thumb != Config.THUMB_PATH
+    ):
         os.remove(thumb)
 
 
