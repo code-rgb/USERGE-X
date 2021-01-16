@@ -102,11 +102,12 @@ async def get_auth_():
     about={"header": "Setup for Spotify Auth"},
 )
 async def spotify_setup(message: Message):
+    """One time Auth."""
     global SP_DATABASE
     if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
         await message.err(
             "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, please add them first !",
-            del_in=8,
+            del_in=6,
         )
         return
     if message.chat.id != Config.LOG_CHANNEL_ID:
