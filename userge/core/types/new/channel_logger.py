@@ -31,7 +31,7 @@ def _gen_string(name: str) -> str:
 
 class ChannelLogger:
     """ Channel logger for Userge """
-    def __init__(self, client: Union['_client.Userge', '_client._UsergeBot'], name: str) -> None:
+    def __init__(self, client: Union['_client.Userge', '_client.UsergeBot'], name: str) -> None:
         self._id = Config.LOG_CHANNEL_ID
         self._client = client
         self._string = _gen_string(name)
@@ -105,15 +105,10 @@ class ChannelLogger:
             if message.media:
                 asyncio.get_event_loop().create_task(self.log("**Forwarding Message...**", name))
                 try:
-                    # pylint: disable=protected-access
                     if as_copy:
-                        await message._client.copy_message(chat_id=self._id,
-                                                           from_chat_id=message.chat.id,
-                                                           message_id=message.message_id)
+                        await message.copy(chat_id=self._id)
                     else:
-                        await message._client.forward_messages(chat_id=self._id,
-                                                               from_chat_id=message.chat.id,
-                                                               message_ids=message.message_id)
+                        await message.forward(chat_id=self._id)
                 except ValueError:
                     pass
             else:
@@ -138,7 +133,7 @@ class ChannelLogger:
         caption = caption or ''
         file_id = None
         if message and message.caption:
-            caption = caption + message.caption.html
+            caption = (caption + message.caption.html) if caption != message.caption.html else caption
         if message:
             file_id = get_file_id(message)
         if message and message.media and file_id:
@@ -153,7 +148,7 @@ class ChannelLogger:
         return message_id
 
     async def forward_stored(self,
-                             client: Union['_client.Userge', '_client._UsergeBot'],
+                             client: Union['_client.Userge', '_client.UsergeBot'],
                              message_id: int,
                              chat_id: int,
                              user_id: int,

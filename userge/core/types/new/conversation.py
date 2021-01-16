@@ -27,7 +27,7 @@ from ... import client as _client  # pylint: disable=unused-import
 _LOG = logging.getLogger(__name__)
 _LOG_STR = "<<<!  :::::  %s  :::::  !>>>"
 
-_CL_TYPE = Union['_client.Userge', '_client._UsergeBot']
+_CL_TYPE = Union['_client.Userge', '_client.UsergeBot']
 _CONV_DICT: Dict[Tuple[int, _CL_TYPE], Union[asyncio.Queue, Tuple[int, asyncio.Queue]]] = {}
 
 
@@ -71,7 +71,7 @@ class Conversation:
                 marks response as read.
 
             filters (``pyrogram.filters.Filter``, *optional*):
-                filter specific response. 
+                filter specific response.
 
         Returns:
             On success, the recieved Message is returned.
@@ -177,8 +177,12 @@ class Conversation:
             MessageHandler(
                 _on_conversation,
                 _filters.create(
-                    lambda _, __, query: _CONV_DICT and query.chat
-                    and (query.chat.id, client) in _CONV_DICT, 0)))
+                    lambda _, __, query: _CONV_DICT and query.chat and (
+                        query.chat.id, client
+                    ) in _CONV_DICT, 0
+                )
+            )
+        )
 
     async def __aenter__(self) -> 'Conversation':
         self._chat_id = int(self._chat) if isinstance(self._chat, int) else \

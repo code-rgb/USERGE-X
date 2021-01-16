@@ -25,6 +25,7 @@ from userge.utils.exceptions import UsergeBotNotFound
 from userge.plugins import get_all_plugins
 from .methods import Methods
 from .ext import RawClient, pool
+from .database import _close_db
 
 _LOG = logging.getLogger(__name__)
 _LOG_STR = "<<<!  #####  %s  #####  !>>>"
@@ -103,10 +104,10 @@ class _AbstractUserge(Methods, RawClient):
         return len(reloaded)
 
 
-class _UsergeBot(_AbstractUserge):
-    """ UsergeBot, the bot """
+class UsergeBot(_AbstractUserge):
+    """ USERGE-X Bot """
     def __init__(self, **kwargs) -> None:
-        _LOG.info(_LOG_STR, "Setting X-bot Configs")
+        _LOG.info(_LOG_STR, "Setting UsergeBot Configs")
         super().__init__(session_name=":memory:", **kwargs)
 
     @property
@@ -116,7 +117,7 @@ class _UsergeBot(_AbstractUserge):
 
 
 class Userge(_AbstractUserge):
-    """ USERGE-X, the userbot """
+    """ USERGE-X Bot """
 
     has_bot = bool(Config.BOT_TOKEN)
 
@@ -131,13 +132,15 @@ class Userge(_AbstractUserge):
             kwargs['bot_token'] = Config.BOT_TOKEN
         if Config.HU_STRING_SESSION and Config.BOT_TOKEN:
             RawClient.DUAL_MODE = True
-            kwargs['bot'] = _UsergeBot(bot=self, **kwargs)
+            kwargs['bot'] = UsergeBot(bot=self, **kwargs)
         kwargs['session_name'] = Config.HU_STRING_SESSION or ":memory:"
         super().__init__(**kwargs)
+        self.executor.shutdown()
+        self.executor = pool._get()  # pylint: disable=protected-access
 
     @property
-    def bot(self) -> Union['_UsergeBot', 'Userge']:
-        """ returns X-bot """
+    def bot(self) -> Union['UsergeBot', 'Userge']:
+        """ returns USERGE-X Bot """
         if self._bot is None:
             if Config.BOT_TOKEN:
                 return self
@@ -146,22 +149,22 @@ class Userge(_AbstractUserge):
 
     async def start(self) -> None:
         """ start client and bot """
-        pool._start()  # pylint: disable=protected-access
         _LOG.info(_LOG_STR, "Starting USERGE-X")
         await super().start()
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Starting X-bot")
+            _LOG.info(_LOG_STR, "Starting -X- Bot")
             await self._bot.start()
         await self._load_plugins()
 
     async def stop(self) -> None:  # pylint: disable=arguments-differ
         """ stop client and bot """
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Stopping X-bot")
+            _LOG.info(_LOG_STR, "Stopping -X- Bot")
             await self._bot.stop()
-        _LOG.info(_LOG_STR, "Stopping Userge")
+        _LOG.info(_LOG_STR, "Stopping USERGE-X")
         await super().stop()
-        await pool._stop()  # pylint: disable=protected-access
+        _close_db()
+        pool._stop()  # pylint: disable=protected-access
 
     def begin(self, coro: Optional[Awaitable[Any]] = None) -> None:
         """ start USERGE-X """
@@ -174,11 +177,14 @@ class Userge(_AbstractUserge):
                     task.cancel()
                 if self.is_initialized:
                     await self.stop()
-                # pylint: disable=expression-not-assigned
-                [t.cancel() for t in asyncio.all_tasks() if t is not asyncio.current_task()]
-                await self.loop.shutdown_asyncgens()
-                self.loop.stop()
-                _LOG.info(_LOG_STR, "Loop Stopped !")
+                else:
+                    _close_db()
+                    pool._stop()  # pylint: disable=protected-access
+            # pylint: disable=expression-not-assigned
+            [t.cancel() for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+            await self.loop.shutdown_asyncgens()
+            self.loop.stop()
+            _LOG.info(_LOG_STR, "Loop Stopped !")
 
         async def _shutdown(sig: signal.Signals) -> None:
             _LOG.info(_LOG_STR, f"Received Stop Signal [{sig.name}], Exiting USERGE-X ...")

@@ -44,7 +44,7 @@ G_DRIVE_FOLDER_LINK = (
     "📁 <a href='https://drive.google.com/drive/folders/{}'>{}</a> __(folder)__"
 )
 _GDRIVE_ID = re.compile(
-    r"https://drive.google.com/[\w\?\./&=]+([-\w]{33}|(?<=[/=])0(?:A[-\w]{17}|B[-\w]{26}))"
+    r"https://drive.google.com/[\w?.&=/]+([-\w]{33}|(?<=[/=])0(?:A[-\w]{17}|B[-\w]{26}))"
 )
 
 _LOG = userge.getLogger(__name__)
@@ -181,7 +181,6 @@ class _GDrive:
             page_token = response.get("nextPageToken", None)
             if page_token is None:
                 break
-        del results
         if not msg:
             return "`Not Found!`"
         if parent_id and not force:
@@ -257,7 +256,7 @@ class _GDrive:
         body = {
             "name": file_name,
             "mimeType": mime_type,
-            "description": "Uploaded using USERGE-X",
+            "description": "Uploaded using Userge",
         }
         if parent_id:
             body["parents"] = [parent_id]
@@ -912,7 +911,7 @@ class Worker(_GDrive):
         """ Upload from file/folder/link/tg file to GDrive """
         replied = self._message.reply_to_message
         is_url = re.search(
-            r"(?:https?|ftp)://[^\|\s]+\.[^\|\s]+", self._message.input_str
+            r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", self._message.input_str
         )
         dl_loc = ""
         if replied and replied.media:

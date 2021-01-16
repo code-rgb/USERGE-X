@@ -70,9 +70,10 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
                 Pass "markdown" or "md" to enable Markdown-style parsing only.
                 Pass "html" to enable HTML-style parsing only.
                 Pass None to completely disable style parsing.
-                
+
             entities (List of :obj:`~pyrogram.types.MessageEntity`):
-                List of special entities that appear in message text, which can be specified instead of *parse_mode*.
+                List of special entities that appear in message text,
+                which can be specified instead of *parse_mode*.
 
             disable_web_page_preview (``bool``, *optional*):
                 Disables link previews for links in this message.

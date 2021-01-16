@@ -12,13 +12,12 @@ __all__ = ['Config', 'get_version']
 
 import os
 from typing import Set
-
+from . import versions
 import heroku3
 from git import Repo
 from pyrogram import filters
 
 from userge import logging, logbot
-from . import versions
 
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
@@ -64,7 +63,8 @@ class Config:
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY", None)
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME", None)
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
-    LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
+    LOAD_UNOFFICIAL_PLUGINS = os.environ.get(
+        "LOAD_UNOFFICIAL_PLUGINS") == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
     TMP_PATH = "userge/plugins/temp/"
     MAX_MESSAGE_LENGTH = 4096
@@ -77,6 +77,8 @@ class Config:
     USE_USER_FOR_CLIENT_CHECKS = False
     SUDO_ENABLED = False
     SUDO_USERS: Set[int] = set()
+    DISABLED_ALL = False
+    DISABLED_CHATS: Set[int] = set()
     ALLOWED_COMMANDS: Set[str] = set()
     ANTISPAM_SENTRY = False
     RUN_DYNO_SAVER = False
@@ -104,7 +106,7 @@ class Config:
 
 
 def get_version() -> str:
-    """ get userge version """
+    """ get USERGE-X version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     try:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
