@@ -1,6 +1,5 @@
 """Module to display Currenty Playing Spotify Songs in your bio"""
 
-
 #  CREDITS:
 # [Poolitzer](https://t.me/poolitzer)  (for creating spotify bio plugin)
 #
@@ -12,23 +11,20 @@
 
 
 import asyncio
-import json
+import ujson
 import os
 import time
-
 import requests
 from pyrogram.errors import AboutTooLong, FloodWait
-
+from pymongo import MongoClient
 from userge import Config, Message, get_collection, userge
-from userge.utils.spotify import Database
 
-SPOTIFY_DB = get_collection("SPOTIFY_DB")
+SPOTIFY_DB = get_collection("SP_DATA")
 SAVED_SETTINGS = get_collection("CONFIGS")
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 USER_INITIAL_BIO = {}
-
-
+PATH_ = "./userge/xcache/spotify_database.json"
 KEY = "🎶"
 BIOS = [
     KEY + " Vibing ; {interpret} - {title} {progress}/{duration}",
@@ -40,23 +36,140 @@ BIOS = [
 OFFSET = 1
 # reduce the OFFSET from our actual 70 character limit
 LIMIT = 70 - OFFSET
+SP_DATABASE = None
 
 
+class Database:
+    def __init__(self):
+        if not os.path.exists(PATH_):
+            print('Spotify Auth. required see help for "sp_setup" for more info !')
+            return 
+        with open(PATH_) as f:
+            self.db = ujson.load(f)
+
+    def save_token(self, token):
+        self.db["access_token"] = token
+        self.save()
+
+    def save_refresh(self, token):
+        self.db["refresh_token"] = token
+        self.save()
+
+    def save_bio(self, bio):
+        self.db["bio"] = bio
+        self.save()
+
+    def save_spam(self, which, what):
+        self.db[which + "_spam"] = what
+
+    def return_token(self):
+        return self.db["access_token"]
+
+    def return_refresh(self):
+        return self.db["refresh_token"]
+
+    def return_bio(self):
+        return self.db["bio"]
+
+    def return_spam(self, which):
+        return self.db[which + "_spam"]
+
+    def save(self):
+        with open(PATH_, "w") as outfile:
+            ujson.dump(self.db, outfile, indent=4, sort_keys=True)
+
+async def get_auth_():
+    _authurl = (
+        "https://accounts.spotify.com/authorize?client_id={}&response_type=code&redirect_uri="
+        "https%3A%2F%2Fexample.com%2Fcallback&scope=user-read-playback-state%20user-read-currently"
+        "-playing+user-follow-read+user-read-recently-played+user-top-read+playlist-read-private+playlist"
+        "-modify-private+user-follow-modify+user-read-private"
+    )
+    async with userge.conversation(Config.LOG_CHANNEL_ID, timeout=150) as conv:
+        await conv.send_message(
+            "Go to the following link in "
+            f"your browser: {_authurl.format(Config.SPOTIFY_CLIENT_ID)} and reply the code or url"
+        )
+        response = await conv.get_response(mark_read=True)
+        msg_ = await conv.send_message('`Processing ...`')
+        return response.text.strip(), msg_
+
+
+@userge.on_cmd(
+    "sp_setup",
+    about={"header": "Setup for Spotify Auth"},
+)
+async def spotify_setup(message: Message):
+    if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
+        await message.err("Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, please add them first !", del_in=8)
+        return
+    if message.chat.id != Config.LOG_CHANNEL_ID:
+        await message.err("CHAT INVALID :: Do this in your Log Channel", del_in=5)
+        return
+        
+    initial_token, msg_ = await get_auth_()
+    if "code=" in initial_token:
+        initial_token = (initial_token.split("code=", 1))[1]
+    body_ = {
+        "client_id": Config.SPOTIFY_CLIENT_ID,
+        "client_secret": Config.SPOTIFY_CLIENT_SECRET,
+        "grant_type": "authorization_code",
+        "redirect_uri": "https://example.com/callback",
+        "code": initial_token
+    }
+    r = requests.post("https://accounts.spotify.com/api/token", data=body_)
+    save = r.json()
+    access_token = save.get('access_token')
+    refresh_token = save.get('refresh_token')
+    to_create = {
+        'bio':"",
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'telegram_spam': False,
+        'spotify_spam': False
+    }
+    with open(PATH_, 'w') as outfile:
+        ujson.dump(to_create, outfile, indent=4, sort_keys=True)
+    await msg_.edit("Done! Setup was Successfully")
+    await SPOTIFY_DB.update_one(
+        {"_id": "database"},
+        {"$set": {
+            "access_token": access_token,
+            'refresh_token': refresh_token
+        }},
+        upsert=True,
+    )
+    SP_DATABASE = Database()
+
+    
 if (
     Config.SPOTIFY_CLIENT_ID
     and Config.SPOTIFY_CLIENT_SECRET
-    and Config.SPOTIFY_INITIAL_TOKEN
 ):
-
     async def _init() -> None:
-        global database
-        data = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
-        if data:
+        data_ = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
+        if data_:
             Config.SPOTIFY_MODE = bool(data["is_active"])
-        if not os.path.exists("./userge/xcache/spotify_database.json"):
-            await spotify_db_loader()
-            await asyncio.sleep(5)
-            database = Database()
+        if not os.path.exists(PATH_):
+            db_ = await SPOTIFY_DB.find_one({'_id': "database"})
+            if db_:
+                to_create = {
+                    "bio": "",
+                    "access_token": db_.get("access_token"),
+                    "refresh_token": db_.get("refresh_token"),
+                    "telegram_spam": False,
+                    "spotify_spam": False,
+                }
+                with open(PATH_, "w+") as outfile:
+                    ujson.dump(to_create, outfile, indent=4)
+                SP_DATABASE = Database()
+            
+
+
+
+
+
+
 
     @userge.on_cmd(
         "spotify_bio",
@@ -70,11 +183,11 @@ if (
             if USER_INITIAL_BIO:
                 await userge.update_profile(bio=USER_INITIAL_BIO["bio"])
                 USER_INITIAL_BIO.clear()
-            await message.edit(" `Spotify Bio disabled !`", del_in=3)
+            await message.edit(" `Spotify Bio disabled !`", del_in=4)
         else:
             await message.edit(
-                "✅ `Spotify Bio enabled` \nCurrent Spotify playback will updated in BIO",
-                del_in=5,
+                "✅ `Spotify Bio enabled` \nCurrent Spotify playback will updated in the Bio",
+                del_in=4,
             )
             USER_INITIAL_BIO["bio"] = (
                 await userge.get_chat((await userge.get_me()).id)
@@ -99,86 +212,41 @@ if (
         minutes = int(minutes)
         return str(minutes) + ":" + str(seconds)
 
-    async def spotify_db_loader():
-        sdb = await SPOTIFY_DB.find_one({"_id": "SPOTIFY_DB"})
-        if sdb:
-            sdb_msgid = sdb["database_id"]
-            sdb_get = await userge.get_messages(Config.LOG_CHANNEL_ID, int(sdb_msgid))
-            await userge.download_media(
-                sdb_get.document, file_name="userge/xcache/spotify_database.json"
-            )
-
-        else:
-            body = {
-                "client_id": Config.SPOTIFY_CLIENT_ID,
-                "client_secret": Config.SPOTIFY_CLIENT_SECRET,
-                "grant_type": "authorization_code",
-                "redirect_uri": "https://example.com/callback",
-                "code": Config.SPOTIFY_INITIAL_TOKEN,
-            }
-            r = requests.post("https://accounts.spotify.com/api/token", data=body)
-            save = r.json()
-            try:
-                to_create = {
-                    "bio": "",
-                    "access_token": save["access_token"],
-                    "refresh_token": save["refresh_token"],
-                    "telegram_spam": False,
-                    "spotify_spam": False,
-                }
-                with open("./userge/xcache/spotify_database.json", "w+") as outfile:
-                    json.dump(to_create, outfile, indent=4, sort_keys=True)
-            except KeyError:
-                await CHANNEL.log("SPOTIFY_INITIAL_TOKEN expired recreate one")
-            except FileNotFoundError:
-                await CHANNEL.log("Database not found")
-            else:
-                s_database = await userge.send_document(
-                    Config.LOG_CHANNEL_ID,
-                    "userge/xcache/spotify_database.json",
-                    disable_notification=True,
-                    caption="#SPOTIFY_DB Don't Delete",
-                )
-                await SPOTIFY_DB.update_one(
-                    {"_id": "SPOTIFY_DB"},
-                    {"$set": {"database_id": s_database.message_id}},
-                    upsert=True,
-                )
 
     # to stop unwanted spam, we sent these type of message only once. So we have a variable in our database which we check
     # for in return_info. When we send a message, we set this variable to true. After a successful update
     # (or a closing of spotify), we reset that variable to false.
 
     def save_spam(which, what):
-        global database
+        
         # see below why
 
         # this is if False is inserted, so if spam = False, so if everything is good.
         if not what:
             # if it wasn't normal before, we proceed
-            if database.return_spam(which):
+            if SP_DATABASE.return_spam(which):
                 # we save that it is normal now
-                database.save_spam(which, False)
+                SP_DATABASE.save_spam(which, False)
                 # we return True so we can test against it and if it this function returns, we can send a fitting message
                 return True
         # this is if True is inserted, so if spam = True, so if something went wrong
         else:
             # if it was normal before, we proceed
-            if not database.return_spam(which):
+            if not SP_DATABASE.return_spam(which):
                 # we save that it is not normal now
-                database.save_spam(which, True)
+                SP_DATABASE.save_spam(which, True)
                 # we return True so we can send a message
                 return True
         # if True wasn't returned before, we can return False now so our test fails and we dont send a message
         return False
 
     async def spotify_biox():
-        global database
+        
         while Config.SPOTIFY_MODE:
             # SPOTIFY
             skip = False
             to_insert = {}
-            oauth = {"Authorization": "Bearer " + database.return_token()}
+            oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
             r = requests.get(
                 "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
             )
@@ -234,16 +302,16 @@ if (
                     "client_id": Config.SPOTIFY_CLIENT_ID,
                     "client_secret": Config.SPOTIFY_CLIENT_SECRET,
                     "grant_type": "refresh_token",
-                    "refresh_token": database.return_refresh(),
+                    "refresh_token": SP_DATABASE.return_refresh(),
                 }
                 r = requests.post("https://accounts.spotify.com/api/token", data=data)
                 received = r.json()
                 # if a new refresh is token as well, we save it here
                 try:
-                    database.save_refresh(received["refresh_token"])
+                    SP_DATABASE.save_refresh(received["refresh_token"])
                 except KeyError:
                     pass
-                database.save_token(received["access_token"])
+                SP_DATABASE.save_token(received["access_token"])
                 # since we didnt actually update our status yet, lets do this without the 30 seconds wait
                 skip = True
             # 502 means bad gateway, its an issue on spotify site which we can do nothing about. 30 seconds wait shouldn't
@@ -322,10 +390,10 @@ if (
                     if new_bio:
                         # test if the user changed his bio to blank, we save it before we override
                         if not bio:
-                            database.save_bio(bio)
+                            SP_DATABASE.save_bio(bio)
                         # test if the user changed his bio in the meantime, if yes, we save it before we override
                         elif "🎶" not in bio:
-                            database.save_bio(bio)
+                            SP_DATABASE.save_bio(bio)
                         # test if the bio isn't the same, otherwise updating it would be stupid
                         if not new_bio == bio:
                             try:
@@ -364,17 +432,17 @@ if (
                             "been resolved."
                         )
                         await CHANNEL.log(stringy)
-                    old_bio = database.return_bio()
+                    old_bio = SP_DATABASE.return_bio()
                     # this means the bio is blank, so we save that as the new one
                     if not bio:
-                        database.save_bio(bio)
+                        SP_DATABASE.save_bio(bio)
                     # this means an old playback is in the bio, so we change it back to the original one
                     elif "🎶" in bio:
-                        await userge.update_profile(bio=database.return_bio())
+                        await userge.update_profile(bio=SP_DATABASE.return_bio())
 
                     # this means a new original is there, lets save it
                     elif not bio == old_bio:
-                        database.save_bio(bio)
+                        SP_DATABASE.save_bio(bio)
                     # this means the original one we saved is still valid
                     else:
                         pass
@@ -394,8 +462,8 @@ if (
     @userge.on_cmd("now_playing", about={"header": "Now Playing Spotify Song"})
     async def now_playing_(message: Message):
         """Spotify Now Playing"""
-        global database
-        oauth = {"Authorization": "Bearer " + database.return_token()}
+        
+        oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         r = requests.get(
             "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
         )
@@ -409,9 +477,9 @@ if (
     @userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
     async def sp_info_(message: Message):
         """Spotify Device Info"""
-        global database
+        
         # =====================================GET_204=====================================================#
-        oauth = {"Authorization": "Bearer " + database.return_token()}
+        oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         getplay = requests.get(
             "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
         )
@@ -422,7 +490,7 @@ if (
         )
 
         # =====================================GET_FIVE_RECETLY_PLAYED_SONGS=================================#
-        oauth = {"Authorization": "Bearer " + database.return_token()}
+        oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         recetly_pl = requests.get(
             "https://api.spotify.com/v1/me/player/recently-played?type=track&limit=5",
             headers=oauth,
@@ -464,8 +532,8 @@ if (
     @userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
     async def sp_profile_(message: Message):
         """Spotify Profile"""
-        global database
-        oauth = {"Authorization": "Bearer " + database.return_token()}
+        
+        oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         me = requests.get("https://api.spotify.com/v1/me", headers=oauth)
         a_me = me.json()
         name = a_me["display_name"]
@@ -482,8 +550,8 @@ if (
     @userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
     async def sp_recents_(message: Message):
         """Spotify Recent Songs"""
-        global database
-        oauth = {"Authorization": "Bearer " + database.return_token()}
+        
+        oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
         await message.edit("`Getting recent played songs...`")
         r = requests.get(
             "https://api.spotify.com/v1/me/player/recently-played", headers=oauth
