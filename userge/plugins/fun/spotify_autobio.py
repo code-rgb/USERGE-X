@@ -102,6 +102,7 @@ async def get_auth_():
     about={"header": "Setup for Spotify Auth"},
 )
 async def spotify_setup(message: Message):
+    global SP_DATABASE
     if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
         await message.err(
             "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, please add them first !",
@@ -141,12 +142,13 @@ async def spotify_setup(message: Message):
         {"$set": {"access_token": access_token, "refresh_token": refresh_token}},
         upsert=True,
     )
-    Database()
+    SP_DATABASE = Database()
 
 
 if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
 
     async def _init() -> None:
+        global SP_DATABASE
         data_ = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
         if data_:
             Config.SPOTIFY_MODE = bool(data["is_active"])
@@ -162,7 +164,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 }
                 with open(PATH_, "w+") as outfile:
                     ujson.dump(to_create, outfile, indent=4)
-                Database()
+                SP_DATABASE = Database()
 
     @userge.on_cmd(
         "spotify_bio",
