@@ -492,7 +492,7 @@ async def spotify_bio_(message: Message):
 async def now_playing_(message: Message):
     """Spotify Now Playing"""
     if not await sp_var_check(message):
-        return    
+        return
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     r = requests.get(
         "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
