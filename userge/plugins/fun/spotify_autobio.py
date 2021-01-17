@@ -43,6 +43,7 @@ OFFSET = 1
 # reduce the OFFSET from our actual 70 character limit
 LIMIT = 70 - OFFSET
 # [----------------------------------------------------------------------]
+# Errors
 no_sp_vars = (
     "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, add them first !"
 )
@@ -51,7 +52,7 @@ no_sp_vars = (
 class Database:
     def __init__(self):
         if not os.path.exists(PATH_):
-            print('Spotify Auth. required see help for "sp_setup" for more info !')
+            LOG_.error('Spotify Auth. required see help for "sp_setup" for more info !')
             return
         with open(PATH_) as f:
             self.db = ujson.load(f)
