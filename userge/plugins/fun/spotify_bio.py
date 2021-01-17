@@ -567,9 +567,7 @@ async def sp_profile_(message: Message):
     country = a_me.get("country")
     me_img = a_me.get("images").pop().get("url") if a_me.get("images") else None
     me_url = a_me["external_urls"]["spotify"]
-    profile_text = (
-        f"[\u200c]({me_img or 'https://i.imgur.com/XTLlQeq.gif'})**Spotify name**: {name}\n**Profile link:** [here]({me_url})"
-    )
+    profile_text = f"[\u200c]({me_img or 'https://i.imgur.com/XTLlQeq.gif'})**Spotify name**: {name}\n**Profile link:** [here]({me_url})"
     if country:
         profile_text += f"\n**Country:** {country}"
     total_ = a_me["followers"].get("total")
@@ -600,4 +598,6 @@ async def sp_recents_(message: Message):
             escape_markdown(get_name), escape_markdown(get_link)
         )
     await message.edit(recent, disable_web_page_preview=True)
+
+
 # 600 Lines Lmafo
