@@ -182,16 +182,19 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
         if not os.path.exists(PATH_):
             db_ = await SPOTIFY_DB.find_one({"_id": "database"})
             if db_:
-                to_create = {
-                    "bio": "",
-                    "access_token": db_.get("access_token"),
-                    "refresh_token": db_.get("refresh_token"),
-                    "telegram_spam": False,
-                    "spotify_spam": False,
-                }
-                with open(PATH_, "w+") as outfile:
-                    ujson.dump(to_create, outfile, indent=4)
-                SP_DATABASE = Database()
+                access_token = db_.get("access_token")
+                refresh_token = db_.get("refresh_token")
+                if access_token and refresh_token:
+                    to_create = {
+                        "bio": "",
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                        "telegram_spam": False,
+                        "spotify_spam": False,
+                    }
+                    with open(PATH_, "w+") as outfile:
+                        ujson.dump(to_create, outfile, indent=4)
+                    SP_DATABASE = Database()
 
     # to stop unwanted spam, we sent these type of message only once. So we have a variable in our database which we check
     # for in return_info. When we send a message, we set this variable to true. After a successful update
@@ -335,7 +338,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 )
                 LOG_.error(f"Spotify, error {str(r.status_code)}, text: {r.text}")
                 # stop the whole program since I dont know what happens here and this is the safest thing we can do
-                Config.SPOTIFY_MODE = False  # TODO check this
+                Config.SPOTIFY_MODE = False
             # TELEGRAM
             try:
                 # full needed, since we dont get a bio with the normal request
@@ -452,7 +455,6 @@ def sp_var_check(func):
             )
             return
         await func(message)
-
     return wrapper
 
 
