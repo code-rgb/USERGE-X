@@ -36,7 +36,6 @@ CHANNEL = userge.getCLogger(__name__)
 )
 async def promote_usr(message: Message):
     """ promote members in tg group """
-    custom_rank = ""
     chat_id = message.chat.id
     await message.edit("`Trying to Promote User.. Hang on!! ⏳`")
     user_id, custom_rank = message.extract_user_and_text
@@ -153,7 +152,6 @@ async def demote_usr(message: Message):
 async def ban_user(message: Message):
     """ ban user from tg group """
     await message.edit("`Trying to Ban User.. Hang on!! ⏳`")
-    reason = ""
     user_id, reason = message.extract_user_and_text
     if not user_id:
         await message.edit(
@@ -316,7 +314,6 @@ async def kick_usr(message: Message):
 )
 async def mute_usr(message: Message):
     """ mute user from tg group """
-    reason = ""
     chat_id = message.chat.id
     flags = message.flags
     minutes = flags.get("-m", 0)
@@ -562,27 +559,20 @@ async def pin_msgs(message: Message):
     """ pin & unpin message in groups """
     chat_id = message.chat.id
     flags = message.flags
-    silent_pin = "-s" in flags
+    disable_notification = False
+    if "-s" in flags:
+        disable_notification = True
     unpin_pinned = "-u" in flags
     if unpin_pinned:
         try:
-            await message.client.unpin_chat_message(chat_id)
+            if message.reply_to_message:
+                await message.client.unpin_chat_message(
+                    chat_id, message.reply_to_message.message_id
+                )
+            else:
+                await message.client.unpin_all_chat_messages(chat_id)
             await message.delete()
             await CHANNEL.log(f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
-            )
-    elif silent_pin:
-        try:
-            message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(
-                chat_id, message_id, disable_notification=True
-            )
-            await message.delete()
-            await CHANNEL.log(f"#PIN-SILENT\n\n{message.chat.title}` (`{chat_id}`)")
         except Exception as e_f:
             await message.edit(
                 r"`something went wrong! (⊙_⊙;)`"
@@ -592,7 +582,9 @@ async def pin_msgs(message: Message):
     else:
         try:
             message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(chat_id, message_id)
+            await message.client.pin_chat_message(
+                chat_id, message_id, disable_notification=disable_notification
+            )
             await message.delete()
             await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
         except Exception as e_f:
