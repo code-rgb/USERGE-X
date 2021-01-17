@@ -179,7 +179,9 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
         data_ = await SAVED_SETTINGS.find_one({"_id": "SPOTIFY_MODE"})
         if data_:
             Config.SPOTIFY_MODE = bool(data_["is_active"])
-        if not os.path.exists(PATH_):
+        if os.path.exists(PATH_):
+            SP_DATABASE = Database()
+        else:
             db_ = await SPOTIFY_DB.find_one({"_id": "database"})
             if db_:
                 access_token = db_.get("access_token")
@@ -595,6 +597,4 @@ async def sp_recents_(message: Message):
         get_link = ex_link["spotify"]
         recent += "• [{}]({})\n".format(get_name, get_link)
     await message.edit(recent, disable_web_page_preview=True)
-
-
 # 600 Lines Lmafo
