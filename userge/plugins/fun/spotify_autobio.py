@@ -427,14 +427,14 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     else:
                         pass
             except FloodWait as e:
-                to_wait = e.seconds
+                to_wait = e.x
                 LOG_.error(f"to wait for {str(to_wait)}")
                 await CHANNEL.log(
                     "**[WARNING]**\n\nI caught a telegram api limit. I shall sleep "
                     f"{str(to_wait)} seconds until I refresh again"
                 )
                 skip = True
-                await asyncio.sleep(int(to_wait))
+                await asyncio.sleep(to_wait)
             # skip means a flood error stopped the whole program, no need to wait another 30 seconds after that
             if not skip:
                 await asyncio.sleep(30)
