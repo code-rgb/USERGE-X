@@ -443,19 +443,17 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 await asyncio.sleep(30)
 
 
-def sp_var_check(func):
-    async def wrapper(message: Message):
-        if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
-            await message.err(no_sp_vars, del_in=7)
-            return
-        if SP_DATABASE is None:
-            await message.edit(
-                "ERROR :: No Database was found!\n**See help for sp_setup for more info.**",
-                del_in=10,
-            )
-            return
-        await func(message)
-    return wrapper
+async def sp_var_check(message: Message):
+    if not (Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET):
+        await message.err(no_sp_vars, del_in=7)
+        return False
+    if SP_DATABASE is None:
+        await message.edit(
+            "ERROR :: No Database was found!\n**See help for sp_setup for more info.**",
+            del_in=10,
+        )
+        return False
+    return True
 
 
 @userge.on_cmd(
@@ -463,9 +461,10 @@ def sp_var_check(func):
     about={"header": "enable / disable Spotify Bio"},
     allow_channels=False,
 )
-@sp_var_check
 async def spotify_bio_(message: Message):
-    """Toggle Spotify BIO"""
+    """Toggle Spotify Bio"""
+    if not await sp_var_check(message):
+        return
     if Config.SPOTIFY_MODE:
         Config.SPOTIFY_MODE = False
         if USER_INITIAL_BIO:
@@ -490,9 +489,10 @@ async def spotify_bio_(message: Message):
 
 
 @userge.on_cmd("sp_now", about={"header": "Now Playing Spotify Song"})
-@sp_var_check
 async def now_playing_(message: Message):
     """Spotify Now Playing"""
+    if not await sp_var_check(message):
+        return    
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     r = requests.get(
         "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
@@ -505,9 +505,10 @@ async def now_playing_(message: Message):
 
 
 @userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
-@sp_var_check
 async def sp_info_(message: Message):
     """Spotify Device Info"""
+    if not await sp_var_check(message):
+        return
     # =====================================GET_204=====================================================#
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     getplay = requests.get(
@@ -554,9 +555,10 @@ async def sp_info_(message: Message):
 
 
 @userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
-@sp_var_check
 async def sp_profile_(message: Message):
     """Spotify Profile"""
+    if not await sp_var_check(message):
+        return
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     me = requests.get("https://api.spotify.com/v1/me", headers=oauth)
     a_me = me.json()
@@ -573,9 +575,10 @@ async def sp_profile_(message: Message):
 
 
 @userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
-@sp_var_check
 async def sp_recents_(message: Message):
     """Spotify Recent Songs"""
+    if not await sp_var_check(message):
+        return
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     await message.edit("`Getting recent played songs...`")
     r = requests.get(
