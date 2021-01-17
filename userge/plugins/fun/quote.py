@@ -6,6 +6,7 @@ from pyrogram.errors import YouBlockedUser
 from userge import Message, userge
 from userge.utils.exceptions import StopConversation
 
+
 @userge.on_cmd(
     "q",
     about={
@@ -53,7 +54,9 @@ async def quotecmd(message: Message):
         async with userge.conversation("QuotLyBot", timeout=100) as conv:
             try:
                 if quote_list:
-                    await userge.forward_messages("QuotLyBot", message.chat.id, quote_list)
+                    await userge.forward_messages(
+                        "QuotLyBot", message.chat.id, quote_list
+                    )
                     if self_mid:
                         await message.delete()
                 elif args:
@@ -79,6 +82,6 @@ async def quotecmd(message: Message):
                     reply_to_message_id=message_id,
                 )
     except StopConversation:
-        await message.err("@QuotLyBot Didn't respond in time\n:(  please try again later...", del_in=5)
-
-
+        await message.err(
+            "@QuotLyBot Didn't respond in time\n:(  please try again later...", del_in=5
+        )
