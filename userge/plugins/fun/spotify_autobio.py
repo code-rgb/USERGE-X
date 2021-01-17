@@ -151,7 +151,7 @@ async def spotify_setup(message: Message):
     refresh_token = save.get("refresh_token")
     if not (access_token and refresh_token):
         await msg_.err(
-            "Auth. was Unsuccessful !\nProvide a do sp_setup again and provide a valid URL or Code"
+            "Auth. was Unsuccessful !\ndo sp_setup again and provide a valid URL or Code"
         )
         return
     to_create = {
