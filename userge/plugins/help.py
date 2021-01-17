@@ -732,7 +732,7 @@ if userge.has_bot:
                 ]
 
                 alive_info = f"""
-    **[Paimon](https://telegram.dog/x_xtests) is Up and Running**
+    **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running**
 
    Python       :  v{versions.__python_version__}
    Pyrogram  :  v{versions.__pyro_version__}
