@@ -13,19 +13,21 @@
 import asyncio
 import os
 import time
+
 import requests
 import ujson
 from pyrogram.errors import AboutTooLong, FloodWait
-from userge.utils import escape_markdown
-from userge import Config, Message, get_collection, userge
 
-SP_DATABASE = None # Main DB (Class Database)
+from userge import Config, Message, get_collection, userge
+from userge.utils import escape_markdown
+
+SP_DATABASE = None  # Main DB (Class Database)
 # Saves Auth data cuz heroku doesn't have persistent storage
-SPOTIFY_DB = get_collection("SP_DATA") 
+SPOTIFY_DB = get_collection("SP_DATA")
 SAVED_SETTINGS = get_collection("CONFIGS")
 LOG_ = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
-USER_INITIAL_BIO = {} # Saves Users Original Bio
+USER_INITIAL_BIO = {}  # Saves Users Original Bio
 PATH_ = "./userge/xcache/spotify_database.json"
 
 # [---------------------------] Constants [------------------------------]
@@ -41,7 +43,9 @@ OFFSET = 1
 # reduce the OFFSET from our actual 70 character limit
 LIMIT = 70 - OFFSET
 # [----------------------------------------------------------------------]
-no_sp_vars = "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, add them first !"
+no_sp_vars = (
+    "Vars `SPOTIFY_CLIENT_ID` & `SPOTIFY_CLIENT_SECRET` are missing, add them first !"
+)
 
 
 class Database:
@@ -83,6 +87,7 @@ class Database:
         with open(PATH_, "w") as outfile:
             ujson.dump(self.db, outfile, indent=4, sort_keys=True)
 
+
 def ms_converter(millis):
     millis = int(millis)
     seconds = (millis / 1000) % 60
@@ -94,6 +99,7 @@ def ms_converter(millis):
     minutes = (millis / (1000 * 60)) % 60
     minutes = int(minutes)
     return str(minutes) + ":" + str(seconds)
+
 
 async def get_auth_():
     _authurl = (
@@ -114,10 +120,11 @@ async def get_auth_():
 
 @userge.on_cmd(
     "sp_setup",
-    about={"header": "Setup for Spotify Auth",
-    "description":  "[In LOG Channel]\nLogin in your spotify account before doing this, then follow the instructions",
-    "usage": "{tr}sp_setup"
-    }
+    about={
+        "header": "Setup for Spotify Auth",
+        "description": "[In LOG Channel]\nLogin in your spotify account before doing this, then follow the instructions",
+        "usage": "{tr}sp_setup",
+    },
 )
 async def spotify_setup(message: Message):
     """Setup Spotify Creds"""
@@ -143,7 +150,9 @@ async def spotify_setup(message: Message):
     access_token = save.get("access_token")
     refresh_token = save.get("refresh_token")
     if not (access_token and refresh_token):
-        await msg_.err("Auth. was Unsuccessful !\nProvide a do sp_setup again and provide a valid URL or Code")
+        await msg_.err(
+            "Auth. was Unsuccessful !\nProvide a do sp_setup again and provide a valid URL or Code"
+        )
         return
     to_create = {
         "bio": "",
@@ -184,7 +193,6 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     ujson.dump(to_create, outfile, indent=4)
                 SP_DATABASE = Database()
 
-
     # to stop unwanted spam, we sent these type of message only once. So we have a variable in our database which we check
     # for in return_info. When we send a message, we set this variable to true. After a successful update
     # (or a closing of spotify), we reset that variable to false.
@@ -208,7 +216,6 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 return True
         # if True wasn't returned before, we can return False now so our test fails and we dont send a message
         return False
-
 
     async def spotify_bio_():
 
@@ -282,7 +289,12 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 SP_DATABASE.save_token(received["access_token"])
                 await SPOTIFY_DB.update_one(
                     {"_id": "database"},
-                    {"$set": {"access_token": SP_DATABASE.return_token(), "refresh_token": SP_DATABASE.return_refresh()}},
+                    {
+                        "$set": {
+                            "access_token": SP_DATABASE.return_token(),
+                            "refresh_token": SP_DATABASE.return_refresh(),
+                        }
+                    },
                     upsert=True,
                 )
                 # since we didnt actually update our status yet, lets do this without the 30 seconds wait
@@ -434,9 +446,13 @@ def sp_var_check(func):
             await message.err(no_sp_vars, del_in=7)
             return
         if SP_DATABASE is None:
-            await message.edit("ERROR :: No Database was found!\n**See help for sp_setup for more info.**", del_in=10)
+            await message.edit(
+                "ERROR :: No Database was found!\n**See help for sp_setup for more info.**",
+                del_in=10,
+            )
             return
         await func(message)
+
     return wrapper
 
 
@@ -496,9 +512,7 @@ async def sp_info_(message: Message):
         "https://api.spotify.com/v1/me/player/currently-playing", headers=oauth
     )
     # =====================================GET_DEVICE_INFO==============================================#
-    device = requests.get(
-        "https://api.spotify.com/v1/me/player/devices", headers=oauth
-    )
+    device = requests.get("https://api.spotify.com/v1/me/player/devices", headers=oauth)
     # =====================================GET_FIVE_RECETLY_PLAYED_SONGS=================================#
     oauth = {"Authorization": "Bearer " + SP_DATABASE.return_token()}
     recetly_pl = requests.get(
@@ -526,9 +540,7 @@ async def sp_info_(message: Message):
         device_vol = g_dlist["volume_percent"]
         # ==================PLAYING_SONGS_INFO=======================================#
         currently_playing_song = f"{spotify_bio_.title} - {spotify_bio_.interpret}"
-        currently_playing_song_dur = (
-            f"{spotify_bio_.progress}/{spotify_bio_.duration}"
-        )
+        currently_playing_song_dur = f"{spotify_bio_.progress}/{spotify_bio_.duration}"
         # ==================ASSINGING_VAR_VLAUE=======================================#
         status_pn = f"""
     **Device name:** {device_name} ({device_type}) 
@@ -575,5 +587,13 @@ async def sp_recents_(message: Message):
         get_name = track["name"]
         ex_link = track["external_urls"]
         get_link = ex_link["spotify"]
-        recent += "• [" + escape_markdown(get_name) + "]" + "(" + escape_markdown(get_link) + ")" + "\n"
+        recent += (
+            "• ["
+            + escape_markdown(get_name)
+            + "]"
+            + "("
+            + escape_markdown(get_link)
+            + ")"
+            + "\n"
+        )
     await message.edit(recent, disable_web_page_preview=True)
