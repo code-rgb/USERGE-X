@@ -129,6 +129,9 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
                     [
                         [
                             InlineKeyboardButton("CONTACT", url=f"t.me/{u_n}"),
+                            InlineKeyboardButton(
+                                "ABOUT", url="https://t.me/VijayXD"
+                            ),
                         ],
                         [
                             InlineKeyboardButton(
