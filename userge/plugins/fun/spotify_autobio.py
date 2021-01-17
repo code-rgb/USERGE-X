@@ -462,7 +462,7 @@ async def sp_var_check(message: Message):
     about={"header": "enable / disable Spotify Bio"},
     allow_channels=False,
 )
-async def spotify_bio_(message: Message):
+async def spotify_bio_toggle(message: Message):
     """Toggle Spotify Bio"""
     if not await sp_var_check(message):
         return
