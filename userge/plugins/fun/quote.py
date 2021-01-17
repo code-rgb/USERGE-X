@@ -4,7 +4,7 @@
 from pyrogram.errors import YouBlockedUser
 
 from userge import Message, userge
-
+from userge.utils.exceptions import StopConversation
 
 @userge.on_cmd(
     "q",
@@ -49,31 +49,36 @@ async def quotecmd(message: Message):
     if not args and len(quote_list) == 0:
         await message.err("Reply to a message or provide an input to quote !", del_in=5)
         return
-    async with userge.conversation("QuotLyBot") as conv:
-        try:
-            if quote_list:
-                await userge.forward_messages("QuotLyBot", message.chat.id, quote_list)
-                if self_mid:
-                    await message.delete()
-            elif args:
-                await conv.send_message(args)
-        except YouBlockedUser:
-            await message.edit("first **unblock** @QuotLyBot")
-            return
-        quote = await conv.get_response(mark_read=True)
-        if not (quote.sticker or quote.document):
-            await message.err("something went wrong!")
-            return
-        message_id = reply.message_id if reply else None
-        if quote.sticker:
-            await userge.send_sticker(
-                chat_id=message.chat.id,
-                sticker=quote.sticker.file_id,
-                reply_to_message_id=message_id,
-            )
-        else:
-            await userge.send_document(
-                chat_id=message.chat.id,
-                document=quote.document.file_id,
-                reply_to_message_id=message_id,
-            )
+    try:
+        async with userge.conversation("QuotLyBot", timeout=100) as conv:
+            try:
+                if quote_list:
+                    await userge.forward_messages("QuotLyBot", message.chat.id, quote_list)
+                    if self_mid:
+                        await message.delete()
+                elif args:
+                    await conv.send_message(args)
+            except YouBlockedUser:
+                await message.edit("first **unblock** @QuotLyBot")
+                return
+            quote = await conv.get_response(mark_read=True)
+            if not (quote.sticker or quote.document):
+                await message.err("something went wrong!")
+                return
+            message_id = reply.message_id if reply else None
+            if quote.sticker:
+                await userge.send_sticker(
+                    chat_id=message.chat.id,
+                    sticker=quote.sticker.file_id,
+                    reply_to_message_id=message_id,
+                )
+            else:
+                await userge.send_document(
+                    chat_id=message.chat.id,
+                    document=quote.document.file_id,
+                    reply_to_message_id=message_id,
+                )
+    except StopConversation:
+        await message.err("@QuotLyBot Didn't respond in time\n:(  please try again later...", del_in=5)
+
+
