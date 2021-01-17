@@ -54,7 +54,7 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
         if Config.BOT_FORWARDS:
             hello += "\n<b>NOTE: </b> "
             hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
-            hello += "All your messages here will be forwared to my **MASTER**"
+            hello += "All your messages here will be forwarded to my **MASTER**"
         if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
             if not found:
