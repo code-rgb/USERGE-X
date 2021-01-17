@@ -587,5 +587,7 @@ async def sp_recents_(message: Message):
         get_name = track["name"]
         ex_link = track["external_urls"]
         get_link = ex_link["spotify"]
-        recent += "• [{}]({})\n".format(escape_markdown(get_name), escape_markdown(get_link))
+        recent += "• [{}]({})\n".format(
+            escape_markdown(get_name), escape_markdown(get_link)
+        )
     await message.edit(recent, disable_web_page_preview=True)
