@@ -734,9 +734,9 @@ if userge.has_bot:
                 alive_info = f"""
     **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running**
 
-   Python       :  v{versions.__python_version__}
-   Pyrogram  :  v{versions.__pyro_version__}
-   X                   :  v{get_version()}-Alícia-154
+   Python   🐍     :  v{versions.__python_version__}
+   Pyrogram 🔥  :  v{versions.__pyro_version__}
+   X        🧬            :  v{get_version()}-Alícia-154
 
 {_get_mode()}  |  : {userge.uptime}
 """
