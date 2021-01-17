@@ -68,10 +68,10 @@ REPO_X = InlineQueryResultArticle(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "Alícia Dark", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "🚀 Deploy USERGE-X",
+                    "Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
                         "https://github.com/code-rgb/USERGE-X/tree/alpha"
@@ -93,10 +93,10 @@ ALIVE_IMGS = [
 
 def _get_mode() -> str:
     if RawClient.DUAL_MODE:
-        return "↕️  **DUAL**"
+        return "**DUAL**"
     if Config.BOT_TOKEN:
-        return "🤖  **BOT**"
-    return "👤  **USER**"
+        return "**BOT**"
+    return "**USER**"
 
 
 async def _init() -> None:
@@ -174,10 +174,10 @@ if userge.has_bot:
                 try:
                     await func(c_q)
                 except MessageNotModified:
-                    await c_q.answer("Nothing Found to Refresh 🤷‍♂️", show_alert=True)
+                    await c_q.answer("Nothing Found to Refresh ", show_alert=True)
                 except MessageIdInvalid:
                     await c_q.answer(
-                        "Sorry, I Don't Have Permissions to edit this 😔",
+                        "Sorry, I Don't Have Permissions to edit this ",
                         show_alert=True,
                     )
             else:
@@ -426,7 +426,7 @@ if userge.has_bot:
                     )
                 )
         else:
-            cur_clnt = "👤 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
+            cur_clnt = "USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "BOT"
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
@@ -533,13 +533,13 @@ if userge.has_bot:
         if flt.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➖ Disable", callback_data=f"disable({cur_pos})".encode()
+                    "Disable", callback_data=f"disable({cur_pos})".encode()
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➕ Enable", callback_data=f"enable({cur_pos})".encode()
+                    "Enable", callback_data=f"enable({cur_pos})".encode()
                 )
             )
         buttons = [tmp_btns] + buttons
@@ -725,20 +725,20 @@ if userge.has_bot:
                 buttons = [
                     [
                         InlineKeyboardButton(
-                            "🔧 SETTINGS", callback_data="settings_btn"
+                            "SETTINGS", callback_data="settings_btn"
                         ),
-                        InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO),
+                        InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
                     ]
                 ]
 
                 alive_info = f"""
-    **[USERGE-X](https://telegram.dog/x_xtests) is Up and Running**
+    **[Paimon](https://telegram.dog/x_xtests) is Up and Running**
 
- • 🐍 Python :  `v{versions.__python_version__}`
- • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
- • 🧬 𝑿 :  `v{get_version()}`
+   Python       :  v{versions.__python_version__}
+   Pyrogram  :  v{versions.__pyro_version__}
+   X                   :  v{get_version()}-Alícia-154
 
-{_get_mode()}  |  🕔: {userge.uptime}
+{_get_mode()}  |  : {userge.uptime}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
