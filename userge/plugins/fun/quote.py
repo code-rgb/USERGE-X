@@ -1,7 +1,8 @@
+# Rewrote with experimental bleck magik
+# code-rgb
+
 import asyncio
-
 from pyrogram.errors import YouBlockedUser
-
 from userge import Message, userge
 
 
@@ -18,33 +19,43 @@ from userge import Message, userge
 )
 async def quotecmd(message: Message):
     """quotecmd"""
+    reply = message.reply_to_message
     quote_list = []
-    replied = message.reply_to_message
-    if replied and "l" in message.flags and not message.filtered_input_str:
-        args = ""
-        limit = message.flags.get("l", 1)
-        if limit.isdigit():
-            limit = int(limit)
+    self_mid = False
+    args = ""
+    if reply:
+        if "l" in message.flags:
+            limit = message.flags.get("l", 1)
+            if not limit.isdigit():
+                await message.err("give valid no. of message to quote", del_in=5)
+                return
+            num_ = min(int(limit), 24)
+            async for msg in userge.iter_history(
+                message.chat.id, limit=num_, offset_id=reply.message_id, reverse=True
+            ):
+                if msg.message_id != message.message_id:
+                    quote_list.append(msg.message_id)
+            if message.filtered_input_str:
+                self_mid = True
+                await message.edit(message.filtered_input_str)
         else:
-            return await message.err("give valid no. of message to quote", del_in=3)
-        num = min(limit, 24)
-        async for msg in userge.iter_history(
-            message.chat.id, limit=num, offset_id=replied.message_id, reverse=True
-        ):
-            if msg.message_id != message.message_id:
-                quote_list.append(msg.message_id)
+            quote_list.append(reply.message_id)
+            if message.input_str:
+                self_mid = True
+                await message.edit(message.input_str)
     else:
         args = message.input_str
-    asyncio.get_event_loop().create_task(message.delete())
-
+    quote_list.append(message.message_id) if self_mid else await message.delete()
+    if not args and len(quote_list) == 0:
+        await message.err("Reply to a message or provide an input to quote !", del_in=5)
+        return
     async with userge.conversation("QuotLyBot") as conv:
         try:
-            if quote_list and not args:
+            if quote_list:
                 await userge.forward_messages("QuotLyBot", message.chat.id, quote_list)
-            else:
-                if not args:
-                    await message.err("input not found!")
-                    return
+                if self_mid:
+                    await message.delete()
+            elif args:
                 await conv.send_message(args)
         except YouBlockedUser:
             await message.edit("first **unblock** @QuotLyBot")
@@ -52,17 +63,17 @@ async def quotecmd(message: Message):
         quote = await conv.get_response(mark_read=True)
         if not (quote.sticker or quote.document):
             await message.err("something went wrong!")
+            return
+        message_id = reply.message_id if reply else None
+        if quote.sticker:
+            await userge.send_sticker(
+                chat_id=message.chat.id,
+                sticker=quote.sticker.file_id,
+                reply_to_message_id=message_id,
+            )
         else:
-            message_id = replied.message_id if replied else None
-            if quote.sticker:
-                await userge.send_sticker(
-                    chat_id=message.chat.id,
-                    sticker=quote.sticker.file_id,
-                    reply_to_message_id=message_id,
-                )
-            else:
-                await userge.send_document(
-                    chat_id=message.chat.id,
-                    document=quote.document.file_id,
-                    reply_to_message_id=message_id,
-                )
+            await userge.send_document(
+                chat_id=message.chat.id,
+                document=quote.document.file_id,
+                reply_to_message_id=message_id,
+            )
