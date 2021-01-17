@@ -19,7 +19,6 @@ import ujson
 from pyrogram.errors import AboutTooLong, FloodWait
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import escape_markdown
 
 SP_DATABASE = None  # Main DB (Class Database)
 # Saves Auth data cuz heroku doesn't have persistent storage
@@ -596,8 +595,6 @@ async def sp_recents_(message: Message):
         get_name = track["name"]
         ex_link = track["external_urls"]
         get_link = ex_link["spotify"]
-        recent += "• [{}]({})\n".format(
-            escape_markdown(get_name), escape_markdown(get_link)
-        )
+        recent += "• [{}]({})\n".format(get_name, get_link)
     await message.edit(recent, disable_web_page_preview=True)
 # 600 Lines Lmafo
