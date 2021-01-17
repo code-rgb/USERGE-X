@@ -1,8 +1,8 @@
 # Rewrote with experimental bleck magik
 # code-rgb
 
-import asyncio
 from pyrogram.errors import YouBlockedUser
+
 from userge import Message, userge
 
 
