@@ -597,4 +597,6 @@ async def sp_recents_(message: Message):
         get_link = ex_link["spotify"]
         recent += "• [{}]({})\n".format(get_name, get_link)
     await message.edit(recent, disable_web_page_preview=True)
+
+
 # 600 Lines Lmafo
