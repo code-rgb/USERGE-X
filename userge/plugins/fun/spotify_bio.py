@@ -110,13 +110,13 @@ async def get_auth_():
         "-modify-private+user-follow-modify+user-read-private"
     )
     async with userge.conversation(Config.LOG_CHANNEL_ID, timeout=150) as conv:
-        to_del_ = await conv.send_message(
+        msg_ = await conv.send_message(
             "Go to the following link in "
             f"your browser: {_authurl.format(Config.SPOTIFY_CLIENT_ID)} and reply the code or url"
         )
         response = await conv.get_response(mark_read=True)
-        await to_del_.edit("`Processing ...`")
-        return response.text.strip(), to_del_
+        await msg_.edit("`Processing ...`")
+        return response.text.strip(), msg_
 
 
 @userge.on_cmd(
@@ -458,7 +458,7 @@ async def sp_var_check(message: Message):
 
 
 @userge.on_cmd(
-    "spotify_bio",
+    "sp_bio",
     about={"header": "enable / disable Spotify Bio"},
     allow_channels=False,
 )
@@ -564,14 +564,17 @@ async def sp_profile_(message: Message):
     me = requests.get("https://api.spotify.com/v1/me", headers=oauth)
     a_me = me.json()
     name = a_me["display_name"]
-    country = a_me["country"] if hasattr(a_me, "country") else ""
-    me_img = a_me["images"][0]["url"] if hasattr(a_me, "images") else ""
+    country = a_me.get("country")
+    me_img = a_me.get("images").pop().get("url") if a_me.get("images") else None
     me_url = a_me["external_urls"]["spotify"]
     profile_text = (
-        f"**Spotify name**: [{name}]({me_img})\n**Profile link:** [here]({me_url})"
+        f"[\u200c]({me_img or 'https://i.imgur.com/XTLlQeq.gif'})**Spotify name**: {name}\n**Profile link:** [here]({me_url})"
     )
     if country:
         profile_text += f"\n**Country:** {country}"
+    total_ = a_me["followers"].get("total")
+    if total_ and total_.isdigit() and int(total_) != 0:
+        profile_text += f"\n**Followers:** {total_}"
     await message.edit(profile_text)
 
 
@@ -597,3 +600,4 @@ async def sp_recents_(message: Message):
             escape_markdown(get_name), escape_markdown(get_link)
         )
     await message.edit(recent, disable_web_page_preview=True)
+# 600 Lines Lmafo
