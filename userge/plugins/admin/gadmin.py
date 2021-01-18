@@ -540,59 +540,80 @@ async def zombie_clean(message: Message):
             )
 
 
+def chat_name_(msg: Message):
+    chat_ = msg.chat
+    if chat_.type in ("private", "bot"):
+        return " ".join([chat_.first_name, chat_.last_name or ""])
+    return chat_.title
+
+
+@userge.on_cmd(
+    "unpin",
+    about={
+        "header": "use this to unpin messages",
+        "description": "unpin messages in groups",
+        "flags": {"-all": "unpin all messages"},
+        "examples": [
+            "{tr}unpin [reply to chat message]",
+            "{tr}unpin -all [reply to chat message]",
+        ],
+    },
+    check_pin_perm=True,
+)
+async def unpin_msgs(message: Message):
+    """ unpin message """
+    reply = message.reply_to_message
+    unpinall_ = bool("-all" in message.flags)
+    try:
+        if unpinall_:
+            await message.client.unpin_all_chat_messages(message.chat.id)
+        else:
+            if not reply:
+                await message.err("First reply to a message to unpin !", del_in=5)
+                return
+            await reply.unpin()
+        await message.delete()
+        await CHANNEL.log(
+            f"{'#UNPIN_All' if unpinall_ else '#UNPIN'}\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
+        )
+    except Exception as e_f:
+        await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
+
+
 @userge.on_cmd(
     "pin",
     about={
-        "header": "use this to pin & unpin messages",
-        "description": "pin & unpin messages in groups with or without notify to members.",
-        "flags": {"-s": "silent", "-u": "unpin"},
+        "header": "use this to pin messages",
+        "description": "pin messages in groups, with or without notify to members.",
+        "flags": {
+            "-s": "silent",
+            "-me": "only for yourself (for private chats only), Defaults pin both sides)",
+        },
         "examples": [
             "{tr}pin [reply to chat message]",
             "{tr}pin -s [reply to chat message]",
-            "{tr}pin -u [send to chat]",
+            "{tr}pin -me [send to private chat]",
         ],
     },
-    allow_channels=False,
     check_pin_perm=True,
 )
 async def pin_msgs(message: Message):
-    """ pin & unpin message in groups """
-    chat_id = message.chat.id
-    flags = message.flags
-    disable_notification = False
-    if "-s" in flags:
-        disable_notification = True
-    unpin_pinned = "-u" in flags
-    if unpin_pinned:
-        try:
-            if message.reply_to_message:
-                await message.client.unpin_chat_message(
-                    chat_id, message.reply_to_message.message_id
-                )
-            else:
-                await message.client.unpin_all_chat_messages(chat_id)
-            await message.delete()
-            await CHANNEL.log(f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
-            )
-    else:
-        try:
-            message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(
-                chat_id, message_id, disable_notification=disable_notification
-            )
-            await message.delete()
-            await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
-            )
+    """ pin message """
+    reply = message.reply_to_message
+    if not reply:
+        await message.err("First  reply to a message to pin !", del_in=5)
+        return
+    try:
+        await reply.pin(
+            disable_notification=bool("-s" in message.flags),
+            both_sides=(not bool("-me" in message.flags)),
+        )
+        await message.delete()
+        await CHANNEL.log(
+            f"#PIN\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
+        )
+    except Exception as e_f:
+        await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
 
 
 @userge.on_cmd(
