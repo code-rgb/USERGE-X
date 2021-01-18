@@ -539,6 +539,11 @@ async def zombie_clean(message: Message):
                 r"ZOMBIE COUNT: `WOOHOO group is clean.. \^o^/`"
             )
 
+def chat_name_(msg: Message):
+    chat_ = msg.chat
+    if chat_.type in ("private", "bot"):
+        return " ".join([chat_.first_name, chat_.last_name or ""])
+    return chat_.title
 
 @userge.on_cmd(
     "unpin",
@@ -556,20 +561,22 @@ async def zombie_clean(message: Message):
 async def unpin_msgs(message: Message):
     """ unpin message """
     reply = message.reply_to_message
+    unpinall_ = bool("-all" in message.flags)
     try:
-        if "-all" in message.flags:
+        if unpinall_:
             await message.client.unpin_all_chat_messages(message.chat.id)
         else:
             if not reply:
-                await message.err("Reply to a message to unpin first !", del_in=5)
+                await message.err("First reply to a message to unpin !", del_in=5)
                 return
             await reply.unpin()
         await message.delete()
         await CHANNEL.log(
-            f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)"
+            f"{'#UNPIN All' if unpinall_ else '#UNPIN'}\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
         )
     except Exception as e_f:
         await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
+
 
 
 @userge.on_cmd(
@@ -593,7 +600,7 @@ async def pin_msgs(message: Message):
     """ pin message """
     reply = message.reply_to_message
     if not reply:
-        await message.err("Reply to a message to pin first !", del_in=5)
+        await message.err("First  reply to a message to pin !", del_in=5)
         return
     try:
         await reply.pin(
@@ -601,7 +608,7 @@ async def pin_msgs(message: Message):
             both_sides=(not bool("-me" in message.flags)),
         )
         await message.delete()
-        await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)")
+        await CHANNEL.log(f"#PIN\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)")
     except Exception as e_f:
         await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
 
