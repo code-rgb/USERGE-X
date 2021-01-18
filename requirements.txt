@@ -43,5 +43,5 @@ git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 PyYAML>=5.3.1
 pymediainfo>=5.0.3
 ujson>=4.0.1
-youtube-search-python==1.3.4
+youtube-search-python==1.3.6
 feedparser>=6.0.2
