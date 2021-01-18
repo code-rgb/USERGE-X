@@ -572,7 +572,7 @@ async def unpin_msgs(message: Message):
             await reply.unpin()
         await message.delete()
         await CHANNEL.log(
-            f"{'#UNPIN All' if unpinall_ else '#UNPIN'}\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
+            f"{'#UNPIN_All' if unpinall_ else '#UNPIN'}\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
         )
     except Exception as e_f:
         await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
