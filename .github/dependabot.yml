@@ -8,4 +8,3 @@ updates:
   ignore:
     - dependency-name: "googletrans"
     - dependency-name: "selenium"
-    
