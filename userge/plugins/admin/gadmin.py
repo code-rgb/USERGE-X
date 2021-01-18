@@ -565,7 +565,9 @@ async def unpin_msgs(message: Message):
                 return
             await reply.unpin()
         await message.delete()
-        await CHANNEL.log(f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)")
+        await CHANNEL.log(
+            f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)"
+        )
     except Exception as e_f:
         await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
 
@@ -575,7 +577,10 @@ async def unpin_msgs(message: Message):
     about={
         "header": "use this to pin messages",
         "description": "pin messages in groups, with or without notify to members.",
-        "flags": {"-s": "silent", "-me": "only for yourself (for private chats only), Defaults pin both sides)"},
+        "flags": {
+            "-s": "silent",
+            "-me": "only for yourself (for private chats only), Defaults pin both sides)",
+        },
         "examples": [
             "{tr}pin [reply to chat message]",
             "{tr}pin -s [reply to chat message]",
@@ -593,7 +598,7 @@ async def pin_msgs(message: Message):
     try:
         await reply.pin(
             disable_notification=bool("-s" in message.flags),
-            both_sides=(not bool("-me" in message.flags))
+            both_sides=(not bool("-me" in message.flags)),
         )
         await message.delete()
         await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)")
