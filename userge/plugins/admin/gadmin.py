@@ -539,11 +539,13 @@ async def zombie_clean(message: Message):
                 r"ZOMBIE COUNT: `WOOHOO group is clean.. \^o^/`"
             )
 
+
 def chat_name_(msg: Message):
     chat_ = msg.chat
     if chat_.type in ("private", "bot"):
         return " ".join([chat_.first_name, chat_.last_name or ""])
     return chat_.title
+
 
 @userge.on_cmd(
     "unpin",
@@ -578,7 +580,6 @@ async def unpin_msgs(message: Message):
         await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
 
 
-
 @userge.on_cmd(
     "pin",
     about={
@@ -608,7 +609,9 @@ async def pin_msgs(message: Message):
             both_sides=(not bool("-me" in message.flags)),
         )
         await message.delete()
-        await CHANNEL.log(f"#PIN\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)")
+        await CHANNEL.log(
+            f"#PIN\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
+        )
     except Exception as e_f:
         await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
 
