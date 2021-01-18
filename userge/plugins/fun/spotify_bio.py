@@ -572,7 +572,7 @@ async def sp_profile_(message: Message):
     if country:
         profile_text += f"\n**Country:** {country}"
     total_ = a_me["followers"].get("total")
-    if total_ and total_.isdigit() and int(total_) != 0:
+    if isinstance(total_, int) and total_ != 0:
         profile_text += f"\n**Followers:** {total_}"
     await message.edit(profile_text)
 
