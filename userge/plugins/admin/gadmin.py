@@ -556,13 +556,13 @@ async def zombie_clean(message: Message):
 async def unpin_msgs(message: Message):
     """ unpin message """
     reply = message.reply_to_message
-    if not reply:
-        await message.err("Reply to a message to unpin first !", del_in=5)
-        return
     try:
         if "-all" in message.flags:
             await message.client.unpin_all_chat_messages(message.chat.id)
         else:
+            if not reply:
+                await message.err("Reply to a message to unpin first !", del_in=5)
+                return
             await reply.unpin()
         await message.delete()
         await CHANNEL.log(f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{message.chat.id}`)")
