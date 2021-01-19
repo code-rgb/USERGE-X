@@ -68,6 +68,12 @@ async def add_sudo(message: Message):
     if user["id"] in Config.SUDO_USERS:
         await message.edit(f"user : `{user['id']}` already in **SUDO**!", del_in=5)
     else:
+        if user["id"] in Config.OWNER_ID or user["id"] == (await userge.get_me()).id:
+            await message.edit(
+                f"user : `{user['id']}` is in `OWNER_ID` so no need to add in sudo",
+                del_in=5,
+            )
+            return
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
