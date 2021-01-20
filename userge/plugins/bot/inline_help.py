@@ -9,6 +9,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, userge
 
 HELP_BUTTONS = None
+AUTH_USERS = list(Config.OWNER_ID) + list(Config.SUDO_USERS)
 
 
 COMMANDS = {
@@ -91,7 +92,7 @@ if userge.has_bot:
     inline_help_txt = " <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands.\nChoose a command and for usage see:\n**📕  EXAMPLE**"
 
     @userge.bot.on_message(
-        filters.user(list(Config.OWNER_ID))
+        filters.user(AUTH_USERS)
         & filters.private
         & (filters.command("inline") | filters.regex(pattern=r"^/start inline$"))
     )
@@ -103,7 +104,7 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.user(list(Config.OWNER_ID)) & filters.regex(pattern=r"^backbtn_ihelp$")
+        filters.user(AUTH_USERS) & filters.regex(pattern=r"^backbtn_ihelp$")
     )
     async def back_btn(_, c_q: CallbackQuery):
         await c_q.answer()
@@ -112,8 +113,7 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.user(list(Config.OWNER_ID))
-        & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
+        filters.user(AUTH_USERS) & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
     )
     async def help_query(_, c_q: CallbackQuery):
         await c_q.answer()
