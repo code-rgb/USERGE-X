@@ -214,9 +214,7 @@ if userge.has_bot:
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
-                await userge.bot.send_message(
-                    b_id, "You received a new Broadcast."
-                )
+                await userge.bot.send_message(b_id, "You received a new Broadcast.")
                 if to_copy:
                     await userge.bot.copy_message(
                         chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
