@@ -113,8 +113,7 @@ if userge.has_bot:
         )
 
     @userge.bot.on_callback_query(
-        filters.user(AUTH_USERS)
-        & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
+        filters.user(AUTH_USERS) & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
     )
     async def help_query(_, c_q: CallbackQuery):
         await c_q.answer()
