@@ -125,14 +125,16 @@ Nice To Meet You! I'm {bot.first_name}.
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton("MÚSICA", url=f"https://t.me/THEGREATFOXXGODDESS"),
+                            InlineKeyboardButton(
+                                "MÚSICA", url=f"https://t.me/THEGREATFOXXGODDESS"
+                            ),
                             InlineKeyboardButton(
                                 "REPO", url="https://github.com/code-rgb/USERGE-X"
                             ),
                         ],
                     ]
-                 ),
-              )
+                ),
+            )
         except MediaEmpty:
             if recurs_count >= 2:
                 return
