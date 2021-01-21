@@ -4,8 +4,8 @@ import os
 import random
 import re
 from uuid import uuid4
-from emoji import get_emoji_regexp
 
+from emoji import get_emoji_regexp
 from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import CallbackQuery
 
