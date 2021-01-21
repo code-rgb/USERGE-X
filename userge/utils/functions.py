@@ -82,9 +82,10 @@ async def media_to_image(message):
 
 # Removes Emoji From Text
 # RETURNS a "string"
+EMOJI_PATTERN = get_emoji_regexp()
 def deEmojify(inputString: str) -> str:
     """Remove emojis and other non-safe characters from string"""
-    return re.sub(get_emoji_regexp(), "", inputString)
+    return re.sub(EMOJI_PATTERN, "", inputString)
 
 
 def cleanhtml(raw_html):
