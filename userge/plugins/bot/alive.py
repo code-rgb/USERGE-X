@@ -33,7 +33,7 @@ async def alive_inline(message: Message):
                         caption=Bot_Alive.alive_info(),
                         reply_markup=Bot_Alive.alive_buttons(),   
                     )
-                elif type_ == "url_image"
+                elif type_ == "url_image":
                     await userge.bot.send_photo(
                         message.chat.id,
                         photo=url_,
