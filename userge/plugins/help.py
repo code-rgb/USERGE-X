@@ -724,9 +724,7 @@ if userge.has_bot:
             if string == "alive":
                 buttons = [
                     [
-                        InlineKeyboardButton(
-                            "SETTINGS", callback_data="settings_btn"
-                        ),
+                        InlineKeyboardButton("SETTINGS", callback_data="settings_btn"),
                         InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
                     ]
                 ]
