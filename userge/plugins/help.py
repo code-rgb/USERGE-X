@@ -724,20 +724,21 @@ if userge.has_bot:
             if string == "alive":
                 buttons = [
                     [
-                        InlineKeyboardButton("SETTINGS", callback_data="settings_btn"),
+                        InlineKeyboardButton(
+                            "SETTINGS", callback_data="settings_btn"
+                        ),
                         InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
                     ]
                 ]
 
                 alive_info = f"""
-    **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running...**
+    **[Paimon](https://telegram.dog/x_xtests) is Up and Running**
 
-   Python version :         🐍v{versions.__python_version__}
-   Pyrogram version :    🔥v{versions.__pyro_version__}
-   Bot Version :               🧬 v{get_version()}-X-154
-   Maintainer :                 🦋[Alíciadark](tg://openmessage?user_id=1360435532)
-   
-   Bot Mode : {_get_mode()}  |  {userge.uptime}
+   Python       :  v{versions.__python_version__}
+   Pyrogram  :  v{versions.__pyro_version__}
+   X                   :  v{get_version()}-Alícia-154
+
+{_get_mode()}  |  : {userge.uptime}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
@@ -1233,6 +1234,9 @@ if userge.has_bot:
                 results=results,
                 cache_time=1,
                 switch_pm_text=f"This bot is only for {owner_name}",
+                switch_pm_parameter="start",
+            )
+ is only for {owner_name}",
                 switch_pm_parameter="start",
             )
 parameter="start",
