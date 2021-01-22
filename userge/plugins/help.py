@@ -1,4 +1,5 @@
 import os
+import random
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
@@ -23,12 +24,13 @@ from pyrogram.types import (
 )
 from youtubesearchpython import VideosSearch
 
-from userge import Config, Message, get_collection, userge
+from userge import Config, Message, get_collection, get_version, userge, versions
+from userge.core.ext import RawClient
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
-from .bot.alive import Bot_Alive
+from .bot.alive import check_media_link
 from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
@@ -66,10 +68,10 @@ REPO_X = InlineQueryResultArticle(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "Alícia Dark", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "🚀 Deploy USERGE-X",
+                    "Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
                         "https://github.com/code-rgb/USERGE-X/tree/alpha"
@@ -79,6 +81,22 @@ REPO_X = InlineQueryResultArticle(
         ]
     ),
 )
+# Thanks boi @FLAMEPOSEIDON
+ALIVE_IMGS = [
+    "https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg",
+    "https://i.imgur.com/uzKdTXG.jpg",
+    "https://telegra.ph/file/6ecab390e4974c74c3764.png",
+    "https://telegra.ph/file/995c75983a6c0e4499b55.png",
+    "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
+]
+
+
+def _get_mode() -> str:
+    if RawClient.DUAL_MODE:
+        return "**DUAL**"
+    if Config.BOT_TOKEN:
+        return "**BOT**"
+    return "**USER**"
 
 
 async def _init() -> None:
@@ -156,10 +174,10 @@ if userge.has_bot:
                 try:
                     await func(c_q)
                 except MessageNotModified:
-                    await c_q.answer("Nothing Found to Refresh 🤷‍♂️", show_alert=True)
+                    await c_q.answer("Nothing Found to Refresh ", show_alert=True)
                 except MessageIdInvalid:
                     await c_q.answer(
-                        "Sorry, I Don't Have Permissions to edit this 😔",
+                        "Sorry, I Don't Have Permissions to edit this ",
                         show_alert=True,
                     )
             else:
@@ -408,7 +426,7 @@ if userge.has_bot:
                     )
                 )
         else:
-            cur_clnt = "👤 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
+            cur_clnt = "USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "BOT"
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
@@ -515,13 +533,13 @@ if userge.has_bot:
         if flt.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➖ Disable", callback_data=f"disable({cur_pos})".encode()
+                    "Disable", callback_data=f"disable({cur_pos})".encode()
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➕ Enable", callback_data=f"enable({cur_pos})".encode()
+                    "Enable", callback_data=f"enable({cur_pos})".encode()
                 )
             )
         buttons = [tmp_btns] + buttons
@@ -529,7 +547,7 @@ if userge.has_bot:
 
     async def get_alive_():
         global MEDIA_TYPE, MEDIA_URL
-        type_, media_ = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA)
+        type_, media_ = await check_media_link(Config.ALIVE_MEDIA)
         if not media_:
             return
         MEDIA_TYPE = type_
@@ -553,7 +571,6 @@ if userge.has_bot:
 
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
-        global MEDIA_URL, MEDIA_TYPE
         results = []
         i_q = inline_query.query
         string = i_q.lower()  # All lower
@@ -705,15 +722,26 @@ if userge.has_bot:
             #     )
 
             if string == "alive":
+                buttons = [
+                    [
+                        InlineKeyboardButton("SETTINGS", callback_data="settings_btn"),
+                        InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
+                    ]
+                ]
 
-                alive_info = Bot_Alive.alive_info()
-                buttons = Bot_Alive.alive_buttons()
-                if Config.ALIVE_MEDIA:
-                    if Config.ALIVE_MEDIA.lower().strip() == "false":
-                        MEDIA_TYPE = "no_media"
+                alive_info = f"""
+    **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running...**
 
-                    elif MEDIA_URL is None:
-                        await get_alive_()
+   Python version :         🐍v{versions.__python_version__}
+   Pyrogram version :    🔥v{versions.__pyro_version__}
+   Bot Version :               🧬 v{get_version()}-X-154
+   Maintainer :                 🦋[Alíciadark](tg://openmessage?user_id=1360435532)
+   
+   Bot Mode : {_get_mode()}  |  {userge.uptime}
+"""
+
+                if not MEDIA_URL and Config.ALIVE_MEDIA:
+                    await get_alive_()
 
                 if MEDIA_URL:
                     if MEDIA_TYPE == "url_gif":
@@ -721,7 +749,7 @@ if userge.has_bot:
                             InlineQueryResultAnimation(
                                 animation_url=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=buttons,
+                                reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
                     elif MEDIA_TYPE == "url_image":
@@ -729,7 +757,7 @@ if userge.has_bot:
                             InlineQueryResultPhoto(
                                 photo_url=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=buttons,
+                                reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
                     elif MEDIA_TYPE == "tg_image":
@@ -737,7 +765,7 @@ if userge.has_bot:
                             InlineQueryResultCachedPhoto(
                                 file_id=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=buttons,
+                                reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
                     else:
@@ -747,24 +775,16 @@ if userge.has_bot:
                                 file_id=MEDIA_URL,
                                 caption=alive_info,
                                 description="ALIVE",
-                                reply_markup=buttons,
+                                reply_markup=InlineKeyboardMarkup(buttons),
                             )
                         )
-                elif MEDIA_TYPE == "no_media":
-                    results.append(
-                        InlineQueryResultArticle(
-                            title="USERGE-X",
-                            input_message_content=InputTextMessageContent(alive_info),
-                            description="ALIVE",
-                            reply_markup=buttons,
-                        )
-                    )
                 else:  # default
+                    random_alive = random.choice(ALIVE_IMGS)
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url=Bot_Alive.alive_default_imgs(),
+                            photo_url=random_alive,
                             caption=alive_info,
-                            reply_markup=buttons,
+                            reply_markup=InlineKeyboardMarkup(buttons),
                         )
                     )
 
@@ -1215,22 +1235,617 @@ if userge.has_bot:
                 switch_pm_text=f"This bot is only for {owner_name}",
                 switch_pm_parameter="start",
             )
-d(MAIN_MENU)
-            if len(results) != 0:
-                await inline_query.answer(
-                    results=results,
-                    cache_time=1,
-                    switch_pm_text="Available Commands",
-                    switch_pm_parameter="inline",
-                )
-        else:
-            results.append(REPO_X)
-            owner_name = (await userge.get_me()).first_name
-            await inline_query.answer(
-                results=results,
-                cache_time=1,
-                switch_pm_text=f"This bot is only for {owner_name}",
-                switch_pm_parameter="start",
-            )
 parameter="start",
             
+et_timeout"],
+
+                    arguments["prefix"],
+
+                    arguments["print_size"],
+
+                    arguments["no_numbering"],
+
+                    arguments["no_download"],
+
+                    arguments["save_source"],
+
+                    object["image_source"],
+
+                    arguments["silent_mode"],
+
+                    arguments["thumbnail_only"],
+
+                    arguments["format"],
+
+                    arguments["ignore_urls"],
+
+                )
+
+                if not arguments["silent_mode"]:
+
+                    print(download_message)
+
+                if download_status == "success":
+
+                    # download image_thumbnails
+
+                    if arguments["thumbnail"] or arguments["thumbnail_only"]:
+
+                        (
+
+                            download_status,
+
+                            download_message_thumbnail,
+
+                        ) = self.download_image_thumbnail(
+
+                            object["image_thumbnail_url"],
+
+                            main_directory,
+
+                            dir_name,
+
+                            return_image_name,
+
+                            arguments["print_urls"],
+
+                            arguments["socket_timeout"],
+
+                            arguments["print_size"],
+
+                            arguments["no_download"],
+
+                            arguments["save_source"],
+
+                            object["image_source"],
+
+                            arguments["ignore_urls"],
+
+                        )
+
+                        if not arguments["silent_mode"]:
+
+                            print(download_message_thumbnail)
+
+                    count += 1
+
+                    object["image_filename"] = return_image_name
+
+                    # Append all the links in the list named 'Links'
+
+                    items.append(object)
+
+                    abs_path.append(absolute_path)
+
+                else:
+
+                    errorCount += 1
+
+                # delay param
+
+                if arguments["delay"]:
+
+                    time.sleep(int(arguments["delay"]))
+
+            i += 1
+
+        if count < limit:
+
+            print(
+
+                "\n\nUnfortunately all "
+
+                + str(limit)
+
+                + " could not be downloaded because some images were not downloadable. "
+
+                + str(count - 1)
+
+                + " is all we got for this search filter!"
+
+            )
+
+        return items, errorCount, abs_path
+
+    # Bulk Download
+
+    def download(self, arguments):
+
+        paths_agg = {}
+
+        # for input coming from other python files
+
+        if __name__ != "__main__":
+
+            # if the calling file contains config_file param
+
+            if "config_file" in arguments:
+
+                records = []
+
+                json_file = json.load(open(arguments["config_file"]))
+
+                for item in json_file["Records"]:
+
+                    arguments = {}
+
+                    for i in args_list:
+
+                        arguments[i] = None
+
+                    for key, value in item.items():
+
+                        arguments[key] = value
+
+                    records.append(arguments)
+
+                total_errors = 0
+
+                for rec in records:
+
+                    paths, errors = self.download_executor(rec)
+
+                    for i in paths:
+
+                        paths_agg[i] = paths[i]
+
+                    if not arguments["silent_mode"] and arguments["print_paths"]:
+
+                        print(paths.encode("raw_unicode_escape").decode("utf-8"))
+
+                    total_errors += errors
+
+                return paths_agg, total_errors
+
+            # if the calling file contains params directly
+
+            paths, errors = self.download_executor(arguments)
+
+            for i in paths:
+
+                paths_agg[i] = paths[i]
+
+            if not arguments["silent_mode"] and arguments["print_paths"]:
+
+                print(paths.encode("raw_unicode_escape").decode("utf-8"))
+
+            return paths_agg, errors
+
+        # for input coming from CLI
+
+        paths, errors = self.download_executor(arguments)
+
+        for i in paths:
+
+            paths_agg[i] = paths[i]
+
+        if not arguments["silent_mode"] and arguments["print_paths"]:
+
+            print(paths.encode("raw_unicode_escape").decode("utf-8"))
+
+        return paths_agg, errors
+
+    def download_executor(self, arguments):
+
+        paths = {}
+
+        errorCount = None
+
+        for arg in args_list:
+
+            if arg not in arguments:
+
+                arguments[arg] = None
+
+        # Initialization and Validation of user arguments
+
+        if arguments["keywords"]:
+
+            search_keyword = [str(item) for item in arguments["keywords"].split(",")]
+
+        if arguments["keywords_from_file"]:
+
+            search_keyword = self.keywords_from_file(arguments["keywords_from_file"])
+
+        # both time and time range should not be allowed in the same query
+
+        if arguments["time"] and arguments["time_range"]:
+
+            raise ValueError(
+
+                "Either time or time range should be used in a query. Both cannot be used at the same time."
+
+            )
+
+        # both time and time range should not be allowed in the same query
+
+        if arguments["size"] and arguments["exact_size"]:
+
+            raise ValueError(
+
+                'Either "size" or "exact_size" should be used in a query. Both cannot be used at the same time.'
+
+            )
+
+        # both image directory and no image directory should not be allowed in
+
+        # the same query
+
+        if arguments["image_directory"] and arguments["no_directory"]:
+
+            raise ValueError(
+
+                "You can either specify image directory or specify no image directory, not both!"
+
+            )
+
+        # Additional words added to keywords
+
+        if arguments["suffix_keywords"]:
+
+            suffix_keywords = [
+
+                " " + str(sk) for sk in arguments["suffix_keywords"].split(",")
+
+            ]
+
+        else:
+
+            suffix_keywords = [""]
+
+        # Additional words added to keywords
+
+        if arguments["prefix_keywords"]:
+
+            prefix_keywords = [
+
+                str(sk) + " " for sk in arguments["prefix_keywords"].split(",")
+
+            ]
+
+        else:
+
+            prefix_keywords = [""]
+
+        # Setting limit on number of images to be downloaded
+
+        limit = int(arguments["limit"]) if arguments["limit"] else 100
+
+        if arguments["url"]:
+
+            current_time = str(datetime.datetime.now()).split(".")[0]
+
+            search_keyword = [current_time.replace(":", "_")]
+
+        if arguments["similar_images"]:
+
+            current_time = str(datetime.datetime.now()).split(".")[0]
+
+            search_keyword = [current_time.replace(":", "_")]
+
+        # If single_image or url argument not present then keywords is
+
+        # mandatory argument
+
+        if (
+
+            arguments["single_image"] is None
+
+            and arguments["url"] is None
+
+            and arguments["similar_images"] is None
+
+            and arguments["keywords"] is None
+
+            and arguments["keywords_from_file"] is None
+
+        ):
+
+            print(
+
+                "-------------------------------\n"
+
+                "Uh oh! Keywords is a required argument \n\n"
+
+                "Please refer to the documentation on guide to writing queries \n"
+
+                "https://github.com/hardikvasa/google-images-download#examples"
+
+                "\n\nexiting!\n"
+
+                "-------------------------------"
+
+            )
+
+            sys.exit()
+
+        # If this argument is present, set the custom output directory
+
+        if arguments["output_directory"]:
+
+            main_directory = arguments["output_directory"]
+
+        else:
+
+            main_directory = "downloads"
+
+        # Proxy settings
+
+        if arguments["proxy"]:
+
+            os.environ["http_proxy"] = arguments["proxy"]
+
+            os.environ["https_proxy"] = arguments["proxy"]
+
+            # Initialization Complete
+
+        total_errors = 0
+
+        for pky in prefix_keywords:  # 1.for every prefix keywords
+
+            for sky in suffix_keywords:  # 2.for every suffix keywords
+
+                for i in range(len(search_keyword)):  # 3.for every main keyword
+
+                    iteration = (
+
+                        "\n"
+
+                        + "Item no.: "
+
+                        + str(i + 1)
+
+                        + " -->"
+
+                        + " Item name = "
+
+                        + (pky)
+
+                        + (search_keyword[i])
+
+                        + (sky)
+
+                    )
+
+                    if not arguments["silent_mode"]:
+
+                        print(iteration.encode("raw_unicode_escape").decode("utf-8"))
+
+                        print("Evaluating...")
+
+                    else:
+
+                        print(
+
+                            "Downloading images for: "
+
+                            + (pky)
+
+                            + (search_keyword[i])
+
+                            + (sky)
+
+                            + " ..."
+
+                        )
+
+                    search_term = pky + search_keyword[i] + sky
+
+                    if arguments["image_directory"]:
+
+                        dir_name = arguments["image_directory"]
+
+                    elif arguments["no_directory"]:
+
+                        dir_name = ""
+
+                    else:
+
+                        dir_name = search_term + (
+
+                            "-" + arguments["color"] if arguments["color"] else ""
+
+                        )  # sub-directory
+
+                    if not arguments["no_download"]:
+
+                        self.create_directories(
+
+                            main_directory,
+
+                            dir_name,
+
+                            arguments["thumbnail"],
+
+                            arguments["thumbnail_only"],
+
+                        )  # create directories in OS
+
+                    params = self.build_url_parameters(
+
+                        arguments
+
+                    )  # building URL with params
+
+                    url = self.build_search_url(
+
+                        search_term,
+
+                        params,
+
+                        arguments["url"],
+
+                        arguments["similar_images"],
+
+                        arguments["specific_site"],
+
+                        arguments["safe_search"],
+
+                    )  # building main search url
+
+                    if limit < 101:
+
+                        raw_html = self.download_page(url)  # download page
+
+                    else:
+
+                        raw_html = self.download_extended_page(
+
+                            url, arguments["chromedriver"]
+
+                        )
+
+                    if not arguments["silent_mode"]:
+
+                        if arguments["no_download"]:
+
+                            print("Getting URLs without downloading images...")
+
+                        else:
+
+                            print("Starting Download...")
+
+                    items, errorCount, abs_path = self._get_all_items(
+
+                        raw_html, main_directory, dir_name, limit, arguments
+
+                    )  # get all image items and download images
+
+                    paths[pky + search_keyword[i] + sky] = abs_path
+
+                    # dumps into a json file
+
+                    if arguments["extract_metadata"]:
+
+                        try:
+
+                            if not os.path.exists("logs"):
+
+                                os.makedirs("logs")
+
+                        except OSError as e:
+
+                            print(e)
+
+                        json_file = open("logs/" + search_keyword[i] + ".json", "w")
+
+                        json.dump(items, json_file, indent=4, sort_keys=True)
+
+                        json_file.close()
+
+                    # Related images
+
+                    if arguments["related_images"]:
+
+                        print(
+
+                            "\nGetting list of related keywords...this may take a few moments"
+
+                        )
+
+                        tabs = self.get_all_tabs(raw_html)
+
+                        for key, value in tabs.items():
+
+                            final_search_term = search_term + " - " + key
+
+                            print("\nNow Downloading - " + final_search_term)
+
+                            if limit < 101:
+
+                                new_raw_html = self.download_page(
+
+                                    value
+
+                                )  # download page
+
+                            else:
+
+                                new_raw_html = self.download_extended_page(
+
+                                    value, arguments["chromedriver"]
+
+                                )
+
+                            self.create_directories(
+
+                                main_directory,
+
+                                final_search_term,
+
+                                arguments["thumbnail"],
+
+                                arguments["thumbnail_only"],
+
+                            )
+
+                            self._get_all_items(
+
+                                new_raw_html,
+
+                                main_directory,
+
+                                search_term + " - " + key,
+
+                                limit,
+
+                                arguments,
+
+                            )
+
+                    total_errors += errorCount
+
+                    if not arguments["silent_mode"]:
+
+                        print("\nErrors: " + str(errorCount) + "\n")
+
+        return paths, total_errors
+
+# ------------- Main Program -------------#
+
+def main():
+
+    records = user_input()
+
+    total_errors = 0
+
+    t0 = time.time()  # start the timer
+
+    for arguments in records:
+
+        if arguments["single_image"]:  # Download Single Image using a URL
+
+            response = googleimagesdownload()
+
+            response.single_image(arguments["single_image"])
+
+        else:  # or download multiple images based on keywords/keyphrase search
+
+            response = googleimagesdownload()
+
+            # wrapping response in a variable just for consistency
+
+            paths, errors = response.download(arguments)
+
+            total_errors = total_errors + errors
+
+        t1 = time.time()  # stop the timer
+
+        # Calculating the total time required to crawl, find and download all
+
+        # the links of 60,000 images
+
+        total_time = t1 - t0
+
+        if not arguments["silent_mode"]:
+
+            print("\nEverything downloaded!")
+
+            print("Total errors: " + str(total_errors))
+
+            print("Total time taken: " + str(total_time) + " Seconds")
+
+if __name__ == "__main__":
+
+    main()
+
