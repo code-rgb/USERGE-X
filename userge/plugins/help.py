@@ -737,7 +737,7 @@ if userge.has_bot:
    Bot Version :               🧬 v{get_version()}-X-154
    Maintainer :                 🦋[Alíciadark](tg://openmessage?user_id=1360435532)
    
-   Bot Mode : {_get_mode()} | Bot Uptime : {userge.uptime}
+   Bot Mode : {_get_mode()}  |  {userge.uptime}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
