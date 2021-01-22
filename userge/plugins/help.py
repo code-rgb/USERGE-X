@@ -1,5 +1,4 @@
 import os
-import random
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
@@ -24,13 +23,12 @@ from pyrogram.types import (
 )
 from youtubesearchpython import VideosSearch
 
-from userge import Config, Message, get_collection, get_version, userge, versions
-from userge.core.ext import RawClient
+from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
 
-from .bot.alive import check_media_link
+from .bot.alive import Bot_Alive
 from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
@@ -68,10 +66,10 @@ REPO_X = InlineQueryResultArticle(
         [
             [
                 InlineKeyboardButton(
-                    "Alícia Dark", url="https://github.com/code-rgb/USERGE-X"
+                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "Deploy USERGE-X",
+                    "🚀 Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
                         "https://github.com/code-rgb/USERGE-X/tree/alpha"
@@ -81,22 +79,6 @@ REPO_X = InlineQueryResultArticle(
         ]
     ),
 )
-# Thanks boi @FLAMEPOSEIDON
-ALIVE_IMGS = [
-    "https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg",
-    "https://i.imgur.com/uzKdTXG.jpg",
-    "https://telegra.ph/file/6ecab390e4974c74c3764.png",
-    "https://telegra.ph/file/995c75983a6c0e4499b55.png",
-    "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
-]
-
-
-def _get_mode() -> str:
-    if RawClient.DUAL_MODE:
-        return "**DUAL**"
-    if Config.BOT_TOKEN:
-        return "**BOT**"
-    return "**USER**"
 
 
 async def _init() -> None:
@@ -174,10 +156,10 @@ if userge.has_bot:
                 try:
                     await func(c_q)
                 except MessageNotModified:
-                    await c_q.answer("Nothing Found to Refresh ", show_alert=True)
+                    await c_q.answer("Nothing Found to Refresh 🤷‍♂️", show_alert=True)
                 except MessageIdInvalid:
                     await c_q.answer(
-                        "Sorry, I Don't Have Permissions to edit this ",
+                        "Sorry, I Don't Have Permissions to edit this 😔",
                         show_alert=True,
                     )
             else:
@@ -426,7 +408,7 @@ if userge.has_bot:
                     )
                 )
         else:
-            cur_clnt = "USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "BOT"
+            cur_clnt = "👤 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "⚙️ BOT"
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
@@ -463,27 +445,27 @@ if userge.has_bot:
         if plg.is_loaded:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "❎ Unload",
+                    "Unload",
                     callback_data=f"unload({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "✅ Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
+                    "Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
                 )
             )
         if plg.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➖ Disable",
+                    "Disable",
                     callback_data=f"disable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "➕ Enable",
+                    "Enable",
                     callback_data=f"enable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
@@ -533,13 +515,13 @@ if userge.has_bot:
         if flt.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Disable", callback_data=f"disable({cur_pos})".encode()
+                    "➖ Disable", callback_data=f"disable({cur_pos})".encode()
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Enable", callback_data=f"enable({cur_pos})".encode()
+                    "➕ Enable", callback_data=f"enable({cur_pos})".encode()
                 )
             )
         buttons = [tmp_btns] + buttons
@@ -547,7 +529,7 @@ if userge.has_bot:
 
     async def get_alive_():
         global MEDIA_TYPE, MEDIA_URL
-        type_, media_ = await check_media_link(Config.ALIVE_MEDIA)
+        type_, media_ = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA)
         if not media_:
             return
         MEDIA_TYPE = type_
@@ -571,6 +553,7 @@ if userge.has_bot:
 
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
+        global MEDIA_URL, MEDIA_TYPE
         results = []
         i_q = inline_query.query
         string = i_q.lower()  # All lower
@@ -722,26 +705,15 @@ if userge.has_bot:
             #     )
 
             if string == "alive":
-                buttons = [
-                    [
-                        InlineKeyboardButton("SETTINGS", callback_data="settings_btn"),
-                        InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
-                    ]
-                ]
 
-                alive_info = f"""
-    **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running...**
+                alive_info = Bot_Alive.alive_info()
+                buttons = Bot_Alive.alive_buttons()
+                if Config.ALIVE_MEDIA:
+                    if Config.ALIVE_MEDIA.lower().strip() == "false":
+                        MEDIA_TYPE = "no_media"
 
-   Python version :         🐍v{versions.__python_version__}
-   Pyrogram version :    🔥v{versions.__pyro_version__}
-   Bot Version :               🧬 v{get_version()}-X-154
-   Maintainer :                 🦋[Alíciadark](tg://openmessage?user_id=1360435532)
-   
-   Bot Mode : {_get_mode()}  |  {userge.uptime}
-"""
-
-                if not MEDIA_URL and Config.ALIVE_MEDIA:
-                    await get_alive_()
+                    elif MEDIA_URL is None:
+                        await get_alive_()
 
                 if MEDIA_URL:
                     if MEDIA_TYPE == "url_gif":
@@ -749,7 +721,7 @@ if userge.has_bot:
                             InlineQueryResultAnimation(
                                 animation_url=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=InlineKeyboardMarkup(buttons),
+                                reply_markup=buttons,
                             )
                         )
                     elif MEDIA_TYPE == "url_image":
@@ -757,7 +729,7 @@ if userge.has_bot:
                             InlineQueryResultPhoto(
                                 photo_url=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=InlineKeyboardMarkup(buttons),
+                                reply_markup=buttons,
                             )
                         )
                     elif MEDIA_TYPE == "tg_image":
@@ -765,7 +737,7 @@ if userge.has_bot:
                             InlineQueryResultCachedPhoto(
                                 file_id=MEDIA_URL,
                                 caption=alive_info,
-                                reply_markup=InlineKeyboardMarkup(buttons),
+                                reply_markup=buttons,
                             )
                         )
                     else:
@@ -775,16 +747,24 @@ if userge.has_bot:
                                 file_id=MEDIA_URL,
                                 caption=alive_info,
                                 description="ALIVE",
-                                reply_markup=InlineKeyboardMarkup(buttons),
+                                reply_markup=buttons,
                             )
                         )
+                elif MEDIA_TYPE == "no_media":
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="USERGE-X",
+                            input_message_content=InputTextMessageContent(alive_info),
+                            description="ALIVE",
+                            reply_markup=buttons,
+                        )
+                    )
                 else:  # default
-                    random_alive = random.choice(ALIVE_IMGS)
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url=random_alive,
+                            photo_url=Bot_Alive.alive_default_imgs(),
                             caption=alive_info,
-                            reply_markup=InlineKeyboardMarkup(buttons),
+                            reply_markup=buttons,
                         )
                     )
 
@@ -1219,6 +1199,25 @@ if userge.has_bot:
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
             )
             results.append(MAIN_MENU)
+            if len(results) != 0:
+                await inline_query.answer(
+                    results=results,
+                    cache_time=1,
+                    switch_pm_text="Available Commands",
+                    switch_pm_parameter="inline",
+                )
+        else:
+            results.append(REPO_X)
+            owner_name = (await userge.get_me()).first_name
+            await inline_query.answer(
+                results=results,
+                cache_time=1,
+                switch_pm_text=f"This bot is only for {owner_name}",
+                switch_pm_parameter="start",
+            )
+,
+            )
+d(MAIN_MENU)
             if len(results) != 0:
                 await inline_query.answer(
                     results=results,
