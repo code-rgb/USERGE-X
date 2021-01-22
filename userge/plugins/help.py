@@ -93,10 +93,10 @@ ALIVE_IMGS = [
 
 def _get_mode() -> str:
     if RawClient.DUAL_MODE:
-        return "↕️  **DUAL**"
+        return "↕️  DUAL"
     if Config.BOT_TOKEN:
-        return "🤖  **BOT**"
-    return "👤  **USER**"
+        return "🤖  BOT"
+    return "👤  USER"
 
 
 async def _init() -> None:
@@ -730,13 +730,13 @@ if userge.has_bot:
                 ]
 
                 alive_info = f"""
-<b><i>[USERGE-X](https://telegram.dog/x_xtests)</i>  is Up and Running
+<b>[USERGE-X](https://telegram.dog/x_xtests)  is Up and Running.
 
     Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
     <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
     𝑿 :        🧬  <code>v{get_version()}</code>
 
-❯  <code>Mode:</code>  {_get_mode()}
+⚙  <b>Mode :  {_get_mode()}</b>
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
