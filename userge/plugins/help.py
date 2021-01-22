@@ -732,11 +732,13 @@ if userge.has_bot:
                 alive_info = f"""
     **[Paimon](tg://openmessage?user_id=1486647366) is Up and Running**
 
-   Python   🐍     :  v{versions.__python_version__}
-   Pyrogram 🔥  :  v{versions.__pyro_version__}
-   X        🧬            :  v{get_version()}-Alícia-154
-
-{_get_mode()}  |  : {userge.uptime}
+   Python version  🐍     :  v{versions.__python_version__}
+   Pyrogram version 🔥  :  v{versions.__pyro_version__}
+   Bot Version        🧬            :  v{get_version()}-X-154
+   Maintainer            : [Alícia](tg://openmessage?user_id=1360435532)
+   
+   Bot Mode : {_get_mode()} 
+   Bot Uptime : {userge.uptime}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
@@ -1233,4 +1235,6 @@ if userge.has_bot:
                 cache_time=1,
                 switch_pm_text=f"This bot is only for {owner_name}",
                 switch_pm_parameter="start",
+            )
+parameter="start",
             )
