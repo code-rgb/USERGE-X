@@ -736,7 +736,7 @@ if userge.has_bot:
     <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
     𝑿 :        🧬  <code>v{get_version()}</code>
 
-⚙ <b>Mode:    《 {_get_mode()} 》</b>
+⚙ <b>Mode  ➥    {_get_mode()}</b>
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
