@@ -445,27 +445,27 @@ if userge.has_bot:
         if plg.is_loaded:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Unload",
+                    "❎ Unload",
                     callback_data=f"unload({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
+                    "✅ Load", callback_data=f"load({'|'.join(pos_list[:3])})".encode()
                 )
             )
         if plg.is_enabled:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Disable",
+                    "➖ Disable",
                     callback_data=f"disable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
         else:
             tmp_btns.append(
                 InlineKeyboardButton(
-                    "Enable",
+                    "➕ Enable",
                     callback_data=f"enable({'|'.join(pos_list[:3])})".encode(),
                 )
             )
@@ -1214,8 +1214,6 @@ if userge.has_bot:
                 cache_time=1,
                 switch_pm_text=f"This bot is only for {owner_name}",
                 switch_pm_parameter="start",
-            )
-,
             )
 d(MAIN_MENU)
             if len(results) != 0:
