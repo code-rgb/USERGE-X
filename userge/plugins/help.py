@@ -553,6 +553,7 @@ if userge.has_bot:
 
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
+        global MEDIA_URL, MEDIA_TYPE
         results = []
         i_q = inline_query.query
         string = i_q.lower()  # All lower
@@ -706,12 +707,14 @@ if userge.has_bot:
             if string == "alive":
 
                 alive_info = Bot_Alive.alive_info()
+                buttons = Bot_Alive.alive_buttons()
                 if Config.ALIVE_MEDIA:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         MEDIA_TYPE = "no_media"
-                    elif not MEDIA_URL:
+                        
+                    elif MEDIA_URL is None:
                         await get_alive_()
-                buttons = Bot_Alive.alive_buttons()
+                
 
                 if MEDIA_URL:
                     if MEDIA_TYPE == "url_gif":
