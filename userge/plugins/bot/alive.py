@@ -83,7 +83,7 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
-        alive_s = f"❯❯  𝗨𝗣𝗧𝗜𝗠𝗘 :    🕑  {userge.uptime}\n"
+        alive_s = f"𝗕𝗢𝗧 𝗨𝗣𝗧𝗜𝗠𝗘 :    🕑  {userge.uptime}\n"
         alive_s += "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
