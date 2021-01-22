@@ -33,7 +33,7 @@ if userge.has_bot:
             dynos_saver = _parse_arg(Config.RUN_DYNO_SAVER)
         else:
             dynos_saver = "Not Supported"
-        alive_s = f"  🕑  {userge.uptime}"
+        alive_s = f"Uptime :  {userge.uptime}\n"
         alive_s += "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
@@ -46,7 +46,7 @@ if userge.has_bot:
 
 
 def _parse_arg(arg: bool) -> str:
-    return " ✅  Enabled" if arg else " ❌  Disabled"
+    return "  ✅  Enabled" if arg else "  ❌  Disabled"
 
 
 async def check_media_link(media_link: str):

@@ -725,9 +725,9 @@ if userge.has_bot:
                 buttons = [
                     [
                         InlineKeyboardButton(
-                            "🔧 SETTINGS", callback_data="settings_btn"
+                            "SETTINGS", callback_data="settings_btn"
                         ),
-                        InlineKeyboardButton(text="⚡️ REPO", url=Config.UPSTREAM_REPO),
+                        InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
                     ]
                 ]
 
@@ -738,7 +738,7 @@ if userge.has_bot:
     <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
     𝑿 :        🧬  <code>v{get_version()}</code>
 
-<code>Mode:</code>   {_get_mode()}
+❯  <code>Mode:</code>  {_get_mode()}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
