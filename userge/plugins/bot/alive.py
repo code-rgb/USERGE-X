@@ -97,7 +97,7 @@ if userge.has_bot:
 
 
 def _parse_arg(arg: bool) -> str:
-    return "  ✅  Enabled" if arg else "  ❌  Disabled"
+    return "  ✅  𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else "  ❌  𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
@@ -129,11 +129,11 @@ class Bot_Alive:
         alive_info = f"""
 <b>[USERGE-X](https://telegram.dog/x_xtests)  is Up and Running.
 
-    Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
-    <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
-    𝑿 :        🧬  <code>v{get_version()}</code>
+  Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
+  <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
+  𝑿 :        🧬  <code>v{get_version()}</code>
 
-⚙  <b>Mode  ➥   [ {Bot_Alive._get_mode()} ]</b>
+⚙  <b>Mode  ➥  {Bot_Alive._get_mode()}</b>
 """
         return alive_info
 
