@@ -2,14 +2,17 @@
 
 import asyncio
 from re import search
-from userge.utils import rand_array, get_file_id
+
 from pyrogram import filters
 from pyrogram.errors import BadRequest, Forbidden
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup,
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
+from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge import Config, Message, userge, get_version, versions
+from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
+
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
@@ -22,7 +25,7 @@ async def alive_inline(message: Message):
                     message.chat.id,
                     Bot_Alive.alive_info(),
                     reply_markup=Bot_Alive.alive_buttons(),
-                    disable_web_page_preview=True
+                    disable_web_page_preview=True,
                 )
             else:
                 type_, media_ = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA)
@@ -31,19 +34,21 @@ async def alive_inline(message: Message):
                         message.chat.id,
                         animation=url_,
                         caption=Bot_Alive.alive_info(),
-                        reply_markup=Bot_Alive.alive_buttons(),   
+                        reply_markup=Bot_Alive.alive_buttons(),
                     )
                 elif type_ == "url_image":
                     await userge.bot.send_photo(
                         message.chat.id,
                         photo=url_,
                         caption=Bot_Alive.alive_info(),
-                        reply_markup=Bot_Alive.alive_buttons(),   
+                        reply_markup=Bot_Alive.alive_buttons(),
                     )
                 elif type_ == "tg_media" and isinstance(media_, list):
                     if not CACHED_MEDIA:
                         try:
-                            CACHED_MEDIA = get_file_id(await userge.bot.get_messages(media_[0], media_[1]))
+                            CACHED_MEDIA = get_file_id(
+                                await userge.bot.get_messages(media_[0], media_[1])
+                            )
                         except Exception as er:
                             await message.err(er, del_in=7)
                             return
@@ -51,14 +56,14 @@ async def alive_inline(message: Message):
                         message.chat.id,
                         file_id=CACHED_MEDIA,
                         caption=Bot_Alive.alive_info(),
-                        reply_markup=Bot_Alive.alive_buttons(), 
+                        reply_markup=Bot_Alive.alive_buttons(),
                     )
         else:
             await userge.bot.send_photo(
                 message.chat.id,
                 photo=Bot_Alive.alive_default_imgs(),
                 caption=Bot_Alive.alive_info(),
-                reply_markup=Bot_Alive.alive_buttons(),   
+                reply_markup=Bot_Alive.alive_buttons(),
             )
     else:
         bot = await userge.bot.get_me()
@@ -118,7 +123,7 @@ class Bot_Alive:
                 message_id = match.group(3)
             link = [chat_id, int(message_id)]
         return link_type, link
-    
+
     @staticmethod
     def alive_info():
         alive_info = f"""
@@ -131,7 +136,7 @@ class Bot_Alive:
 ⚙ <b>Mode  ➥    [ {Bot_Alive._get_mode()} ]</b>
 """
         return alive_info
-    
+
     @staticmethod
     def _get_mode() -> str:
         if RawClient.DUAL_MODE:
@@ -160,4 +165,3 @@ class Bot_Alive:
             "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
         ]
         return rand_array(alive_imgs)
-    

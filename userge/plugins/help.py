@@ -1,5 +1,4 @@
 import os
-import random
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
@@ -24,11 +23,11 @@ from pyrogram.types import (
 )
 from youtubesearchpython import VideosSearch
 
-from userge import Config, Message, get_collection, get_version, userge, versions
-from userge.core.ext import RawClient
+from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key, xbot
+
 from .bot.alive import Bot_Alive
 from .bot.gogo import Anime
 from .bot.utube_inline import (
@@ -80,6 +79,7 @@ REPO_X = InlineQueryResultArticle(
         ]
     ),
 )
+
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
@@ -752,9 +752,7 @@ if userge.has_bot:
                     results.append(
                         InlineQueryResultArticle(
                             title="USERGE-X",
-                            input_message_content=InputTextMessageContent(
-                                alive_info
-                            ),
+                            input_message_content=InputTextMessageContent(alive_info),
                             description="ALIVE",
                             reply_markup=buttons,
                         )
