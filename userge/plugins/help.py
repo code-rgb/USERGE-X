@@ -732,13 +732,13 @@ if userge.has_bot:
                 ]
 
                 alive_info = f"""
-    **[USERGE-X](https://telegram.dog/x_xtests) is Up and Running**
+<b><i>[USERGE-X](https://telegram.dog/x_xtests)</i>  is Up and Running
 
- • 🐍 Python :  `v{versions.__python_version__}`
- • 🔥 Pyrogram :  `v{versions.__pyro_version__}`
- • 🧬 𝑿 :  `v{get_version()}`
+    Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
+    <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
+    𝑿 :        🧬  <code>v{get_version()}</code>
 
-{_get_mode()}  |  🕔: {userge.uptime}
+<code>Mode:</code>   {_get_mode()}
 """
 
                 if not MEDIA_URL and Config.ALIVE_MEDIA:
