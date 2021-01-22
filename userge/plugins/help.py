@@ -711,10 +711,9 @@ if userge.has_bot:
                 if Config.ALIVE_MEDIA:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         MEDIA_TYPE = "no_media"
-                        
+
                     elif MEDIA_URL is None:
                         await get_alive_()
-                
 
                 if MEDIA_URL:
                     if MEDIA_TYPE == "url_gif":
