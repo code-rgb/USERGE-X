@@ -39,6 +39,7 @@ from .bot.utube_inline import (
 )
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
+from .utils.notes import get_inote
 
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -705,16 +706,13 @@ if userge.has_bot:
             #     )
 
             if string == "alive":
-
                 alive_info = Bot_Alive.alive_info()
                 buttons = Bot_Alive.alive_buttons()
                 if Config.ALIVE_MEDIA:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         MEDIA_TYPE = "no_media"
-
                     elif MEDIA_URL is None:
                         await get_alive_()
-
                 if MEDIA_URL:
                     if MEDIA_TYPE == "url_gif":
                         results.append(
@@ -754,7 +752,9 @@ if userge.has_bot:
                     results.append(
                         InlineQueryResultArticle(
                             title="USERGE-X",
-                            input_message_content=InputTextMessageContent(alive_info),
+                            input_message_content=InputTextMessageContent(
+                                alive_info, disable_web_page_preview=True
+                            ),
                             description="ALIVE",
                             reply_markup=buttons,
                         )
@@ -775,6 +775,44 @@ if userge.has_bot:
                         caption="To defeat evil, I must become a greater evil",
                     )
                 )
+
+            if str_y[0] == "inotes" and len(str_y) == 2:
+                note_data = str_y[1].split("_", 2)
+                note_data = [int(x) for x in note_data]
+                if len(note_data) == 3:
+                    cnote = await get_inote(
+                        note_id=note_data[0], chat_id=note_data[1], user_id=note_data[2]
+                    )
+                    type_ = cnote.get("type")
+                    if type_ == "image":
+                        results.append(
+                            InlineQueryResultCachedPhoto(
+                                file_id=cnote.get("file_id"),
+                                caption=cnote.get("caption"),
+                                reply_markup=cnote.get("buttons"),
+                            )
+                        )
+                    elif type_ == "media":
+                        results.append(
+                            InlineQueryResultCachedDocument(
+                                title="Inline Note",
+                                file_id=cnote.get("file_id"),
+                                caption=cnote.get("caption"),
+                                description=f"#{note_data[0]}",
+                                reply_markup=cnote.get("buttons"),
+                            )
+                        )
+                    else:
+                        results.append(
+                            InlineQueryResultArticle(
+                                title="Inline Note",
+                                input_message_content=InputTextMessageContent(
+                                    cnote.get("caption"), disable_web_page_preview=True
+                                ),
+                                description=f"#{note_data[0]}",
+                                reply_markup=cnote.get("buttons"),
+                            )
+                        )
 
             if string == "gapps":
                 buttons = [
@@ -832,7 +870,6 @@ if userge.has_bot:
                     ]
                 else:
                     buttons = [[InlineKeyboardButton(text="⬇️ DOWNLOAD", url=s["url"])]]
-
                 results.append(
                     InlineQueryResultPhoto(
                         photo_url=photo,
@@ -939,7 +976,6 @@ if userge.has_bot:
 
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
-
                 opinion = os.path.join(PATH, "emoji_data.txt")
                 if os.path.exists(opinion):
                     with open(opinion) as fo:
@@ -949,10 +985,8 @@ if userge.has_bot:
                     view_data.update(new_id)
                 else:
                     view_data = {int(inline_query.id): [{}]}
-
                 with open(opinion, "w") as outfile:
                     ujson.dump(view_data, outfile)
-
                 buttons = [
                     [
                         InlineKeyboardButton(
@@ -974,12 +1008,10 @@ if userge.has_bot:
                 )
 
             if "btn_" in str_y[0] or str_y[0] == "btn":
-
                 inline_db_path = "./userge/xcache/inline_db.json"
                 if os.path.exists(inline_db_path):
                     with open(inline_db_path, "r") as data_file:
                         view_db = ujson.load(data_file)
-
                     data_count_n = 1
                     reverse_list = list(view_db)
                     reverse_list.reverse()
@@ -987,19 +1019,15 @@ if userge.has_bot:
                         if data_count_n > 15:
                             view_db.pop(butt_ons, None)
                         data_count_n += 1
-
                     with open(inline_db_path, "w") as data_file:
                         ujson.dump(view_db, data_file)
-
                     if str_y[0] == "btn":
                         inline_storage = list(view_db)
                     else:
                         rnd_id = (str_y[0].split("_", 1))[1]
                         inline_storage = [rnd_id]
-
                     if len(inline_storage) == 0:
                         return
-
                     for inline_content in inline_storage:
                         inline_db = view_db.get(inline_content)
                         if inline_db:
@@ -1011,9 +1039,7 @@ if userge.has_bot:
                                     Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
                                 )
                                 media_data = get_file_id(saved_msg)
-
                             textx, buttonsx = pb(inline_db["msg_content"])
-
                             if inline_db["media_valid"]:
                                 if saved_msg.photo:
                                     results.append(
@@ -1044,52 +1070,49 @@ if userge.has_bot:
                                     )
                                 )
 
-            if str_y[0].lower() == "stylish":
-                if len(str_y) == 2:
-                    results = []
-                    input_text = str_y[1]
-                    font_names = [
-                        "serif",
-                        "sans",
-                        "sans_i",
-                        "serif_i",
-                        "medi_b",
-                        "medi",
-                        "double",
-                        "cursive_b",
-                        "cursive",
-                        "bigsmall",
-                        "reverse",
-                        "circle",
-                        "circle_b",
-                        "mono",
-                        "square_b",
-                        "square",
-                        "smoth",
-                        "goth",
-                        "wide",
-                        "web",
-                        "weeb",
-                        "weeeb",
-                    ]
-                    for f_name in font_names:
-                        styled_str = await font_gen(f_name, input_text)
-                        results.append(
-                            InlineQueryResultArticle(
-                                title=f_name.upper(),
-                                input_message_content=InputTextMessageContent(
-                                    styled_str
-                                ),
-                                description=styled_str,
-                            )
+            if str_y[0].lower() == "stylish" and len(str_y) == 2:
+                results = []
+                input_text = str_y[1]
+                font_names = [
+                    "serif",
+                    "sans",
+                    "sans_i",
+                    "serif_i",
+                    "medi_b",
+                    "medi",
+                    "double",
+                    "cursive_b",
+                    "cursive",
+                    "bigsmall",
+                    "reverse",
+                    "circle",
+                    "circle_b",
+                    "mono",
+                    "square_b",
+                    "square",
+                    "smoth",
+                    "goth",
+                    "wide",
+                    "web",
+                    "weeb",
+                    "weeeb",
+                ]
+                for f_name in font_names:
+                    styled_str = await font_gen(f_name, input_text)
+                    results.append(
+                        InlineQueryResultArticle(
+                            title=f_name.upper(),
+                            input_message_content=InputTextMessageContent(styled_str),
+                            description=styled_str,
                         )
-                    await inline_query.answer(
-                        results=results,
-                        cache_time=1,
-                        switch_pm_text="Available Commands",
-                        switch_pm_parameter="inline",
                     )
-                    return
+                await inline_query.answer(
+                    results=results,
+                    cache_time=1,
+                    switch_pm_text="Available Commands",
+                    switch_pm_parameter="inline",
+                )
+                return
 
             if str_x[0].lower() == "secret" and len(str_x) == 3:
                 user_name = str_x[1]
