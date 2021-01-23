@@ -83,21 +83,21 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
-        alive_s = f"𝗨𝗣𝗧𝗜𝗠𝗘 :  🕑 {userge.uptime}\n"
-        alive_s += "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
+        alive_s = f"𝗨𝗣𝗧𝗜𝗠𝗘 :  {userge.uptime}\n"
+        alive_s += "𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
         alive_s += f"👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s += f"🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
-            alive_s += f"⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
+            alive_s += f"⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
         alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         await callback_query.answer(alive_s, show_alert=True)
 
 
 def _parse_arg(arg: bool) -> str:
-    return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
+    return "𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else "𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
@@ -127,23 +127,23 @@ class Bot_Alive:
     @staticmethod
     def alive_info():
         alive_info = f"""
-<b>[USERGE-X](https://telegram.dog/x_xtests)  is Up and Running.
+<b>[Paimon](tg://openmessage?user_id=1486647366) is Up and Running....
 
   Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
-  <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
-  𝑿 :        🧬  <code>v{get_version()}</code>
-
-⚙  <b>Mode  ➥  {Bot_Alive._get_mode()}</b>
+  <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>-X-158
+  Bot Version :            🧬  <code>v{get_version()}</code>
+  Maintainer :         🦋 [Alícia Dark](tg://openmessage?user_id=1360435532)
+  <b>Bot Mode    {Bot_Alive._get_mode()}</b>   |   {userge.uptime}
 """
         return alive_info
 
     @staticmethod
     def _get_mode() -> str:
         if RawClient.DUAL_MODE:
-            return "↕️  DUAL"
+            return "DUAL"
         if Config.BOT_TOKEN:
-            return "🤖  BOT"
-        return "👤  USER"
+            return "BOT"
+        return "USER"
 
     @staticmethod
     def alive_buttons():
@@ -158,10 +158,16 @@ class Bot_Alive:
     @staticmethod
     def alive_default_imgs():
         alive_imgs = [
-            "https://telegra.ph/file/11123ef7dff2f1e19e79d.jpg",
-            "https://i.imgur.com/uzKdTXG.jpg",
-            "https://telegra.ph/file/6ecab390e4974c74c3764.png",
-            "https://telegra.ph/file/995c75983a6c0e4499b55.png",
-            "https://telegra.ph/file/86cc25c78ad667ca5e691.png",
+            "https://telegra.ph/file/b89e490e28f54aef619d5.jpg",
+            "https://telegra.ph/file/5c37c5bd08aec214823c2.jpg",
+            "https://telegra.ph/file/fe6f294620a891348f20d.jpg",
+            "https://telegra.ph/file/1b78637adcf084ba9b946.jpg",
+            "https://telegra.ph/file/121b2ad058dc928404cac.jpg",
+            "https://telegra.ph/file/46fbf0c18282d5526519b.jpg",
+            "https://telegra.ph/file/b1b9d233f01815b20a4b8.jpg",
+            "https://telegra.ph/file/c22a31d1dc68fe83a4cac.jpg",
+            "https://telegra.ph/file/46fbf0c18282d5526519b.jpg",
+            "https://telegra.ph/file/ec8027ae1c3d452375017.mp4"
         ]
         return rand_array(alive_imgs)
+gs)
