@@ -10,9 +10,12 @@
 
 import asyncio
 from typing import Dict, Tuple
+
 from pyrogram.errors import BadRequest, Forbidden
+
 from userge import Config, Message, get_collection, userge
 from userge.utils import SafeDict, get_file_id, parse_buttons
+
 NOTES_COLLECTION = get_collection("notes")
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -225,15 +228,20 @@ async def get_note(message: Message) -> None:
         if not message.client.is_bot and userge.has_bot and Config.INLINE_NOTES:
             bot = await userge.bot.get_me()
             try:
-                x = await userge.get_inline_bot_results(bot.username, f"inotes {mid}_{message.chat.id}_{user_id}")
+                x = await userge.get_inline_bot_results(
+                    bot.username, f"inotes {mid}_{message.chat.id}_{user_id}"
+                )
                 await userge.send_inline_bot_result(
-                    chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id, reply_to_message_id=reply_to_message_id
+                    chat_id=message.chat.id,
+                    query_id=x.query_id,
+                    result_id=x.results[0].id,
+                    reply_to_message_id=reply_to_message_id,
                 )
             except (Forbidden, BadRequest) as ex:
                 await message.err(str(ex), del_in=5)
             else:
                 return
-            
+
         await CHANNEL.forward_stored(
             client=message.client,
             message_id=mid,
@@ -293,37 +301,43 @@ async def add_note(message: Message) -> None:
 
 async def get_inote(note_id: int, chat_id: int, user_id: int):
     message = await userge.bot.get_messages(Config.LOG_CHANNEL_ID, note_id)
-    caption = ''
+    caption = ""
     if message.caption:
-        caption = message.caption.html.split('\n\n', maxsplit=1)[-1]
+        caption = message.caption.html.split("\n\n", maxsplit=1)[-1]
     elif message.text:
-        caption = message.text.html.split('\n\n', maxsplit=1)[-1]
+        caption = message.text.html.split("\n\n", maxsplit=1)[-1]
     if caption:
         caption = no_mention(caption)
         u_dict = await userge.get_user_dict(user_id)
         u_dict["mention"] = no_mention(u_dict["mention"])
         chat = await userge.get_chat(chat_id)
-        u_dict.update({
-            'chat': chat.title if chat.title else "this group",
-            'count': chat.members_count})
+        u_dict.update(
+            {
+                "chat": chat.title if chat.title else "this group",
+                "count": chat.members_count,
+            }
+        )
         caption = caption.format_map(SafeDict(**u_dict))
     file_id = get_file_id(message)
     caption, buttons = parse_buttons(caption)
     if message.media and file_id:
         if message.photo:
-            type_= "photo"
+            type_ = "photo"
         else:
             type_ = "media"
     else:
         type_ = "text"
     return {"type": type_, "file_id": file_id, "caption": caption, "buttons": buttons}
 
+
 def no_mention(text: str):
     return text.replace("tg://user?id=", "tg://openmessage?user_id=")
 
 
 @userge.on_cmd(
-    "inline_note", about={"header": "enable / disable inline notes"}, allow_channels=False
+    "inline_note",
+    about={"header": "enable / disable inline notes"},
+    allow_channels=False,
 )
 async def inline_note_(message: Message):
     """ enable / disable inline notes """

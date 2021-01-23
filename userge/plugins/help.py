@@ -22,7 +22,7 @@ from pyrogram.types import (
     InputTextMessageContent,
 )
 from youtubesearchpython import VideosSearch
-from .utils.notes import get_inote
+
 from userge import Config, Message, get_collection, userge
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
@@ -39,6 +39,7 @@ from .bot.utube_inline import (
 )
 from .fun.stylish import font_gen
 from .misc.redditdl import reddit_thumb_link
+from .utils.notes import get_inote
 
 CHANNEL = userge.getCLogger(__name__)
 MEDIA_TYPE, MEDIA_URL = None, None
@@ -751,7 +752,9 @@ if userge.has_bot:
                     results.append(
                         InlineQueryResultArticle(
                             title="USERGE-X",
-                            input_message_content=InputTextMessageContent(alive_info, disable_web_page_preview=True),
+                            input_message_content=InputTextMessageContent(
+                                alive_info, disable_web_page_preview=True
+                            ),
                             description="ALIVE",
                             reply_markup=buttons,
                         )
@@ -774,10 +777,12 @@ if userge.has_bot:
                 )
 
             if str_y[0] == "inotes" and len(str_y) == 2:
-                note_data = str_y[1].split('_', 2)
+                note_data = str_y[1].split("_", 2)
                 note_data = [int(x) for x in note_data if x.isdigit()]
                 if len(note_data) == 3:
-                    cnote = await get_inote(note_id=note_data[0], chat_id=note_data[1], user_id=note_data[2])
+                    cnote = await get_inote(
+                        note_id=note_data[0], chat_id=note_data[1], user_id=note_data[2]
+                    )
                     type_ = cnote.get("type")
                     if type_ == "image":
                         results.append(
@@ -801,7 +806,9 @@ if userge.has_bot:
                         results.append(
                             InlineQueryResultArticle(
                                 title="Inline Note",
-                                input_message_content=InputTextMessageContent(cnote.get("caption"), disable_web_page_preview=True),
+                                input_message_content=InputTextMessageContent(
+                                    cnote.get("caption"), disable_web_page_preview=True
+                                ),
                                 description=f"#{note_data[0]}",
                                 reply_markup=cnote.get("buttons"),
                             )
@@ -1095,9 +1102,7 @@ if userge.has_bot:
                     results.append(
                         InlineQueryResultArticle(
                             title=f_name.upper(),
-                            input_message_content=InputTextMessageContent(
-                                styled_str
-                            ),
+                            input_message_content=InputTextMessageContent(styled_str),
                             description=styled_str,
                         )
                     )
