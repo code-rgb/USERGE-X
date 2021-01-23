@@ -129,11 +129,12 @@ class Bot_Alive:
         alive_info = f"""
 <b>[Paimon](tg://openmessage?user_id=1486647366) is Up and Running....
 
-  Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
-  <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>-X-158
-  Bot Version :            🧬  <code>v{get_version()}</code>
-  Maintainer :         🦋 [Alícia Dark](tg://openmessage?user_id=1360435532)
-  <b>Bot Mode    {Bot_Alive._get_mode()}</b>   |   {userge.uptime}
+  Python</b> :              🐍  <code>v{versions.__python_version__}</code>
+  <b>Pyrogram</b> :       🔥  <code>v{versions.__pyro_version__}</code>-X-158
+  Bot Version :        🧬  <code>v{get_version()}</code>
+  Maintainer :       🦋 [Alícia Dark](tg://openmessage?user_id=1360435532)
+  
+  <b>Bot Mode  :  {Bot_Alive._get_mode()}</b>   |   {userge.uptime}
 """
         return alive_info
 
