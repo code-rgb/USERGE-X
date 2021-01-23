@@ -83,21 +83,21 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
-        alive_s = f"𝗕𝗢𝗧 𝗨𝗣𝗧𝗜𝗠𝗘 :    🕑  {userge.uptime}\n"
+        alive_s = f"𝗨𝗣𝗧𝗜𝗠𝗘 :  🕑 {userge.uptime}\n"
         alive_s += "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
-        alive_s += f"👥  𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
-        alive_s += f"🚨  𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
-        if Config.HEROKU_APP:
-            alive_s += f"⛽️  𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 : {_parse_arg(Config.RUN_DYNO_SAVER)}\n"
-        alive_s += f"💬  𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"📝  𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
+        alive_s += f"👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
+        alive_s += f"🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
+        if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
+            alive_s += f"⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
+        alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
+        alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         await callback_query.answer(alive_s, show_alert=True)
 
 
 def _parse_arg(arg: bool) -> str:
-    return "  ✅  𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else "  ❌  𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
+    return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
 
 
 class Bot_Alive:
