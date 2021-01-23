@@ -318,14 +318,14 @@ async def get_inote(note_id: int, chat_id: int, user_id: int):
         type_ = "text"
     return {"type": type_, "file_id": file_id, "caption": caption, "buttons": buttons}
 
-def no_mention(text: str)
+def no_mention(text: str):
     return text.replace("tg://user?id=", "tg://openmessage?user_id=")
 
 
 @userge.on_cmd(
     "inline_note", about={"header": "enable / disable inline notes"}, allow_channels=False
 )
-async def sudo_(message: Message):
+async def inline_note_(message: Message):
     """ enable / disable inline notes """
     if Config.INLINE_NOTES:
         Config.INLINE_NOTES = False
