@@ -215,7 +215,7 @@ if userge.has_bot:
             try:
                 b_id = c["user_id"]
                 await userge.bot.send_message(
-                    b_id, "🔊 You received a **new** Broadcast."
+                    b_id, "You received a new Broadcast."
                 )
                 if to_copy:
                     await userge.bot.copy_message(
