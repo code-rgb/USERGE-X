@@ -777,12 +777,16 @@ if userge.has_bot:
                 )
 
             if str_y[0] == "inotes" and len(str_y) == 2:
+                print('yesssssss')
                 note_data = str_y[1].split("_", 2)
                 note_data = [int(x) for x in note_data if x.isdigit()]
+                print(note_data)
                 if len(note_data) == 3:
+                    print('aaaaaa')
                     cnote = await get_inote(
                         note_id=note_data[0], chat_id=note_data[1], user_id=note_data[2]
                     )
+                    print(cnote)
                     type_ = cnote.get("type")
                     if type_ == "image":
                         results.append(
