@@ -85,8 +85,8 @@ if userge.has_bot:
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, callback_query: CallbackQuery):
         start = datetime.now()
-        await callback_query.edit_message_caption(
-            caption=Bot_Alive.alive_info(), reply_markup=Bot_Alive.alive_buttons()
+        await callback_query.edit_message_text(
+            Bot_Alive.alive_info(), reply_markup=Bot_Alive.alive_buttons()
         )
         ping = "𝗣𝗶𝗻𝗴:  🏓  {} sec\n"
         alive_s = "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
@@ -97,8 +97,8 @@ if userge.has_bot:
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
             alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"🛡 𝗣𝗠 𝗚𝗮𝘂𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}"
-        alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}\n"
+        alive_s += f"🛡 𝗣𝗠 𝗚𝗮𝘂𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
+        alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         end = datetime.now()
         m_s = (end - start).microseconds / 1000
         await callback_query.answer(ping.format(m_s) + alive_s, show_alert=True)
