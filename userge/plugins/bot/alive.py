@@ -1,10 +1,11 @@
 """Fun plugin"""
 
 import asyncio
+from datetime import datetime
 from re import search
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, Forbidden
+from pyrogram.errors import BadRequest, FloodWait, Forbidden
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, get_version, userge, versions
@@ -75,25 +76,50 @@ async def alive_inline(message: Message):
         except (Forbidden, BadRequest) as ex:
             return await message.err(str(ex), del_in=5)
         await message.delete()
-        await asyncio.sleep(120)
+        await asyncio.sleep(200)
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
-    async def alive_cb(_, callback_query: CallbackQuery):
-        alive_s = f"𝗨𝗣𝗧𝗜𝗠𝗘 :  🕑 {userge.uptime}\n"
-        alive_s += "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
+    async def alive_cb(_, c_q: CallbackQuery):
+        allow = bool(
+            c_q.from_user
+            and (
+                c_q.from_user.id in Config.OWNER_ID
+                or c_q.from_user.id in Config.SUDO_USERS
+            )
+        )
+        if allow:
+            start = datetime.now()
+            try:
+                await callback_query.edit_message_text(
+                    Bot_Alive.alive_info(),
+                    reply_markup=Bot_Alive.alive_buttons(),
+                    disable_web_page_preview=True,
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+            except BadRequest:
+                pass
+            ping = "𝗣𝗶𝗻𝗴:  🏓  {} sec\n"
+        alive_s = "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
             _parse_arg(Config.LOAD_UNOFFICIAL_PLUGINS)
         )
         alive_s += f"👥 𝗦𝘂𝗱𝗼 : {_parse_arg(Config.SUDO_ENABLED)}\n"
         alive_s += f"🚨 𝗔𝗻𝘁𝗶𝘀𝗽𝗮𝗺 : {_parse_arg(Config.ANTISPAM_SENTRY)}\n"
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
-            alive_s += f"⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
+            alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
+        alive_s += f"🛡 𝗣𝗠 𝗚𝗮𝘂𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
         alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
-        await callback_query.answer(alive_s, show_alert=True)
+        if allow:
+            end = datetime.now()
+            m_s = (end - start).microseconds / 1000
+            await c_q.answer(ping.format(m_s) + alive_s, show_alert=True)
+        else:
+            await c_q.answer(alive_s, show_alert=True)
 
 
 def _parse_arg(arg: bool) -> str:
@@ -127,13 +153,13 @@ class Bot_Alive:
     @staticmethod
     def alive_info():
         alive_info = f"""
-<b>[USERGE-X](https://telegram.dog/x_xtests)  is Up and Running.
+<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
-  Python</b> :                 🐍  <code>v{versions.__python_version__}</code>
-  <b>Pyrogram</b> :         🔥  <code>v{versions.__pyro_version__}</code>
-  𝑿 :        🧬  <code>v{get_version()}</code>
+  🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
+  🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
+  🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
 
-⚙  <b>Mode  ➥  {Bot_Alive._get_mode()}</b>
+<b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
 
@@ -149,8 +175,8 @@ class Bot_Alive:
     def alive_buttons():
         buttons = [
             [
-                InlineKeyboardButton("SETTINGS", callback_data="settings_btn"),
-                InlineKeyboardButton(text="REPO", url=Config.UPSTREAM_REPO),
+                InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
+                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
             ]
         ]
         return InlineKeyboardMarkup(buttons)
