@@ -1,12 +1,13 @@
 """Fun plugin"""
 
 import asyncio
+from datetime import datetime
 from re import search
 
 from pyrogram import filters
 from pyrogram.errors import BadRequest, Forbidden
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from datetime import datetime
+
 from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.utils import get_file_id, rand_array
@@ -85,8 +86,7 @@ if userge.has_bot:
     async def alive_cb(_, callback_query: CallbackQuery):
         start = datetime.now()
         await callback_query.edit_message_caption(
-            caption=Bot_Alive.alive_info(),
-            reply_markup=Bot_Alive.alive_buttons()
+            caption=Bot_Alive.alive_info(), reply_markup=Bot_Alive.alive_buttons()
         )
         ping = "𝗣𝗶𝗻𝗴:  🏓  {} sec\n"
         alive_s = "➕ 𝗘𝘅𝘁𝗿𝗮 𝗣𝗹𝘂𝗴𝗶𝗻𝘀 : {}\n".format(
