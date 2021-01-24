@@ -94,7 +94,7 @@ if userge.has_bot:
         if allow:
             start = datetime.now()
             try:
-                await callback_query.edit_message_text(
+                await c_q.edit_message_text(
                     Bot_Alive.alive_info(),
                     reply_markup=Bot_Alive.alive_buttons(),
                     disable_web_page_preview=True,
@@ -120,6 +120,7 @@ if userge.has_bot:
             await c_q.answer(ping.format(m_s) + alive_s, show_alert=True)
         else:
             await c_q.answer(alive_s, show_alert=True)
+        await asyncio.sleep(0.5)
 
 
 def _parse_arg(arg: bool) -> str:
