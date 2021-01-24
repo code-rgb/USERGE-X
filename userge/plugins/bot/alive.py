@@ -154,11 +154,12 @@ class Bot_Alive:
     @staticmethod
     def alive_info():
         alive_info = f"""
-<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
+<a href="https://telegram.dog/x_xtests"><b>[Voldemort](tg://openmessage?user_id=906322078)</a> is Up and Running.</b>
 
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
-  🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
+  🧬   <b>VoldeBot :</b>    <code>v{get_version()}</code>
+       <b>Maintainer  :</b> [Voldemort](tg://openmessage?user_id=906322078)
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
