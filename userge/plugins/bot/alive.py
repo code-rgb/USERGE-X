@@ -170,4 +170,3 @@ class Bot_Alive:
             "https://telegra.ph/file/46fbf0c18282d5526519b.jpg"
         ]
         return rand_array(alive_imgs)   return rand_array(alive_imgs)
-gs)
