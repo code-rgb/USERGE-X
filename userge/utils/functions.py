@@ -5,7 +5,7 @@ import random
 import re
 from uuid import uuid4
 
-from emoji import get_emoji_regexp
+from pyrogram import emoji
 from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import CallbackQuery
 
@@ -13,6 +13,7 @@ from ..config import Config
 from .progress import progress
 from .tools import runcmd, take_screen_shot
 
+_EMOJI_REGEXP = None
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
@@ -80,9 +81,27 @@ async def media_to_image(message):
     return dls_loc
 
 
+# https://github.com/carpedm20/emoji/blob/master/emoji/core.py
+def get_emoji_regex():
+    global _EMOJI_REGEXP
+    if not _EMOJI_REGEXP:
+        e_list = [
+            getattr(emoji, _).encode("unicode-escape").decode("ASCII")
+            for _ in dir(emoji)
+            if not _.startswith("__")
+        ]
+        # to avoid re.error excluding char that start with '*'
+        e_sort = sorted([__ for __ in e_list if not __.startswith("*")], reverse=True)
+        # Sort emojis by length to make sure multi-character emojis are
+        # matched first
+        pattern_ = "(" + "|".join(e_sort) + ")"
+        _EMOJI_REGEXP = re.compile(pattern_)
+    return _EMOJI_REGEXP
+
+
 # Removes Emoji From Text
 # RETURNS a "string"
-EMOJI_PATTERN = get_emoji_regexp()
+EMOJI_PATTERN = get_emoji_regex()
 
 
 def deEmojify(inputString: str) -> str:
