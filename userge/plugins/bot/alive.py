@@ -112,7 +112,7 @@ if userge.has_bot:
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
             alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"🛡 𝗣𝗠 𝗚𝗮𝘂𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
+        alive_s += f"🛡 𝗣𝗠 𝗚𝘂𝗮𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
         alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         if allow:
             end = datetime.now()
