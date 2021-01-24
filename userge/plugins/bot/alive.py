@@ -5,7 +5,7 @@ from datetime import datetime
 from re import search
 
 from pyrogram import filters
-from pyrogram.errors import BadRequest, Forbidden, FloodWait
+from pyrogram.errors import BadRequest, FloodWait, Forbidden
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, get_version, userge, versions
@@ -84,14 +84,20 @@ if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
     async def alive_cb(_, c_q: CallbackQuery):
-        allow = bool(c_q.from_user and (
-            c_q.from_user.id in Config.OWNER_ID or c_q.from_user.id in Config.SUDO_USERS
-        ))
+        allow = bool(
+            c_q.from_user
+            and (
+                c_q.from_user.id in Config.OWNER_ID
+                or c_q.from_user.id in Config.SUDO_USERS
+            )
+        )
         if allow:
             start = datetime.now()
             try:
                 await callback_query.edit_message_text(
-                Bot_Alive.alive_info(), reply_markup=Bot_Alive.alive_buttons(), disable_web_page_preview=True
+                    Bot_Alive.alive_info(),
+                    reply_markup=Bot_Alive.alive_buttons(),
+                    disable_web_page_preview=True,
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x)
@@ -114,7 +120,6 @@ if userge.has_bot:
             await c_q.answer(ping.format(m_s) + alive_s, show_alert=True)
         else:
             await c_q.answer(alive_s, show_alert=True)
-            
 
 
 def _parse_arg(arg: bool) -> str:
