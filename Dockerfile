@@ -1,11 +1,18 @@
-# set base image (host OS)
+# set base image (host OS) [Debian Slim Buster]
 FROM python:3.9-slim-buster
+
+# https://shouldiblamecaching.com/
+ENV PIP_NO_CACHE_DIR 1
+
+# fix "ephimeral" / "AWS" file-systems
+RUN sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
 
 # set the working directory in the container
 WORKDIR /app/
 
 RUN apt -qq update && apt -qq upgrade -y 
 RUN apt -qq install -y --no-install-recommends \
+    apt-utils \
     curl \
     git \
     gnupg2 \
@@ -44,7 +51,6 @@ ENV GOOGLE_CHROME_BIN /usr/bin/google-chrome-stable
 
 # install required packages
 RUN apt -qq install -y --no-install-recommends \
-    apt-utils \
     # this package is required to fetch "contents" via "TLS"
     apt-transport-https \
     # install coreutils
