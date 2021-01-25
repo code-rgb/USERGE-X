@@ -13,7 +13,7 @@ from functools import wraps
 from json import dumps
 from mimetypes import guess_type
 from urllib.parse import quote
-
+from pyrogram.errors import FloodWait
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
@@ -953,7 +953,10 @@ class Worker(_GDrive):
                 self._cancel()
             if self._progress is not None and count >= Config.EDIT_SLEEP_TIMEOUT:
                 count = 0
-                await self._message.try_to_edit(self._progress)
+                try:
+                    await self._message.try_to_edit(self._progress)
+                except FloodWait as ef:
+                    await asyncio.sleep(ef.x + 3)    
             await asyncio.sleep(1)
         if dl_loc and os.path.exists(dl_loc):
             os.remove(dl_loc)
