@@ -94,7 +94,7 @@ if userge.has_bot:
         if allow:
             start = datetime.now()
             try:
-                await callback_query.edit_message_text(
+                await c_q.edit_message_text(
                     Bot_Alive.alive_info(),
                     reply_markup=Bot_Alive.alive_buttons(),
                     disable_web_page_preview=True,
@@ -112,7 +112,7 @@ if userge.has_bot:
         if Config.HEROKU_APP and Config.RUN_DYNO_SAVER:
             alive_s += "⛽️ 𝗗𝘆𝗻𝗼 𝗦𝗮𝘃𝗲𝗿 :  ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍\n"
         alive_s += f"💬 𝗕𝗼𝘁 𝗙𝗼𝗿𝘄𝗮𝗿𝗱𝘀 : {_parse_arg(Config.BOT_FORWARDS)}\n"
-        alive_s += f"🛡 𝗣𝗠 𝗚𝗮𝘂𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
+        alive_s += f"🛡 𝗣𝗠 𝗚𝘂𝗮𝗿𝗱 : {_parse_arg(not Config.ALLOW_ALL_PMS)}\n"
         alive_s += f"📝 𝗣𝗠 𝗟𝗼𝗴𝗴𝗲𝗿 : {_parse_arg(Config.PM_LOGGING)}"
         if allow:
             end = datetime.now()
@@ -120,6 +120,7 @@ if userge.has_bot:
             await c_q.answer(ping.format(m_s) + alive_s, show_alert=True)
         else:
             await c_q.answer(alive_s, show_alert=True)
+        await asyncio.sleep(0.5)
 
 
 def _parse_arg(arg: bool) -> str:
