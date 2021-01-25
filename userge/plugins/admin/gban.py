@@ -394,9 +394,9 @@ async def gban_at_entry(message: Message):
                     f"https://api.cas.chat/check?user_id={user_id}"
                 )
             except ValueError:  # api down
-                resp = False
+                res = False
 
-            if resp and (res["ok"]):
+            if res and (res["ok"]):
                 reason = (
                     " | ".join(res["result"]["messages"]) if "result" in res else None
                 )
