@@ -18,9 +18,9 @@ from userge.utils import (
     get_response,
     humanbytes,
     post_to_telegraph,
+    sublists,
     xbot,
     xmedia,
-    sublists
 )
 
 from ..misc.upload import upload
@@ -502,11 +502,32 @@ def download_button(vid: str, body: bool = False):
             ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
 
     btn += sublists(
-    [InlineKeyboardButton(format_data.get(qual_), callback_data=f"ytdl_download_{vid}_{qual_}_v") for qual_ in [format_144,format_240,format_360,format_720,format_1080,format_1440,format_2160] if qual_ != 0]
-    ,width=2)
+        [
+            InlineKeyboardButton(
+                format_data.get(qual_), callback_data=f"ytdl_download_{vid}_{qual_}_v"
+            )
+            for qual_ in [
+                format_144,
+                format_240,
+                format_360,
+                format_720,
+                format_1080,
+                format_1440,
+                format_2160,
+            ]
+            if qual_ != 0
+        ],
+        width=2,
+    )
     btn += sublists(
-    [InlineKeyboardButton(audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a") for key_ in sorted(audio.keys())]
-    ,width=2)
+        [
+            InlineKeyboardButton(
+                audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a"
+            )
+            for key_ in sorted(audio.keys())
+        ],
+        width=2,
+    )
     if body:
         vid_body = f"<b>[{x.get('title')}]({x.get('webpage_url')})</b>"
 
