@@ -1,13 +1,13 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
-a
+
 """Module that handles Inline Help"""
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
-from userge.utils import row_width
+from userge.utils import sublists
 
 HELP_BUTTONS = None
 AUTH_USERS = list(Config.OWNER_ID) + list(Config.SUDO_USERS)
@@ -76,7 +76,7 @@ if userge.has_bot:
             InlineKeyboardButton(cmd.capitalize(), callback_data=ihelp_ + cmd)
             for cmd in list(COMMANDS.keys())
         ]
-        return row_width(help_list, width=3)
+        return sublists(help_list, width=3)
 
     if not HELP_BUTTONS:
         HELP_BUTTONS = help_btn_generator()
