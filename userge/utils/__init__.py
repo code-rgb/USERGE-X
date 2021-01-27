@@ -23,4 +23,5 @@ from .tools import (
     runcmd,
     take_screen_shot,
     time_formatter,
+    row_width
 )
