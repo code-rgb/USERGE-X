@@ -145,3 +145,8 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
         else:
             keyb.append([InlineKeyboardButton(btn[0], url=btn[1])])
     return note_data.strip(), InlineKeyboardMarkup(keyb) if keyb else None
+
+
+def row_width(input_list: list, width: int = 3):
+    return [input_list[x:x+width] for x in range(0, len(input_list), width)]
+    
