@@ -1,6 +1,6 @@
 # Copyright (C) 2020 BY - GitHub.com/code-rgb [TG - @deleteduser420]
 # All rights reserved.
-
+a
 """Module that handles Inline Help"""
 
 from pyrogram import filters
