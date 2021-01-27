@@ -5,7 +5,7 @@
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+from userge.utils import row_width
 from userge import Config, Message, userge
 
 HELP_BUTTONS = None
@@ -71,18 +71,8 @@ COMMANDS = {
 if userge.has_bot:
 
     def help_btn_generator():
-        btn = []
-        b = []
-        for cmd in list(COMMANDS.keys()):
-            name = cmd.capitalize()
-            call_back = f"ihelp_{cmd}"
-            b.append(InlineKeyboardButton(name, callback_data=call_back))
-            if len(b) == 3:  # no. of columns
-                btn.append(b)
-                b = []
-        if len(b) != 0:
-            btn.append(b)  # buttons in the last row
-        return btn
+        help_list = [InlineKeyboardButton(cmd.capitalize(), callback_data=ihelp_+ cmd) for cmd in list(COMMANDS.keys())]
+        return row_width(help_list, width=3)
 
     if not HELP_BUTTONS:
         HELP_BUTTONS = help_btn_generator()
