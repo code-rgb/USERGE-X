@@ -389,10 +389,14 @@ async def gban_at_entry(message: Message):
                 ),
             )
         elif Config.ANTISPAM_SENTRY:
-            res = await get_response.json(
-                f"https://api.cas.chat/check?user_id={user_id}"
-            )
-            if res["ok"]:
+            try:
+                res = await get_response.json(
+                    f"https://api.cas.chat/check?user_id={user_id}"
+                )
+            except ValueError:  # api down
+                res = False
+
+            if res and (res["ok"]):
                 reason = (
                     " | ".join(res["result"]["messages"]) if "result" in res else None
                 )

@@ -23,6 +23,7 @@ from oauth2client.client import (
     HttpAccessTokenRefreshError,
     OAuth2WebServerFlow,
 )
+from pyrogram.errors import FloodWait
 
 from userge import Config, Message, get_collection, pool, userge
 from userge.plugins.misc.download import tg_download, url_download
@@ -953,7 +954,10 @@ class Worker(_GDrive):
                 self._cancel()
             if self._progress is not None and count >= Config.EDIT_SLEEP_TIMEOUT:
                 count = 0
-                await self._message.try_to_edit(self._progress)
+                try:
+                    await self._message.try_to_edit(self._progress)
+                except FloodWait as ef:
+                    await asyncio.sleep(ef.x + 3)
             await asyncio.sleep(1)
         if dl_loc and os.path.exists(dl_loc):
             os.remove(dl_loc)
