@@ -7,6 +7,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
+from userge.utils import sublists
 
 HELP_BUTTONS = None
 AUTH_USERS = list(Config.OWNER_ID) + list(Config.SUDO_USERS)
@@ -71,18 +72,11 @@ COMMANDS = {
 if userge.has_bot:
 
     def help_btn_generator():
-        btn = []
-        b = []
-        for cmd in list(COMMANDS.keys()):
-            name = cmd.capitalize()
-            call_back = f"ihelp_{cmd}"
-            b.append(InlineKeyboardButton(name, callback_data=call_back))
-            if len(b) == 3:  # no. of columns
-                btn.append(b)
-                b = []
-        if len(b) != 0:
-            btn.append(b)  # buttons in the last row
-        return btn
+        help_list = [
+            InlineKeyboardButton(cmd.capitalize(), callback_data="ihelp_" + cmd)
+            for cmd in list(COMMANDS.keys())
+        ]
+        return sublists(help_list)
 
     if not HELP_BUTTONS:
         HELP_BUTTONS = help_btn_generator()

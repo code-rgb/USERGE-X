@@ -18,6 +18,7 @@ from userge.utils import (
     get_response,
     humanbytes,
     post_to_telegraph,
+    sublists,
     xbot,
     xmedia,
 )
@@ -469,7 +470,6 @@ def download_button(vid: str, body: bool = False):
             )
         ]
     ]
-    b, c = [], []
     audio, format_data = {}, {}
     ###
     for video in x["formats"]:
@@ -501,40 +501,33 @@ def download_button(vid: str, body: bool = False):
                 bitrrate
             ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
 
-    for qual_ in (
-        format_144,
-        format_240,
-        format_360,
-        format_720,
-        format_1080,
-        format_1440,
-        format_2160,
-    ):
-        if qual_ != 0:
-            name = format_data.get(qual_)
-            b.append(
-                InlineKeyboardButton(
-                    name, callback_data=f"ytdl_download_{vid}_{qual_}_v"
-                )
+    btn += sublists(
+        [
+            InlineKeyboardButton(
+                format_data.get(qual_), callback_data=f"ytdl_download_{vid}_{qual_}_v"
             )
-            if len(b) == 2:
-                btn.append(b)
-                b = []
-    if len(b) != 0:
-        btn.append(b)
-
-    for key_ in sorted(audio.keys()):
-        c.append(
+            for qual_ in [
+                format_144,
+                format_240,
+                format_360,
+                format_720,
+                format_1080,
+                format_1440,
+                format_2160,
+            ]
+            if qual_ != 0
+        ],
+        width=2,
+    )
+    btn += sublists(
+        [
             InlineKeyboardButton(
                 audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a"
             )
-        )
-        if len(c) == 2:
-            btn.append(c)
-            c = []
-    if len(c) != 0:
-        btn.append(c)
-
+            for key_ in sorted(audio.keys())
+        ],
+        width=2,
+    )
     if body:
         vid_body = f"<b>[{x.get('title')}]({x.get('webpage_url')})</b>"
 
