@@ -1,6 +1,6 @@
 name: PyLint
 
-on: push
+on: [push, pull_request]
 
 jobs:
   PEP8:
