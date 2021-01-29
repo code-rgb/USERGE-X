@@ -1,6 +1,6 @@
 name: FailedChecker
 
-on: push
+on: [push, pull_request]
 
 jobs:
   build:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: [3.9]
+        python-version: [3.9.1]
 
     steps:
     - uses: actions/checkout@v1
@@ -21,8 +21,8 @@ jobs:
       run: |
         sudo apt-get install libpq-dev
         python -m pip install --upgrade pip
-        pip install -U pip setuptools wheel
-        pip install -r requirements.txt
+        pip install -U setuptools setuptools-scm wheel
+        pip install --no-cache-dir -r requirements.txt
         pip install flake8 flake8-print flake8-quotes
     - name: Check for showstoppers
       run: |
