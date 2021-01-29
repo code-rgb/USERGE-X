@@ -65,14 +65,14 @@ RUN apt -qq install -y --no-install-recommends \
     libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev \
     python3-dev zlib1g-dev && \
     # clean up the container "layer", after we are done
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp && \
-    mkdir /tmp
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
 
 # copy the dependencies file to the working directory
 COPY requirements.txt .
 
 # install dependencies
-RUN pip install -U pip setuptools wheel && pip install --no-cache-dir -r requirements.txt
+
+RUN pip install -U setuptools setuptools-scm wheel && pip install --no-cache-dir -r requirements.txt
 
 # copy the content of the local src directory to the working directory
 COPY . .
