@@ -154,7 +154,7 @@ def check_owner(func):
                 pass
         else:
             await c_q.answer(
-                " Only My Master can Access This !!   \n\n\n____________________\n/                    \\\n|     In case of     |\n|     Frustration    |\n\\____________________/\n         !  !\n         !  !\n         L_ !\n        / _)!\n       / /__L\n _____/ (____)\n        (____)\n _____  (____)\n      \\_(____)\n         !  !\n         !  !\n         \\__/",
+                " Only My Master can Access This !! ",
                 show_alert=True,
             )
 
