@@ -9,7 +9,13 @@ from time import time
 
 import ujson
 from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, UserIsBlocked, Forbidden
+from pyrogram.errors import (
+    BadRequest,
+    FloodWait,
+    Forbidden,
+    MessageIdInvalid,
+    UserIsBlocked,
+)
 
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html, time_formatter
@@ -113,7 +119,10 @@ if userge.has_bot:
                     )
             except (BadRequest, Forbidden) as err:
                 if "block" in str(err):
-                    await message.reply("**ERROR:** `You cannot reply to this user as he blocked your bot !`", del_in=5)
+                    await message.reply(
+                        "**ERROR:** `You cannot reply to this user as he blocked your bot !`",
+                        del_in=5,
+                    )
                 return
             except Exception:
                 await userge.bot.send_message(
