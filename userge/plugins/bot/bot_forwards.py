@@ -9,7 +9,13 @@ from time import time
 
 import ujson
 from pyrogram import filters
-from pyrogram.errors import BadRequest, FloodWait, MessageIdInvalid, UserIsBlocked
+from pyrogram.errors import (
+    BadRequest,
+    FloodWait,
+    Forbidden,
+    MessageIdInvalid,
+    UserIsBlocked,
+)
 
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html, time_formatter
@@ -111,7 +117,12 @@ if userge.has_bot:
                     await userge.bot.forward_messages(
                         chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
                     )
-            except BadRequest:
+            except (BadRequest, Forbidden) as err:
+                if "block" in str(err).lower():
+                    await message.reply(
+                        "**ERROR:** `You cannot reply to this user as he blocked your bot !`",
+                        del_in=5,
+                    )
                 return
             except Exception:
                 await userge.bot.send_message(
@@ -229,7 +240,7 @@ if userge.has_bot:
                 # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-            except BadRequest:
+            except (BadRequest, Forbidden):
                 blocked_users.append(
                     b_id
                 )  # Collect the user id and removing them later
