@@ -118,7 +118,7 @@ if userge.has_bot:
                         chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
                     )
             except (BadRequest, Forbidden) as err:
-                if "block" in str(err):
+                if "block" in str(err).lower():
                     await message.reply(
                         "**ERROR:** `You cannot reply to this user as he blocked your bot !`",
                         del_in=5,
