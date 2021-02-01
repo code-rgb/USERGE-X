@@ -91,7 +91,7 @@ async def see_info(message: Message):
     await message.edit(result, disable_web_page_preview=True)
 
 
-def count_lines(cmd_path: str, word: str=None):
+def count_lines(cmd_path: str, word: str = None):
     arr = []
     num_lines = 0
     if word:
