@@ -34,6 +34,8 @@ spamwatch>=0.3.0
 speedtest-cli>=2.1.2
 stagger>=1.0.0
 telegraph>=1.4.1
+fastapi
+uvicorn
 tgcrypto
 urbandict>=0.5
 wget>=3.2
