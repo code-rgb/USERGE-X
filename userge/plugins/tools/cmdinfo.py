@@ -69,7 +69,7 @@ async def see_info(message: Message):
     result = f"""
 <b>•>  CMD:</b>  <code>{cmd_str}</code>
 
-📂  <b>Path :</b>  <pre>{local_path}
+📂  <b>Path :</b>  <code>{local_path}</code><pre>
   - Size on Disk: {f_size}
   - No. of lines: {search_path[0]}</pre>
 """
