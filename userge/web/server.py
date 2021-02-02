@@ -1,8 +1,6 @@
 import uvicorn
 import os
 
-from web import webX
-
 Port = int(os.environ.get('PORT', 8080))
 
 
