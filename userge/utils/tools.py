@@ -151,6 +151,7 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
 def sublists(input_list: list, width: int = 3):
     return [input_list[x : x + width] for x in range(0, len(input_list), width)]
 
+
 # Solves ValueError: No closing quotation by removing ' or " in file name
 def safe_filename(path_: str):
     safename = path_.replace("'", "").replace('"', "")

@@ -21,8 +21,8 @@ from .tools import (
     parse_buttons,
     post_to_telegraph,
     runcmd,
+    safe_filename,
     sublists,
     take_screen_shot,
     time_formatter,
-    safe_filename
 )

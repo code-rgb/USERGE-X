@@ -21,8 +21,17 @@ async def mediainfo(message: Message):
         return
     process = await message.edit("`Processing ...`")
     x_media = None
-    available_media = ("audio", "document", "photo", "sticker", "animation", "video", "voice", "video_note",
-                        "new_chat_photo")
+    available_media = (
+        "audio",
+        "document",
+        "photo",
+        "sticker",
+        "animation",
+        "video",
+        "voice",
+        "video_note",
+        "new_chat_photo",
+    )
     for kind in available_media:
         x_media = getattr(reply, kind, None)
         if x_media is not None:

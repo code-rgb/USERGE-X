@@ -3,15 +3,9 @@
 # by - @DeletedUser420
 
 
-import re
-
-import sys
-from ujson import loads
-import sys
+import ujson
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
-import ujson
-
 
 from userge import Message, userge
 
@@ -45,7 +39,9 @@ async def to_yaml_(message: Message):
     """yaml-ify"""
     msg = message.reply_to_message or message
     result = yamlify(convert(ujson.loads(str(msg))))
-    await message.edit_or_send_as_file(text=result, filename="yaml.txt", caption="Too Large")
+    await message.edit_or_send_as_file(
+        text=result, filename="yaml.txt", caption="Too Large"
+    )
 
 
 def convert(obj):
@@ -63,7 +59,6 @@ def bool_emoji(choice: bool) -> str:
 
 
 class MyYAML(YAML):
-    
     def dump(self, data, stream=None, **kw):
         inefficient = False
         if stream is None:
