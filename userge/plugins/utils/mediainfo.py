@@ -32,7 +32,7 @@ async def mediainfo(message: Message):
         return
     media_type = str(type(x_media)).split("'")[1]
     file_path = safe_filename(await reply.download())
-    output_ = await runcmd(f"mediainfo {file_path)}")
+    output_ = await runcmd(f"mediainfo {file_path}")
     out = output_[0] if len(output_) != 0 else "Not Supported"
     body_text = f"""
 <h2>Json</h2>
