@@ -51,12 +51,13 @@ async def mediainfo(message: Message):
 <h2>Details</h2>
 <pre>{out}</pre>
 """
+    text_ = media_type.split('.')[-1].upper()
     link = post_to_telegraph(media_type, body_text)
     if message.client.is_bot:
         markup = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text=x_media.upper(), url=link)]]
+            [[InlineKeyboardButton(text=text_, url=link)]]
         )
         await process.edit_text("ℹ️  <b>MEDIA INFO</b>", reply_markup=markup)
     else:
-        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{x_media.upper()}]({link})</b>")
+        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{text_}]({link})</b>")
     os.remove(file_path)

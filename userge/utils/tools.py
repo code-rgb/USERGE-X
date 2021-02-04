@@ -153,7 +153,9 @@ def sublists(input_list: list, width: int = 3):
 
 
 # Solves ValueError: No closing quotation by removing ' or " in file name
-def safe_filename(path_: str):
+def safe_filename(path_):
+    if path_ is None:
+        return
     safename = path_.replace("'", "").replace('"', "")
     if safename != path_:
         os.rename(path_, safename)

@@ -11,7 +11,7 @@ from pyrogram.types import CallbackQuery
 
 from ..config import Config
 from .progress import progress
-from .tools import runcmd, take_screen_shot
+from .tools import runcmd, take_screen_shot, safe_filename
 
 _EMOJI_REGEXP = None
 
