@@ -36,6 +36,8 @@ if userge.has_bot:
         bot = await userge.bot.get_me()
         master = await userge.get_me()
         u_id = message.from_user.id
+        if u_id != master.id:
+            return message.delete()
         found = await BOT_BAN.find_one({"user_id": u_id})
         if found:
             return
@@ -46,7 +48,7 @@ if userge.has_bot:
 Hello {f_name},
 Nice To Meet You! I'm **{bot.first_name}** A Bot.
 
-        <i><b>Powered by</i> [USERGE-X](https://t.me/x_xtests)</b>
+        <i><b>Powered by</i> {master.username}</b>
 
 <b>My Master is: {master.first_name}</b>
 <i>You can contact my <b>Master</b> and checkout the <b>Repo</b> For more info.</i>

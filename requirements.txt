@@ -44,3 +44,4 @@ ruamel.yaml==0.16.12
 pymediainfo>=5.0.3
 ujson>=4.0.1
 youtube-search-python==1.4.0
+pudb
