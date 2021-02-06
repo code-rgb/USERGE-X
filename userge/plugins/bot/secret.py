@@ -6,7 +6,8 @@ import os
 import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+import asyncio
+from pyrogram.errors import MessageNotModified, BadRequest
 from userge import Config, userge
 
 if userge.has_bot:
@@ -30,7 +31,7 @@ if userge.has_bot:
         u_id = c_q.from_user.id
         # Fit name in one line
         msg = f"🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: {sender_name}"
-        adjust = len(msg.encode("utf-8")) - 30
+        adjust = len(msg.encode("utf-8")) - 70
         if adjust > 0:
             msg = msg[: adjust * -1]
         msg += f'\n{view_data.get("msg")}'
@@ -59,20 +60,29 @@ if userge.has_bot:
                     show_alert=True,
                 )
                 return
-            msg_body = f"😈 <b>{receiver_name}</b> can't view this message."
+            msg_body = f"Only 😈 <b>{receiver_name}</b> can't view this message."
             msg_b_data = f"troll_{key_}"
         # Views
-        views = view_data["views"]
-        v_count = len(views)
-        if v_count != 0 and not (u_id in Config.OWNER_ID or u_id in views):
-            view_data["views"] = views.append(u_id)
+        if u_id not in Config.OWNER_ID:
+            views = view_data["views"]
+            v_count = len(views)
+            if v_count == 0:
+                view_data["views"] = [u_id]
+            else:
+                if u_id in views:
+                    return
+                view_data["views"] = views.append(u_id)
             buttons = InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🔐  SHOW", callback_data=msg_b_data)]]
             )
             msg_body += f"\n\n👁 **Views:** {v_count + 1}"
-            await c_q.edit_message_text(
-                text=msg_body, disable_web_page_preview=True, reply_markup=buttons
-            )
+            try:
+                await c_q.edit_message_text(
+                    text=msg_body, disable_web_page_preview=True, reply_markup=buttons
+                )
+            except MessageNotModified:
+                pass
             s_data[key_] = view_data
             with open(secret_path, "w") as r:
                 ujson.dump(s_data, r, indent=4)
+            await asyncio.sleep(2)
