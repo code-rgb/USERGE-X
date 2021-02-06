@@ -562,10 +562,7 @@ if userge.has_bot:
         str_y = i_q.split(" ", 1)  # trigger and Text
         string_split = string.split()  # All lower and Split each word
         iq_user_id = inline_query.from_user.id
-        if (
-            iq_user_id in Config.OWNER_ID
-            or iq_user_id in Config.SUDO_USERS
-        ):
+        if iq_user_id in Config.OWNER_ID or iq_user_id in Config.SUDO_USERS:
 
             if string == "syntax":
                 owner = [
@@ -1123,8 +1120,19 @@ if userge.has_bot:
                     return
                 secret = os.path.join(PATH, "secret.json")
                 key_ = rand_key()
-                r_name = ("@" + receiver.username) if receiver.username else f"{receiver.first_name} {receiver.last_name or ''}"
-                secret_data = {key_: {"sender": iq_user_id, "receiver": {"id" : receiver.id, "name": r_name}, "msg": msg, "views": []}}
+                r_name = (
+                    ("@" + receiver.username)
+                    if receiver.username
+                    else f"{receiver.first_name} {receiver.last_name or ''}"
+                )
+                secret_data = {
+                    key_: {
+                        "sender": iq_user_id,
+                        "receiver": {"id": receiver.id, "name": r_name},
+                        "msg": msg,
+                        "views": [],
+                    }
+                }
                 if os.path.exists(secret):
                     with open(secret) as outfile:
                         view_data = ujson.load(outfile)
@@ -1138,21 +1146,15 @@ if userge.has_bot:
                     c_data = f"secret_{key_}"
                     i_m_content = f"📩 <b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
                     i_l_des = f"Send Secret Message to: {r_name}"
-                    title="Send A Secret Message"
+                    title = "Send A Secret Message"
                     thumb_img = "https://i.imgur.com/c5pZebC.png"
                 else:
                     c_data = f"troll_{key_}"
                     i_m_content = f"😈 <b>{r_name}</b> can't view this message. UwU"
                     i_l_des = f"Message Hidden from {r_name}"
-                    title="😈 Troll"
+                    title = "😈 Troll"
                     thumb_img = "https://i.imgur.com/0vg5B0A.png"
-                buttons = [
-                    [
-                        InlineKeyboardButton(
-                            "🔐  SHOW", callback_data=c_data
-                        )
-                    ]
-                ]
+                buttons = [[InlineKeyboardButton("🔐  SHOW", callback_data=c_data)]]
                 results.append(
                     InlineQueryResultArticle(
                         title=title,
