@@ -32,14 +32,12 @@ if userge.has_bot:
         u_id = c_q.from_user.id
         # Fit name in one line
         msg = f"🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: {sender_name}"
-        adjust = len(msg) - 50
+        adjust = len(msg) - 55
         if adjust > 0:
             msg = msg[: adjust * -1]
         msg += f'\n{view_data.get("msg")}'
         # max char. limit in callback answer
-        final_l = len(msg) - 200
-        if final_l > 0:
-            msg = msg[: final_l * -1]
+        msg = msg[:200]
         sender_id = sender.id
         receiver = view_data["receiver"]
         receiver_id = int(receiver["id"])
