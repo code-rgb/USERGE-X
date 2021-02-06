@@ -36,12 +36,12 @@ if userge.has_bot:
         msg += f'\n{view_data.get("msg")}'
         # max char. limit in callback answer
         final_l = len(msg.encode("utf-8")) - 200
-        sender_id = sender.id
-        receiver = view_data.get("receiver")
-        receiver_id = int(receiver["id"])
-        receiver_name = receiver["name"]
         if final_l > 0:
             msg = msg[: final_l * -1]
+        sender_id = sender.id
+        receiver = view_data["receiver"]
+        receiver_id = int(receiver["id"])
+        receiver_name = receiver["name"]
         if mode == "secret":
             if u_id in Config.OWNER_ID or u_id in (sender_id, receiver_id):
                 await c_q.answer(msg, show_alert=True)
@@ -62,17 +62,17 @@ if userge.has_bot:
             msg_body = f"😈 <b>{receiver_name}</b> can't view this message."
             msg_b_data = f"troll_{key_}"
         # Views
-        if u_id not in Config.OWNER_ID:
-            views = view_data["views"]
-            if u_id not in views:
-                view_data["views"] = views.append(u_id)
-                buttons = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("🔐  SHOW", callback_data=msg_b_data)]]
-                )
-                msg_body += f"\n\n👁 **Views:** {len(views) + 1}"
-                await c_q.edit_message_text(
-                    text=msg_body, disable_web_page_preview=True, reply_markup=buttons
-                )
-                s_data[key_] = view_data
-                with open(secret_path, "w") as r:
-                    ujson.dump(s_data, r, indent=4)
+        views = view_data["views"]
+        v_count = len(views)
+        if v_count != 0 and not (u_id in Config.OWNER_ID or u_id in views):
+            view_data["views"] = views.append(u_id)
+            buttons = InlineKeyboardMarkup(
+                [[InlineKeyboardButton("🔐  SHOW", callback_data=msg_b_data)]]
+            )
+            msg_body += f"\n\n👁 **Views:** {v_count + 1}"
+            await c_q.edit_message_text(
+                text=msg_body, disable_web_page_preview=True, reply_markup=buttons
+            )
+            s_data[key_] = view_data
+            with open(secret_path, "w") as r:
+                ujson.dump(s_data, r, indent=4)
