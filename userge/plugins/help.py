@@ -1013,7 +1013,7 @@ if userge.has_bot:
                     reverse_list = list(view_db)
                     reverse_list.reverse()
                     for butt_ons in reverse_list:
-                        if data_count_n > 15:
+                        if data_count_n > 30:
                             view_db.pop(butt_ons, None)
                         data_count_n += 1
                     with open(inline_db_path, "w") as data_file:
@@ -1150,7 +1150,7 @@ if userge.has_bot:
                     thumb_img = "https://i.imgur.com/c5pZebC.png"
                 else:
                     c_data = f"troll_{key_}"
-                    i_m_content = f"Only 😈 <b>{r_name}</b> can't view this message. UwU"
+                    i_m_content = f"😈 Only <b>{r_name}</b> can't view this message. UwU"
                     i_l_des = f"Message Hidden from {r_name}"
                     title = "😈 Troll"
                     thumb_img = "https://i.imgur.com/0vg5B0A.png"

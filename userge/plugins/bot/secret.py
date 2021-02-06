@@ -32,12 +32,12 @@ if userge.has_bot:
         u_id = c_q.from_user.id
         # Fit name in one line
         msg = f"🔓 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗳𝗿𝗼𝗺: {sender_name}"
-        adjust = len(msg.encode("utf-8")) - 70
+        adjust = len(msg) - 50
         if adjust > 0:
             msg = msg[: adjust * -1]
         msg += f'\n{view_data.get("msg")}'
         # max char. limit in callback answer
-        final_l = len(msg.encode("utf-8")) - 200
+        final_l = len(msg) - 200
         if final_l > 0:
             msg = msg[: final_l * -1]
         sender_id = sender.id
@@ -61,7 +61,7 @@ if userge.has_bot:
                     show_alert=True,
                 )
                 return
-            msg_body = f"Only 😈 <b>{receiver_name}</b> can't view this message."
+            msg_body = f"😈 Only <b>{receiver_name}</b> can't view this message."
             msg_b_data = f"troll_{key_}"
         # Views
         if u_id not in Config.OWNER_ID:
@@ -84,6 +84,9 @@ if userge.has_bot:
             except MessageNotModified:
                 pass
             s_data[key_] = view_data
+            #  to keep the data within limits
+            if len(list(s_data)) > 50:
+                s_data = dict(list(s_data.items())[-50:])
             with open(secret_path, "w") as r:
                 ujson.dump(s_data, r, indent=4)
             await asyncio.sleep(2)
