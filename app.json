@@ -11,8 +11,8 @@
         "Userbot",
         "Inline"
     ],
-    "repository":"https://github.com/code-rgb/USERGE-X",
-    "website":"https://github.com/code-rgb/USERGE-X",
+    "repository":"https://github.com/shahrooz1397/USERGE-X",
+    "website":"https://github.com/shahrooz1397/USERGE-X",
     "success_url":"https://t.me/userge_x",
     "env":{
         "API_ID":{

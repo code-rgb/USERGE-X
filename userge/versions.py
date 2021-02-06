@@ -7,5 +7,5 @@ __minor__ = 3
 __micro__ = 2
 
 __python_version__ = f"{version_info[0]}.{version_info[1]}.{version_info[2]}"
-__license__ = "[GNU GPL v3.0](https://github.com/code-rgb/userge-x/blob/alpha/LICENSE)"
-__copyright__ = "[USERGE-X](https://github.com/code-rgb/userge-x)"
+__license__ = "[GNU GPL v3.0](https://github.com/shahrooz1397/USERGE-X/blob/alpha/LICENSE)"
+__copyright__ = "[USERGE-X](https://github.com/shahrooz1397/USERGE-X)"

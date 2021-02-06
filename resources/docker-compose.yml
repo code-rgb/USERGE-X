@@ -3,7 +3,7 @@ version: "3.7"
 services:
   userge:
       build:
-        context: https://github.com/code-rgb/userge-x.git#alpha
+        context: https://github.com/shahrooz1397/USERGE-X.git#alpha
       depends_on:
         - mongo
       restart: on-failure
