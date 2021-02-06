@@ -65,38 +65,40 @@ async def see_info(message: Message):
         )
     local_path = f"userge/plugins{plugin_loc}/{plugin_name}.py"
     f_size = humanbytes(os.stat(local_path).st_size)
-    search_path = count_lines(local_path, word) if word else count_lines(local_path)
+    search_path = count_lines(local_path, word)
     result = f"""
 <b>•>  CMD:</b>  <code>{cmd_str}</code>
 
-📂 <b>Path : </b><code>{local_path}</code><code>
-  - Size on Disc: {f_size}
-  - No. of lines: {search_path[0]}</code>
+📂  <b>Path :</b>  <code>{local_path}</code><pre>
+  - Size on Disk: {f_size}
+  - No. of lines: {search_path[0]}</pre>
 """
     if plugin_link:
-        result += f"\n💻 <b>[View Code on Github]({plugin_link})</b>"
+        result += f"\n💻  <b>[View Code on Github]({plugin_link})</b>"
     if word:
-        result += f"\n\n🔎 <b>Matches for:</b> {word}\n"
+        result += f"\n\n🔎  <b>Matches for:</b> {word}\n"
         s_result = ""
         if len(search_path[1]) == 0:
-            s_result += "  ❌ Not Found !"
+            s_result += "  ❌  Not Found !"
         else:
             line_c = 0
             for line in search_path[1]:
                 line_c += 1
                 s_result += f"[#L{line}]({plugin_link}#L{line})  "
-                if line_c > 5:
+                if line_c >= 8:
                     break
         result += "  <b>{}</b>".format(s_result)
     await message.edit(result, disable_web_page_preview=True)
 
 
-def count_lines(cmd_path: str, word=None):
+def count_lines(cmd_path: str, word: str = None):
     arr = []
     num_lines = 0
+    if word:
+        word = word.strip().lower()
     with open(cmd_path, "r") as f:
         for line in f:
             num_lines += 1
-            if word and word in line:
+            if word and word in line.lower():
                 arr.append(num_lines)
     return num_lines, arr

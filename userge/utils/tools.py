@@ -150,3 +150,14 @@ def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarku
 # https://www.tutorialspoint.com/How-do-you-split-a-list-into-evenly-sized-chunks-in-Python
 def sublists(input_list: list, width: int = 3):
     return [input_list[x : x + width] for x in range(0, len(input_list), width)]
+
+
+# Solves ValueError: No closing quotation by removing ' or " in file name
+def safe_filename(path_):
+    if path_ is None:
+        return
+    safename = path_.replace("'", "").replace('"', "")
+    if safename != path_:
+        os.rename(path_, safename)
+        return safename
+    return path_

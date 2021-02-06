@@ -9,18 +9,7 @@ import os
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, userge
-from userge.utils import post_to_telegraph, runcmd
-
-TYPES = [
-    "audio",
-    "document",
-    "animation",
-    "video",
-    "voice",
-    "video_note",
-    "photo",
-    "sticker",
-]
+from userge.utils import post_to_telegraph, runcmd, safe_filename
 
 
 @userge.on_cmd("mediainfo", about={"header": "Get Detailed Info About Replied Media"})
@@ -32,33 +21,41 @@ async def mediainfo(message: Message):
         return
     process = await message.edit("`Processing ...`")
     x_media = None
-    for media_type in TYPES:
-        if reply[media_type]:
-            x_media = media_type
+    available_media = (
+        "audio",
+        "document",
+        "photo",
+        "sticker",
+        "animation",
+        "video",
+        "voice",
+        "video_note",
+        "new_chat_photo",
+    )
+    for kind in available_media:
+        x_media = getattr(reply, kind, None)
+        if x_media is not None:
             break
-    if not x_media:
-        return await message.err("Reply To a Vaild Media Format", del_in=3)
-    file_path = await reply.download()
+    if x_media is None:
+        await message.err("Reply To a Vaild Media Format", del_in=3)
+        return
+    media_type = str(type(x_media)).split("'")[1]
+    file_path = safe_filename(await reply.download())
     output_ = await runcmd(f"mediainfo {file_path}")
-    out = output_[0] if len(output_) != 0 else None
-    if not out:
-        out = "Not Supported"
-    body_text = f"""<br>
-<h2>JSON</h2>
-<code>{reply[x_media]}</code>
+    out = output_[0] if len(output_) != 0 else "Not Supported"
+    body_text = f"""
+<h2>Json</h2>
+<pre>{x_media}</pre>
 <br>
-<br>
-<h2>DETAILS</h2>
-<code>{out}</code>
+
+<h2>Details</h2>
+<pre>{out}</pre>
 """
-    link = post_to_telegraph(f"pyrogram.types.{x_media}", body_text)
+    text_ = media_type.split(".")[-1].upper()
+    link = post_to_telegraph(media_type, body_text)
     if message.client.is_bot:
-        markup = InlineKeyboardMarkup(
-            [[InlineKeyboardButton(text=x_media.upper(), url=link)]]
-        )
+        markup = InlineKeyboardMarkup([[InlineKeyboardButton(text=text_, url=link)]])
         await process.edit_text("ℹ️  <b>MEDIA INFO</b>", reply_markup=markup)
-
     else:
-        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{x_media.upper()}]({link})</b>")
-
+        await message.edit(f"ℹ️  <b>MEDIA INFO:  [{text_}]({link})</b>")
     os.remove(file_path)

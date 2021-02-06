@@ -2,10 +2,10 @@
 
 # by - @DeletedUser420
 
-import json
-import re
 
-import yaml
+import ujson
+from ruamel.yaml import YAML
+from ruamel.yaml.compat import StringIO
 
 from userge import Message, userge
 
@@ -17,7 +17,7 @@ from userge import Message, userge
         "usage": "reply {tr}json to any message",
     },
 )
-async def jsonify(message: Message):
+async def to_json_(message: Message):
     """Json-ify"""
     if message.reply_to_message:
         msg = str(message.reply_to_message)
@@ -35,20 +35,13 @@ async def jsonify(message: Message):
         "usage": "reply {tr}yaml to any message",
     },
 )
-async def yamlify(message: Message):
+async def to_yaml_(message: Message):
     """yaml-ify"""
-    if message.reply_to_message:
-        msg = str(message.reply_to_message)
-    else:
-        msg = str(message)
-    json_file = json.loads(msg)
-    yaml_ify = yaml.dump(convert(json_file), allow_unicode=True)
-    regex = r"(\s+|)(?:- _:|_:)[\s]"
-    result = re.sub(regex, " ", yaml_ify, re.MULTILINE)
-    if result:
-        await message.edit_or_send_as_file(
-            text=f"```{result[1:]}```", filename="yaml.txt", caption="Too Large"
-        )
+    msg = message.reply_to_message or message
+    result = yamlify(convert(ujson.loads(str(msg))))
+    await message.edit_or_send_as_file(
+        text=result, filename="yaml.txt", caption="Too Large"
+    )
 
 
 def convert(obj):
@@ -63,3 +56,20 @@ def convert(obj):
 
 def bool_emoji(choice: bool) -> str:
     return "✔" if choice else "✖"
+
+
+class MyYAML(YAML):
+    def dump(self, data, stream=None, **kw):
+        inefficient = False
+        if stream is None:
+            inefficient = True
+            stream = StringIO()
+        YAML.dump(self, data, stream, **kw)
+        if inefficient:
+            return stream.getvalue()
+
+
+def yamlify(input):
+    yaml = MyYAML()
+    yaml.indent(mapping=2, sequence=4, offset=2)
+    return f"<pre>{yaml.dump(input)}</pre>"
