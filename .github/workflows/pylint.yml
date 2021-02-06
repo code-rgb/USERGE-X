@@ -1,6 +1,6 @@
 name: PyLint
 
-on: [push, pull_request]
+on: push
 
 jobs:
   PEP8:
@@ -29,8 +29,8 @@ jobs:
       # commit changes
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'black autoformat'
-          commit_options: '--no-verify'
+          commit_message: "black autoformat"
+          commit_options: "--no-verify"
           repository: .
           commit_user_name: code-rgb
           commit_user_email: 62891774+code-rgb@users.noreply.github.com
