@@ -496,7 +496,7 @@ def download_button(vid: str, body: bool = False):
 
         if video.get("acodec") != "none":
             bitrrate = video.get("abr")
-            if bitrrate is not None:
+            if bitrrate:
                 audio[
                     int(bitrrate)
                 ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'

@@ -561,11 +561,8 @@ if userge.has_bot:
         str_x = i_q.split(" ", 2)  # trigger @username Text
         str_y = i_q.split(" ", 1)  # trigger and Text
         string_split = string.split()  # All lower and Split each word
-
-        if (
-            inline_query.from_user.id in Config.OWNER_ID
-            or inline_query.from_user.id in Config.SUDO_USERS
-        ):
+        iq_user_id = inline_query.from_user.id
+        if iq_user_id in Config.OWNER_ID or iq_user_id in Config.SUDO_USERS:
 
             if string == "syntax":
                 owner = [
@@ -1016,7 +1013,7 @@ if userge.has_bot:
                     reverse_list = list(view_db)
                     reverse_list.reverse()
                     for butt_ons in reverse_list:
-                        if data_count_n > 15:
+                        if data_count_n > 30:
                             view_db.pop(butt_ons, None)
                         data_count_n += 1
                     with open(inline_db_path, "w") as data_file:
@@ -1114,51 +1111,65 @@ if userge.has_bot:
                 )
                 return
 
-            if str_x[0].lower() == "secret" and len(str_x) == 3:
+            if str_x[0].lower() in ["secret", "troll"] and len(str_x) == 3:
                 user_name = str_x[1]
                 msg = str_x[2]
                 try:
-                    a = await userge.get_users(user_name)
-                    user_id = a.id
-                except BaseException:
+                    receiver = await userge.get_users(user_name)
+                except (BadRequest, IndexError):
                     return
-                secret = os.path.join(PATH, "secret.txt")
+                secret = os.path.join(PATH, "secret.json")
+                key_ = rand_key()
+                r_name = (
+                    ("@" + receiver.username)
+                    if receiver.username
+                    else f"{receiver.first_name} {receiver.last_name or ''}"
+                )
+                secret_data = {
+                    key_: {
+                        "sender": iq_user_id,
+                        "receiver": {"id": receiver.id, "name": r_name},
+                        "msg": msg,
+                        "views": [],
+                    }
+                }
                 if os.path.exists(secret):
                     with open(secret) as outfile:
                         view_data = ujson.load(outfile)
-                    # Uniquely identifies an inline message
-                    new_id = {str(inline_query.id): {"user_id": user_id, "msg": msg}}
-                    view_data.update(new_id)
+                    view_data.update(secret_data)
                 else:
-                    view_data = {str(inline_query.id): {"user_id": user_id, "msg": msg}}
+                    view_data = secret_data
                 # Save
                 with open(secret, "w") as r:
-                    ujson.dump(view_data, r)
-
-                buttons = [
-                    [
-                        InlineKeyboardButton(
-                            "🔐  SHOW", callback_data=f"secret_{inline_query.id}"
-                        )
-                    ]
-                ]
+                    ujson.dump(view_data, r, indent=4)
+                if str_x[0].lower() == "secret":
+                    c_data = f"secret_{key_}"
+                    i_m_content = f"📩 <b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
+                    i_l_des = f"Send Secret Message to: {r_name}"
+                    title = "Send A Secret Message"
+                    thumb_img = "https://i.imgur.com/c5pZebC.png"
+                else:
+                    c_data = f"troll_{key_}"
+                    i_m_content = f"😈 Only <b>{r_name}</b> can't view this message. UwU"
+                    i_l_des = f"Message Hidden from {r_name}"
+                    title = "😈 Troll"
+                    thumb_img = "https://i.imgur.com/0vg5B0A.png"
+                buttons = [[InlineKeyboardButton("🔐  SHOW", callback_data=c_data)]]
                 results.append(
                     InlineQueryResultArticle(
-                        title="Send A Secret Message",
-                        input_message_content=InputTextMessageContent(
-                            f"📩 <b>Secret Msg</b> for {user_name}. Only he/she can open it."
-                        ),
-                        description=f"Send Secret Message to: {user_name}",
-                        thumb_url="https://i.imgur.com/c5pZebC.png",
+                        title=title,
+                        input_message_content=InputTextMessageContent(i_m_content),
+                        description=i_l_des,
+                        thumb_url=thumb_img,
                         reply_markup=InlineKeyboardMarkup(buttons),
                     )
                 )
 
             if str_y[0].lower() == "ytdl" and len(str_y) == 2:
-                link = get_yt_video_id(str_y[1])
+                link = get_yt_video_id(str_y[1].strip())
                 found_ = True
                 if link is None:
-                    search = VideosSearch(str_y[1], limit=15)
+                    search = VideosSearch(str_y[1].strip(), limit=15)
                     resp = (search.result()).get("result")
                     if len(resp) == 0:
                         found_ = False
