@@ -64,7 +64,10 @@ if userge.has_bot:
         # Views
         if u_id not in Config.OWNER_ID:
             views = view_data["views"]
-            v_count = len(views)
+            try:
+                v_count = len(views)
+            except TypeError:
+                v_count = 0
             if v_count == 0:
                 view_data["views"] = [u_id]
             else:
