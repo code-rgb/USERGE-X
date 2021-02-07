@@ -10,7 +10,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from collections import defaultdict
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
@@ -306,7 +306,7 @@ def _tubeDl(url: str, starttime, uid=None):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": "{}+bestaudio/best".format(uid or "bestvideo"),
+        "format": f"{uid or 'bestvideo'}+bestaudio/best"
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [
@@ -339,7 +339,7 @@ def _mp3Dl(url: str, starttime, uid):
             {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
-                "preferredquality": str(uid),
+                "preferredquality": uid or "320",
             },
             {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
@@ -450,93 +450,55 @@ def yt_search_btns(
 
 @pool.run_in_thread
 def download_button(vid: str, body: bool = False):
-    x = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
+    vid_data = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
         BASE_YT_URL + vid, download=False
     )
-    ###
-    (
-        format_144,
-        format_240,
-        format_360,
-        format_720,
-        format_1080,
-        format_1440,
-        format_2160,
-    ) = [0 for _ in range(7)]
-    btn = [
+    buttons = [
         [
             InlineKeyboardButton(
-                "⭐️  BEST (Video + Audio)", callback_data=f"ytdl_download_{vid}_best_v"
+                "📹  Video (⭐️ Best)", callback_data=f"ytdl_download_{vid}_best_v"
+            ),
+            InlineKeyboardButton(
+                "🎵  Audio (⭐️ Best)", callback_data=f"ytdl_download_{vid}_best_a"
             )
         ]
     ]
-    audio, format_data = {}, {}
-    ###
-    for video in x["formats"]:
-        if video.get("ext") == "mp4":
-            f_note = video.get("format_note")
-            fr_id = int(video.get("format_id"))
-            if f_note in ("2160p", "2160p60") and fr_id > format_2160:
-                format_2160 = fr_id
-            if f_note in ("1440p", "1440p60") and fr_id > format_1440:
-                format_1440 = fr_id
-            if f_note in ("1080p", "1080p60") and fr_id > format_1080:
-                format_1080 = fr_id
-            if f_note in ("720p", "720p60") and fr_id > format_720:
-                format_720 = fr_id
-            if f_note in ("360p", "360p60") and fr_id > format_360:
-                format_360 = fr_id
-            if f_note in ("240p", "240p60") and fr_id > format_240:
-                format_240 = fr_id
-            if f_note in ("144p", "144p60") and fr_id > format_144:
-                format_144 = fr_id
-            format_data[
-                fr_id
-            ] = f'📹 {f_note} ({humanbytes(video.get("filesize")) or "N/A"})'
-
+    # ------------------------------------------------ #
+    qual_dict = defaultdict(lambda : defaultdict(int))
+    qual_list  = ['144p', '360p', '720p', '1080p', '1440p']
+    audio_dict = {}
+    # ------------------------------------------------ #
+    for video in vid_data["formats"]:
+        fr_note = video.get("format_note")
+        fr_id = int(video.get("format_id"))
+        fr_size = video.get("filesize")
+        for frmt_ in qual_list:
+            if fr_note in (frmt_ , frmt_ + "60"):
+                qual_dict[frmt_][fr_id] = fr_size
         if video.get("acodec") != "none":
-            bitrrate = video.get("abr")
-            if bitrrate is not None:
-                audio[
-                    int(bitrrate)
-                ] = f'🎵 {bitrrate}Kbps ({humanbytes(video.get("filesize")) or "N/A"})'
+            bitrrate = int(video.get("abr", 0))
+            if bitrrate != 0:
+                audio[bitrrate] = f"🎵 {bitrrate}Kbps ({humanbytes(fr_size) or 'N/A'})"
 
-    btn += sublists(
+    for frmt in qual_list:
+        video_btns = []
+        frmt_dict = qual_dict[frmt]
+        if len(frmt_dict) != 0:
+            frmt_id = sorted(list(frmt_dict))[-1]
+            frmt_size = humanbytes(frmt_dict.get(frmt_id)) or "N/A"
+            video_btns.append(InlineKeyboardButton(f"📹 {frmt} ({frmt_size})", callback_data=f"ytdl_download_{vid}_{frmt_id}_v"))
+
+    buttons += sublists(video_btns, width=2)
+    buttons += sublists(
         [
             InlineKeyboardButton(
-                format_data.get(qual_), callback_data=f"ytdl_download_{vid}_{qual_}_v"
+                audio_dict.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a"
             )
-            for qual_ in [
-                format_144,
-                format_240,
-                format_360,
-                format_720,
-                format_1080,
-                format_1440,
-                format_2160,
-            ]
-            if qual_ != 0
-        ],
-        width=2,
-    )
-    btn += sublists(
-        [
-            InlineKeyboardButton(
-                audio.get(key_), callback_data=f"ytdl_download_{vid}_{key_}_a"
-            )
-            for key_ in sorted(audio.keys())
+            for key_ in sorted(audio_dict.keys())
         ],
         width=2,
     )
     if body:
-        vid_body = f"<b>[{x.get('title')}]({x.get('webpage_url')})</b>"
-
-        # ERROR Media Caption Too Long
-        # <code>{x.get("description")}</code>
-        # ❯  <b>Duration:</b> {x.get('duration')}
-        # ❯  <b>Views:</b> {x.get('view_count')}
-        # ❯  <b>Upload date:</b> {x.get('upload_date')}
-        # ❯  <b>Uploader:</b> [{x.get('uploader')}]({x.get('uploader_url')})
-
-        return vid_body, InlineKeyboardMarkup(btn)
-    return InlineKeyboardMarkup(btn)
+        vid_body = f"<b>[{vid_data.get('title')}]({vid_data.get('webpage_url')})</b>"
+        return vid_body, InlineKeyboardMarkup(buttons)
+    return InlineKeyboardMarkup(buttons)
