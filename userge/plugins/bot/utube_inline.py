@@ -458,8 +458,8 @@ def download_button(vid: str, body: bool = False):
                     bitrrate
                 ] = f"🎵 {bitrrate}Kbps ({humanbytes(fr_size) or 'N/A'})"
 
-    video_btns = []  
-    for frmt in qual_list:      
+    video_btns = []
+    for frmt in qual_list:
         frmt_dict = qual_dict[frmt]
         if len(frmt_dict) != 0:
             frmt_id = sorted(list(frmt_dict))[-1]
