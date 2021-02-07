@@ -219,7 +219,7 @@ if userge.has_bot:
             await c_q.edit_message_media(
                 media=(
                     InputMediaVideo(
-                        file_id=f_id,
+                        media=f_id,
                         caption=f"📹  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
                 ),
@@ -228,7 +228,7 @@ if userge.has_bot:
             await c_q.edit_message_media(
                 media=(
                     InputMediaAudio(
-                        file_id=f_id,
+                        media=f_id,
                         caption=f"🎵  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
                 ),
@@ -260,7 +260,7 @@ if userge.has_bot:
             await c_q.edit_message_media(
                 media=(
                     InputMediaPhoto(
-                        file_id=back_vid.get("thumb"),
+                        media=back_vid.get("thumb"),
                         caption=back_vid.get("message"),
                     )
                 ),
@@ -281,7 +281,7 @@ if userge.has_bot:
             await c_q.edit_message_media(
                 media=(
                     InputMediaPhoto(
-                        file_id=front_vid.get("thumb"),
+                        media=front_vid.get("thumb"),
                         caption=front_vid.get("message"),
                     )
                 ),
@@ -304,7 +304,7 @@ if userge.has_bot:
             await c_q.edit_message_media(
                 media=(
                     InputMediaPhoto(
-                        file_id=search_data.get("1").get("thumb"),
+                        media=search_data.get("1").get("thumb"),
                         # caption=f"<b>[Click to view]({})</b>",
                     )
                 ),
@@ -331,8 +331,8 @@ if userge.has_bot:
             first = search_data.get(str(index))
             await c_q.edit_message_media(
                 media=(
-                    await InputMediaPhoto(
-                        file_id=first.get("thumb"),
+                    InputMediaPhoto(
+                        media=first.get("thumb"),
                         caption=first.get("message"),
                     )
                 ),
