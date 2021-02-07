@@ -9,7 +9,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
-from userge.utils import xbot
+
 
 if not os.path.exists("userge/xcache"):
     os.mkdir("userge/xcache")
@@ -84,10 +84,8 @@ if userge.has_bot:
                 data[str(opinion_id)] = view_data
                 with open(PATH, "w") as outfile:
                     ujson.dump(data, outfile)
-
         agree_data += f"  {view_data[1]['agree']}"
         disagree_data += f"  {view_data[1]['disagree']}"
-
         opinion_data = [
             [
                 InlineKeyboardButton(agree_data, callback_data=f"op_y_{opinion_id}"),
@@ -95,18 +93,15 @@ if userge.has_bot:
             ],
             [InlineKeyboardButton("📊 Stats", callback_data=f"opresult_{opinion_id}")],
         ]
+        try:
+            await c_q.edit_message_reply_markup(
+                reply_markup=InlineKeyboardMarkup(opinion_data)
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+        except BadRequest:
+            return
 
-        await xbot.edit_inline_reply_markup(
-            c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
-        )
-
-        #    await userge.bot.edit_inline_reply_markup(
-        #        c_q.inline_message_id, reply_markup=InlineKeyboardMarkup(opinion_data)
-        #    )
-        # except FloodWait as e:
-        #    await asyncio.sleep(e.x)
-        # except BadRequest:
-        #    return
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^opresult_(\d+)$"))
     async def choice_result_cb(_, c_q: CallbackQuery):
@@ -124,10 +119,7 @@ if userge.has_bot:
             msg += f"• 👤 `{total} People voted`\n\n"
             msg += f"• 👍 `{agreed}% People Agreed`\n\n"
             msg += f"• 👎 `{disagreed}% People Disagreed`\n\n"
-
-            await xbot.edit_inline_text(c_q.inline_message_id, msg)
-
-            # await userge.bot.edit_inline_text(c_q.inline_message_id, msg)
+            await c_q.edit_message_text(msg)
         else:
             a = await userge.get_me()
             if a.username:

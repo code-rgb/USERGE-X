@@ -8,7 +8,7 @@ from time import time
 import ujson
 import youtube_dl
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, InputMediaVideo, InputMediaAudio
 from wget import download
 from youtube_dl.utils import DownloadError
 from youtubesearchpython import VideosSearch
@@ -22,8 +22,6 @@ from userge.utils import (
     post_to_telegraph,
     rand_key,
     sublists,
-    xbot,
-    xmedia,
 )
 
 from ..misc.upload import upload
@@ -63,7 +61,6 @@ async def get_ytthumb(videoid: str):
         "mqdefault.jpg",
         "default.jpg",  # Worst quality
     ]
-
     thumb_link = "https://i.imgur.com/4LwPLai.png"
     for qualiy in thumb_quality:
         link = f"https://i.ytimg.com/vi/{videoid}/{qualiy}"
@@ -160,8 +157,8 @@ if userge.has_bot:
             choice_id = int(choice_id)
             if choice_id == 0:
                 await c_q.answer("🔄  Processing...", show_alert=False)
-                await xbot.edit_inline_reply_markup(
-                    c_q.inline_message_id, reply_markup=(await download_button(yt_code))
+                await c_q.edit_message_reply_markup(
+                    reply_markup=(await download_button(yt_code))
                 )
                 return
         else:
@@ -175,9 +172,8 @@ if userge.has_bot:
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_url = BASE_YT_URL + yt_code
-        await xbot.edit_inline_caption(
-            c_q.inline_message_id,
-            caption=(
+        await c_q.edit_message_text(
+            text=(
                 f"**⬇️ Downloading {media_type} ...**"
                 f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {frmt_text}"
             ),
@@ -191,10 +187,11 @@ if userge.has_bot:
         _fpath = ""
         thumb_pic = None
         for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), "*")):
-            if _path.lower().endswith((".jpg", ".png", ".webp")):
-                thumb_pic = _path
-            else:
+            if not _path.lower().endswith((".jpg", ".png", ".webp")):
                 _fpath = _path
+            if _path.lower().endswith(".jpg"):
+                thumb_pic = _path
+
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
@@ -205,27 +202,25 @@ if userge.has_bot:
             Path(_fpath),
             logvid=False,
             custom_thumb=thumb_pic,
-            inline_id=c_q.inline_message_id,
+            msg_instance=c_q.message or c_q.inline_message_id,
         )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
         )
         f_id = get_file_id(refresh_vid)
         if downtype == "v":
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaVideo(
+                    InputMediaVideo(
                         file_id=f_id,
                         caption=f"📹  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
                 ),
             )
         else:  # Audio
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaAudio(
+                    InputMediaAudio(
                         file_id=f_id,
                         caption=f"🎵  <b>[{uploaded_media.caption}]({yt_url})</b>",
                     )
@@ -255,10 +250,9 @@ if userge.has_bot:
             del_back = index == 1
             await c_q.answer()
             back_vid = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaPhoto(
+                    InputMediaPhoto(
                         file_id=back_vid.get("thumb"),
                         caption=back_vid.get("message"),
                     )
@@ -277,10 +271,9 @@ if userge.has_bot:
                 return await c_q.answer("That's All Folks !", show_alert=True)
             await c_q.answer()
             front_vid = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaPhoto(
+                    InputMediaPhoto(
                         file_id=front_vid.get("thumb"),
                         caption=front_vid.get("message"),
                     )
@@ -292,7 +285,6 @@ if userge.has_bot:
                     total=total,
                 ),
             )
-
         elif choosen_btn == "listall":
             await c_q.answer("View Changed to:  📜  List", show_alert=False)
             list_res = ""
@@ -302,10 +294,9 @@ if userge.has_bot:
                 a_title=f"Showing {total} youtube video results for the given query ...",
                 content=list_res,
             )
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaPhoto(
+                    InputMediaPhoto(
                         file_id=search_data.get("1").get("thumb"),
                         # caption=f"<b>[Click to view]({})</b>",
                     )
@@ -327,15 +318,13 @@ if userge.has_bot:
                     ]
                 ),
             )
-
         else:  # Detailed
             index = 1
             await c_q.answer("View Changed to:  📰  Detailed", show_alert=False)
             first = search_data.get(str(index))
-            await xbot.edit_inline_media(
-                c_q.inline_message_id,
+            await c_q.edit_message_media(
                 media=(
-                    await xmedia.InputMediaPhoto(
+                    await InputMediaPhoto(
                         file_id=first.get("thumb"),
                         caption=first.get("message"),
                     )

@@ -16,8 +16,7 @@ from pyrogram.errors.exceptions import FloodWait
 
 from userge import Config, Message, userge
 from userge.plugins.misc.download import tg_download, url_download
-from userge.utils import humanbytes, progress, take_screen_shot
-from userge.utils.botapi import inline_progress
+from userge.utils import humanbytes, progress, inline_progress, take_screen_shot
 from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
@@ -159,12 +158,12 @@ async def upload_path(message: Message, path: Path, del_path: bool):
 async def upload(
     message: Message,
     path: Path,
+    msg_instance,
     del_path: bool = False,
     extra: str = "",
     with_thumb: bool = True,
     logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None,
 ):
     if "wt" in message.flags:
         with_thumb = False
@@ -172,13 +171,13 @@ async def upload(
         "d" not in message.flags
     ):
         return await vid_upload(
-            message, path, del_path, extra, with_thumb, logvid, custom_thumb, inline_id
+            message, path, del_path, extra, with_thumb, logvid, custom_thumb, msg_instance
         )
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
         return await audio_upload(
-            message, path, del_path, extra, with_thumb, logvid, inline_id
+            message, path, del_path, extra, with_thumb, logvid, msg_instance
         )
     elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
         "d" not in message.flags
@@ -230,12 +229,13 @@ async def doc_upload(
 async def vid_upload(
     message: Message,
     path,
+    msg_instance,
     del_path: bool = False,
     extra: str = "",
     with_thumb: bool = True,
     logvid: bool = True,
     custom_thumb: str = None,
-    inline_id: str = None,
+    
 ):
     str_path = str(path)
     thumb = (custom_thumb or await get_thumb(str_path)) if with_thumb else None
@@ -257,15 +257,15 @@ async def vid_upload(
         if t_m and t_m.has("height"):
             height = t_m.get("height")
     try:
-        if logvid:
-            progress_args = (message, f"uploading {extra}", str_path)
+        is_message = bool(isinstance(msg_instance, Message))
+        if logvid or is_message:
+            progress_args = (msg_instance if is_message else message, f"uploading {extra}", str_path)
         else:
             progress_args = (
                 message,
-                inline_id,
+                msg_instance,
                 f"uploading {extra}",
                 str_path,
-                "caption",
             )
         msg = await message.client.send_video(
             chat_id=message.chat.id,
@@ -277,7 +277,7 @@ async def vid_upload(
             caption=path.name,
             parse_mode="html",
             disable_notification=True,
-            progress=progress if logvid else inline_progress,
+            progress=progress if (logvid or is_message) else inline_progress,
             progress_args=progress_args,
         )
     except ValueError as e_e:
@@ -298,11 +298,12 @@ async def vid_upload(
 async def audio_upload(
     message: Message,
     path,
+    msg_instance,
     del_path: bool = False,
     extra: str = "",
     with_thumb: bool = True,
     logvid: bool = True,
-    inline_id: str = None,
+    
 ):
     title = None
     artist = None
@@ -336,15 +337,15 @@ async def audio_upload(
     start_t = datetime.now()
     await message.client.send_chat_action(message.chat.id, "upload_audio")
     try:
-        if logvid:
-            progress_args = (message, f"uploading {extra}", str_path)
+        is_message = bool(isinstance(msg_instance, Message))
+        if logvid or is_message:
+            progress_args = (msg_instance if is_message else message, f"uploading {extra}", str_path)
         else:
             progress_args = (
                 message,
-                inline_id,
+                msg_instance,
                 f"uploading {extra}",
                 str_path,
-                "caption",
             )
         msg = await message.client.send_audio(
             chat_id=message.chat.id,
@@ -356,7 +357,7 @@ async def audio_upload(
             duration=duration,
             parse_mode="html",
             disable_notification=True,
-            progress=progress if logvid else inline_progress,
+            progress=progress if (logvid or is_message) else inline_progress,
             progress_args=progress_args,
         )
     except ValueError as e_e:

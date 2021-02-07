@@ -9,6 +9,7 @@
 # All rights reserved.
 
 import time
+import asyncio
 from math import floor
 from typing import Dict, Tuple
 
@@ -40,7 +41,7 @@ async def progress(
         try:
             await message.try_to_edit("`finalizing process ...`")
         except FloodWait as f_e:
-            time.sleep(f_e.x)
+            await asyncio.sleep(f_e.x)
         return
     now = time.time()
     if task_id not in _TASKS:
@@ -86,4 +87,74 @@ async def progress(
         try:
             await message.try_to_edit(progress_str)
         except FloodWait as f_e:
-            time.sleep(f_e.x)
+            await asyncio.sleep(f_e.x)
+
+
+
+async def inline_progress(
+    current: int,
+    total: int,
+    message: "userge.Message",
+    inline_id: str,
+    ud_type: str,
+    file_name: str = "",
+    delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
+) -> None:
+    """ progress function """
+    if message.process_is_canceled:
+        await message.client.stop_transmission()
+    task_id = f"{message.chat.id}.{message.message_id}"
+    if current == total:
+        if task_id not in _TASKS:
+            return
+        del _TASKS[task_id]
+        try:
+            await userge.bot.edit_inline_text(inline_id, text="`finalizing process ...`")
+        except FloodWait as f_e:
+            await asyncio.sleep(f_e.x)
+        return
+    now = time.time()
+    if task_id not in _TASKS:
+        _TASKS[task_id] = (now, now)
+    start, last = _TASKS[task_id]
+    elapsed_time = now - start
+    if (now - last) >= delay:
+        _TASKS[task_id] = (start, now)
+        percentage = current * 100 / total
+        speed = current / elapsed_time
+        time_to_completion = time_formatter(int((total - current) / speed))
+        progress_str = (
+            "__{}__ : `{}`\n"
+            + "```[{}{}]```\n"
+            + "**Progress** : `{}%`\n"
+            + "**Completed** : `{}`\n"
+            + "**Total** : `{}`\n"
+            + "**Speed** : `{}/s`\n"
+            + "**ETA** : `{}`"
+        )
+        progress_str = progress_str.format(
+            ud_type,
+            file_name,
+            "".join(
+                (
+                    userge.Config.FINISHED_PROGRESS_STR
+                    for i in range(floor(percentage / 5))
+                )
+            ),
+            "".join(
+                (
+                    userge.Config.UNFINISHED_PROGRESS_STR
+                    for i in range(20 - floor(percentage / 5))
+                )
+            ),
+            round(percentage, 2),
+            humanbytes(current),
+            humanbytes(total),
+            humanbytes(speed),
+            time_to_completion or "0 s",
+        )
+
+        try:
+            await userge.bot.edit_inline_text(inline_id, text=progress_str)
+        except FloodWait as f_e:
+            await asyncio.sleep(f_e.x)
