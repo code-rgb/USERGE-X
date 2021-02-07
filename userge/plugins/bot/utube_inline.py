@@ -4,7 +4,7 @@ from collections import defaultdict
 from pathlib import Path
 from time import time
 from urllib.parse import parse_qs, urlparse
-
+from re import search
 import ujson
 import youtube_dl
 from pyrogram import filters
@@ -29,6 +29,7 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
+YOUTUBE_REGEX = r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
 PATH = "./userge/xcache/ytsearch.json"
 
 
@@ -357,39 +358,13 @@ def _mp3Dl(url: str, starttime, uid):
         return dloader
 
 
-#  initial version: http://stackoverflow.com/a/7936523/617185 \
-#  by Mikhail Kashkin (http://stackoverflow.com/users/85739/mikhail-kashkin)
-#
-# Returns Video_ID extracting from the given url of Youtube
-# Examples of URLs:
-#     Valid:
-#     'http://youtu.be/_lOT2p_FCvA',
-#     'www.youtube.com/watch?v=_lOT2p_FCvA&feature=feedu',
-#     'http://www.youtube.com/embed/_lOT2p_FCvA',
-#     'http://www.youtube.com/v/_lOT2p_FCvA?version=3&amp;hl=en_US',
-#     'https://www.youtube.com/watch?v=rTHlyTphWP0&index=6&list=PLjeDyYvG6-40qawYNR4juzvSOg-ezZ2a6',
-#     'youtube.com/watch?v=_lOT2p_FCvA',
-#
-#     Invalid:
-#     'youtu.be/watch?v=_lOT2p_FCvA'
-
 
 def get_yt_video_id(url: str):
-    if url.startswith(("youtu", "www")):
-        url = "http://" + url
-    yt_link = None
-    try:
-        query = urlparse(url)
-        if "youtube" in query.hostname:
-            if query.path == "/watch":
-                yt_link = parse_qs(query.query)["v"][0]
-            if query.path.startswith(("/embed/", "/v/")):
-                yt_link = query.path.split("/")[2]
-        elif "youtu.be" in query.hostname:
-            yt_link = query.path[1:]
-    except TypeError:
-        pass
-    return yt_link
+    # https://regex101.com/r/boXuXb/1
+    match = search(YOUTUBE_REGEX, url)
+    if match:
+        return match.group(1)
+    return
 
 
 async def result_formatter(results: list):
