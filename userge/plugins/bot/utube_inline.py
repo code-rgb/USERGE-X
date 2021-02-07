@@ -439,7 +439,7 @@ async def result_formatter(results: list):
             video_id=v_deo_id,
             list_view=f'<img src={thumb}><b><a href={r.get("link")}>{index}. {r.get("accessibility").get("title")}</a></b><br>',
         )
-            
+
     return output
 
 
