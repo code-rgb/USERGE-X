@@ -119,12 +119,11 @@ if userge.has_bot:
                 return
         else:
             choice_id = None
-
         startTime = time()
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
         callback_continue = f"Downloading {media_type} Please Wait..."
-        callback_continue += f"\n\nFormat Code : {choice_id or 'bestaudio/best'}"
+        callback_continue += f"\n\nFormat Code : {choice_id or ('bestaudio/best' if downtype == 'v' else '320 Kbps')}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_url = BASE_YT_URL + yt_code
@@ -432,10 +431,10 @@ def download_button(vid: str, body: bool = False):
     buttons = [
         [
             InlineKeyboardButton(
-                "📹  Video (⭐️ Best)", callback_data=f"ytdl_download_{vid}_best_v"
+                "⭐️  BEST VIDEO", callback_data=f"ytdl_download_{vid}_best_v"
             ),
             InlineKeyboardButton(
-                "🎵  Audio (⭐️ Best)", callback_data=f"ytdl_download_{vid}_best_a"
+                "⭐️  BEST AUDIO", callback_data=f"ytdl_download_{vid}_best_a"
             ),
         ]
     ]
@@ -470,7 +469,6 @@ def download_button(vid: str, body: bool = False):
                     callback_data=f"ytdl_download_{vid}_{frmt_id}_v",
                 )
             )
-
     buttons += sublists(video_btns, width=2)
     buttons += sublists(
         [
