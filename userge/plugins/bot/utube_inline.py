@@ -36,9 +36,10 @@ PATH = "./userge/xcache/ytsearch.json"
 class YT_Search_X:
     def __init__(self):
         if not os.path.exists(PATH):
-            d = {}
-            ujson.dump(d, open(PATH, "w"))
-        self.db = ujson.load(open(PATH))
+            with open(PATH, "w") as f_x:
+                ujson.dump({}, f_x)
+        with open(PATH) as yt_db:
+            self.db = ujson.load(yt_db)
 
     def store_(self, rnd_id: str, results: dict):
         self.db[rnd_id] = results
@@ -457,8 +458,8 @@ def download_button(vid: str, body: bool = False):
                     bitrrate
                 ] = f"🎵 {bitrrate}Kbps ({humanbytes(fr_size) or 'N/A'})"
 
-    for frmt in qual_list:
-        video_btns = []
+video_btns = []  
+for frmt in qual_list:      
         frmt_dict = qual_dict[frmt]
         if len(frmt_dict) != 0:
             frmt_id = sorted(list(frmt_dict))[-1]
