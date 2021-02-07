@@ -1,5 +1,6 @@
 import glob
 import os
+from collections import defaultdict
 from pathlib import Path
 from time import time
 from urllib.parse import parse_qs, urlparse
@@ -10,7 +11,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from wget import download
 from youtube_dl.utils import DownloadError
-from collections import defaultdict
+
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
@@ -460,12 +461,12 @@ def download_button(vid: str, body: bool = False):
             ),
             InlineKeyboardButton(
                 "🎵  Audio (⭐️ Best)", callback_data=f"ytdl_download_{vid}_best_a"
-            )
+            ),
         ]
     ]
     # ------------------------------------------------ #
-    qual_dict = defaultdict(lambda : defaultdict(int))
-    qual_list  = ['144p', '360p', '720p', '1080p', '1440p']
+    qual_dict = defaultdict(lambda: defaultdict(int))
+    qual_list = ["144p", "360p", "720p", "1080p", "1440p"]
     audio_dict = {}
     # ------------------------------------------------ #
     for video in vid_data["formats"]:
@@ -473,7 +474,7 @@ def download_button(vid: str, body: bool = False):
         fr_id = int(video.get("format_id"))
         fr_size = video.get("filesize")
         for frmt_ in qual_list:
-            if fr_note in (frmt_ , frmt_ + "60"):
+            if fr_note in (frmt_, frmt_ + "60"):
                 qual_dict[frmt_][fr_id] = fr_size
         if video.get("acodec") != "none":
             bitrrate = int(video.get("abr", 0))
@@ -486,7 +487,12 @@ def download_button(vid: str, body: bool = False):
         if len(frmt_dict) != 0:
             frmt_id = sorted(list(frmt_dict))[-1]
             frmt_size = humanbytes(frmt_dict.get(frmt_id)) or "N/A"
-            video_btns.append(InlineKeyboardButton(f"📹 {frmt} ({frmt_size})", callback_data=f"ytdl_download_{vid}_{frmt_id}_v"))
+            video_btns.append(
+                InlineKeyboardButton(
+                    f"📹 {frmt} ({frmt_size})",
+                    callback_data=f"ytdl_download_{vid}_{frmt_id}_v",
+                )
+            )
 
     buttons += sublists(video_btns, width=2)
     buttons += sublists(
