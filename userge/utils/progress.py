@@ -13,7 +13,7 @@ import asyncio
 from math import floor
 from typing import Dict, Tuple
 
-from pyrogram.errors.exceptions import FloodWait
+from pyrogram.errors import FloodWait
 
 import userge
 

@@ -7,7 +7,7 @@ import os
 import ujson
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
+from pyrogram.errors import FloodWait, BadRequest
 from userge import Config, Message, userge
 
 

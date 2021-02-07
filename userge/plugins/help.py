@@ -275,7 +275,7 @@ if userge.has_bot:
                 "you using [BOT MODE], can't change client.", show_alert=True)
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
-        elif RawClient.DUAL_MODE::
+        elif RawClient.DUAL_MODE:
             Config.USE_USER_FOR_CLIENT_CHECKS = True
         await SAVED_SETTINGS.update_one(
             {"_id": "CURRENT_CLIENT"},
