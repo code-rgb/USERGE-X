@@ -437,8 +437,9 @@ async def result_formatter(results: list):
             message=out,
             thumb=thumb,
             video_id=v_deo_id,
-            list_view=f"<iframe src='https://www.youtube.com/embed/{v_deo_id}'></iframe>",
+            list_view=f'<img src={thumb}><b><a href={r.get("link")}>{index}. {r.get("accessibility").get("title")}</a></b><br>',
         )
+            
     return output
 
 
