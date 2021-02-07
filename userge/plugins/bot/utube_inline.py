@@ -11,7 +11,7 @@ from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from wget import download
 from youtube_dl.utils import DownloadError
-
+from youtubesearchpython import VideosSearch
 from userge import Config, Message, pool, userge
 from userge.utils import (
     check_owner,
@@ -188,18 +188,22 @@ if userge.has_bot:
         if retcode != 0:
             return await upload_msg.edit(str(retcode))
         _fpath = ""
+        thumb_pic = None
         for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), "*")):
-            if not _path.lower().endswith((".jpg", ".png", ".webp")):
+            if _path.lower().endswith((".jpg", ".png", ".webp")):
+                thumb_pic = _path
+            else:
                 _fpath = _path
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
-        thumb_ = str(download(await get_ytthumb(yt_code))) if downtype == "v" else None
+        if not thumb_pic and downtype == "v":
+            thumb_pic = str(download(await get_ytthumb(yt_code)))
         uploaded_media = await upload(
             upload_msg,
             Path(_fpath),
             logvid=False,
-            custom_thumb=thumb_,
+            custom_thumb=thumb_pic,
             inline_id=c_q.inline_message_id,
         )
         refresh_vid = await userge.bot.get_messages(
