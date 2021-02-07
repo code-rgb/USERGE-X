@@ -306,7 +306,7 @@ def _tubeDl(url: str, starttime, uid=None):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid or 'bestvideo'}+bestaudio/best"
+        "format": f"{uid or 'bestvideo'}+bestaudio/best",
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [
