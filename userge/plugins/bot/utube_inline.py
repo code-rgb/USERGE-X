@@ -22,6 +22,7 @@ from userge.utils import (
     sublists,
     xbot,
     xmedia,
+    rand_key
 )
 
 from ..misc.upload import upload
@@ -88,16 +89,61 @@ async def iytdl_inline(message: Message):
             input_url = reply.text
         elif reply.caption:
             input_url = reply.caption
-
     if not input_url:
         return await message.err("Input or reply to a valid youtube URL", del_in=5)
     await message.edit(f"🔎 Searching Youtube for: <code>'{input_url}'</code>")
-    bot = await userge.bot.get_me()
-    x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url.strip()}")
-    await message.delete()
-    await userge.send_inline_bot_result(
-        chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
-    )
+    input_url = input_url.strip()
+    if message.client.is_bot:
+        link = get_yt_video_id(input_url)
+        if link is None:
+            search = VideosSearch(input_url, limit=15)
+            resp = (search.result()).get("result")
+            if len(resp) == 0:
+                await message.err(f'No Results found for "{input_url}"', del_in=7)
+                return
+            outdata = await result_formatter(resp)
+            key_ = rand_key()
+            ytsearch_data.store_(key_, outdata)
+            buttons = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text=f"1 / {len(outdata)}",
+                            callback_data=f"ytdl_next_{key_}_1",
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="📜  List all",
+                            callback_data=f"ytdl_listall_{key_}_1",
+                        ),
+                        InlineKeyboardButton(
+                            text="⬇️  Download",
+                            callback_data=f'ytdl_download_{outdata[1]["video_id"]}_0',
+                        ),
+                    ],
+                ]
+            )
+            caption = outdata[1]["message"]
+            photo = outdata[1]["thumb"]
+        else:
+            caption, buttons = await download_button(link, body=True)
+            photo = await get_ytthumb(link)
+
+        await userge.bot.send_photo(
+            message.chat.id,
+            photo=photo,
+            caption=caption,
+            reply_markup=buttons,
+        )
+        await message.delete()
+    else:
+        bot = await userge.bot.get_me()
+        x = await userge.get_inline_bot_results(bot.username, f"ytdl {input_url}")
+        await message.delete()
+        await userge.send_inline_bot_result(
+            chat_id=message.chat.id, query_id=x.query_id, result_id=x.results[0].id
+        )
 
 
 if userge.has_bot:
@@ -123,7 +169,8 @@ if userge.has_bot:
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
         callback_continue = f"Downloading {media_type} Please Wait..."
-        callback_continue += f"\n\nFormat Code : {choice_id or ('bestaudio/best' if downtype == 'v' else '320 Kbps')}"
+        frmt_text = choice_id or ('bestaudio/best' if downtype == 'v' else '320 Kbps')
+        callback_continue += f"\n\nFormat Code : {frmt_text}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_url = BASE_YT_URL + yt_code
@@ -131,7 +178,7 @@ if userge.has_bot:
             c_q.inline_message_id,
             caption=(
                 f"**⬇️ Downloading {media_type} ...**"
-                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {choice_id or 'bestaudio/best'}"
+                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {frmt_text}"
             ),
         )
         if downtype == "v":
@@ -308,7 +355,7 @@ def _tubeDl(url: str, starttime, uid=None):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid or 'bestvideo'}+bestaudio/best",
+        "format": f"{uid or 'bestvideo[ext=mp4]'}+bestaudio[ext=m4a]/best[ext=mp4]",
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [
@@ -384,11 +431,12 @@ async def result_formatter(results: list):
         if upld:
             out += "<b>❯  Uploader:</b> "
             out += f'<a href={upld.get("link")}>{upld.get("name")}</a>'
+        v_deo_id = r.get("id")
         output[index] = dict(
             message=out,
             thumb=thumb,
-            video_id=r.get("id"),
-            list_view=f'<img src={thumb}><b><a href={r.get("link")}>{index}. {r.get("accessibility").get("title")}</a></b><br><br>',
+            video_id=v_deo_id,
+            list_view=f"<iframe src='https://www.youtube.com/embed/{v_deo_id}'></iframe>",
         )
     return output
 
