@@ -2,9 +2,9 @@ import glob
 import os
 from collections import defaultdict
 from pathlib import Path
-from time import time
-from urllib.parse import parse_qs, urlparse
 from re import search
+from time import time
+
 import ujson
 import youtube_dl
 from pyrogram import filters
@@ -356,7 +356,6 @@ def _mp3Dl(url: str, starttime, uid):
         return y_e
     else:
         return dloader
-
 
 
 def get_yt_video_id(url: str):
