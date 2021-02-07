@@ -8,8 +8,8 @@
 #
 # All rights reserved.
 
-import time
 import asyncio
+import time
 from math import floor
 from typing import Dict, Tuple
 
@@ -90,7 +90,6 @@ async def progress(
             await asyncio.sleep(f_e.x)
 
 
-
 async def inline_progress(
     current: int,
     total: int,
@@ -109,7 +108,9 @@ async def inline_progress(
             return
         del _TASKS[task_id]
         try:
-            await userge.bot.edit_inline_text(inline_id, text="`finalizing process ...`")
+            await userge.bot.edit_inline_text(
+                inline_id, text="`finalizing process ...`"
+            )
         except FloodWait as f_e:
             await asyncio.sleep(f_e.x)
         return

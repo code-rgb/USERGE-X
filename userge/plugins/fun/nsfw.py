@@ -1,6 +1,12 @@
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from pyrogram.errors import MessageNotModified
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InputMediaPhoto,
+)
+
 from userge import Config, userge
 from userge.utils import get_file_id
 
@@ -49,7 +55,6 @@ if userge.has_bot:
         except MessageNotModified:
             pass
 
-
     @userge.bot.on_callback_query(filters.regex(pattern=r"^age_verification_false"))
     async def age_verification_false(_, c_q: CallbackQuery):
         u_id = c_q.from_user.id
@@ -77,7 +82,6 @@ if userge.has_bot:
             )
         except MessageNotModified:
             return
-
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^chg_of_decision_"))
     async def chg_of_decision_(_, c_q: CallbackQuery):
@@ -108,4 +112,3 @@ if userge.has_bot:
             )
         except MessageNotModified:
             pass
-

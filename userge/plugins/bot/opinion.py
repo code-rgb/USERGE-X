@@ -6,10 +6,10 @@ import os
 
 import ujson
 from pyrogram import filters
+from pyrogram.errors import BadRequest, FloodWait
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from pyrogram.errors import FloodWait, BadRequest
-from userge import Config, Message, userge
 
+from userge import Config, Message, userge
 
 if not os.path.exists("userge/xcache"):
     os.mkdir("userge/xcache")
@@ -101,7 +101,6 @@ if userge.has_bot:
             await asyncio.sleep(e.x)
         except BadRequest:
             return
-
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^opresult_(\d+)$"))
     async def choice_result_cb(_, c_q: CallbackQuery):

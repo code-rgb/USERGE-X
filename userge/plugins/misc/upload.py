@@ -16,7 +16,7 @@ from pyrogram.errors.exceptions import FloodWait
 
 from userge import Config, Message, userge
 from userge.plugins.misc.download import tg_download, url_download
-from userge.utils import humanbytes, progress, inline_progress, take_screen_shot
+from userge.utils import humanbytes, inline_progress, progress, take_screen_shot
 from userge.utils.exceptions import ProcessCanceled
 
 LOGGER = userge.getLogger(__name__)
@@ -171,7 +171,14 @@ async def upload(
         "d" not in message.flags
     ):
         return await vid_upload(
-            message, path, del_path, extra, with_thumb, logvid, custom_thumb, msg_instance
+            message,
+            path,
+            del_path,
+            extra,
+            with_thumb,
+            logvid,
+            custom_thumb,
+            msg_instance,
         )
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
@@ -235,7 +242,6 @@ async def vid_upload(
     with_thumb: bool = True,
     logvid: bool = True,
     custom_thumb: str = None,
-    
 ):
     str_path = str(path)
     thumb = (custom_thumb or await get_thumb(str_path)) if with_thumb else None
@@ -259,7 +265,11 @@ async def vid_upload(
     try:
         is_message = bool(isinstance(msg_instance, Message))
         if logvid or is_message:
-            progress_args = (msg_instance if is_message else message, f"uploading {extra}", str_path)
+            progress_args = (
+                msg_instance if is_message else message,
+                f"uploading {extra}",
+                str_path,
+            )
         else:
             progress_args = (
                 message,
@@ -303,7 +313,6 @@ async def audio_upload(
     extra: str = "",
     with_thumb: bool = True,
     logvid: bool = True,
-    
 ):
     title = None
     artist = None
@@ -339,7 +348,11 @@ async def audio_upload(
     try:
         is_message = bool(isinstance(msg_instance, Message))
         if logvid or is_message:
-            progress_args = (msg_instance if is_message else message, f"uploading {extra}", str_path)
+            progress_args = (
+                msg_instance if is_message else message,
+                f"uploading {extra}",
+                str_path,
+            )
         else:
             progress_args = (
                 message,

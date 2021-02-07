@@ -3,7 +3,6 @@
 import asyncio
 import os
 import time
-from userge.utils.functions import get_emoji_regex
 
 from pyrogram.errors import (
     FloodWait,
@@ -15,6 +14,7 @@ from pyrogram.errors import (
 from pyrogram.types import ChatPermissions
 
 from userge import Message, userge
+from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
 

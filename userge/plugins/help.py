@@ -24,10 +24,11 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
+from userge.core.ext import RawClient
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
-from userge.core.ext import RawClient
+
 from .bot.alive import Bot_Alive
 from .bot.gogo import Anime
 from .bot.utube_inline import (
@@ -272,7 +273,8 @@ if userge.has_bot:
     async def callback_chgclnt(callback_query: CallbackQuery):
         if not RawClient.DUAL_MODE:
             return await callback_query.answer(
-                "you using [BOT MODE], can't change client.", show_alert=True)
+                "you using [BOT MODE], can't change client.", show_alert=True
+            )
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
         elif RawClient.DUAL_MODE:
@@ -354,10 +356,7 @@ if userge.has_bot:
                 )
             )
             if len(cur_pos.split("|")) > 2:
-                tmp_btns.append(
-                    InlineKeyboardButton("🖥 Main Menu", callback_data="mm")
-                    
-                )
+                tmp_btns.append(InlineKeyboardButton("🖥 Main Menu", callback_data="mm"))
                 tmp_btns.append(
                     InlineKeyboardButton(
                         "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()
@@ -368,8 +367,7 @@ if userge.has_bot:
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
-                    callback_data="chgclnt"
-                   
+                    callback_data="chgclnt",
                 )
             )
         return [tmp_btns]

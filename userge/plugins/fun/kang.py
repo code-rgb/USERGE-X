@@ -12,9 +12,9 @@ import io
 import os
 import random
 
-from pyrogram import emoji
 from bs4 import BeautifulSoup as bs
 from PIL import Image
+from pyrogram import emoji
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
@@ -85,7 +85,8 @@ async def kang_(message: Message):
                 emoji_ = args[0]
 
         if emoji_ and emoji_ not in (
-                getattr(emoji, _) for _ in dir(emoji) if not _.startswith("_")):
+            getattr(emoji, _) for _ in dir(emoji) if not _.startswith("_")
+        ):
             emoji_ = None
         if not emoji_:
             emoji_ = "🤔"

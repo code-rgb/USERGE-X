@@ -9,9 +9,9 @@
 import json
 
 import aiohttp
-from userge.utils.functions import get_emoji_regex
 
 from userge import Config, Message, userge
+from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
 LOG = userge.getLogger(__name__)
