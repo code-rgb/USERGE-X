@@ -30,7 +30,7 @@ async def tele_text(message: Message):
     await message.edit("Pasting...")
     text = replied.text or replied.caption
     if "-mono" in message.flags:
-        text = "<code>{}</code>".format(text)
+        text = f"<code>{text}</code>"
     else:
         text = text.html
     if "-m" in message.flags:
