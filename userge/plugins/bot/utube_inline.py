@@ -194,22 +194,18 @@ if userge.has_bot:
         _fpath = ""
         thumb_pic = None
         for _path in glob.glob(os.path.join(Config.DOWN_PATH, str(startTime), "*")):
-            if not _path.lower().endswith((".jpg", ".png", ".webp")):
-                _fpath = _path
-            if _path.lower().endswith(".jpg"):
+            if _path.lower().endswith((".jpg", ".png", ".webp")):
                 thumb_pic = _path
-
+            else:
+                _fpath = _path
         if not _fpath:
             await upload_msg.err("nothing found !")
             return
         if not thumb_pic and downtype == "v":
             thumb_pic = str(download(await get_ytthumb(yt_code)))
+
         uploaded_media = await upload(
-            upload_msg,
-            Path(_fpath),
-            logvid=False,
-            custom_thumb=thumb_pic,
-            msg_instance=c_q.message or c_q.inline_message_id,
+            upload_msg, path=Path(_fpath),callback=c_q,custom_thumb=thumb_pic,log=False
         )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
