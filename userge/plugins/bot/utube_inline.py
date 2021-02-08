@@ -205,7 +205,11 @@ if userge.has_bot:
             thumb_pic = str(download(await get_ytthumb(yt_code)))
 
         uploaded_media = await upload(
-            upload_msg, path=Path(_fpath),callback=c_q,custom_thumb=thumb_pic,log=False
+            upload_msg,
+            path=Path(_fpath),
+            callback=c_q,
+            custom_thumb=thumb_pic,
+            log=False,
         )
         refresh_vid = await userge.bot.get_messages(
             Config.LOG_CHANNEL_ID, uploaded_media.message_id
