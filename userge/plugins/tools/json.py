@@ -69,7 +69,7 @@ class MyYAML(YAML):
             return stream.getvalue()
 
 
-def yamlify(input):
+def yamlify(input_):
     yaml = MyYAML()
     yaml.indent(mapping=2, sequence=4, offset=2)
-    return f"<pre>{yaml.dump(input)}</pre>"
+    return f"<pre>{yaml.dump(input_)}</pre>"

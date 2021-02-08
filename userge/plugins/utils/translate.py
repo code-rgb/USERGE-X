@@ -9,10 +9,10 @@
 import time
 from json import dumps
 
-from emoji import get_emoji_regexp
 from googletrans import LANGUAGES, Translator
 
 from userge import Config, Message, pool, userge
+from userge.utils.functions import get_emoji_regex
 
 
 @userge.on_cmd(
@@ -51,7 +51,7 @@ async def translateme(message: Message):
         src, dest = "auto", list(flags)[0]
     else:
         src, dest = "auto", Config.LANG
-    text = get_emoji_regexp().sub("", text)
+    text = get_emoji_regex().sub("", text)
     await message.edit("`Translating ...`")
     try:
         reply_text = await _translate_this(text, dest, src)
