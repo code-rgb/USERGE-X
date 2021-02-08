@@ -366,10 +366,9 @@ async def audio_upload(
             await finalize(message, msg, start_t)
         if os.path.exists(str_path) and del_path:
             os.remove(str_path)
-    finally:
-        if os.path.lexists("album_cover.jpg"):
-            os.remove("album_cover.jpg")
-        return msg
+    if os.path.lexists("album_cover.jpg"):
+        os.remove("album_cover.jpg")
+    return msg
 
 
 async def photo_upload(message: Message, path, del_path: bool = False, extra: str = ""):

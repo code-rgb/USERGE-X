@@ -106,8 +106,8 @@ async def iytdl_inline(message: Message):
     if message.client.is_bot:
         link = get_yt_video_id(input_url)
         if link is None:
-            search = VideosSearch(input_url, limit=15)
-            resp = (search.result()).get("result")
+            search_ = VideosSearch(input_url, limit=15)
+            resp = (search_.result()).get("result")
             if len(resp) == 0:
                 await message.err(f'No Results found for "{input_url}"', del_in=7)
                 return
