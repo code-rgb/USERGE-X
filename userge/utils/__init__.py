@@ -11,8 +11,8 @@ from .functions import (
     rand_key,
     thumb_from_audio,
 )
-from .progress import inline_progress, progress  # noqa
-from .sys_tools import SafeDict, get_import_path, secure_text, terminate  # noqa
+from .progress import progress
+from .sys_tools import SafeDict, get_import_path, secure_text, terminate
 from .tools import (
     get_file_id,
     humanbytes,
