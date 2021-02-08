@@ -1,3 +1,8 @@
+""" Download Youtube Video/ Audio in a User friendly interface """
+# -------------------------- #
+# Modded ytdl by code-rgb
+# -------------------------- #
+
 import glob
 import os
 from collections import defaultdict
@@ -174,7 +179,7 @@ if userge.has_bot:
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
         callback_continue = f"Downloading {media_type} Please Wait..."
-        frmt_text = choice_id or ("bestaudio/best" if downtype == "v" else "320 Kbps")
+        frmt_text = choice_id or ("bestaudio/best [mp4]" if downtype == "v" else "320 Kbps")
         callback_continue += f"\n\nFormat Code : {frmt_text}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
@@ -203,7 +208,6 @@ if userge.has_bot:
             return
         if not thumb_pic and downtype == "v":
             thumb_pic = str(download(await get_ytthumb(yt_code)))
-
         uploaded_media = await upload(
             upload_msg,
             path=Path(_fpath),
