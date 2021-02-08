@@ -298,6 +298,7 @@ async def check_thumb(thumb_path: str):
         new_thumb_path = f"{f_path[0]}.jpg"
         Image.open(thumb_path).convert("RGB").save(new_thumb_path, "JPEG")
         os.remove(thumb_path)
+        thumb_path = new_thumb_path
     return thumb_path
 
 
