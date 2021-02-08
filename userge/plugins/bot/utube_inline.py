@@ -179,7 +179,9 @@ if userge.has_bot:
         downtype = c_q.matches[0].group(3)
         media_type = "Video" if downtype == "v" else "Audio"
         callback_continue = f"Downloading {media_type} Please Wait..."
-        frmt_text = choice_id or ("bestaudio/best [mp4]" if downtype == "v" else "320 Kbps")
+        frmt_text = choice_id or (
+            "bestaudio/best [mp4]" if downtype == "v" else "320 Kbps"
+        )
         callback_continue += f"\n\nFormat Code : {frmt_text}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
