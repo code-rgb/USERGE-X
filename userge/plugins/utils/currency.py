@@ -9,9 +9,9 @@
 import json
 
 import aiohttp
-from emoji import get_emoji_regexp
 
 from userge import Config, Message, userge
+from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
 LOG = userge.getLogger(__name__)
@@ -40,7 +40,7 @@ async def cur_conv(message: Message):
         )
         return
 
-    filterinput = get_emoji_regexp().sub("", message.input_str)
+    filterinput = get_emoji_regex().sub("", message.input_str)
     curcon = filterinput.upper().split()
 
     if len(curcon) == 3:

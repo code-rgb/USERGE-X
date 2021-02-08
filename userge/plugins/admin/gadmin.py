@@ -4,7 +4,6 @@ import asyncio
 import os
 import time
 
-from emoji import get_emoji_regexp
 from pyrogram.errors import (
     FloodWait,
     PeerIdInvalid,
@@ -15,6 +14,7 @@ from pyrogram.errors import (
 from pyrogram.types import ChatPermissions
 
 from userge import Message, userge
+from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -47,7 +47,7 @@ async def promote_usr(message: Message):
         )
         return
     if custom_rank:
-        custom_rank = get_emoji_regexp().sub("", custom_rank)
+        custom_rank = get_emoji_regex().sub("", custom_rank)
         if len(custom_rank) > 15:
             custom_rank = custom_rank[:15]
     try:

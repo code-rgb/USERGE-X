@@ -1,18 +1,10 @@
-# pylint: disable=missing-module-docstring
-#
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
-#
-# This file is part of < https://github.com/UsergeTeam/Userge > project,
-# and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
-#
-# All rights reserved.
-
+import asyncio
 import time
 from math import floor
 from typing import Dict, Tuple
 
-from pyrogram.errors.exceptions import FloodWait
+from pyrogram.errors import FloodWait
+from pyrogram.types import CallbackQuery
 
 import userge
 
@@ -27,6 +19,7 @@ async def progress(
     message: "userge.Message",
     ud_type: str,
     file_name: str = "",
+    c_q: CallbackQuery = None,
     delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
 ) -> None:
     """ progress function """
@@ -38,9 +31,12 @@ async def progress(
             return
         del _TASKS[task_id]
         try:
-            await message.try_to_edit("`finalizing process ...`")
+            if c_q:
+                await c_q.edit_message_text("`finalizing process ...`")
+            else:
+                await message.try_to_edit("`finalizing process ...`")
         except FloodWait as f_e:
-            time.sleep(f_e.x)
+            await asyncio.sleep(f_e.x)
         return
     now = time.time()
     if task_id not in _TASKS:
@@ -80,10 +76,12 @@ async def progress(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
-            time_to_completion or "0 s",
+            time_to_completion if time_to_completion else "0 s",
         )
-
         try:
-            await message.try_to_edit(progress_str)
+            if c_q:
+                await c_q.edit_message_text(progress_str)
+            else:
+                await message.try_to_edit(progress_str)
         except FloodWait as f_e:
-            time.sleep(f_e.x)
+            await asyncio.sleep(f_e.x)
