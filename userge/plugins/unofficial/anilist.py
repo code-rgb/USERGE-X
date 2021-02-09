@@ -13,10 +13,10 @@ from datetime import datetime
 import flag as cflag
 import humanize
 import tracemoepy
+from aiohttp import ClientSession
 from userge import Message, get_collection, userge
 from userge.utils import media_to_image
 from userge.utils import post_to_telegraph as post_to_tp
-from userge.utils import xbot
 
 # Logging Errors
 CLOG = userge.getCLogger(__name__)
@@ -185,10 +185,11 @@ async def _init():
 async def return_json_senpai(query, vars_):
     """ Makes a Post to https://graphql.anilist.co. """
     url_ = "https://graphql.anilist.co"
-    async with xbot.session.post(
-        url_, json={"query": query, "variables": vars_}
-    ) as post_con:
-        json_data = await post_con.json()
+    async with ClientSession() as session:
+        async with session.post(
+            url_, json={"query": query, "variables": vars_}
+        ) as post_con:
+            json_data = await post_con.json()
     return json_data
 
 
@@ -528,18 +529,19 @@ async def trace_bek(message: Message):
     """ Reverse Search Anime Clips/Photos """
     dls_loc = await media_to_image(message)
     if dls_loc:
-        tracemoe = tracemoepy.AsyncTrace(session=xbot.session)
-        search = await tracemoe.search(dls_loc, upload_file=True)
-        os.remove(dls_loc)
-        result = search["docs"][0]
-        caption = (
-            f"**Title**: **{result['title_english']}**\n"
-            f"   🇯🇵 (`{result['title_romaji']} - {result['title_native']}`)\n"
-            f"\n**Anilist ID:** `{result['anilist_id']}`"
-            f"\n**Similarity**: `{result['similarity']*100}`"
-            f"\n**Episode**: `{result['episode']}`"
-        )
-        preview = await tracemoe.natural_preview(search)
+        async with ClientSession() as session:
+            tracemoe = tracemoepy.AsyncTrace(session=session)
+            search = await tracemoe.search(dls_loc, upload_file=True)
+            os.remove(dls_loc)
+            result = search["docs"][0]
+            caption = (
+                f"**Title**: **{result['title_english']}**\n"
+                f"   🇯🇵 (`{result['title_romaji']} - {result['title_native']}`)\n"
+                f"\n**Anilist ID:** `{result['anilist_id']}`"
+                f"\n**Similarity**: `{result['similarity']*100}`"
+                f"\n**Episode**: `{result['episode']}`"
+            )
+            preview = await tracemoe.natural_preview(search)
         with open("preview.mp4", "wb") as f:
             f.write(preview)
         await message.reply_video("preview.mp4", caption=caption)
