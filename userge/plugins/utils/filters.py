@@ -168,7 +168,7 @@ async def delete_filters(message: Message) -> None:
             "{chat}": "chat name",
             "{count}": "chat members count",
             "{mention}": "mention user",
-            "\%\%\%": 'This separator can be used to add "random" replies to the bot.'
+            "\%\%\%": 'This separator can be used to add "random" replies to the bot.',
         },
         "usage": "{tr}addfilter [filter name | filter type] | [content | reply to msg]",
         "types": list(_SUPPORTED_TYPES),
@@ -241,7 +241,7 @@ async def chat_filter(message: Message) -> None:
                     chat_id=message.chat.id,
                     user_id=message.from_user.id,
                     reply_to_message_id=message.message_id,
-                    allow_random=True
+                    allow_random=True,
                 )
     except RuntimeError:
         pass
