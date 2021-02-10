@@ -197,8 +197,9 @@ class ChannelLogger:
             caption = caption.format_map(SafeDict(**u_dict))
         file_id = get_file_id(message)
         caption, buttons = parse_buttons(caption)
-        if allow_random and "%%%%" in caption:
-            caption = rand_array(caption.split("%%%%"))
+        split_char = r"%%%"
+        if allow_random and split_char in caption:
+            caption = rand_array(caption.split(split_char))
         try:
             if message.media and file_id:
                 msg = await client.send_cached_media(
