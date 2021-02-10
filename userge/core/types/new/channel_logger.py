@@ -154,7 +154,7 @@ class ChannelLogger:
                              user_id: int,
                              reply_to_message_id: int,
                              del_in: int = 0,
-                             allow_random:bool=False) -> None:
+                             allow_random:bool=True) -> None:
         """\nforward stored message from log channel.
 
         Parameters:

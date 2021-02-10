@@ -37,6 +37,7 @@ async def _init() -> None:
             "{chat}": "chat name",
             "{count}": "chat members count",
             "{mention}": "mention user",
+            r"%%%": 'This separator can be used to add "random" welcome',
         },
         "types": [
             "audio",

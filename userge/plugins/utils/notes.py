@@ -263,6 +263,7 @@ async def get_note(message: Message) -> None:
             "{chat}": "chat name",
             "{count}": "chat members count",
             "{mention}": "mention user",
+            r"%%%": 'This separator can be used to add "random" notes',
         },
         "usage": "{tr}addnote [note name] [content | reply to msg]",
         "buttons": "<code>[name][buttonurl:link]</code> - <b>add a url button</b>\n"

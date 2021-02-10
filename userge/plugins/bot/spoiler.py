@@ -119,6 +119,7 @@ if userge.has_bot:
                         user_id=u_user.id,
                         chat_id=message.chat.id,
                         reply_to_message_id=message.message_id,
+                        allow_random=False,
                     )
                 else:
                     await message.reply("Sorry 🥺 , The Spoiler has now been expired !")
