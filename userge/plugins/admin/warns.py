@@ -435,6 +435,7 @@ if userge.has_bot:
                 user_id=u_user,
                 chat_id=u_user,
                 reply_to_message_id=message.message_id,
+                allow_random=False,
             )
         except UserIsBlocked:
             pass
