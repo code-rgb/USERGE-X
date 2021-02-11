@@ -421,11 +421,11 @@ def get_choice_by_id(choice_id, media_type: str):
     if choice_id == "mkv":
         # default format selection
         choice_str = "bestvideo+bestaudio/best"
-        disp_str = "best video+audio"
+        disp_str = "best(video+audio)"
     elif choice_id == "mp4":
         # Download best Webm / Mp4 format available or any other best if no mp4 available
         choice_str = "bestvideo[ext=webm]+251/bestvideo[ext=mp4]+(258/256/140/bestaudio[ext=m4a])/bestvideo[ext=webm]+(250/249)/best"
-        disp_str = "best video+audio [WebM / Mp4]"
+        disp_str = "best(video+audio)[webm/mp4]"
     elif choice_id == "mp3":
         choice_str = "320"
         disp_str = "320 Kbps"
@@ -506,10 +506,11 @@ def download_button(vid: str, body: bool = False):
     buttons = [
         [
             InlineKeyboardButton(
-                "⭐️  BEST VIDEO (.mkv)", callback_data=f"ytdl_download_{vid}_mkv_v"
+                 
+                "⭐️ BEST | 📹 mkv", callback_data=f"ytdl_download_{vid}_mkv_v"
             ),
             InlineKeyboardButton(
-                "⭐️  BEST VIDEO (.webm / .mp4)",
+                "⭐️ BEST | 📹 webm/mp4",
                 callback_data=f"ytdl_download_{vid}_mp4_v",
             ),
         ]
@@ -549,7 +550,7 @@ def download_button(vid: str, body: bool = False):
     buttons += [
         [
             InlineKeyboardButton(
-                "⭐️  BEST AUDIO (.mp3)", callback_data=f"ytdl_download_{vid}_mp3_a"
+                "⭐️ BEST | 🎵 mp3", callback_data=f"ytdl_download_{vid}_mp3_a"
             )
         ]
     ]
