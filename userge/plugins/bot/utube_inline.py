@@ -523,7 +523,7 @@ def download_button(vid: str, body: bool = False):
     audio_dict = {}
     # ------------------------------------------------ #
     for video in vid_data["formats"]:
-        
+
         fr_note = video.get("format_note")
         fr_id = int(video.get("format_id"))
         fr_size = video.get("filesize")
