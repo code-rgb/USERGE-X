@@ -506,7 +506,6 @@ def download_button(vid: str, body: bool = False):
     buttons = [
         [
             InlineKeyboardButton(
-                 
                 "⭐️ BEST | 📹 mkv", callback_data=f"ytdl_download_{vid}_mkv_v"
             ),
             InlineKeyboardButton(
