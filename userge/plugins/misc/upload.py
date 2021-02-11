@@ -171,13 +171,13 @@ async def upload(
         "d" not in message.flags
     ):
         return await vid_upload(
-            message, path, callback, del_path, extra, with_thumb, custom_thumb, log
+            message=message, path=path, callback=callback, del_path=del_path, extra=extra, with_thumb=with_thumb, custom_thumb=custom_thumb, log=log
         )
     elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
         "d" not in message.flags
     ):
         return await audio_upload(
-            message, path, callback, del_path, extra, with_thumb, log
+            message=message, path=path, callback=callback, del_path=del_path, extra=extra, with_thumb=with_thumb, log=log
         )
     elif path.name.lower().endswith((".jpg", ".jpeg", ".png", ".bmp")) and (
         "d" not in message.flags
