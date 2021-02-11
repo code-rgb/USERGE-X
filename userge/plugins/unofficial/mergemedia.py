@@ -29,7 +29,7 @@ async def mergesave_(message: Message):
     r = message.reply_to_message
     if not r:
         await message.err("Reply To Media, dear.")
-    if not (r.audio or r.document or r.video or r.video_note or r.voice):
+    if not (r.animation or r.audio or r.document or r.video or r.video_note or r.voice):
         await message.err("Not Supported Extension")
     else:
         replied_media = await message.client.download_media(
