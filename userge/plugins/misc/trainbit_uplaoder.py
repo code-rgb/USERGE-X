@@ -18,10 +18,10 @@ def login_trainbit(driver):
     if not username:
         return False
     form = driver.find_element_by_id('login-form')
+    await asyncio.sleep(1)
     form.find_element_by_id('ctl00_ContentPlaceHolder1_t_email').send_keys(username)
     form.find_element_by_id('ctl00_ContentPlaceHolder1_t_password').send_keys(password)
     btn = form.find_element_by_id('ctl00_ContentPlaceHolder1_b_login').click()
-    return True
 
 
 @userge.on_cmd(
@@ -66,14 +66,12 @@ async def up_to_trainbit(message: Message):
             chrome_options.add_experimental_option("prefs", prefs)
             driver = webdriver.Chrome(chrome_options=chrome_options)
             driver.get(login_url)
-            login = login_trainbit(driver)
-            if not login:
-                return message.err('Credentials not found!')
-            asyncio.sleep(2)
+            login_trainbit(driver)
+            await asyncio.sleep(1)
             driver.find_element_by_id('f_upload').send_keys(path_)
             get_link = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="manual-upload-queue"]/li/div/p[2]/a')))
             get_link.click()
-            asyncio.sleep(1)
+            await asyncio.sleep(1)
             await message.edit("`Uploaded Successfully`")
             text_area = get_link.find_element_by_xpath('//*[@id="t_sharelinks"]')
             dl_link = text_area.get_attribute('value')
@@ -81,4 +79,4 @@ async def up_to_trainbit(message: Message):
             os.remove(path_)
             return driver.quit()
         except Exception as e:
-            message.err(e)
+            await message.err(e)
