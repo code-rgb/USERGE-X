@@ -7,7 +7,7 @@ import glob
 import os
 from collections import defaultdict
 from pathlib import Path
-from re import compile
+import re
 from time import time
 
 import ujson
@@ -22,7 +22,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from wget import download
-from youtube_dl.utils import DownloadError
+from youtube_dl.utils import DownloadError, ExtractorError
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, pool, userge
@@ -41,7 +41,7 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
-YOUTUBE_REGEX = compile(
+YOUTUBE_REGEX = re.compile(
     r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
 )
 PATH = "./userge/xcache/ytsearch.json"
@@ -500,16 +500,19 @@ def yt_search_btns(
 
 @pool.run_in_thread
 def download_button(vid: str, body: bool = False):
-    vid_data = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
-        BASE_YT_URL + vid, download=False
-    )
+    try:
+        vid_data = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
+            BASE_YT_URL + vid, download=False
+        )
+    except ExtractorError:
+       vid_data = {"formats": []}
     buttons = [
         [
             InlineKeyboardButton(
-                "⭐️ BEST | 📹 mkv", callback_data=f"ytdl_download_{vid}_mkv_v"
+                "⭐️ BEST - 📹 MKV", callback_data=f"ytdl_download_{vid}_mkv_v"
             ),
             InlineKeyboardButton(
-                "⭐️ BEST | 📹 webm/mp4",
+                "⭐️ BEST - 📹 WebM/MP4",
                 callback_data=f"ytdl_download_{vid}_mp4_v",
             ),
         ]
@@ -549,7 +552,7 @@ def download_button(vid: str, body: bool = False):
     buttons += [
         [
             InlineKeyboardButton(
-                "⭐️ BEST | 🎵 mp3", callback_data=f"ytdl_download_{vid}_mp3_a"
+                "⭐️ BEST - 🎵 MP3", callback_data=f"ytdl_download_{vid}_mp3_a"
             )
         ]
     ]
