@@ -159,7 +159,7 @@ def check_brackets(text: str):
         if m.group(3):
             textx += m.group(0)
         elif m.group(5):
-            textx += f"[{m.group(1)}][buttonurl:{m.group(5)}]"
+            textx += f"[{m.group(1)}][buttonurl:{m.group(5)}{m.group(6) or ''}]"
     return unmatch + textx
 
 
