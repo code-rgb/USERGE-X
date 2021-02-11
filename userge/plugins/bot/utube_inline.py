@@ -5,9 +5,9 @@
 
 import glob
 import os
+import re
 from collections import defaultdict
 from pathlib import Path
-import re
 from time import time
 
 import ujson
@@ -505,7 +505,7 @@ def download_button(vid: str, body: bool = False):
             BASE_YT_URL + vid, download=False
         )
     except ExtractorError:
-       vid_data = {"formats": []}
+        vid_data = {"formats": []}
     buttons = [
         [
             InlineKeyboardButton(
