@@ -13,7 +13,9 @@ from userge import Config, Message, userge
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-BTN_REGEX = compile(r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
+BTN_REGEX = compile(
+    r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
+)
 PATH = "./userge/xcache/inline_db.json"
 CHANNEL = userge.getCLogger(__name__)
 
