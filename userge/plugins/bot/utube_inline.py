@@ -41,7 +41,9 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
-YOUTUBE_REGEX = compile(r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?")
+YOUTUBE_REGEX = compile(
+    r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
+)
 PATH = "./userge/xcache/ytsearch.json"
 
 
@@ -413,6 +415,7 @@ def get_yt_video_id(url: str):
         return match.group(1)
     return
 
+
 # Based on https://gist.github.com/AgentOak/34d47c65b1d28829bb17c24c04a0096f
 def get_choice_by_id(choice_id, media_type: str):
     if choice_id == "mkv":
@@ -431,7 +434,7 @@ def get_choice_by_id(choice_id, media_type: str):
         if media_type == "v":
             # mp4 video quality + best compatible audio
             choice_str = disp_str + "+(258/256/140/bestaudio[ext=m4a])/best"
-        else: # Audio
+        else:  # Audio
             choice_str = disp_str
     return choice_str, disp_str
 
@@ -506,7 +509,8 @@ def download_button(vid: str, body: bool = False):
                 "⭐️  BEST VIDEO (.mkv)", callback_data=f"ytdl_download_{vid}_mkv_v"
             ),
             InlineKeyboardButton(
-                "⭐️  BEST VIDEO (.webm / .mp4)", callback_data=f"ytdl_download_{vid}_mp4_v"
+                "⭐️  BEST VIDEO (.webm / .mp4)",
+                callback_data=f"ytdl_download_{vid}_mp4_v",
             ),
         ]
     ]
@@ -542,7 +546,13 @@ def download_button(vid: str, body: bool = False):
                 )
             )
     buttons += sublists(video_btns, width=2)
-    buttons += [[InlineKeyboardButton("⭐️  BEST AUDIO (.mp3)", callback_data=f"ytdl_download_{vid}_mp3_a")]]
+    buttons += [
+        [
+            InlineKeyboardButton(
+                "⭐️  BEST AUDIO (.mp3)", callback_data=f"ytdl_download_{vid}_mp3_a"
+            )
+        ]
+    ]
     buttons += sublists(
         [
             InlineKeyboardButton(
