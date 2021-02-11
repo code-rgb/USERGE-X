@@ -32,7 +32,6 @@ def login_trainbit(driver):
     del_pre=True,
 )
 async def up_to_trainbit(message: Message):
-    set_trace()
     r = message.reply_to_message
     username = os.getenv('TBUSER')
     password = os.getenv('TBPASSWORD')
