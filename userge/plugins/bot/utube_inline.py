@@ -1,7 +1,7 @@
 """ Download Youtube Video/ Audio in a User friendly interface """
-# -------------------------- #
-#   Modded ytdl by code-rgb  #
-# -------------------------- #
+# --------------------------- #
+#   Modded ytdl by code-rgb   #
+# --------------------------- #
 
 import glob
 import os
@@ -523,12 +523,14 @@ def download_button(vid: str, body: bool = False):
     audio_dict = {}
     # ------------------------------------------------ #
     for video in vid_data["formats"]:
+        
         fr_note = video.get("format_note")
         fr_id = int(video.get("format_id"))
         fr_size = video.get("filesize")
-        for frmt_ in qual_list:
-            if fr_note in (frmt_, frmt_ + "60"):
-                qual_dict[frmt_][fr_id] = fr_size
+        if video.get("ext") == "mp4":
+            for frmt_ in qual_list:
+                if fr_note in (frmt_, frmt_ + "60"):
+                    qual_dict[frmt_][fr_id] = fr_size
         if video.get("acodec") != "none":
             bitrrate = int(video.get("abr", 0))
             if bitrrate != 0:
@@ -552,7 +554,7 @@ def download_button(vid: str, body: bool = False):
     buttons += [
         [
             InlineKeyboardButton(
-                "⭐️ BEST - 🎵 MP3", callback_data=f"ytdl_download_{vid}_mp3_a"
+                "⭐️ BEST - 🎵 MP3 - 320 Kbps", callback_data=f"ytdl_download_{vid}_mp3_a"
             )
         ]
     ]
