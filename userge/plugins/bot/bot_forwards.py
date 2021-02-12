@@ -218,7 +218,7 @@ if userge.has_bot:
             return
         start_ = time()
         br_cast = await replied.reply("`Broadcasting ...`")
-        b_msg = replied.message_id
+        replied.message_id
         blocked_users = []
         count = 0
         to_copy = not replied.poll
