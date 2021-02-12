@@ -112,7 +112,7 @@ async def upload_to_tg(message: Message):
         await message.edit("wrong syntax\n`.upload [path]`")
     else:
         await message.delete()
-        await upload_path(message, string, del_path)
+        await upload_path(message=message, path=string, del_path=del_path)
 
 
 async def _handle_message(message: Message) -> None:
