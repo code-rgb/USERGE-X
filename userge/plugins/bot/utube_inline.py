@@ -519,7 +519,7 @@ def download_button(vid: str, body: bool = False):
     ]
     # ------------------------------------------------ #
     qual_dict = defaultdict(lambda: defaultdict(int))
-    qual_list = ["144p", "360p", "720p", "1080p", "1440p"]
+    qual_list = ["144p", "240p", "360p", "480p", "720p", "1080p", "1440p"]
     audio_dict = {}
     # ------------------------------------------------ #
     for video in vid_data["formats"]:
@@ -554,7 +554,7 @@ def download_button(vid: str, body: bool = False):
     buttons += [
         [
             InlineKeyboardButton(
-                "⭐️ BEST - 🎵 MP3 - 320 Kbps", callback_data=f"ytdl_download_{vid}_mp3_a"
+                "⭐️ BEST - 🎵 320Kbps - MP3", callback_data=f"ytdl_download_{vid}_mp3_a"
             )
         ]
     ]
