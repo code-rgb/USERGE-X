@@ -158,8 +158,8 @@ async def upload_path(message: Message, path: Path, del_path: bool):
 async def upload(
     message: Message,
     path: Path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     custom_thumb: str = "",
@@ -173,8 +173,8 @@ async def upload(
         return await vid_upload(
             message=message,
             path=path,
-            callback=callback,
             del_path=del_path,
+            callback=callback,
             extra=extra,
             with_thumb=with_thumb,
             custom_thumb=custom_thumb,
@@ -186,8 +186,8 @@ async def upload(
         return await audio_upload(
             message=message,
             path=path,
-            callback=callback,
             del_path=del_path,
+            callback=callback,
             extra=extra,
             with_thumb=with_thumb,
             log=log,
@@ -242,8 +242,8 @@ async def doc_upload(
 async def vid_upload(
     message: Message,
     path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     custom_thumb: str = "",
@@ -318,8 +318,8 @@ async def check_thumb(thumb_path: str):
 async def audio_upload(
     message: Message,
     path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     log: bool = True,
