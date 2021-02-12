@@ -72,9 +72,7 @@ if userge.has_bot:
         if await BOT_BAN.find_one({"user_id": message.from_user.id}):
             return
         try:
-            msg_owner = await message.forward(
-                Config.OWNER_ID[0]
-            )
+            msg_owner = await message.forward(Config.OWNER_ID[0])
         except MessageIdInvalid:
             await CHANNEL.log(
                 f"**ERROR**: can't send message to __ID__: {Config.OWNER_ID[0]}\nNote: message will be send to the first id in `OWNER_ID` only!"
@@ -107,13 +105,9 @@ if userge.has_bot:
                     data = ujson.load(f)
                 user_id = data[0][str(replied.message_id)]
                 if to_copy:
-                    await message.copy(
-                        user_id
-                    )
+                    await message.copy(user_id)
                 else:
-                    await message.forward(
-                        user_id
-                    )
+                    await message.forward(user_id)
             except (BadRequest, Forbidden) as err:
                 if "block" in str(err).lower():
                     await message.reply(
@@ -134,13 +128,9 @@ if userge.has_bot:
             if to_user.id in Config.OWNER_ID:
                 return
             if to_copy:
-                await message.copy(
-                    to_user.id
-                )
+                await message.copy(to_user.id)
             else:
-                await message.forward(
-                    to_user.id
-                )
+                await message.forward(to_user.id)
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
