@@ -69,14 +69,10 @@ if userge.has_bot:
         & ~filters.command("start")
     )
     async def forward_bot(_, message: Message):
-        found = await BOT_BAN.find_one({"user_id": message.from_user.id})
-        if found:
+        if await BOT_BAN.find_one({"user_id": message.from_user.id}):
             return
-        msg_id = message.message_id
         try:
-            msg_owner = await userge.bot.forward_messages(
-                Config.OWNER_ID[0], message.chat.id, msg_id
-            )
+            msg_owner = await message.forward(Config.OWNER_ID[0])
         except MessageIdInvalid:
             await CHANNEL.log(
                 f"**ERROR**: can't send message to __ID__: {Config.OWNER_ID[0]}\nNote: message will be send to the first id in `OWNER_ID` only!"
@@ -100,7 +96,6 @@ if userge.has_bot:
     async def forward_reply(_, message: Message):
         replied = message.reply_to_message
         to_user = replied.forward_from
-        msg_id = message.message_id
         to_copy = not message.poll
         if not to_user:
             if not replied.forward_sender_name:
@@ -110,13 +105,9 @@ if userge.has_bot:
                     data = ujson.load(f)
                 user_id = data[0][str(replied.message_id)]
                 if to_copy:
-                    await userge.bot.copy_message(
-                        chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
-                    )
+                    await message.copy(user_id)
                 else:
-                    await userge.bot.forward_messages(
-                        chat_id=user_id, from_chat_id=message.chat.id, message_id=msg_id
-                    )
+                    await message.forward(user_id)
             except (BadRequest, Forbidden) as err:
                 if "block" in str(err).lower():
                     await message.reply(
@@ -137,13 +128,9 @@ if userge.has_bot:
             if to_user.id in Config.OWNER_ID:
                 return
             if to_copy:
-                await userge.bot.copy_message(
-                    chat_id=to_user.id, from_chat_id=message.chat.id, message_id=msg_id
-                )
+                await message.copy(to_user.id)
             else:
-                await userge.bot.forward_messages(
-                    chat_id=to_user.id, from_chat_id=message.chat.id, message_id=msg_id
-                )
+                await message.forward(to_user.id)
 
     # Based - https://github.com/UsergeTeam/Userge/.../gban.py
 
@@ -218,7 +205,6 @@ if userge.has_bot:
             return
         start_ = time()
         br_cast = await replied.reply("`Broadcasting ...`")
-        b_msg = replied.message_id
         blocked_users = []
         count = 0
         to_copy = not replied.poll
@@ -229,13 +215,9 @@ if userge.has_bot:
                     b_id, "🔊 You received a **new** Broadcast."
                 )
                 if to_copy:
-                    await userge.bot.copy_message(
-                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
-                    )
+                    await replied.copy(b_id)
                 else:
-                    await userge.bot.forward_messages(
-                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
-                    )
+                    await replied.forward(b_id)
                 await asyncio.sleep(0.05)
                 # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:

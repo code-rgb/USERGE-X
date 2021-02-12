@@ -1,13 +1,13 @@
 """ Download Youtube Video/ Audio in a User friendly interface """
-# -------------------------- #
-# Modded ytdl by code-rgb
-# -------------------------- #
+# --------------------------- #
+#   Modded ytdl by code-rgb   #
+# --------------------------- #
 
 import glob
 import os
+import re
 from collections import defaultdict
 from pathlib import Path
-from re import search
 from time import time
 
 import ujson
@@ -22,7 +22,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from wget import download
-from youtube_dl.utils import DownloadError
+from youtube_dl.utils import DownloadError, ExtractorError
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, pool, userge
@@ -41,7 +41,9 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
-YOUTUBE_REGEX = r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
+YOUTUBE_REGEX = re.compile(
+    r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
+)
 PATH = "./userge/xcache/ytsearch.json"
 
 
@@ -139,7 +141,6 @@ async def iytdl_inline(message: Message):
         else:
             caption, buttons = await download_button(link, body=True)
             photo = await get_ytthumb(link)
-
         await userge.bot.send_photo(
             message.chat.id,
             photo=photo,
@@ -159,12 +160,13 @@ async def iytdl_inline(message: Message):
 if userge.has_bot:
 
     @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+|best)(?:_(a|v))?")
+        filters.regex(pattern=r"^ytdl_download_(.*)_([\d]+|mkv|mp4|mp3)(?:_(a|v))?")
     )
     @check_owner
     async def ytdl_download_callback(c_q: CallbackQuery):
         yt_code = c_q.matches[0].group(1)
         choice_id = c_q.matches[0].group(2)
+        downtype = c_q.matches[0].group(3)
         if str(choice_id).isdigit():
             choice_id = int(choice_id)
             if choice_id == 0:
@@ -173,29 +175,24 @@ if userge.has_bot:
                     reply_markup=(await download_button(yt_code))
                 )
                 return
-        else:
-            choice_id = None
         startTime = time()
-        downtype = c_q.matches[0].group(3)
+        choice_str, disp_str = get_choice_by_id(choice_id, downtype)
         media_type = "Video" if downtype == "v" else "Audio"
         callback_continue = f"Downloading {media_type} Please Wait..."
-        frmt_text = choice_id or (
-            "bestaudio/best [mp4]" if downtype == "v" else "320 Kbps"
-        )
-        callback_continue += f"\n\nFormat Code : {frmt_text}"
+        callback_continue += f"\n\nFormat Code : {disp_str}"
         await c_q.answer(callback_continue, show_alert=True)
         upload_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "Uploading...")
         yt_url = BASE_YT_URL + yt_code
         await c_q.edit_message_text(
             text=(
                 f"**⬇️ Downloading {media_type} ...**"
-                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {frmt_text}"
+                f"\n\n🔗  [<b>Link</b>]({yt_url})\n🆔  <b>Format Code</b> : {disp_str}"
             ),
         )
         if downtype == "v":
-            retcode = await _tubeDl(url=yt_url, starttime=startTime, uid=choice_id)
+            retcode = await _tubeDl(url=yt_url, starttime=startTime, uid=choice_str)
         else:
-            retcode = await _mp3Dl(url=yt_url, starttime=startTime, uid=choice_id)
+            retcode = await _mp3Dl(url=yt_url, starttime=startTime, uid=choice_str)
         if retcode != 0:
             return await upload_msg.edit(str(retcode))
         _fpath = ""
@@ -311,7 +308,6 @@ if userge.has_bot:
                 media=(
                     InputMediaPhoto(
                         media=search_data.get("1").get("thumb"),
-                        # caption=f"<b>[Click to view]({})</b>",
                     )
                 ),
                 reply_markup=InlineKeyboardMarkup(
@@ -353,7 +349,7 @@ if userge.has_bot:
 
 
 @pool.run_in_thread
-def _tubeDl(url: str, starttime, uid=None):
+def _tubeDl(url: str, starttime, uid: str):
     ydl_opts = {
         "addmetadata": True,
         "geo_bypass": True,
@@ -362,7 +358,7 @@ def _tubeDl(url: str, starttime, uid=None):
             Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
-        "format": f"{uid or 'bestvideo[ext=mp4]'}+bestaudio[ext=m4a]/best[ext=mp4]",
+        "format": uid,
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [
@@ -382,7 +378,7 @@ def _tubeDl(url: str, starttime, uid=None):
 
 
 @pool.run_in_thread
-def _mp3Dl(url: str, starttime, uid):
+def _mp3Dl(url: str, starttime, uid: str):
     _opts = {
         "outtmpl": os.path.join(Config.DOWN_PATH, str(starttime), "%(title)s.%(ext)s"),
         "logger": LOGGER,
@@ -395,7 +391,7 @@ def _mp3Dl(url: str, starttime, uid):
             {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
-                "preferredquality": uid or "320",
+                "preferredquality": uid,
             },
             {"key": "EmbedThumbnail"},  # ERROR: Conversion failed!
             {"key": "FFmpegMetadata"},
@@ -414,10 +410,33 @@ def _mp3Dl(url: str, starttime, uid):
 
 def get_yt_video_id(url: str):
     # https://regex101.com/r/boXuXb/1
-    match = search(YOUTUBE_REGEX, url)
+    match = YOUTUBE_REGEX.search(url)
     if match:
         return match.group(1)
     return
+
+
+# Based on https://gist.github.com/AgentOak/34d47c65b1d28829bb17c24c04a0096f
+def get_choice_by_id(choice_id, media_type: str):
+    if choice_id == "mkv":
+        # default format selection
+        choice_str = "bestvideo+bestaudio/best"
+        disp_str = "best(video+audio)"
+    elif choice_id == "mp4":
+        # Download best Webm / Mp4 format available or any other best if no mp4 available
+        choice_str = "bestvideo[ext=webm]+251/bestvideo[ext=mp4]+(258/256/140/bestaudio[ext=m4a])/bestvideo[ext=webm]+(250/249)/best"
+        disp_str = "best(video+audio)[webm/mp4]"
+    elif choice_id == "mp3":
+        choice_str = "320"
+        disp_str = "320 Kbps"
+    else:
+        disp_str = str(choice_id)
+        if media_type == "v":
+            # mp4 video quality + best compatible audio
+            choice_str = disp_str + "+(258/256/140/bestaudio[ext=m4a])/best"
+        else:  # Audio
+            choice_str = disp_str
+    return choice_str, disp_str
 
 
 async def result_formatter(results: list):
@@ -481,31 +500,37 @@ def yt_search_btns(
 
 @pool.run_in_thread
 def download_button(vid: str, body: bool = False):
-    vid_data = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
-        BASE_YT_URL + vid, download=False
-    )
+    try:
+        vid_data = youtube_dl.YoutubeDL({"no-playlist": True}).extract_info(
+            BASE_YT_URL + vid, download=False
+        )
+    except ExtractorError:
+        vid_data = {"formats": []}
     buttons = [
         [
             InlineKeyboardButton(
-                "⭐️  BEST VIDEO", callback_data=f"ytdl_download_{vid}_best_v"
+                "⭐️ BEST - 📹 MKV", callback_data=f"ytdl_download_{vid}_mkv_v"
             ),
             InlineKeyboardButton(
-                "⭐️  BEST AUDIO", callback_data=f"ytdl_download_{vid}_best_a"
+                "⭐️ BEST - 📹 WebM/MP4",
+                callback_data=f"ytdl_download_{vid}_mp4_v",
             ),
         ]
     ]
     # ------------------------------------------------ #
     qual_dict = defaultdict(lambda: defaultdict(int))
-    qual_list = ["144p", "360p", "720p", "1080p", "1440p"]
+    qual_list = ["144p", "240p", "360p", "480p", "720p", "1080p", "1440p"]
     audio_dict = {}
     # ------------------------------------------------ #
     for video in vid_data["formats"]:
+
         fr_note = video.get("format_note")
         fr_id = int(video.get("format_id"))
         fr_size = video.get("filesize")
-        for frmt_ in qual_list:
-            if fr_note in (frmt_, frmt_ + "60"):
-                qual_dict[frmt_][fr_id] = fr_size
+        if video.get("ext") == "mp4":
+            for frmt_ in qual_list:
+                if fr_note in (frmt_, frmt_ + "60"):
+                    qual_dict[frmt_][fr_id] = fr_size
         if video.get("acodec") != "none":
             bitrrate = int(video.get("abr", 0))
             if bitrrate != 0:
@@ -526,6 +551,13 @@ def download_button(vid: str, body: bool = False):
                 )
             )
     buttons += sublists(video_btns, width=2)
+    buttons += [
+        [
+            InlineKeyboardButton(
+                "⭐️ BEST - 🎵 320Kbps - MP3", callback_data=f"ytdl_download_{vid}_mp3_a"
+            )
+        ]
+    ]
     buttons += sublists(
         [
             InlineKeyboardButton(

@@ -3,7 +3,7 @@
 # IMPROVED BY code-rgb
 
 import os
-import re
+from re import compile
 
 import ujson
 from pyrogram.errors import BadRequest, UserIsBot
@@ -13,7 +13,9 @@ from userge import Config, Message, userge
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-BTN_REGEX = r"\[([^\[]+?)\](\[buttonurl:(?:/{0,2})(.+?)(:same)?\]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
+BTN_REGEX = compile(
+    r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
+)
 PATH = "./userge/xcache/inline_db.json"
 CHANNEL = userge.getCLogger(__name__)
 
@@ -153,13 +155,13 @@ async def inline_buttons(message: Message):
 
 
 def check_brackets(text: str):
-    unmatch = re.sub(BTN_REGEX, "", text)
+    unmatch = BTN_REGEX.sub("", text)
     textx = ""
-    for m in re.finditer(BTN_REGEX, text):
+    for m in BTN_REGEX.finditer(text):
         if m.group(3):
             textx += m.group(0)
         elif m.group(5):
-            textx += f"[{m.group(1)}][buttonurl:{m.group(5)}]"
+            textx += f"[{m.group(1)}][buttonurl:{m.group(5)}{m.group(6) or ''}]"
     return unmatch + textx
 
 
