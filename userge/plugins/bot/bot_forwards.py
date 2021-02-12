@@ -229,13 +229,9 @@ if userge.has_bot:
                     b_id, "🔊 You received a **new** Broadcast."
                 )
                 if to_copy:
-                    await userge.bot.copy_message(
-                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
-                    )
+                    await replied.copy(b_id)
                 else:
-                    await userge.bot.forward_messages(
-                        chat_id=b_id, from_chat_id=message.chat.id, message_id=b_msg
-                    )
+                    await replied.forward(b_id)
                 await asyncio.sleep(0.05)
                 # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
