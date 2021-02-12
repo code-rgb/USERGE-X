@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
 from userge import Config, Message, userge
 from pudb import set_trace
@@ -12,25 +13,14 @@ from pudb import set_trace
 login_url = "https://trainbit.com/Membership/login.aspx"
 
 
-async def login_trainbit(driver):
-    username = os.getenv('TBUSER')
-    password = os.getenv('TBPASSWORD')
-    if not username:
-        return False
-    form = driver.find_element_by_id('login-form')
-    await asyncio.sleep(1)
-    form.find_element_by_id('ctl00_ContentPlaceHolder1_t_email').send_keys(username)
-    form.find_element_by_id('ctl00_ContentPlaceHolder1_t_password').send_keys(password)
-    btn = form.find_element_by_id('ctl00_ContentPlaceHolder1_b_login').click()
-
 
 @userge.on_cmd(
-    "tb",
+    "tbup",
     about={
-        "header": "آپلود فایل به ترین بیت",
+        "header": "Upload Files To Trainbit",
         "flags": {
         },
-        "usage": "{tr}bt [flags] [text | reply to msg]",
+        "usage": "{tr}btup [flags] [text | reply to msg]",
         "examples": [
         ],
     },
@@ -38,7 +28,9 @@ async def login_trainbit(driver):
 )
 async def up_to_trainbit(message: Message):
     r = message.reply_to_message
-    if Config.GOOGLE_CHROME_BIN is None:
+    username = os.getenv('TBUSER')
+    password = os.getenv('TBPASSWORD')
+    if Config.GOOGLE_CHROME_BIN is None or not username:
             await message.err("You need to install google chrome")
             return
     else:
@@ -63,7 +55,11 @@ async def up_to_trainbit(message: Message):
             chrome_options.add_experimental_option("prefs", prefs)
             driver = webdriver.Chrome(chrome_options=chrome_options)
             driver.get(login_url)
-            await login_trainbit(driver)
+            form = driver.find_element_by_id('login-form')
+            await asyncio.sleep(1)
+            form.find_element_by_id('ctl00_ContentPlaceHolder1_t_email').send_keys(username)
+            form.find_element_by_id('ctl00_ContentPlaceHolder1_t_password').send_keys(password)
+            btn = form.find_element_by_id('ctl00_ContentPlaceHolder1_b_login').click()
             await asyncio.sleep(1)
             driver.find_element_by_id('f_upload').send_keys(path_)
             get_link = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="manual-upload-queue"]/li/div/p[2]/a')))
@@ -74,6 +70,6 @@ async def up_to_trainbit(message: Message):
             dl_link = text_area.get_attribute('value')
             await message.edit(f"Download link: {dl_link}")
             os.remove(path_)
-            return driver.quit()
+            driver.quit()
         except Exception as e:
             await message.err(e)
