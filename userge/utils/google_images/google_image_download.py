@@ -2,15 +2,12 @@
 # In[ ]:
 #  coding: utf-8
 
-###### Searching and Downloading Google Images to the local disk ######
-from userge.config import Config
 import argparse
 
 # Import Libraries
 import codecs
 import datetime
 import http.client
-import ujson
 import os
 import re
 import ssl
@@ -20,6 +17,11 @@ import urllib.request
 from http.client import BadStatusLine, IncompleteRead
 from urllib.parse import quote
 from urllib.request import HTTPError, Request, URLError, urlopen
+
+import ujson
+
+###### Searching and Downloading Google Images to the local disk ######
+from userge.config import Config
 
 http.client._MAXHEADERS = 1000
 
@@ -85,7 +87,7 @@ def user_input():
 
     records = []
     if object_check["config_file"] != "":
-        json_file = ujson.load(open(config_file_check[0].config_file))
+        ujson.load(open(config_file_check[0].config_file))
         for item in ujson_file["Records"]:
             arguments = {i: None for i in args_list}
             for key, value in item.items():
@@ -493,6 +495,7 @@ class googleimagesdownload:
     def download_extended_page(self, url, chromedriver):
         from selenium import webdriver
         from selenium.webdriver.common.keys import Keys
+
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = Config.GOOGLE_CHROME_BIN
         chrome_options.add_argument("--headless")
@@ -500,8 +503,8 @@ class googleimagesdownload:
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-gpu")
-        prefs = {'download.default_directory': Config.DOWN_PATH}
-        chrome_options.add_experimental_option('prefs', prefs)
+        prefs = {"download.default_directory": Config.DOWN_PATH}
+        chrome_options.add_experimental_option("prefs", prefs)
         try:
             browser = webdriver.Chrome(chrome_options=chrome_options)
         except Exception as e:
