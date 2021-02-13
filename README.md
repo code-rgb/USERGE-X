@@ -1,10 +1,4 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/deleteduser420">𝚂𝚢𝚗𝚝𝚊𝚡 ░ Σrr♢r</a></b></h2>
-<br>
-<p align="center">
-   <a href="https://github.com/shahrooz1397/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
-   <br>
-   <br>
-</p>
+
 <h1>USERGE-X</h1>
 <b>Pluggable Telegram UserBot</b>
 <br>
@@ -19,16 +13,12 @@
 [![PR Open](https://img.shields.io/github/issues-pr/code-rgb/USERGE-X?&style=flat-square)](https://github.com/shahrooz1397/USERGE-X/pulls)
 [![PR Closed](https://img.shields.io/github/issues-pr-closed/code-rgb/USERGE-X?&style=flat-square)](https://github.com/shahrooz1397/USERGE-X/pulls?q=is:closed)
 ![Repo Size](https://img.shields.io/github/repo-size/code-rgb/userge-x?style=flat-square)
-[![CodeFactor](https://www.codefactor.io/repository/github/code-rgb/userge-x/badge?&style=flat-square)](https://www.codefactor.io/repository/github/code-rgb/userge-x)
-[![DeepSource](https://deepsource.io/gh/code-rgb/userge-x.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/code-rgb/userge-x/?ref=repository-badge)
+
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&style=flat-square)](https://gitpod.io/#https://github.com/shahrooz1397/USERGE-X)
 <br>
 
 **USERGE-X** is a Powerful , _Pluggable_ Telegram UserBot written in _Python_ using [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br>
-<p align="center">
-    <a href="https://telegram.dog/x_xtests"><img src="https://img.shields.io/badge/Support%20Group-USERGE--%F0%9D%91%BF-blue?&logo=telegram&style=social" width=220px></a></p>
-
 ## Disclaimer
 ```
 /**
