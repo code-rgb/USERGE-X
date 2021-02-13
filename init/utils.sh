@@ -76,8 +76,10 @@ fetchUpstream() {
     git fetch $UPSTREAM_REMOTE &> /dev/null
 }
 
-testingFix() {
-    git checkout -f alpha &> /dev/null
+checkoutBranch() {
+    local d_br
+    d_br=$(git remote show upstream | grep "HEAD branch" | cut -d ":" -f 2)
+    git checkout -f $d_br &> /dev/null
 }
 
 fetchBranches() {
