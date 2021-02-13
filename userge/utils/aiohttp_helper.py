@@ -1,3 +1,8 @@
+"""
+Idea by @Pokurt
+Repo: https://github.com/pokurt/Nana-Remix/blob/master/nana/utils/aiohttp_helper.py
+"""
+
 from aiohttp import ClientSession, ClientTimeout
 
 
