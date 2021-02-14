@@ -34,16 +34,17 @@ class Colors:
 
 
 @userge.on_cmd(
-    "gimg",
+    "(?:gimg|img)",
     about={
         "header": "Google Image Downloader",
         "description": "Search and download images from google and upload to telegram",
         "flags": {
-            "-l": "limit [1 - 40] (default is 5)",
-            "-q": "quality [0-2] (2 is best | default is 1)",
+            "-l": "limit [1 - 40]  (default is 5)",
+            "-q": "quality [0-2]  (2 is best|default is 1)",
             "-d": "Upload as document",
             "-gif": "download gifs",
             "-down": "download only",
+            "colors": "see ⚙️ Color"
         },
         "usage": "{tr}gimg [flags] [query|reply to text]",
         "color": ["-" + _ for _ in Colors.choice],
@@ -55,6 +56,7 @@ class Colors:
             "{tr}gimg -gif rain <download 5 gifs>",
         ],
     },
+    name="gimg",
     del_pre=True,
 )
 async def gimg_down(message: Message):
@@ -75,12 +77,12 @@ async def gimg_down(message: Message):
     allow_gif = bool("gif" in flags_)
     upload_ = not bool("down" in flags_ or allow_gif)
     doc_ = bool("d" in flags_)
-    limit = min(int(flags_.get("l", 3)), 40)
+    limit = min(int(flags_.get("l", 5)), 40)
     if flags_:
         size = min(int(flags_.get("q", 1)), 2)
-        for i in flags_:
-            if i in Colors.choice:
-                color_ = i
+        for _ in flags_:
+            if _ in Colors.choice:
+                color_ = _
                 break
         arguments = await get_arguments(
             query=text,
@@ -93,14 +95,14 @@ async def gimg_down(message: Message):
     else:
         arguments = await get_arguments(query=text)
     media_type = "Gifs" if allow_gif else "Pics"
-    await message.edit(f"⬇️  Downloading  {limit} {media_type}...")
+    await message.edit(f"⬇️  Downloading  {limit} {media_type} ...")
     try:
         results = await gimg_downloader(arguments)
     except Exception as e:
         await message.err(str(e), del_in=7)
         return
     if upload_:
-        await message.edit(f"⬆️  Uploading {limit} {media_type}......")
+        await message.edit(f"⬆️  Uploading {limit} {media_type} ...")
         try:
             await upload_image_grp(results, message, doc_)
         except Exception as err:
@@ -117,7 +119,7 @@ async def gimg_down(message: Message):
         end_t = datetime.now()
         time_taken_s = (end_t - start_t).seconds
         await message.edit(
-            f'Downloaded {limit} {media_type} to `{arguments["output_directory"]}` in {time_taken_s}'
+            f'Downloaded {limit} {media_type} to `{os.path.join(Config.DOWN_PATH, text)}` in {time_taken_s}'
             f"sec with {results[1]} errors.",
             log=__name__,
         )
@@ -140,7 +142,8 @@ async def get_arguments(
         output_directory = await check_path()
         arguments["no_directory"] = "no_directory"
     else:
-        output_directory = await check_path(path_name=query)
+        await check_path(path_name=query)
+        output_directory = Config.DOWN_PATH
     arguments["output_directory"] = output_directory
     if color:
         arguments["color"] = color
@@ -161,6 +164,8 @@ def check_path(path_name: str = "GIMG"):
     path_ = os.path.join(Config.DOWN_PATH, path_name)
     if os.path.lexists(path_):
         rmtree(path_, ignore_errors=True)
+    if path_name != "GIMG":
+        return
     os.mkdir(path_)
     return path_
 
@@ -196,10 +201,10 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         )
         for num, m_ in enumerate(mgroups, start=1):
             try:
-                await message.client.send_media_group(message.chat.id, media=m_)
                 await message.edit(
-                    f"⬆️  Uploading - **{num / len(mgroups) * 100} %** ..."
+                    f"⬆️  Uploading - **{round(num / len(mgroups) * 100)} %** ..."
                 )
+                await message.client.send_media_group(message.chat.id, media=m_)
                 await asyncio.sleep(5)
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
