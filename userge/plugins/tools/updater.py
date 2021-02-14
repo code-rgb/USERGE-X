@@ -1,6 +1,6 @@
 import asyncio
 from time import time
-
+from os import system
 from git import Repo
 from git.exc import GitCommandError
 
@@ -54,7 +54,7 @@ async def check_update(message: Message):
         out = _get_updates(repo, branch)
     except GitCommandError as g_e:
         if "128" in str(g_e):
-            os.system(
+            system(
                 f"git fetch {Config.UPSTREAM_REMOTE} {branch} && git checkout -f {branch}"
             )
             out = _get_updates(repo, branch)
