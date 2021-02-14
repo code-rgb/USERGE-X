@@ -76,12 +76,6 @@ fetchUpstream() {
     git fetch $UPSTREAM_REMOTE &> /dev/null
 }
 
-checkoutBranch() {
-    local d_br
-    d_br=$(git branch --show-current)
-    git checkout -f $d_br &> /dev/null
-}
-
 fetchBranches() {
     local r_bs l_bs
     r_bs=$(grep -oP '(?<=refs/heads/)\w+' < <(git ls-remote --heads $UPSTREAM_REMOTE))

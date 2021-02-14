@@ -39,8 +39,8 @@ class Colors:
         "header": "Google Image Downloader",
         "description": "Search and download images from google and upload to telegram",
         "flags": {
-            "-l": "limit [1 - 100] (default is 5)",
-            "-s": "size [0-2] <2 - best> (default is 1)",
+            "-l": "limit [1 - 40] (default is 5)",
+            "-q": "quality [0-2] (2 is best | default is 1)",
             "-d": "Upload as document",
             "-gif": "download gifs",
             "-down": "download only",
@@ -48,6 +48,7 @@ class Colors:
         "usage": "{tr}gimg [flags] [query|reply to text]",
         "color": ["-" + _ for _ in Colors.choice],
         "examples": [
+            "{tr}gimg wallpaper",
             "{tr}gimg -red wallpaper <red wallpapers>",
             "{tr}gimg tigers <upload 5 pics as gallery>",
             "{tr}gimg -d -l20 tigers <upload 20 pics as document>",
@@ -74,9 +75,9 @@ async def gimg_down(message: Message):
     allow_gif = bool("gif" in flags_)
     upload_ = not bool("down" in flags_ or allow_gif)
     doc_ = bool("d" in flags_)
-    limit = min(int(flags_.get("l", 3)), 100)
+    limit = min(int(flags_.get("l", 3)), 40)
     if flags_:
-        size = min(int(flags_.get("s", 1)), 3)
+        size = min(int(flags_.get("q", 1)), 2)
         for i in flags_:
             if i in Colors.choice:
                 color_ = i
@@ -91,14 +92,15 @@ async def gimg_down(message: Message):
         )
     else:
         arguments = await get_arguments(query=text)
-    await message.edit("⬇️  Downloading ...")
+    media_type = "Gifs" if allow_gif else "Pics"
+    await message.edit(f"⬇️  Downloading  {limit} {media_type}...")
     try:
-        results = await gimg_downloader(arguments=arguments)
+        results = await gimg_downloader(arguments)
     except Exception as e:
         await message.err(str(e), del_in=7)
         return
-    if upload:
-        await message.edit("⬆️  Uploading ...")
+    if upload_:
+        await message.edit(f"⬆️  Uploading {limit} {media_type}......")
         try:
             await upload_image_grp(results, message, doc_)
         except Exception as err:
@@ -115,7 +117,8 @@ async def gimg_down(message: Message):
         end_t = datetime.now()
         time_taken_s = (end_t - start_t).seconds
         await message.edit(
-            f'Downloaded {limit} {"Gifs" if gif else "Pics"} to `{arguments["output_directory"]}` in {time_taken_s} sec with {results[1]} errors.',
+            f'Downloaded {limit} {media_type} to `{arguments["output_directory"]}` in {time_taken_s}'
+            f"sec with {results[1]} errors.",
             log=__name__,
         )
 
@@ -163,7 +166,7 @@ def check_path(path_name: str = "GIMG"):
 
 
 @pool.run_in_thread
-def gimg_downloader(arguments=arguments):
+def gimg_downloader(arguments):
     response = googleimagesdownload()
     path_ = response.download(arguments)
     return path_
@@ -186,7 +189,7 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         mgroups = sublists(
             [
                 (InputMediaDocument(media=x) if doc else InputMediaPhoto(media=x))
-                for x in medias_
+                for x in medias_ if x.endswith(".jpg")
             ],
             width=10,
         )

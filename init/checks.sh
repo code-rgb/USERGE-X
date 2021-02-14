@@ -158,7 +158,6 @@ _checkUpstreamRepo() {
     replyLastMessage "\tFetching Data From UPSTREAM_REPO ..."
     fetchUpstream || updateUpstream && fetchUpstream || quit "Invalid UPSTREAM_REPO var !"
     fetchBranches
-    checkoutBranch
     updateBuffer
     deleteLastMessage
 }
