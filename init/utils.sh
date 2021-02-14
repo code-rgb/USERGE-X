@@ -78,7 +78,7 @@ fetchUpstream() {
 
 checkoutBranch() {
     local d_br
-    d_br=$(git remote show upstream | grep "HEAD branch" | cut -d ":" -f 2)
+    d_br=$(git branch --show-current)
     git checkout -f $d_br &> /dev/null
 }
 
