@@ -1,6 +1,7 @@
 import asyncio
-from time import time
 from os import system
+from time import time
+
 from git import Repo
 from git.exc import GitCommandError
 
