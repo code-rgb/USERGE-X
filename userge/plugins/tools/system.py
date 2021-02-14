@@ -1,9 +1,9 @@
 """ system commands """
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
+# Please see < https://github.com/UsergeTeam/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
 
@@ -46,7 +46,7 @@ async def _init() -> None:
     about={
         "header": "Restarts the bot and reload all plugins",
         "flags": {
-            "-h": "restart heroku dyno",
+            "-h": "restart hard",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
@@ -57,28 +57,34 @@ async def _init() -> None:
     allow_channels=False,
 )
 async def restart_(message: Message):
-    """ restart userge """
-    await message.edit("Restarting <b><u>USERGE-X</u></b> Services", log=__name__)
+    """ restart USERGE-X """
+    await message.edit("`Restarting USERGE-X Services`", log=__name__)
     LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
-    if Config.HEROKU_APP and "h" in message.flags:
-        await message.edit(
-            "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`",
-            del_in=3,
-        )
-        Config.HEROKU_APP.restart()
-        time.sleep(30)
+    if "h" in message.flags:
+        if Config.HEROKU_APP:
+            await message.edit(
+                "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`",
+                del_in=3,
+            )
+            Config.HEROKU_APP.restart()
+            time.sleep(30)
+        else:
+            await message.edit("`Restarting [HARD] ...`", del_in=1)
+            asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
-        await message.edit("finalizing...", del_in=1)
+        await message.edit("`Restarting [SOFT] ...`", del_in=1)
         asyncio.get_event_loop().create_task(userge.restart())
 
 
-@userge.on_cmd("shutdown", about={"header": "shutdown userge :)"}, allow_channels=False)
+@userge.on_cmd(
+    "shutdown", about={"header": "shutdown USERGE-X :)"}, allow_channels=False
+)
 async def shutdown_(message: Message) -> None:
-    """ shutdown userge """
+    """ shutdown USERGE-X """
     await message.edit("`shutting down ...`")
     if Config.HEROKU_APP:
         try:
@@ -103,7 +109,7 @@ async def shutdown_(message: Message) -> None:
     allow_channels=False,
 )
 async def die_(message: Message) -> None:
-    """ set offline timeout to die userge """
+    """ set offline timeout to die USERGE-X """
     global MAX_IDLE_TIME  # pylint: disable=global-statement
     if not Config.HEROKU_APP:
         await message.err("`heroku app not detected !`")
@@ -331,11 +337,11 @@ async def view_disabled_chats_(message: Message):
 
 @userge.on_cmd(
     "sleep (\\d+)",
-    about={"header": "sleep userge :P", "usage": "{tr}sleep [timeout in seconds]"},
+    about={"header": "sleep USERGE-X :P", "usage": "{tr}sleep [timeout in seconds]"},
     allow_channels=False,
 )
 async def sleep_(message: Message) -> None:
-    """ sleep userge """
+    """ sleep USERGE-X """
     seconds = int(message.matches[0].group(1))
     await message.edit(f"`sleeping {seconds} seconds...`")
     asyncio.get_event_loop().create_task(_slp_wrkr(seconds))
