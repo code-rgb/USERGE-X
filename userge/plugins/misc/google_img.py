@@ -197,7 +197,9 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         for num, m_ in enumerate(mgroups, start=1):
             try:
                 await message.client.send_media_group(message.chat.id, media=m_)
-                await message.edit(f"⬆️  Uploading - **{num / len(mgroups) * 100} %** ...")
+                await message.edit(
+                    f"⬆️  Uploading - **{num / len(mgroups) * 100} %** ..."
+                )
                 await asyncio.sleep(5)
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
