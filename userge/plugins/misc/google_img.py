@@ -108,7 +108,7 @@ async def get_arguments(query: query, limit: int = 5, img_format: str = "jpg", c
     if upload:
         output_directory = await check_path()
         arguments["no_directory"] = "no_directory"
-    else
+    else:
         output_directory = await check_path(path_name=query)
     arguments["output_directory"] = output_directory
     if color:
