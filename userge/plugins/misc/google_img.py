@@ -44,7 +44,7 @@ class Colors:
             "-d": "Upload as document",
             "-gif": "download gifs",
             "-down": "download only",
-            "colors": "see ⚙️ Color"
+            "colors": "see ⚙️ Color",
         },
         "usage": "{tr}gimg [flags] [query|reply to text]",
         "color": ["-" + _ for _ in Colors.choice],
@@ -119,7 +119,7 @@ async def gimg_down(message: Message):
         end_t = datetime.now()
         time_taken_s = (end_t - start_t).seconds
         await message.edit(
-            f'Downloaded {limit} {media_type} to `{os.path.join(Config.DOWN_PATH, text)}` in {time_taken_s}'
+            f"Downloaded {limit} {media_type} to `{os.path.join(Config.DOWN_PATH, text)}` in {time_taken_s}"
             f"sec with {results[1]} errors.",
             log=__name__,
         )
