@@ -117,7 +117,7 @@ async def get_arguments(query: query, limit: int = 5, img_format: str = "jpg", c
     if size <= 0:
         size_ = "icon"
     elif size == 1:
-        size_ = "medium":
+        size_ = "medium"
     else:
         size_ = "large"
     arguments["size"] = size_
