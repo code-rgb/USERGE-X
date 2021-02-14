@@ -6,17 +6,21 @@
 #  Author: https://github.com/code-rgb [TG: @DeletedUser420]
 
 
-from userge import Message, userge, Config, pool
-from google_images_download.google_images_download import googleimagesdownload
-from .upload import photo_upload, doc_upload
-from datetime import datetime
-from userge.utils import sublists
-from pyrogram.types import InputMediaDocument, InputMediaPhoto
-import os
-from shutil import rmtree
-from pathlib import Path
 import asyncio
+import os
+from datetime import datetime
+from pathlib import Path
+from shutil import rmtree
+
+from google_images_download.google_images_download import googleimagesdownload
 from pyrogram.errors import FloodWait
+from pyrogram.types import InputMediaDocument, InputMediaPhoto
+
+from userge import Config, Message, pool, userge
+from userge.utils import sublists
+
+from .upload import doc_upload, photo_upload
+
 
 class Colors:
     # fmt: off
@@ -28,14 +32,21 @@ class Colors:
     ]
     # fmt: on
 
+
 @userge.on_cmd(
     "gimg",
     about={
         "header": "Google Image Downloader",
         "description": "Search and download images from google and upload to telegram",
-        "flags": {"-l": "limit [1 - 100] (default is 5)", "-s": "size [0-2] <2 - best> (default is 1)", "-d": "Upload as document", "-gif": "download gifs", "-down": "download only"},
+        "flags": {
+            "-l": "limit [1 - 100] (default is 5)",
+            "-s": "size [0-2] <2 - best> (default is 1)",
+            "-d": "Upload as document",
+            "-gif": "download gifs",
+            "-down": "download only",
+        },
         "usage": "{tr}gimg [flags] [query|reply to text]",
-        "color": ["-" + _ for  _ in Colors.choice],
+        "color": ["-" + _ for _ in Colors.choice],
         "examples": [
             "{tr}gimg -red wallpaper <red wallpapers>",
             "{tr}gimg tigers <upload 5 pics as gallery>",
@@ -43,7 +54,7 @@ class Colors:
             "{tr}gimg -gif rain <download 5 gifs>",
         ],
     },
-    del_pre=True
+    del_pre=True,
 )
 async def gimg_down(message: Message):
     """google images downloader"""
@@ -52,7 +63,7 @@ async def gimg_down(message: Message):
     if args:
         text = args
     elif reply:
-        text = (args or reply.text or reply.caption)
+        text = args or reply.text or reply.caption
     else:
         await message.err("`Input not found!...`", del_in=5)
         return
@@ -76,7 +87,7 @@ async def gimg_down(message: Message):
             img_format="gif" if allow_gif else "jpg",
             color=color_,
             upload=upload_,
-            size=size
+            size=size,
         )
     else:
         arguments = await get_arguments(query=text)
@@ -95,15 +106,28 @@ async def gimg_down(message: Message):
         else:
             end_t = datetime.now()
             time_taken_s = (end_t - start_t).seconds
-            await message.edit(f"Uploaded {limit} Pics in {time_taken_s} sec with {results[1]} errors.", del_in=5, log=__name__)
+            await message.edit(
+                f"Uploaded {limit} Pics in {time_taken_s} sec with {results[1]} errors.",
+                del_in=5,
+                log=__name__,
+            )
     else:
         end_t = datetime.now()
         time_taken_s = (end_t - start_t).seconds
-        await message.edit(f'Downloaded {limit} {"Gifs" if gif else "Pics"} to `{arguments["output_directory"]}` in {time_taken_s} sec with {results[1]} errors.', log=__name__)
+        await message.edit(
+            f'Downloaded {limit} {"Gifs" if gif else "Pics"} to `{arguments["output_directory"]}` in {time_taken_s} sec with {results[1]} errors.',
+            log=__name__,
+        )
 
 
-
-async def get_arguments(query: query, limit: int = 5, img_format: str = "jpg", color: str = None, upload: bool = True, size: int = 1):
+async def get_arguments(
+    query: query,
+    limit: int = 5,
+    img_format: str = "jpg",
+    color: str = None,
+    upload: bool = True,
+    size: int = 1,
+):
     arguments = {
         "keywords": query,
         "limit": limit,
@@ -128,6 +152,7 @@ async def get_arguments(query: query, limit: int = 5, img_format: str = "jpg", c
     # ------------------- #
     return arguments
 
+
 @pool.run_in_thread
 def check_path(path_name: str = "GIMG"):
     path_ = os.path.join(Config.DOWN_PATH, path_name)
@@ -136,11 +161,13 @@ def check_path(path_name: str = "GIMG"):
     os.mkdir(path_)
     return path_
 
+
 @pool.run_in_thread
 def gimg_downloader(arguments=arguments):
     response = googleimagesdownload()
     path_ = response.download(arguments)
     return path_
+
 
 async def upload_image_grp(results, message: Message, doc: bool = False):
     key_ = list(results[0])[0]
@@ -156,13 +183,16 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         else:
             await photo_upload(message=message, path=path_, del_path=True)
     else:
-        mgroups = sublists([(InputMediaDocument(media=x) if doc else InputMediaPhoto(media=x)) for x in medias_], width=10)
+        mgroups = sublists(
+            [
+                (InputMediaDocument(media=x) if doc else InputMediaPhoto(media=x))
+                for x in medias_
+            ],
+            width=10,
+        )
         for m_ in mgroups:
             try:
                 await message.client.send_media_group(message.chat.id, media=m_)
                 await asyncio.sleep(1)
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
-
-
-
