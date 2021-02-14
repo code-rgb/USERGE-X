@@ -84,7 +84,7 @@ async def gimg_down(message: Message):
     if upload:
         await message.edit("⬆️  Uploading ...")
         try:
-            await upload_image_grp(results=results, start_t=start_t, message=message, doc=doc_)
+            await upload_image_grp(results=results, message=message, doc=doc_)
         except Exception as err:
             await message.err(str(err), del_in=7)
         else:
