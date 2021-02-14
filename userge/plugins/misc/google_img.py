@@ -189,7 +189,8 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         mgroups = sublists(
             [
                 (InputMediaDocument(media=x) if doc else InputMediaPhoto(media=x))
-                for x in medias_ if x.endswith(".jpg")
+                for x in medias_
+                if x.endswith(".jpg")
             ],
             width=10,
         )
