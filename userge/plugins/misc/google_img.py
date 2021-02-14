@@ -16,6 +16,7 @@ import os
 from shutil import rmtree
 from pathlib import Path
 import asyncio
+from pyrogram.errors import FloodWait
 
 class Colors:
     # fmt: off
@@ -51,7 +52,7 @@ async def gimg_down(message: Message):
     if args:
         text = args
     elif reply:
-        text = args or reply.text or reply.caption
+        text = (args or reply.text or reply.caption)
     else:
         await message.err("`Input not found!...`", del_in=5)
         return
@@ -80,11 +81,15 @@ async def gimg_down(message: Message):
     else:
         arguments = await get_arguments(query=text)
     await message.edit("⬇️  Downloading ...")
-    results = await gimg_downloader(arguments=arguments)
+    try:
+        results = await gimg_downloader(arguments=arguments)
+    except Exception as e:
+        await message.err(str(e), del_in=7)
+        return
     if upload:
         await message.edit("⬆️  Uploading ...")
         try:
-            await upload_image_grp(results=results, message=message, doc=doc_)
+            await upload_image_grp(results, message, doc_)
         except Exception as err:
             await message.err(str(err), del_in=7)
         else:
@@ -103,7 +108,6 @@ async def get_arguments(query: query, limit: int = 5, img_format: str = "jpg", c
         "keywords": query,
         "limit": limit,
         "format": img_format,
-        "size": size,
     }
     if upload:
         output_directory = await check_path()
@@ -138,7 +142,7 @@ def gimg_downloader(arguments=arguments):
     path_ = response.download(arguments)
     return path_
 
-async def upload_image_grp(results=tuple, message: Message, doc: bool):
+async def upload_image_grp(results, message: Message, doc: bool = False):
     key_ = list(results[0])[0]
     medias_ = results[0][key_]
     if message.process_is_canceled:
