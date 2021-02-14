@@ -54,7 +54,9 @@ async def check_update(message: Message):
         out = _get_updates(repo, branch)
     except GitCommandError as g_e:
         if "128" in str(g_e):
-            os.system(f"git fetch {Config.UPSTREAM_REMOTE} {branch} && git checkout -f {branch}")
+            os.system(
+                f"git fetch {Config.UPSTREAM_REMOTE} {branch} && git checkout -f {branch}"
+            )
             out = _get_updates(repo, branch)
         else:
             await message.err(g_e, del_in=5)
