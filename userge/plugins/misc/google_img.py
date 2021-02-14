@@ -138,7 +138,7 @@ def gimg_downloader(arguments=arguments):
     path_ = response.download(arguments)
     return path_
 
-async def upload_image_grp(results=tuple, message: Message, doc: bool = False):
+async def upload_image_grp(results=tuple, message: Message, doc: bool):
     key_ = list(results[0])[0]
     medias_ = results[0][key_]
     if message.process_is_canceled:
