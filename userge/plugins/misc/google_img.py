@@ -121,7 +121,7 @@ async def gimg_down(message: Message):
 
 
 async def get_arguments(
-    query: query,
+    query: str,
     limit: int = 5,
     img_format: str = "jpg",
     color: str = None,
