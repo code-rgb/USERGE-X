@@ -148,7 +148,7 @@ async def upload_path(message: Message, path: Path, del_path: bool):
     for p_t in file_paths:
         current += 1
         try:
-            await upload(message, p_t, del_path, f"{current}/{len(file_paths)}")
+            await upload(message=message, path=p_t, del_path=del_path, extra=f"{current}/{len(file_paths)}")
         except FloodWait as f_e:
             time.sleep(f_e.x)  # asyncio sleep ?
         if message.process_is_canceled:
