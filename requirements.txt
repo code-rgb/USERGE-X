@@ -4,7 +4,6 @@ beautifulsoup4>=4.9.1
 covid>=2.4.0
 cowpy>=1.1.0
 dnspython>=2.0.0
-emoji>=0.6.0
 gitpython>=3.1.11
 google-api-python-client>=1.12.8
 google-auth-httplib2>=0.0.4
@@ -38,10 +37,10 @@ tgcrypto
 urbandict>=0.5
 wget>=3.2
 wikipedia>=1.4.0
-youtube_dl>=2021.1.8
+git+https://github.com/ytdl-org/youtube-dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ruamel.yaml==0.16.12
 pymediainfo>=5.0.3
 ujson>=4.0.1
 youtube-search-python==1.4.0
-pudb
+git+https://github.com/code-rgb/google-images-download.git

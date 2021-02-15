@@ -24,9 +24,10 @@ from pyrogram.types import (
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
+from userge.core.ext import RawClient
 from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
-from userge.utils import rand_key, xbot
+from userge.utils import rand_key
 
 from .bot.alive import Bot_Alive
 from .bot.gogo import Anime
@@ -198,13 +199,9 @@ if userge.has_bot:
             )
         elif len(pos_list) == 3:
             _, buttons = plugin_data(cur_pos, p_num)
-        await xbot.edit_inline_reply_markup(
-            callback_query.inline_message_id,
-            reply_markup=InlineKeyboardMarkup(buttons),
+        await callback_query.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(buttons)
         )
-        # await callback_query.edit_message_reply_markup(
-        #     reply_markup=InlineKeyboardMarkup(buttons)
-        # )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"back\((.+)\)"))
     @check_owner
@@ -221,16 +218,9 @@ if userge.has_bot:
             text, buttons = category_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = plugin_data(cur_pos)
-
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
+        await callback_query.edit_message_text(
+            text, reply_markup=InlineKeyboardMarkup(buttons)
         )
-
-        # await callback_query.edit_message_text(
-        #     text, reply_markup=InlineKeyboardMarkup(buttons)
-        # )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"enter\((.+)\)"))
     @check_owner
@@ -243,16 +233,9 @@ if userge.has_bot:
             text, buttons = plugin_data(cur_pos)
         elif len(pos_list) == 4:
             text, buttons = filter_data(cur_pos)
-
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
+        await callback_query.edit_message_text(
+            text, reply_markup=InlineKeyboardMarkup(buttons)
         )
-
-        # await callback_query.edit_message_text(
-        #     text, reply_markup=InlineKeyboardMarkup(buttons)
-        # )
 
     @userge.bot.on_callback_query(
         filters.regex(pattern=r"((?:un)?load|(?:en|dis)able)\((.+)\)")
@@ -273,51 +256,37 @@ if userge.has_bot:
             plg = userge.manager.plugins[pos_list[-1]]
             await getattr(plg, task)()
             text, buttons = plugin_data(cur_pos)
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
+        await callback_query.edit_message_text(
+            text, reply_markup=InlineKeyboardMarkup(buttons)
         )
-        # await callback_query.edit_message_text(
-        #     text, reply_markup=InlineKeyboardMarkup(buttons)
-        # )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^mm$"))
     @check_owner
     async def callback_mm(callback_query: CallbackQuery):
-
-        await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=" 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
+        await callback_query.edit_message_text(
+            " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
             reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
         )
-
-        # await callback_query.edit_message_text(
-        #     " 𝐔𝐒𝐄𝐑𝐆𝐄-𝐗  𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 ",
-        #     reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
-        # )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^chgclnt$"))
     @check_owner
     async def callback_chgclnt(callback_query: CallbackQuery):
+        if not RawClient.DUAL_MODE:
+            return await callback_query.answer(
+                "you using [BOT MODE], can't change client.", show_alert=True
+            )
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
-        else:
+        elif RawClient.DUAL_MODE:
             Config.USE_USER_FOR_CLIENT_CHECKS = True
         await SAVED_SETTINGS.update_one(
             {"_id": "CURRENT_CLIENT"},
             {"$set": {"is_user": Config.USE_USER_FOR_CLIENT_CHECKS}},
             upsert=True,
         )
-
-        await xbot.edit_inline_reply_markup(
-            callback_query.inline_message_id,
-            reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
+        await callback_query.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(main_menu_buttons())
         )
-
-        # await callback_query.edit_message_reply_markup(
-        #     reply_markup=InlineKeyboardMarkup(main_menu_buttons())
-        # )
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"refresh\((.+)\)"))
     @check_owner
@@ -328,21 +297,9 @@ if userge.has_bot:
             text, buttons = filter_data(cur_pos)
         else:
             text, buttons = plugin_data(cur_pos)
-
-        response = await xbot.edit_inline_text(
-            callback_query.inline_message_id,
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons),
+        await callback_query.edit_message_text(
+            text, reply_markup=InlineKeyboardMarkup(buttons)
         )
-        errors = response.get("description", None)
-        if errors:
-            if "not modified:" in errors:
-                raise MessageNotModified
-            if "MESSAGE_ID_INVALID" in errors:
-                raise MessageIdInvalid
-        # await callback_query.edit_message_text(
-        #     text, reply_markup=InlineKeyboardMarkup(buttons)
-        # )
 
     def is_filter(name: str) -> bool:
         split_ = name.split(".")
@@ -399,10 +356,7 @@ if userge.has_bot:
                 )
             )
             if len(cur_pos.split("|")) > 2:
-                tmp_btns.append(
-                    InlineKeyboardButton("🖥 Main Menu", callback_data="mm")
-                    # .encode()
-                )
+                tmp_btns.append(InlineKeyboardButton("🖥 Main Menu", callback_data="mm"))
                 tmp_btns.append(
                     InlineKeyboardButton(
                         "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()
@@ -413,8 +367,7 @@ if userge.has_bot:
             tmp_btns.append(
                 InlineKeyboardButton(
                     f"🔩 Client for Checks and Sudos : {cur_clnt}",
-                    callback_data="chgclnt"
-                    # .encode()
+                    callback_data="chgclnt",
                 )
             )
         return [tmp_btns]
@@ -561,11 +514,8 @@ if userge.has_bot:
         str_x = i_q.split(" ", 2)  # trigger @username Text
         str_y = i_q.split(" ", 1)  # trigger and Text
         string_split = string.split()  # All lower and Split each word
-
-        if (
-            inline_query.from_user.id in Config.OWNER_ID
-            or inline_query.from_user.id in Config.SUDO_USERS
-        ):
+        iq_user_id = inline_query.from_user.id
+        if iq_user_id in Config.OWNER_ID or iq_user_id in Config.SUDO_USERS:
 
             if string == "syntax":
                 owner = [
@@ -1016,7 +966,7 @@ if userge.has_bot:
                     reverse_list = list(view_db)
                     reverse_list.reverse()
                     for butt_ons in reverse_list:
-                        if data_count_n > 15:
+                        if data_count_n > 30:
                             view_db.pop(butt_ons, None)
                         data_count_n += 1
                     with open(inline_db_path, "w") as data_file:
@@ -1114,51 +1064,65 @@ if userge.has_bot:
                 )
                 return
 
-            if str_x[0].lower() == "secret" and len(str_x) == 3:
+            if str_x[0].lower() in ["secret", "troll"] and len(str_x) == 3:
                 user_name = str_x[1]
                 msg = str_x[2]
                 try:
-                    a = await userge.get_users(user_name)
-                    user_id = a.id
-                except BaseException:
+                    receiver = await userge.get_users(user_name)
+                except (BadRequest, IndexError):
                     return
-                secret = os.path.join(PATH, "secret.txt")
+                secret = os.path.join(PATH, "secret.json")
+                key_ = rand_key()
+                r_name = (
+                    ("@" + receiver.username)
+                    if receiver.username
+                    else f"{receiver.first_name} {receiver.last_name or ''}"
+                )
+                secret_data = {
+                    key_: {
+                        "sender": iq_user_id,
+                        "receiver": {"id": receiver.id, "name": r_name},
+                        "msg": msg,
+                        "views": [],
+                    }
+                }
                 if os.path.exists(secret):
                     with open(secret) as outfile:
                         view_data = ujson.load(outfile)
-                    # Uniquely identifies an inline message
-                    new_id = {str(inline_query.id): {"user_id": user_id, "msg": msg}}
-                    view_data.update(new_id)
+                    view_data.update(secret_data)
                 else:
-                    view_data = {str(inline_query.id): {"user_id": user_id, "msg": msg}}
+                    view_data = secret_data
                 # Save
                 with open(secret, "w") as r:
-                    ujson.dump(view_data, r)
-
-                buttons = [
-                    [
-                        InlineKeyboardButton(
-                            "🔐  SHOW", callback_data=f"secret_{inline_query.id}"
-                        )
-                    ]
-                ]
+                    ujson.dump(view_data, r, indent=4)
+                if str_x[0].lower() == "secret":
+                    c_data = f"secret_{key_}"
+                    i_m_content = f"📩 <b>Secret Msg</b> for <b>{r_name}</b>. Only he/she can open it."
+                    i_l_des = f"Send Secret Message to: {r_name}"
+                    title = "Send A Secret Message"
+                    thumb_img = "https://i.imgur.com/c5pZebC.png"
+                else:
+                    c_data = f"troll_{key_}"
+                    i_m_content = f"😈 Only <b>{r_name}</b> can't view this message. UwU"
+                    i_l_des = f"Message Hidden from {r_name}"
+                    title = "😈 Troll"
+                    thumb_img = "https://i.imgur.com/0vg5B0A.png"
+                buttons = [[InlineKeyboardButton("🔐  SHOW", callback_data=c_data)]]
                 results.append(
                     InlineQueryResultArticle(
-                        title="Send A Secret Message",
-                        input_message_content=InputTextMessageContent(
-                            f"📩 <b>Secret Msg</b> for {user_name}. Only he/she can open it."
-                        ),
-                        description=f"Send Secret Message to: {user_name}",
-                        thumb_url="https://i.imgur.com/c5pZebC.png",
+                        title=title,
+                        input_message_content=InputTextMessageContent(i_m_content),
+                        description=i_l_des,
+                        thumb_url=thumb_img,
                         reply_markup=InlineKeyboardMarkup(buttons),
                     )
                 )
 
             if str_y[0].lower() == "ytdl" and len(str_y) == 2:
-                link = get_yt_video_id(str_y[1])
+                link = get_yt_video_id(str_y[1].strip())
                 found_ = True
                 if link is None:
-                    search = VideosSearch(str_y[1], limit=15)
+                    search = VideosSearch(str_y[1].strip(), limit=15)
                     resp = (search.result()).get("result")
                     if len(resp) == 0:
                         found_ = False

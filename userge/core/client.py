@@ -1,15 +1,16 @@
 # pylint: disable=missing-module-docstring
 #
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
+# Please see < https://github.com/UsergeTeam/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
 
 __all__ = ['Userge']
 
+import os
 import time
 import signal
 import asyncio
@@ -33,6 +34,7 @@ _LOG_STR = "<<<!  #####  %s  #####  !>>>"
 _IMPORTED: List[ModuleType] = []
 _INIT_TASKS: List[asyncio.Task] = []
 _START_TIME = time.time()
+_SEND_SIGNAL = False
 
 
 async def _complete_init_tasks() -> None:
@@ -52,7 +54,7 @@ class _AbstractUserge(Methods, RawClient):
 
     @property
     def uptime(self) -> str:
-        """ returns USERGE-X uptime """
+        """ returns userge uptime """
         return time_formatter(time.time() - _START_TIME)
 
     async def finalize_load(self) -> None:
@@ -60,7 +62,7 @@ class _AbstractUserge(Methods, RawClient):
         await asyncio.gather(_complete_init_tasks(), self.manager.init())
 
     async def load_plugin(self, name: str, reload_plugin: bool = False) -> None:
-        """ Load plugin to USERGE-X """
+        """ Load plugin to Userge """
         _LOG.debug(_LOG_STR, f"Importing {name}")
         _IMPORTED.append(
             importlib.import_module(f"userge.plugins.{name}"))
@@ -107,7 +109,7 @@ class _AbstractUserge(Methods, RawClient):
 class UsergeBot(_AbstractUserge):
     """ USERGE-X Bot """
     def __init__(self, **kwargs) -> None:
-        _LOG.info(_LOG_STR, "Setting UsergeBot Configs")
+        _LOG.info(_LOG_STR, "Setting X-BOT Configs")
         super().__init__(session_name=":memory:", **kwargs)
 
     @property
@@ -117,7 +119,7 @@ class UsergeBot(_AbstractUserge):
 
 
 class Userge(_AbstractUserge):
-    """ USERGE-X Bot """
+    """ Userge, the userbot """
 
     has_bot = bool(Config.BOT_TOKEN)
 
@@ -140,7 +142,7 @@ class Userge(_AbstractUserge):
 
     @property
     def bot(self) -> Union['UsergeBot', 'Userge']:
-        """ returns USERGE-X Bot """
+        """ returns usergebot """
         if self._bot is None:
             if Config.BOT_TOKEN:
                 return self
@@ -152,14 +154,14 @@ class Userge(_AbstractUserge):
         _LOG.info(_LOG_STR, "Starting USERGE-X")
         await super().start()
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Starting -X- Bot")
+            _LOG.info(_LOG_STR, "Starting X-Bot")
             await self._bot.start()
         await self._load_plugins()
 
     async def stop(self) -> None:  # pylint: disable=arguments-differ
         """ stop client and bot """
         if self._bot is not None:
-            _LOG.info(_LOG_STR, "Stopping -X- Bot")
+            _LOG.info(_LOG_STR, "Stopping X-Bot")
             await self._bot.stop()
         _LOG.info(_LOG_STR, "Stopping USERGE-X")
         await super().stop()
@@ -167,14 +169,14 @@ class Userge(_AbstractUserge):
         pool._stop()  # pylint: disable=protected-access
 
     def begin(self, coro: Optional[Awaitable[Any]] = None) -> None:
-        """ start USERGE-X """
+        """ start userge """
         lock = asyncio.Lock()
         running_tasks: List[asyncio.Task] = []
 
         async def _finalize() -> None:
             async with lock:
-                for task in running_tasks:
-                    task.cancel()
+                for t in running_tasks:
+                    t.cancel()
                 if self.is_initialized:
                     await self.stop()
                 else:
@@ -186,13 +188,16 @@ class Userge(_AbstractUserge):
             self.loop.stop()
             _LOG.info(_LOG_STR, "Loop Stopped !")
 
-        async def _shutdown(sig: signal.Signals) -> None:
-            _LOG.info(_LOG_STR, f"Received Stop Signal [{sig.name}], Exiting USERGE-X ...")
+        async def _shutdown(_sig: signal.Signals) -> None:
+            global _SEND_SIGNAL  # pylint: disable=global-statement
+            _LOG.info(_LOG_STR, f"Received Stop Signal [{_sig.name}], Exiting USERGE-X ...")
             await _finalize()
+            if _sig == _sig.SIGUSR1:
+                _SEND_SIGNAL = True
 
-        for sig in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT):
+        for sig in (signal.SIGHUP, signal.SIGTERM, signal.SIGINT, signal.SIGUSR1):
             self.loop.add_signal_handler(
-                sig, lambda sig=sig: self.loop.create_task(_shutdown(sig)))
+                sig, lambda _sig=sig: self.loop.create_task(_shutdown(_sig)))
         self.loop.run_until_complete(self.start())
         for task in self._tasks:
             running_tasks.append(self.loop.create_task(task()))
@@ -212,3 +217,5 @@ class Userge(_AbstractUserge):
         finally:
             self.loop.close()
             _LOG.info(_LOG_STR, "Loop Closed !")
+            if _SEND_SIGNAL:
+                os.kill(os.getpid(), signal.SIGUSR1)

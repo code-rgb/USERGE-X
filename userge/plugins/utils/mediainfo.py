@@ -41,15 +41,17 @@ async def mediainfo(message: Message):
         return
     media_type = str(type(x_media)).split("'")[1]
     file_path = safe_filename(await reply.download())
-    output_ = await runcmd(f"mediainfo {file_path}")
-    out = output_[0] if len(output_) != 0 else "Not Supported"
+    output_ = await runcmd(f'mediainfo "{file_path}"')
+    out = None
+    if len(output_) != 0:
+        out = output_[0]
     body_text = f"""
-<h2>Json</h2>
+<h2>JSON</h2>
 <pre>{x_media}</pre>
 <br>
 
-<h2>Details</h2>
-<pre>{out}</pre>
+<h2>DETAILS</h2>
+<pre>{out or 'Not Supported'}</pre>
 """
     text_ = media_type.split(".")[-1].upper()
     link = post_to_telegraph(media_type, body_text)

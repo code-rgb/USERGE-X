@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
+# Please see < https://github.com/UsergeTeam/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
 
@@ -70,8 +70,9 @@ _checkDefaultVars() {
         WORKERS=32
     fi
     export MOTOR_MAX_WORKERS=$WORKERS
+    export HEROKU_ENV=$(test $DYNO && echo 1 || echo 0)
     DOWN_PATH=${DOWN_PATH%/}/
-    if [[ -n $HEROKU_API_KEY && -n $HEROKU_APP_NAME ]]; then
+    if [[ $HEROKU_ENV == 1 && -n $HEROKU_API_KEY && -n $HEROKU_APP_NAME ]]; then
         local herokuErr=$(runPythonCode '
 import heroku3
 try:

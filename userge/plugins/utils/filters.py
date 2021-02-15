@@ -168,6 +168,7 @@ async def delete_filters(message: Message) -> None:
             "{chat}": "chat name",
             "{count}": "chat members count",
             "{mention}": "mention user",
+            r"%%%": 'This separator can be used to add "random" filters',
         },
         "usage": "{tr}addfilter [filter name | filter type] | [content | reply to msg]",
         "types": list(_SUPPORTED_TYPES),

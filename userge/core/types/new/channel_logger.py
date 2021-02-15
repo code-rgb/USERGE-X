@@ -16,9 +16,8 @@ from typing import Optional, Union
 from pyrogram.errors import ChatWriteForbidden
 from pyrogram.types import Message as RawMessage
 from pyrogram.errors.exceptions import MessageTooLong
-
 from userge import logging, Config
-from userge.utils import SafeDict, get_file_id, parse_buttons
+from userge.utils import SafeDict, get_file_id, parse_buttons, rand_array
 from ..bound import message as _message  # pylint: disable=unused-import
 from ... import client as _client  # pylint: disable=unused-import
 
@@ -154,7 +153,8 @@ class ChannelLogger:
                              chat_id: int,
                              user_id: int,
                              reply_to_message_id: int,
-                             del_in: int = 0) -> None:
+                             del_in: int = 0,
+                             allow_random:bool=True) -> None:
         """\nforward stored message from log channel.
 
         Parameters:
@@ -197,6 +197,9 @@ class ChannelLogger:
             caption = caption.format_map(SafeDict(**u_dict))
         file_id = get_file_id(message)
         caption, buttons = parse_buttons(caption)
+        split_char = r"%%%"
+        if allow_random and split_char in caption:
+            caption = rand_array(caption.split(split_char))
         try:
             if message.media and file_id:
                 msg = await client.send_cached_media(

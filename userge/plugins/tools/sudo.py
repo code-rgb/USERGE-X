@@ -10,7 +10,7 @@
 
 import asyncio
 
-from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
+from pyrogram.errors import PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
 
@@ -62,8 +62,8 @@ async def add_sudo(message: Message):
         user_id = int(user_id)
     try:
         user = await message.client.get_user_dict(user_id)
-    except PeerIdInvalid as p_e:
-        await message.err(p_e)
+    except (PeerIdInvalid, IndexError) as p_e:
+        await message.err(str(p_e))
         return
     if user["id"] in Config.SUDO_USERS:
         await message.edit(f"user : `{user['id']}` already in **SUDO**!", del_in=5)
@@ -73,6 +73,9 @@ async def add_sudo(message: Message):
                 f"user : `{user['id']}` is in `OWNER_ID` so no need to add in sudo",
                 del_in=5,
             )
+            return
+        if user["id"] in Config.TG_IDS:
+            await message.err("Not Permitted due to security reasons", del_in=7)
             return
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
