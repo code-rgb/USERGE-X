@@ -112,7 +112,7 @@ async def upload_to_tg(message: Message):
         await message.edit("wrong syntax\n`.upload [path]`")
     else:
         await message.delete()
-        await upload_path(message, string, del_path)
+        await upload_path(message=message, path=string, del_path=del_path)
 
 
 async def _handle_message(message: Message) -> None:
@@ -148,7 +148,12 @@ async def upload_path(message: Message, path: Path, del_path: bool):
     for p_t in file_paths:
         current += 1
         try:
-            await upload(message, p_t, del_path, f"{current}/{len(file_paths)}")
+            await upload(
+                message=message,
+                path=p_t,
+                del_path=del_path,
+                extra=f"{current}/{len(file_paths)}",
+            )
         except FloodWait as f_e:
             time.sleep(f_e.x)  # asyncio sleep ?
         if message.process_is_canceled:
@@ -158,8 +163,8 @@ async def upload_path(message: Message, path: Path, del_path: bool):
 async def upload(
     message: Message,
     path: Path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     custom_thumb: str = "",
@@ -173,8 +178,8 @@ async def upload(
         return await vid_upload(
             message=message,
             path=path,
-            callback=callback,
             del_path=del_path,
+            callback=callback,
             extra=extra,
             with_thumb=with_thumb,
             custom_thumb=custom_thumb,
@@ -186,8 +191,8 @@ async def upload(
         return await audio_upload(
             message=message,
             path=path,
-            callback=callback,
             del_path=del_path,
+            callback=callback,
             extra=extra,
             with_thumb=with_thumb,
             log=log,
@@ -242,8 +247,8 @@ async def doc_upload(
 async def vid_upload(
     message: Message,
     path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     custom_thumb: str = "",
@@ -318,8 +323,8 @@ async def check_thumb(thumb_path: str):
 async def audio_upload(
     message: Message,
     path,
-    callback: CallbackQuery = None,
     del_path: bool = False,
+    callback: CallbackQuery = None,
     extra: str = "",
     with_thumb: bool = True,
     log: bool = True,

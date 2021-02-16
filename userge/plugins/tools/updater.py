@@ -1,4 +1,5 @@
 import asyncio
+from os import system
 from time import time
 
 from git import Repo
@@ -46,7 +47,6 @@ async def check_update(message: Message):
         flags.remove("push")
     if len(flags) == 1:
         branch = flags[0]
-
     repo = Repo()
     if branch not in repo.branches:
         await message.err(f"invalid branch name : {branch}")
@@ -54,8 +54,14 @@ async def check_update(message: Message):
     try:
         out = _get_updates(repo, branch)
     except GitCommandError as g_e:
-        await message.err(g_e, del_in=5)
-        return
+        if "128" in str(g_e):
+            system(
+                f"git fetch {Config.UPSTREAM_REMOTE} {branch} && git checkout -f {branch}"
+            )
+            out = _get_updates(repo, branch)
+        else:
+            await message.err(g_e, del_in=5)
+            return
     if not (pull_from_repo or push_to_heroku):
         if out:
             change_log = (
