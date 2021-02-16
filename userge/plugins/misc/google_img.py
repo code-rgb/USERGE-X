@@ -58,6 +58,7 @@ class Colors:
     },
     name="gimg",
     del_pre=True,
+    check_downpath=True
 )
 async def gimg_down(message: Message):
     """google images downloader"""
