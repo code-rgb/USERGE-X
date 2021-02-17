@@ -39,12 +39,12 @@ class Colors:
         "header": "Google Image Downloader",
         "description": "Search and download images from google and upload to telegram",
         "flags": {
-            "-l": "limit [1 - 40]  (default is 5)",
-            "-q": "quality [0-2]  (2 is best|default is 1)",
+            "-l": "limit max. [40 for upload | 100 for download] (default is 5)",
+            "-q": "quality [0-2] (2 is best | default is 1)",
             "-d": "Upload as document",
             "-gif": "download gifs",
             "-down": "download only",
-            "colors": "see ⚙️ Color",
+            "colors": "any color in => ⚙️ Color",
         },
         "usage": "{tr}gimg [flags] [query|reply to text]",
         "color": ["-" + _ for _ in Colors.choice],
@@ -58,6 +58,7 @@ class Colors:
     },
     name="gimg",
     del_pre=True,
+    check_downpath=True,
 )
 async def gimg_down(message: Message):
     """google images downloader"""
@@ -77,7 +78,8 @@ async def gimg_down(message: Message):
     allow_gif = bool("gif" in flags_)
     upload_ = not bool("down" in flags_ or allow_gif)
     doc_ = bool("d" in flags_)
-    limit = min(int(flags_.get("l", 5)), 40)
+    limit = int(flags_.get("l", 5))
+    limit = min(limit, 40) if upload_ else min(limit, 100)
     if flags_:
         size = min(int(flags_.get("q", 1)), 2)
         for _ in flags_:
@@ -202,7 +204,7 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         for num, m_ in enumerate(mgroups, start=1):
             try:
                 await message.edit(
-                    f"⬆️  Uploading - **{round(num / len(mgroups) * 100)} %** ..."
+                    f"⬆️  Uploading **{round(num / len(mgroups) * 100)} %** ..."
                 )
                 await message.client.send_media_group(message.chat.id, media=m_)
                 await asyncio.sleep(len(m_))
