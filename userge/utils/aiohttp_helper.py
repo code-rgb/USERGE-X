@@ -80,6 +80,4 @@ class AioHttp:
     # Just returns the Header
     @staticmethod
     async def status(link: str, session: ClientSession = None):
-        return await AioHttp._manage_session(
-            mode="status", link=link, session=session
-        )
+        return await AioHttp._manage_session(mode="status", link=link, session=session)
