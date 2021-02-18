@@ -79,7 +79,7 @@ class get_response:
 
     # Just returns the Header
     @staticmethod
-    async def status(link: str):
+    async def status(link: str, session: ClientSession = None):
         return await get_response._manage_session(
-            mode="status", link=link, params=params, session=session
+            mode="status", link=link, session=session
         )
