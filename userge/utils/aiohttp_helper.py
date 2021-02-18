@@ -1,32 +1,32 @@
-"""
-Idea by @Pokurt
-Repo: https://github.com/pokurt/Nana-Remix/blob/master/nana/utils/aiohttp_helper.py
-"""
+# """
+# Idea by @Pokurt
+# Repo: https://github.com/pokurt/Nana-Remix/blob/master/nana/utils/aiohttp_helper.py
+# """
 
 from asyncio import TimeoutError
 
 import ujson
 from aiohttp import ClientSession, ClientTimeout
 
-"""
-Success: status == 200
-Failure: ValueError (status != 200) or timeout
-"""
+# """
+# Success: status == 200
+# Failure: ValueError if status != 200 or timeout
+# """
 
 
-class get_response:
+class AioHttp:
     @staticmethod
     async def _manage_session(
         mode: str, link: str, params: dict = None, session: ClientSession = None
     ):
         try:
             if session is not None:
-                return await get_response._request(
+                return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
             else:
                 async with ClientSession(json_serialize=ujson.dumps) as session:
-                    return await get_response._request(
+                    return await AioHttp._request(
                         mode=mode, session=session, link=link, params=params
                     )
         except TimeoutError:
@@ -52,7 +52,7 @@ class get_response:
 
     @staticmethod
     async def json(link: str, params: dict = None, session: ClientSession = None):
-        res = await get_response._manage_session(
+        res = await AioHttp._manage_session(
             mode="json", link=link, params=params, session=session
         )
         if not res:
@@ -61,7 +61,7 @@ class get_response:
 
     @staticmethod
     async def text(link: str, params: dict = None, session: ClientSession = None):
-        res = await get_response._manage_session(
+        res = await AioHttp._manage_session(
             mode="text", link=link, params=params, session=session
         )
         if not res:
@@ -70,7 +70,7 @@ class get_response:
 
     @staticmethod
     async def read(link: str, params: dict = None, session: ClientSession = None):
-        res = await get_response._manage_session(
+        res = await AioHttp._manage_session(
             mode="read", link=link, params=params, session=session
         )
         if not res:
@@ -80,6 +80,6 @@ class get_response:
     # Just returns the Header
     @staticmethod
     async def status(link: str, session: ClientSession = None):
-        return await get_response._manage_session(
+        return await AioHttp._manage_session(
             mode="status", link=link, session=session
         )
