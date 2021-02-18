@@ -4,44 +4,64 @@ Repo: https://github.com/pokurt/Nana-Remix/blob/master/nana/utils/aiohttp_helper
 """
 
 from aiohttp import ClientSession, ClientTimeout
+import ujson
+from asyncio import TimeoutError
 
+"""
+Success: status == 200
+Failure: ValueError (status != 200) or timeout
+"""
 
 class get_response:
     @staticmethod
-    # Can be used without initialising
-    async def json(link: str, params: dict = None):
-        async with ClientSession() as session:
-            async with session.get(
-                link, params=params, timeout=ClientTimeout(total=30)
-            ) as resp:
-                if resp.status != 200:
-                    raise ValueError
-                # Raises an AssertionError if status != 200
-                return await resp.json()
+    async def _manage_session(mode: str, link: str, params: dict = None, session: ClientSession = None):
+        try:
+            if session is not None:
+                return await get_response._request(mode=mode,session=session, link=link,params=params)
+            else:
+                async with ClientSession(json_serialize=ujson.dumps) as session:
+                    return await get_response._request(mode=mode,session=session, link=link,params=params)
+        except TimeoutError:
+            return
 
     @staticmethod
-    async def text(link: str, params: dict = None):
-        async with ClientSession() as session:
-            async with session.get(
-                link, params=params, timeout=ClientTimeout(total=30)
-            ) as resp:
-                if resp.status != 200:
-                    raise ValueError
-                return await resp.text()
+    async def _request(mode: str, session: ClientSession, **kwargs):
+        wait = 5 if mode == "header" else 30
+        async with session.get(kwargs["link"], params=kwargs["params"], timeout=ClientTimeout(total=wait)) as resp:
+            if mode == "header":
+                return resp.status
+            if resp.status != 200:
+                return False
+            if mode == "json":
+                r = await resp.json()
+            elif mode == "text":
+                r = await resp.text()
+            elif mode == "read":
+                r = await resp.read()
+            return r
 
     @staticmethod
-    async def read(link: str, params: dict = None):
-        async with ClientSession() as session:
-            async with session.get(
-                link, params=params, timeout=ClientTimeout(total=30)
-            ) as resp:
-                if resp.status != 200:
-                    raise ValueError
-                return await resp.read()
+    async def json(link: str, params: dict = None, session: ClientSession =None):
+        res = await get_response._manage_session(mode="json", link=link,params=params,session=session)
+        if not res:
+            raise ValueError
+        return res
+
+    @staticmethod
+    async def text(link: str, params: dict = None, session: ClientSession =None):
+        res = await get_response._manage_session(mode="text", link=link,params=params,session=session)
+        if not res:
+            raise ValueError
+        return res
+
+    @staticmethod
+    async def read(link: str, params: dict = None, session: ClientSession =None):
+        res = await get_response._manage_session(mode="read", link=link,params=params,session=session)
+        if not res:
+            raise ValueError
+        return res
 
     # Just returns the Header
     @staticmethod
-    async def status(link: str, wait: int = 5):
-        async with ClientSession() as session:
-            async with session.get(link, timeout=ClientTimeout(total=wait)) as resp:
-                return resp.status
+    async def status(link: str):
+        return await get_response._manage_session(mode="status", link=link,params=params,session=session)
