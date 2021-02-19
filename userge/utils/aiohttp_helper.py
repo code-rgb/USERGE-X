@@ -9,7 +9,6 @@ from typing import Dict, Optional
 import ujson
 from aiohttp import ClientSession, ClientTimeout
 
-
 # """
 # Success: status == 200
 # Failure: ValueError if status != 200 or timeout
