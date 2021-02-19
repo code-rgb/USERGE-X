@@ -8,13 +8,13 @@
 #
 # All rights reserved.
 
-import time
 import asyncio
+import time
 
 from pyrogram import filters
 from pyrogram.types import ChatPermissions
 
-from userge import userge, Message, get_collection
+from userge import Message, get_collection, userge
 
 ANTIFLOOD_DATA = {}
 ADMINS = {}
@@ -31,7 +31,7 @@ async def _init() -> None:
         ANTIFLOOD_DATA[data["chat_id"]] = {
             "data": data["data"],
             "limit": data["limit"],
-            "mode": "Ban"
+            "mode": "Ban",
         }
 
 
@@ -42,19 +42,27 @@ async def cache_admins(msg):
     ADMINS[msg.chat.id] = au_ids
 
 
-@userge.on_cmd("setflood", about={
-    'header': "Set Anti-Flood limit to take Action\n"
-              "Pass <on/off> to turn Off and On.",
-    'usage': "{tr}setflood 5\n"
-             "{tr}setflood on (for ON)\n{tr}setflood off (for OFF)"}, allow_private=False)
+@userge.on_cmd(
+    "setflood",
+    about={
+        "header": "Set Anti-Flood limit to take Action\n"
+        "Pass <on/off> to turn Off and On.",
+        "usage": "{tr}setflood 5\n"
+        "{tr}setflood on (for ON)\n{tr}setflood off (for OFF)",
+    },
+    allow_private=False,
+)
 async def set_flood(msg: Message):
     """ Set flood on/off and flood limit """
     args = msg.input_str
     if not args:
         await msg.err("read .help setflood")
         return
-    if 'on' in args.lower():
-        if msg.chat.id in ANTIFLOOD_DATA and ANTIFLOOD_DATA[msg.chat.id].get("data") == "on":
+    if "on" in args.lower():
+        if (
+            msg.chat.id in ANTIFLOOD_DATA
+            and ANTIFLOOD_DATA[msg.chat.id].get("data") == "on"
+        ):
             return await msg.err("Antiflood Already enabled for this chat.")
         chat_limit = 5
         chat_mode = "Ban"
@@ -64,30 +72,33 @@ async def set_flood(msg: Message):
         ANTIFLOOD_DATA[msg.chat.id] = {
             "data": "on",
             "limit": chat_limit,
-            "mode": chat_mode
+            "mode": chat_mode,
         }
         await ANTI_FLOOD.update_one(
-            {'chat_id': msg.chat.id},
-            {"$set": {
-                'data': 'on',
-                'limit': chat_limit,
-                'mode': chat_mode
-            }},
-            upsert=True
+            {"chat_id": msg.chat.id},
+            {"$set": {"data": "on", "limit": chat_limit, "mode": chat_mode}},
+            upsert=True,
         )
-        await msg.edit("`Anti-Flood is Enabled Successfully...`", log=__name__, del_in=5)
-    elif 'off' in args.lower():
+        await msg.edit(
+            "`Anti-Flood is Enabled Successfully...`", log=__name__, del_in=5
+        )
+    elif "off" in args.lower():
         if msg.chat.id not in ANTIFLOOD_DATA or (
-            msg.chat.id in ANTIFLOOD_DATA and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
+            msg.chat.id in ANTIFLOOD_DATA
+            and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
         ):
             return await msg.err("Antiflood Already Disabled for this chat.")
         ANTIFLOOD_DATA[msg.chat.id]["data"] = "off"
         await ANTI_FLOOD.update_one(
-            {'chat_id': msg.chat.id}, {"$set": {'data': 'off'}}, upsert=True)
-        await msg.edit("`Anti-Flood is Disabled Successfully...`", log=__name__, del_in=5)
+            {"chat_id": msg.chat.id}, {"$set": {"data": "off"}}, upsert=True
+        )
+        await msg.edit(
+            "`Anti-Flood is Disabled Successfully...`", log=__name__, del_in=5
+        )
     elif args.isnumeric():
         if msg.chat.id not in ANTIFLOOD_DATA or (
-            msg.chat.id in ANTIFLOOD_DATA and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
+            msg.chat.id in ANTIFLOOD_DATA
+            and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
         ):
             return await msg.err("First turn ON ANTIFLOOD then set Limit.")
         input_ = int(args)
@@ -96,20 +107,27 @@ async def set_flood(msg: Message):
             return
         ANTIFLOOD_DATA[msg.chat.id]["limit"] = input_
         await ANTI_FLOOD.update_one(
-            {'chat_id': msg.chat.id}, {"$set": {'limit': input_}}, upsert=True)
+            {"chat_id": msg.chat.id}, {"$set": {"limit": input_}}, upsert=True
+        )
         await msg.edit(
             f"`Anti-Flood  limit is Successfully Updated for {input_}.`",
-            log=__name__, del_in=5
+            log=__name__,
+            del_in=5,
         )
     else:
         await msg.err("Invalid argument, read .help setflood")
 
 
-@userge.on_cmd("setmode", about={
-    'header': "Set Anti-Flood Mode",
-    'description': "When User Reached Limit of Flooding "
-                   "He will Got Ban/Kick/Mute By Group Admins",
-    'usage': "{tr}setmode Ban\n{tr}setmode Kick\n{tr}setmode Mute"}, allow_private=False)
+@userge.on_cmd(
+    "setmode",
+    about={
+        "header": "Set Anti-Flood Mode",
+        "description": "When User Reached Limit of Flooding "
+        "He will Got Ban/Kick/Mute By Group Admins",
+        "usage": "{tr}setmode Ban\n{tr}setmode Kick\n{tr}setmode Mute",
+    },
+    allow_private=False,
+)
 async def set_mode(msg: Message):
     """ Set flood mode to take action """
     mode = msg.input_str
@@ -117,24 +135,29 @@ async def set_mode(msg: Message):
         await msg.err("read .help setmode")
         return
     if msg.chat.id not in ANTIFLOOD_DATA or (
-        msg.chat.id in ANTIFLOOD_DATA and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
+        msg.chat.id in ANTIFLOOD_DATA
+        and ANTIFLOOD_DATA[msg.chat.id].get("data") == "off"
     ):
         return await msg.err("First turn ON ANTIFLOOD then set Mode.")
-    if mode.lower() in ('ban', 'kick', 'mute'):
+    if mode.lower() in ("ban", "kick", "mute"):
         ANTIFLOOD_DATA[msg.chat.id]["mode"] = mode.lower()
         await ANTI_FLOOD.update_one(
-            {'chat_id': msg.chat.id}, {"$set": {'mode': mode.lower()}}, upsert=True)
+            {"chat_id": msg.chat.id}, {"$set": {"mode": mode.lower()}}, upsert=True
+        )
         await msg.edit(
             f"`Anti-Flood Mode is Successfully Updated to {mode.title()}`",
-            log=__name__, del_in=5
+            log=__name__,
+            del_in=5,
         )
     else:
         await msg.err("Invalid argument, read .help setmode")
 
 
-@userge.on_cmd("vflood", about={
-    'header': "View Current Anti Flood Settings",
-    'usage': "{tr}vflood"}, allow_private=False)
+@userge.on_cmd(
+    "vflood",
+    about={"header": "View Current Anti Flood Settings", "usage": "{tr}vflood"},
+    allow_private=False,
+)
 async def view_flood_settings(msg: Message):
     """ view Current Flood Settings """
     chat_data = ANTIFLOOD_DATA.get(msg.chat.id)
@@ -151,7 +174,9 @@ async def view_flood_settings(msg: Message):
 
 
 @userge.on_filters(
-    filters.group & filters.incoming & ~filters.edited, group=3, check_restrict_perm=True
+    filters.group & filters.incoming & ~filters.edited,
+    group=3,
+    check_restrict_perm=True,
 )
 async def anti_flood_handler(msg: Message):
     """ Filtering msgs for Handling Flooding """
@@ -179,17 +204,14 @@ async def anti_flood_handler(msg: Message):
     limit = ANTIFLOOD_DATA[msg.chat.id]["limit"]
 
     if check_flood(chat_id, user_id):
-        if mode.lower() == 'ban':
-            await msg.client.kick_chat_member(
-                chat_id, user_id)
+        if mode.lower() == "ban":
+            await msg.client.kick_chat_member(chat_id, user_id)
             exec_str = "#BANNED"
-        elif mode.lower() == 'kick':
-            await msg.client.kick_chat_member(
-                chat_id, user_id, int(time.time() + 60))
+        elif mode.lower() == "kick":
+            await msg.client.kick_chat_member(chat_id, user_id, int(time.time() + 60))
             exec_str = "#KICKED"
         else:
-            await msg.client.restrict_chat_member(
-                chat_id, user_id, ChatPermissions())
+            await msg.client.restrict_chat_member(chat_id, user_id, ChatPermissions())
             exec_str = "#MUTED"
         await asyncio.gather(
             msg.reply(
@@ -197,22 +219,21 @@ async def anti_flood_handler(msg: Message):
                 "\n\nThis User Reached His Limit of Spamming\n\n"
                 f"**User:** [{first_name}](tg://user?id={user_id})\n"
                 f"**ID:** `{user_id}`\n**Limit:** `{limit}`\n\n"
-                f"**Quick Action:** {exec_str}"),
+                f"**Quick Action:** {exec_str}"
+            ),
             CHANNEL.log(
                 r"\\**#AntiFlood_Log**//"
                 "\n\n**User Anti-Flood Limit reached**\n"
                 f"**User:** [{first_name}](tg://user?id={user_id})\n"
                 f"**ID:** `{user_id}`\n**Limit:** {limit}\n"
-                f"**Quick Action:** {exec_str} in {msg.chat.title}")
+                f"**Quick Action:** {exec_str} in {msg.chat.title}"
+            ),
         )
 
 
 def check_flood(chat_id: int, user_id: int):
     if not FLOOD_CACHE.get(chat_id) or FLOOD_CACHE[chat_id]["cur_user"] != user_id:
-        FLOOD_CACHE[chat_id] = {
-            "cur_user": user_id,
-            "count": 1
-        }
+        FLOOD_CACHE[chat_id] = {"cur_user": user_id, "count": 1}
         return False
     chat_flood = FLOOD_CACHE[chat_id]
     count = chat_flood["count"]

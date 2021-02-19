@@ -4,10 +4,11 @@
 # """
 
 from asyncio import TimeoutError
+from typing import Dict, Optional
 
 import ujson
 from aiohttp import ClientSession, ClientTimeout
-from typing import Optional, Dict
+
 from userge.core.methods.utils.get_logger import GetLogger
 
 LOG = GetLogger.getLogger(__name__)
@@ -25,7 +26,10 @@ class AioHttp:
 
     @staticmethod
     async def _manage_session(
-        mode: str, link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None
+        mode: str,
+        link: str,
+        params: Optional[Dict] = None,
+        session: Optional[ClientSession] = None,
     ):
         try:
             if session and not session.closed:
@@ -65,7 +69,11 @@ class AioHttp:
             return r
 
     @staticmethod
-    async def json(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
+    async def json(
+        link: str,
+        params: Optional[Dict] = None,
+        session: Optional[ClientSession] = None,
+    ):
         res = await AioHttp._manage_session(
             mode="json", link=link, params=params, session=session
         )
@@ -74,7 +82,11 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def text(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
+    async def text(
+        link: str,
+        params: Optional[Dict] = None,
+        session: Optional[ClientSession] = None,
+    ):
         res = await AioHttp._manage_session(
             mode="text", link=link, params=params, session=session
         )
@@ -83,7 +95,11 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def read(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
+    async def read(
+        link: str,
+        params: Optional[Dict] = None,
+        session: Optional[ClientSession] = None,
+    ):
         res = await AioHttp._manage_session(
             mode="read", link=link, params=params, session=session
         )
@@ -105,7 +121,9 @@ class AioHttp:
 
     # Just returns the Header
     @staticmethod
-    async def headers(link: str, session: Optional[ClientSession] = None, raw: bool = True):
+    async def headers(
+        link: str, session: Optional[ClientSession] = None, raw: bool = True
+    ):
         headers_ = await AioHttp._manage_session(
             mode="headers", link=link, session=session
         )
