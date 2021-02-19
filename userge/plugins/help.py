@@ -51,7 +51,7 @@ _CATEGORY = {
     "misc": "🧩",
     "tools": "🧰",
     "utils": "🗂",
-    "unofficial": "➕",
+    "xtra": "➕",
     "temp": "♻️",
     "plugins": "💎",
     "bot": "💠",
