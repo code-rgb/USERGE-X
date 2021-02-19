@@ -9,9 +9,6 @@ from typing import Dict, Optional
 import ujson
 from aiohttp import ClientSession, ClientTimeout
 
-from userge.core.methods.utils.get_logger import GetLogger
-
-LOG = GetLogger.getLogger(__name__)
 
 # """
 # Success: status == 200
@@ -41,9 +38,9 @@ class AioHttp:
                     mode=mode, session=xsession, link=link, params=params
                 )
         except TimeoutError:
-            LOG.warning("Timeout! the site didn't responded in time.")
+            print("Timeout! the site didn't responded in time.")
         except Exception as e:
-            LOG.exception(e)
+            print(e)
 
     @staticmethod
     async def _request(mode: str, session: ClientSession, **kwargs):
