@@ -24,15 +24,15 @@ class AioHttp:
         mode: str, link: str, params: dict = None, session: ClientSession = None
     ):
         try:
-            if session and not session.closed:
-                return await AioHttp._request(
-                    mode=mode, session=session, link=link, params=params
-                )
-            else:
-                async with ClientSession(json_serialize=ujson.dumps) as session:
+            if session is not None:
+                if not session.closed:
                     return await AioHttp._request(
                         mode=mode, session=session, link=link, params=params
                     )
+            async with ClientSession(json_serialize=ujson.dumps) as session:
+                return await AioHttp._request(
+                    mode=mode, session=session, link=link, params=params
+                )
         except TimeoutError:
             LOG.warning("Timeout! the site didn't responded in time.")
         except Exception as e:
