@@ -28,9 +28,9 @@ class AioHttp:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
-            async with ClientSession(json_serialize=ujson.dumps) as session:
+            async with ClientSession(json_serialize=ujson.dumps) as xsession:
                 return await AioHttp._request(
-                    mode=mode, session=session, link=link, params=params
+                    mode=mode, session=xsession, link=link, params=params
                 )
         except TimeoutError:
             LOG.warning("Timeout! the site didn't responded in time.")
