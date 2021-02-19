@@ -20,6 +20,10 @@ LOG = GetLogger.getLogger(__name__)
 
 class AioHttp:
     @staticmethod
+    def get_session() -> ClientSession:
+        return ClientSession(json_serialize=ujson.dumps)
+
+    @staticmethod
     async def _manage_session(
         mode: str, link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None
     ):
@@ -28,7 +32,7 @@ class AioHttp:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
-            async with ClientSession(json_serialize=ujson.dumps) as xsession:
+            async with AioHttp.get_session as xsession:
                 return await AioHttp._request(
                     mode=mode, session=xsession, link=link, params=params
                 )
@@ -39,7 +43,7 @@ class AioHttp:
 
     @staticmethod
     async def _request(mode: str, session: ClientSession, **kwargs):
-        wait = 5 if mode == "status" else 30
+        wait = 5 if mode == "status" else 15
         async with session.get(
             kwargs["link"], params=kwargs["params"], timeout=ClientTimeout(total=wait)
         ) as resp:
