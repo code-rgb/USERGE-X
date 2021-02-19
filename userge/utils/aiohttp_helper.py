@@ -24,7 +24,7 @@ class AioHttp:
         mode: str, link: str, params: dict = None, session: ClientSession = None
     ):
         try:
-            if session and isinstance(session, ClientSession) and (not session.closed):
+            if session and not session.closed:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
