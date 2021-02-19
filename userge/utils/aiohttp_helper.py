@@ -3,7 +3,7 @@
 # Repo: https://github.com/pokurt/Nana-Remix/blob/master/nana/utils/aiohttp_helper.py
 # """
 
-from asyncio import TimeoutError
+import asyncio
 from typing import Dict, Optional
 
 import ujson
@@ -36,7 +36,7 @@ class AioHttp:
                 return await AioHttp._request(
                     mode=mode, session=xsession, link=link, params=params
                 )
-        except TimeoutError:
+        except asyncio.TimeoutError:
             print("Timeout! the site didn't responded in time.")
         except Exception as e:
             print(e)
@@ -52,7 +52,7 @@ class AioHttp:
             if mode == "redirect":
                 return resp.url
             if mode == "headers":
-                return r.headers
+                return resp.headers
             # Checking response status
             if resp.status != 200:
                 return False

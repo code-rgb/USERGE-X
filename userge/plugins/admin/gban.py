@@ -63,7 +63,7 @@ async def antispam_(message: Message):
     },
     allow_channels=False,
 )
-async def antispam_(message: Message):
+async def spam_protect_(message: Message):
     """ enable / disable Intellivoid spam protection """
     if Config.SPAM_PROTECTION:
         Config.SPAM_PROTECTION = False
