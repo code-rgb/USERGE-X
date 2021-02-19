@@ -55,6 +55,7 @@ _CATEGORY = {
     "temp": "♻️",
     "plugins": "💎",
     "bot": "💠",
+    "custom": "🔧"
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")

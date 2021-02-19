@@ -44,3 +44,4 @@ pymediainfo>=5.0.3
 ujson>=4.0.1
 youtube-search-python==1.4.0
 git+https://github.com/code-rgb/google-images-download.git
+feedparser>=6.0.2

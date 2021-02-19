@@ -7,7 +7,7 @@ from asyncio import TimeoutError
 
 import ujson
 from aiohttp import ClientSession, ClientTimeout
-from typing import Optional
+from typing import Optional, Dict
 from userge.core.methods.utils.get_logger import GetLogger
 
 LOG = GetLogger.getLogger(__name__)
@@ -25,10 +25,10 @@ class AioHttp:
 
     @staticmethod
     async def _manage_session(
-        mode: str, link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None
+        mode: str, link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None
     ):
         try:
-            if session not session.closed:
+            if session and not session.closed:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
@@ -65,7 +65,7 @@ class AioHttp:
             return r
 
     @staticmethod
-    async def json(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
+    async def json(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="json", link=link, params=params, session=session
         )
@@ -74,7 +74,7 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def text(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
+    async def text(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="text", link=link, params=params, session=session
         )
@@ -83,7 +83,7 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def read(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
+    async def read(link: str, params: Optional[Dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="read", link=link, params=params, session=session
         )
