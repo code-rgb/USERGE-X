@@ -7,7 +7,7 @@ from asyncio import TimeoutError
 
 import ujson
 from aiohttp import ClientSession, ClientTimeout
-
+from typing import Optional
 from userge.core.methods.utils.get_logger import GetLogger
 
 LOG = GetLogger.getLogger(__name__)
@@ -21,14 +21,13 @@ LOG = GetLogger.getLogger(__name__)
 class AioHttp:
     @staticmethod
     async def _manage_session(
-        mode: str, link: str, params: dict = None, session: ClientSession = None
+        mode: str, link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None
     ):
         try:
-            if session is not None:
-                if not session.closed:
-                    return await AioHttp._request(
-                        mode=mode, session=session, link=link, params=params
-                    )
+            if session not session.closed:
+                return await AioHttp._request(
+                    mode=mode, session=session, link=link, params=params
+                )
             async with ClientSession(json_serialize=ujson.dumps) as session:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
@@ -62,7 +61,7 @@ class AioHttp:
             return r
 
     @staticmethod
-    async def json(link: str, params: dict = None, session: ClientSession = None):
+    async def json(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="json", link=link, params=params, session=session
         )
@@ -71,7 +70,7 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def text(link: str, params: dict = None, session: ClientSession = None):
+    async def text(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="text", link=link, params=params, session=session
         )
@@ -80,7 +79,7 @@ class AioHttp:
         return res
 
     @staticmethod
-    async def read(link: str, params: dict = None, session: ClientSession = None):
+    async def read(link: str, params: Optional[dict] = None, session: Optional[ClientSession] = None):
         res = await AioHttp._manage_session(
             mode="read", link=link, params=params, session=session
         )
@@ -90,19 +89,19 @@ class AioHttp:
 
     # Just returns the status
     @staticmethod
-    async def status(link: str, session: ClientSession = None):
+    async def status(link: str, session: Optional[ClientSession] = None):
         return await AioHttp._manage_session(mode="status", link=link, session=session)
 
     # returns redirect url
     @staticmethod
-    async def redirect_url(link: str, session: ClientSession = None):
+    async def redirect_url(link: str, session: Optional[ClientSession] = None):
         return await AioHttp._manage_session(
             mode="redirect", link=link, session=session
         )
 
     # Just returns the Header
     @staticmethod
-    async def headers(link: str, session: ClientSession = None, raw: bool = True):
+    async def headers(link: str, session: Optional[ClientSession] = None, raw: bool = True):
         headers_ = await AioHttp._manage_session(
             mode="headers", link=link, session=session
         )
