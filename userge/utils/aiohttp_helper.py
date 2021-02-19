@@ -32,7 +32,7 @@ class AioHttp:
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
-            async with AioHttp.get_session as xsession:
+            async with AioHttp.get_session() as xsession:
                 return await AioHttp._request(
                     mode=mode, session=xsession, link=link, params=params
                 )
