@@ -7,12 +7,14 @@ from asyncio import TimeoutError
 
 import ujson
 from aiohttp import ClientSession, ClientTimeout
+from userge.core.methods.utils.get_logger import GetLogger
+
+LOG = GetLogger.getLogger(__name__)
 
 # """
 # Success: status == 200
 # Failure: ValueError if status != 200 or timeout
 # """
-
 
 class AioHttp:
     @staticmethod
@@ -20,7 +22,7 @@ class AioHttp:
         mode: str, link: str, params: dict = None, session: ClientSession = None
     ):
         try:
-            if session is not None or session.closed:
+            if session and isinstance(session, ClientSession) and (not session.closed):
                 return await AioHttp._request(
                     mode=mode, session=session, link=link, params=params
                 )
@@ -30,7 +32,10 @@ class AioHttp:
                         mode=mode, session=session, link=link, params=params
                     )
         except TimeoutError:
-            return
+            LOG.warning("Timeout! the site didn't responded in time.")
+        except Exception as e:
+            LOG.exception(e)
+
 
     @staticmethod
     async def _request(mode: str, session: ClientSession, **kwargs):
@@ -40,6 +45,11 @@ class AioHttp:
         ) as resp:
             if mode == "status":
                 return resp.status
+            if mode == "redirect":
+                return resp.url
+            if mode == "headers":
+                return r.headers
+            # Checking response status
             if resp.status != 200:
                 return False
             if mode == "json":
@@ -77,7 +87,24 @@ class AioHttp:
             raise ValueError
         return res
 
-    # Just returns the Header
+    # Just returns the status
     @staticmethod
     async def status(link: str, session: ClientSession = None):
         return await AioHttp._manage_session(mode="status", link=link, session=session)
+
+    # returns redirect url
+    @staticmethod
+    async def redirect_url(link: str, session: ClientSession = None):
+        return await AioHttp._manage_session(mode="redirect", link=link, session=session)
+
+    # Just returns the Header
+    @staticmethod
+    async def headers(link: str, session: ClientSession = None, raw: bool=True):
+        headers_ = await AioHttp._manage_session(mode="headers", link=link, session=session)
+        if headers_:
+            if raw:
+                return headers_
+            text = ""
+            for key, value in headers_.items():
+                text += f"🏷 <i>{key}</i>: <code>{value}</code>\n\n"
+            return f"<b>URl:</b> {link}\n\n<b>HEADERS:</b>\n\n{text}"
