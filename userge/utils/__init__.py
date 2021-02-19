@@ -1,4 +1,4 @@
-from .aiohttp_helper import get_response
+from .aiohttp_helper import AioHttp as get_response
 from .functions import (
     check_owner,
     cleanhtml,
