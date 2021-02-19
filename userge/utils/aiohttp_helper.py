@@ -34,11 +34,11 @@ class AioHttp:
 
     @staticmethod
     async def _request(mode: str, session: ClientSession, **kwargs):
-        wait = 5 if mode == "header" else 30
+        wait = 5 if mode == "status" else 30
         async with session.get(
             kwargs["link"], params=kwargs["params"], timeout=ClientTimeout(total=wait)
         ) as resp:
-            if mode == "header":
+            if mode == "status":
                 return resp.status
             if resp.status != 200:
                 return False
