@@ -483,7 +483,11 @@ async def gban_at_entry(message: Message):
                         ),
                     )
         elif Config.SPAM_WATCH_API:
-            intruder = await _get_spamwatch_data(user_id)
+            try:
+                intruder = await _get_spamwatch_data(user_id)
+            except spamwatch.errors.Error as err:
+                LOG.error(str(err))
+                intruder = False
             if intruder:
                 await asyncio.gather(
                     message.client.kick_chat_member(chat_id, user_id),
