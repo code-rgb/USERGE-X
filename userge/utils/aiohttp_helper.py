@@ -45,14 +45,14 @@ class AioHttp:
     async def _request(mode: str, session: ClientSession, **kwargs):
         wait = 5 if mode == "status" else 15
         async with session.get(
-            kwargs["link"], params=kwargs["params"], timeout=ClientTimeout(total=wait)
-        ) as resp:
-            if mode == "status":
-                return resp.status
-            if mode == "redirect":
-                return resp.url
+                kwargs["link"], params=kwargs["params"], timeout=ClientTimeout(total=wait)
+            ) as resp:
             if mode == "headers":
                 return resp.headers
+            elif mode == "redirect":
+                return resp.url
+            elif mode == "status":
+                return resp.status
             # Checking response status
             if resp.status != 200:
                 return False
@@ -126,7 +126,9 @@ class AioHttp:
         if headers_:
             if raw:
                 return headers_
-            text = ""
-            for key, value in headers_.items():
-                text += f"🏷 <i>{key}</i>: <code>{value}</code>\n\n"
+            text = "".join(
+                f"🏷 <i>{key}</i>: <code>{value}</code>\n\n"
+                for key, value in headers_.items()
+            )
+
             return f"<b>URl:</b> {link}\n\n<b>HEADERS:</b>\n\n{text}"

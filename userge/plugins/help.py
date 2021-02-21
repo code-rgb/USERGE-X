@@ -278,7 +278,7 @@ if userge.has_bot:
             )
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
-        elif RawClient.DUAL_MODE:
+        else:
             Config.USE_USER_FOR_CLIENT_CHECKS = True
         await SAVED_SETTINGS.update_one(
             {"_id": "CURRENT_CLIENT"},
@@ -963,13 +963,11 @@ if userge.has_bot:
                 if os.path.exists(inline_db_path):
                     with open(inline_db_path, "r") as data_file:
                         view_db = ujson.load(data_file)
-                    data_count_n = 1
                     reverse_list = list(view_db)
                     reverse_list.reverse()
-                    for butt_ons in reverse_list:
+                    for data_count_n, butt_ons in enumerate(reverse_list, start=1):
                         if data_count_n > 30:
                             view_db.pop(butt_ons, None)
-                        data_count_n += 1
                     with open(inline_db_path, "w") as data_file:
                         ujson.dump(view_db, data_file)
                     if str_y[0] == "btn":
