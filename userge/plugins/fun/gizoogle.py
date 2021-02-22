@@ -22,7 +22,7 @@ async def gizoo_(message: Message):
         return
     try:
         result = text_giz(input_str)
-    except:
+    except BaseException:
         return await message.err("Failed to gizoogle the text.", del_in=3)
     await message.edit(result)
 

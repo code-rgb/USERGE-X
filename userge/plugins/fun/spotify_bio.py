@@ -203,15 +203,18 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
     # (or a closing of spotify), we reset that variable to false.
     def save_spam(which, what):
         # see below why
-        # this is if False is inserted, so if spam = False, so if everything is good.
+        # this is if False is inserted, so if spam = False, so if everything is
+        # good.
         if not what:
             # if it wasn't normal before, we proceed
             if SP_DATABASE.return_spam(which):
                 # we save that it is normal now
                 SP_DATABASE.save_spam(which, False)
-                # we return True so we can test against it and if it this function returns, we can send a fitting message
+                # we return True so we can test against it and if it this
+                # function returns, we can send a fitting message
                 return True
-        # this is if True is inserted, so if spam = True, so if something went wrong
+        # this is if True is inserted, so if spam = True, so if something went
+        # wrong
         else:
             # if it was normal before, we proceed
             if not SP_DATABASE.return_spam(which):
@@ -219,7 +222,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 SP_DATABASE.save_spam(which, True)
                 # we return True so we can send a message
                 return True
-        # if True wasn't returned before, we can return False now so our test fails and we dont send a message
+        # if True wasn't returned before, we can return False now so our test
+        # fails and we dont send a message
         return False
 
     async def spotify_bio_():
@@ -252,7 +256,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                         await CHANNEL.log(stringy)
                 else:
                     if save_spam("spotify", True):
-                        # currently item is not passed when the user plays a podcast
+                        # currently item is not passed when the user plays a
+                        # podcast
                         string = (
                             f"**[INFO]**\n\nThe playback {received['currently_playing_type']}"
                             " didn't gave me any additional information, so I skipped updating the bio."
@@ -268,7 +273,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 )
                 skip = True
                 await asyncio.sleep(int(to_wait))
-            # 204 means user plays nothing, since to_insert is false, we dont need to change anything
+            # 204 means user plays nothing, since to_insert is false, we dont
+            # need to change anything
             elif r.status_code == 204:
                 if save_spam("spotify", False):
                     stringy = (
@@ -302,10 +308,12 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     },
                     upsert=True,
                 )
-                # since we didnt actually update our status yet, lets do this without the 30 seconds wait
+                # since we didnt actually update our status yet, lets do this
+                # without the 30 seconds wait
                 skip = True
             # 502 means bad gateway, its an issue on spotify site which we can do nothing about. 30 seconds wait shouldn't
-            # put too much pressure on the spotify server, so we are just going to notify the user once
+            # put too much pressure on the spotify server, so we are just going
+            # to notify the user once
             elif r.status_code == 502:
                 if save_spam("spotify", True):
                     string = (
@@ -314,7 +322,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     )
                     await CHANNEL.log(string)
             # 503 means service unavailable, its an issue on spotify site which we can do nothing about. 30 seconds wait
-            # shouldn't put too much pressure on the spotify server, so we are just going to notify the user once
+            # shouldn't put too much pressure on the spotify server, so we are
+            # just going to notify the user once
             elif r.status_code == 503:
                 if save_spam("spotify", True):
                     string = (
@@ -339,7 +348,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     + r.text
                 )
                 LOG_.error(f"Spotify, error {str(r.status_code)}, text: {r.text}")
-                # stop the whole program since I dont know what happens here and this is the safest thing we can do
+                # stop the whole program since I dont know what happens here
+                # and this is the safest thing we can do
                 Config.SPOTIFY_MODE = False
             # TELEGRAM
             try:
@@ -359,7 +369,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     spotify_bio_.title = to_insert["title"]
                     spotify_bio_.link = to_insert["link"]
                     spotify_bio_.image = to_insert["image"]
-                    # we need this variable to see if actually one of the BIOS is below the character limit
+                    # we need this variable to see if actually one of the BIOS
+                    # is below the character limit
                     new_bio = ""
                     for bio in BIOS:
                         temp = bio.format(
@@ -368,20 +379,25 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                             progress=progress,
                             duration=duration,
                         )
-                        # we try to not ignore for telegrams character limit here
+                        # we try to not ignore for telegrams character limit
+                        # here
                         if len(temp) < LIMIT:
-                            # this is short enough, so we put it in the variable and break our for loop
+                            # this is short enough, so we put it in the
+                            # variable and break our for loop
                             new_bio = temp
                             break
                     # if we have a bio, one bio was short enough
                     if new_bio:
-                        # test if the user changed his bio to blank, we save it before we override
+                        # test if the user changed his bio to blank, we save it
+                        # before we override
                         if not bio:
                             SP_DATABASE.save_bio(bio)
-                        # test if the user changed his bio in the meantime, if yes, we save it before we override
+                        # test if the user changed his bio in the meantime, if
+                        # yes, we save it before we override
                         elif "🎶" not in bio:
                             SP_DATABASE.save_bio(bio)
-                        # test if the bio isn't the same, otherwise updating it would be stupid
+                        # test if the bio isn't the same, otherwise updating it
+                        # would be stupid
                         if not new_bio == bio:
                             try:
                                 await userge.update_profile(bio=new_bio)
@@ -393,7 +409,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                                     )
                                     await CHANNEL.log(stringy)
                             # this can happen if our LIMIT check failed because telegram counts emojis twice and python
-                            # doesnt. Refer to the constants file to learn more about this
+                            # doesnt. Refer to the constants file to learn more
+                            # about this
                             except AboutTooLong:
                                 if save_spam("telegram", True):
                                     stringy = (
@@ -402,7 +419,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                                         f"in the constants. Anyway, here is the bio I tried to insert:\n\n{new_bio}"
                                     )
                                     await CHANNEL.log(stringy)
-                    # if we dont have a bio, everything was too long, so we tell the user that
+                    # if we dont have a bio, everything was too long, so we
+                    # tell the user that
                     if not new_bio:
                         if save_spam("telegram", True):
                             to_send = (
@@ -419,10 +437,12 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                         )
                         await CHANNEL.log(stringy)
                     old_bio = SP_DATABASE.return_bio()
-                    # this means the bio is blank, so we save that as the new one
+                    # this means the bio is blank, so we save that as the new
+                    # one
                     if not bio:
                         SP_DATABASE.save_bio(bio)
-                    # this means an old playback is in the bio, so we change it back to the original one
+                    # this means an old playback is in the bio, so we change it
+                    # back to the original one
                     elif "🎶" in bio:
                         await userge.update_profile(bio=SP_DATABASE.return_bio())
                     # this means a new original is there, lets save it
@@ -440,7 +460,8 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 )
                 skip = True
                 await asyncio.sleep(to_wait)
-            # skip means a flood error stopped the whole program, no need to wait another 30 seconds after that
+            # skip means a flood error stopped the whole program, no need to
+            # wait another 30 seconds after that
             if not skip:
                 await asyncio.sleep(30)
 
@@ -548,10 +569,10 @@ async def sp_info_(message: Message):
         currently_playing_song_dur = f"{spotify_bio_.progress}/{spotify_bio_.duration}"
         # ==================ASSINGING_VAR_VLAUE=======================================#
         status_pn = f"""
-    **Device name:** {device_name} ({device_type}) 
-    **Device volume:** {device_vol}% 
-    **Currently playing song:** {currently_playing_song} 
-    **Duration:** {currently_playing_song_dur} 
+    **Device name:** {device_name} ({device_type})
+    **Device volume:** {device_vol}%
+    **Currently playing song:** {currently_playing_song}
+    **Duration:** {currently_playing_song_dur}
     **Recently played songs:** \n{recent_p}"""
     await message.edit(status_pn)
 

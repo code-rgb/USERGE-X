@@ -676,7 +676,7 @@ async def emoji_func(message):
         try:
             await switch.edit(emoji)
             await sleep(2)
-        except:
+        except BaseException:
             pass
 
 
