@@ -39,11 +39,13 @@ async def neofetch_(message: Message):
 
 async def neo_image():
     neofetch = (await runcmd("neofetch --stdout"))[0]
-    base_pic = "https://telegra.ph/file/1f62cbef3fe8e24afc6f7.jpg" if "Debian" in neofetch else "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg"
-    to_print = neofetch.splitlines()
-    in_memory = BytesIO(
-        get(base_pic).content
+    base_pic = (
+        "https://telegra.ph/file/1f62cbef3fe8e24afc6f7.jpg"
+        if "Debian" in neofetch
+        else "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg"
     )
+    to_print = neofetch.splitlines()
+    in_memory = BytesIO(get(base_pic).content)
     font_url = (
         "https://raw.githubusercontent.com/code-rgb/AmongUs/master/FiraCode-Regular.ttf"
     )
