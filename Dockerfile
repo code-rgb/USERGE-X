@@ -21,6 +21,8 @@ RUN apt -qq install -y --no-install-recommends \
 
 # to resynchronize the package index files from their sources.
 RUN apt -qq update
+RUN git config --global user.email "anirudhkunduthode@gmail.com"
+RUN git config --global user.name "sudo-nautilus"
 
 # http://bugs.python.org/issue19846
 # https://github.com/SpEcHiDe/PublicLeech/pull/97
