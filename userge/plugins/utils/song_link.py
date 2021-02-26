@@ -32,7 +32,7 @@ async def getlink_(message: Message):
         txt = reply.text or reply.caption
         msg = reply
     else:
-        await message.err("No Input Found !", del_in=10)
+        await message.err("No Input Found !", del_in=5)
         return
     url_e = [
         _
@@ -40,7 +40,7 @@ async def getlink_(message: Message):
         if _.type in ("url", "text_link")
     ]
     if len(url_e) == 0:
-        await message.err("No Valid URL was found !", del_in=10)
+        await message.err("No Valid URL was found !", del_in=5)
         return
     y = url_e[0]
     link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
@@ -48,7 +48,7 @@ async def getlink_(message: Message):
     resp = await get_song_link(link)
     if resp is None:
         await message.err(
-            "Oops something went wrong! Please try again later.", del_in=10
+            "Oops something went wrong! Please try again later.", del_in=5
         )
         return
     await message.edit((await get_data(resp)) or "404 Not Found")
