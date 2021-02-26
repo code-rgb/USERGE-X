@@ -101,6 +101,7 @@ async def see_info(message: Message):
 
 def count_lines(cmd_path: str, word: str = None):
     arr = []
+    num_lines = 0
     if word:
         word = word.strip().lower()
     with open(cmd_path, "r") as f:
