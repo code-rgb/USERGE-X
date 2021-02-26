@@ -98,7 +98,7 @@ def get_data(resp: Dict) -> str:
             if x != "itunes"
         ]
     )
-    return des += "</b>"
+    return des + "</b>"
 
 
 def htmlink(text: str, link: str) -> str:
