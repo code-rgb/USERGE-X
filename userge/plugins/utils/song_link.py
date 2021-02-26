@@ -6,12 +6,13 @@
 # Idea : https://t.me/USERGE_X/107828
 # API: https://odesli.co/
 
-from re import search
-from userge.utils import get_response
 from html import escape
+from re import search
 from typing import Dict, Optional
 from urllib.parse import quote
-from userge import Message, userge, pool
+
+from userge import Message, pool, userge
+from userge.utils import get_response
 
 
 @userge.on_cmd(
@@ -33,23 +34,31 @@ async def getlink_(message: Message):
     else:
         await message.err("No Input Found !", del_in=10)
         return
-    url_e = [_ for _ in (msg.entities or msg.caption_entities) if _.type in ("url", "text_link")]
+    url_e = [
+        _
+        for _ in (msg.entities or msg.caption_entities)
+        if _.type in ("url", "text_link")
+    ]
     if len(url_e) == 0:
         await message.err("No Valid URL was found !", del_in=10)
         return
     y = url_e[0]
-    link = txt[y.offset:(y.offset + y.length)] if y.type == "url" else y.url
+    link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
     await message.edit(f'🔎 Searching for `"{link}"`')
-    resp  = await get_song_link(link)
+    resp = await get_song_link(link)
     if resp is None:
-        await message.err("Oops something went wrong! Please try again later.", del_in=10)
+        await message.err(
+            "Oops something went wrong! Please try again later.", del_in=10
+        )
         return
     await message.edit((await get_data(resp)) or "404 Not Found")
 
 
 async def get_song_link(link: str) -> Optional[Dict]:
     try:
-        r = await get_response.json("https://api.song.link/v1-alpha.1/links?url=" + quote(link))
+        r = await get_response.json(
+            "https://api.song.link/v1-alpha.1/links?url=" + quote(link)
+        )
     except ValueError:
         r = None
     return r
@@ -68,7 +77,7 @@ def beautify(text: str) -> str:
     else:
         out = text
     return out
-    
+
 
 @pool.run_in_thread
 def get_data(resp: Dict) -> str:
@@ -82,7 +91,13 @@ def get_data(resp: Dict) -> str:
         des += f"**{htmlink(title, platforms[data_['platforms'][0]].get('url'))}**"
     if artist:
         des += f"\n**ARTIST(S)**: __{artist}__"
-    des += "\n\n🎧  **LISTEN ON:**\n" + " | ".join([f"{htmlink(beautify(x), platforms[x].get('url'))}" for x in platforms if x != "itunes"])
+    des += "\n\n🎧  **LISTEN ON:**\n" + " | ".join(
+        [
+            f"{htmlink(beautify(x), platforms[x].get('url'))}"
+            for x in platforms
+            if x != "itunes"
+        ]
+    )
     return des
 
 
