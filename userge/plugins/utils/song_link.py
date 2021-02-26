@@ -34,12 +34,13 @@ async def getlink_(message: Message):
     else:
         await message.err("No Input Found !", del_in=5)
         return
-    url_e = [
-        _
-        for _ in (msg.entities or msg.caption_entities)
-        if _.type in ("url", "text_link")
-    ]
-    if len(url_e) == 0:
+    try:
+        url_e = [
+            _
+            for _ in (msg.entities or msg.caption_entities)
+            if _.type in ("url", "text_link")
+        ]
+    except TypeError:
         await message.err("No Valid URL was found !", del_in=5)
         return
     y = url_e[0]
