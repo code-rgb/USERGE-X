@@ -88,17 +88,17 @@ def get_data(resp: Dict) -> str:
     thumb = data_.get("thumbnailUrl")
     des = f"[\u200c]({thumb})" if thumb else ""
     if title:
-        des += f"**{htmlink(title, platforms[data_['platforms'][0]].get('url'))}**"
+        des += f"{htmlink(title, platforms[data_['platforms'][0]].get('url'))}"
     if artist:
-        des += f"\n**ARTIST(S)**: __{artist}__"
-    des += "\n\n🎧  **LISTEN ON:**\n" + " | ".join(
+        des += f"\nARTIST(S): __{artist}__"
+    des += "\n\n🎧  LISTEN ON:\n<b>" + "  |  ".join(
         [
             f"{htmlink(beautify(x), platforms[x].get('url'))}"
             for x in platforms
             if x != "itunes"
         ]
     )
-    return des
+    return des += "</b>"
 
 
 def htmlink(text: str, link: str) -> str:
