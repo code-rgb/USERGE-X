@@ -44,7 +44,7 @@ class Colors:
             "-d": "Upload as document",
             "-gif": "download gifs",
             "-down": "download only",
-            "colors": "any color in => ⚙️ Color",
+            "colors": "any color in (⚙️ Color)",
         },
         "usage": "{tr}gimg [flags] [query|reply to text]",
         "color": ["-" + _ for _ in Colors.choice],
@@ -62,13 +62,15 @@ class Colors:
 )
 async def gimg_down(message: Message):
     """google images downloader"""
+    text = ""
     reply = message.reply_to_message
-    args = message.filtered_input_str
+    args = (message.filtered_input_str or "").strip()
     if args:
         text = args
-    elif reply:
-        text = args or reply.text or reply.caption
-    else:
+    elif reply and (reply.text or reply.caption):
+        text = reply.text or reply.caption
+
+    if not text:
         await message.err("`Input not found!...`", del_in=5)
         return
     await message.edit("🔎")
