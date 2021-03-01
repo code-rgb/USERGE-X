@@ -39,7 +39,15 @@ async def neofetch_(message: Message):
 
 async def neo_image():
     neofetch = (await runcmd("neofetch --stdout"))[0]
-    base_pic = "https://telegra.ph/file/1f62cbef3fe8e24afc6f7.jpg" if "Debian" in neofetch else ("https://i.imgur.com/iBJxExq.jpg" if "Kali" in neofetch else "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg")
+    base_pic = (
+        "https://telegra.ph/file/1f62cbef3fe8e24afc6f7.jpg"
+        if "Debian" in neofetch
+        else (
+            "https://i.imgur.com/iBJxExq.jpg"
+            if "Kali" in neofetch
+            else "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg"
+        )
+    )
     to_print = neofetch.splitlines()
     in_memory = BytesIO(get(base_pic).content)
     font_url = (
@@ -55,7 +63,10 @@ async def neo_image():
         if ":" in u_text:
             ms = u_text.split(":", 1)
             drawing.text(
-                xy=(315, 45 + x), text=ms[0] + ":", font=font, fill=(0,95,208) if "Kali" in neofetch else (247, 65, 62)
+                xy=(315, 45 + x),
+                text=ms[0] + ":",
+                font=font,
+                fill=(0, 95, 208) if "Kali" in neofetch else (247, 65, 62),
             )
             drawing.text(
                 xy=((8.5 * len(ms[0])) + 315, 45 + x), text=ms[1], font=font, fill=white
