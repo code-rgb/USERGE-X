@@ -1,6 +1,5 @@
 """ setup gban """
 
-
 import asyncio
 from typing import Union
 
@@ -25,15 +24,18 @@ LOG = userge.getLogger(__name__)
 
 async def _init() -> None:
     s_o = await SAVED_SETTINGS.find_one({"_id": "ANTISPAM_ENABLED"})
+    i_as = await SAVED_SETTINGS.find_one({"_id": "SPAM_PROTECTION"})
     if s_o:
         Config.ANTISPAM_SENTRY = s_o["data"]
+    if i_as:
+        Config.SPAM_PROTECTION = s_o["data"]
 
 
 @userge.on_cmd(
     "antispam",
     about={
         "header": "enable / disable antispam",
-        "description": "Toggle API Auto Bans",
+        "description": "Toggle API Auto Bans, based on Combot Cas Api",
     },
     allow_channels=False,
 )
@@ -48,6 +50,29 @@ async def antispam_(message: Message):
     await SAVED_SETTINGS.update_one(
         {"_id": "ANTISPAM_ENABLED"},
         {"$set": {"data": Config.ANTISPAM_SENTRY}},
+        upsert=True,
+    )
+
+
+@userge.on_cmd(
+    "spamprotection",
+    about={
+        "header": "enable / disable Intellivoid spam protection",
+        "description": "Toggle API Auto Bans, based on Intellivoid spam protection api",
+    },
+    allow_channels=False,
+)
+async def spam_protect_(message: Message):
+    """ enable / disable Intellivoid spam protection """
+    if Config.SPAM_PROTECTION:
+        Config.SPAM_PROTECTION = False
+        await message.edit("`Intellivoid Spam Protection disabled !`", del_in=3)
+    else:
+        Config.SPAM_PROTECTION = True
+        await message.edit("`Intellivoid Spam Protection enabled !`", del_in=3)
+    await SAVED_SETTINGS.update_one(
+        {"_id": "SPAM_PROTECTION"},
+        {"$set": {"data": Config.SPAM_PROTECTION}},
         upsert=True,
     )
 
@@ -394,34 +419,74 @@ async def gban_at_entry(message: Message):
                     f"https://api.cas.chat/check?user_id={user_id}"
                 )
             except ValueError:  # api down
-                res = False
-
-            if res and (res["ok"]):
-                reason = (
-                    " | ".join(res["result"]["messages"]) if "result" in res else None
+                pass
+            else:
+                if res and (res["ok"]):
+                    reason = (
+                        " | ".join(res["result"]["messages"])
+                        if "result" in res
+                        else None
+                    )
+                    await asyncio.gather(
+                        message.client.kick_chat_member(chat_id, user_id),
+                        message.reply(
+                            r"\\**#𝑿_Antispam**//"
+                            "\n\nGlobally Banned User Detected in this Chat.\n\n"
+                            "**$SENTRY CAS Federation Ban**\n"
+                            f"**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n\n"
+                            "**Quick Action:** Banned",
+                            del_in=10,
+                        ),
+                        CHANNEL.log(
+                            r"\\**#Antispam_Log**//"
+                            "\n\n**GBanned User $SPOTTED**\n"
+                            "**$SENRTY #CAS BAN**"
+                            f"\n**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n**Quick Action:**"
+                            f" Banned in {message.chat.title}\n\n$AUTOBAN #id{user_id}"
+                        ),
+                    )
+        elif Config.SPAM_PROTECTION:
+            try:
+                iv = await get_response.json(
+                    "https://api.intellivoid.net/spamprotection/v1/lookup?query="
+                    + str(user_id)
                 )
-                await asyncio.gather(
-                    message.client.kick_chat_member(chat_id, user_id),
-                    message.reply(
-                        r"\\**#𝑿_Antispam**//"
-                        "\n\nGlobally Banned User Detected in this Chat.\n\n"
-                        "**$SENTRY CAS Federation Ban**\n"
-                        f"**User:** {mention_html(user_id, firstname)}\n"
-                        f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n\n"
-                        "**Quick Action:** Banned",
-                        del_in=10,
-                    ),
-                    CHANNEL.log(
-                        r"\\**#Antispam_Log**//"
-                        "\n\n**GBanned User $SPOTTED**\n"
-                        "**$SENRTY #CAS BAN**"
-                        f"\n**User:** {mention_html(user_id, firstname)}\n"
-                        f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n**Quick Action:**"
-                        f" Banned in {message.chat.title}\n\n$AUTOBAN #id{user_id}"
-                    ),
-                )
-            elif Config.SPAM_WATCH_API:
+            except ValueError:
+                pass
+            else:
+                if iv and (
+                    iv["success"]
+                    and iv["results"]["attributes"]["is_blacklisted"] is True
+                ):
+                    reason = iv["results"]["attributes"]["blacklist_reason"]
+                    await asyncio.gather(
+                        message.client.kick_chat_member(chat_id, user_id),
+                        message.reply(
+                            r"\\**#𝑿_Antispam**//"
+                            "\n\nGlobally Banned User Detected in this Chat.\n\n"
+                            "**$Intellivoid Spam Protection**"
+                            f"\n**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n\n"
+                            "**Quick Action:** Banned",
+                            del_in=10,
+                        ),
+                        CHANNEL.log(
+                            r"\\**#Antispam_Log**//"
+                            "\n\n**GBanned User $SPOTTED**\n"
+                            "**$Intellivoid Spam Protection**"
+                            f"\n**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{reason}`\n**Quick Action:**"
+                            f" Banned in {message.chat.title}\n\n$AUTOBAN #id{user_id}"
+                        ),
+                    )
+        elif Config.SPAM_WATCH_API:
+            try:
                 intruder = await _get_spamwatch_data(user_id)
+            except spamwatch.errors.Error as err:
+                LOG.error(str(err))
+            else:
                 if intruder:
                     await asyncio.gather(
                         message.client.kick_chat_member(chat_id, user_id),
