@@ -375,7 +375,7 @@ async def ungban_user(message: Message):
         get_mem = await message.client.get_user_dict(user_id)
         firstname = get_mem["fname"]
         user_id = get_mem["id"]
-    except:
+    except BaseException:
         await message.edit("`userid Invalid`", del_in=7)
         return
     found = await BOT_BAN.find_one({"user_id": user_id})
@@ -417,7 +417,7 @@ async def bf_help(message: Message):
 • `/uinfo` - Get user Info
     e.g-
     /uinfo [reply to forwarded message]
-  
+
     <i>can work outside bot pm</i>
 • `{cmd_}bblist` - BotBanList (Users Banned from your Bot's PM)
     e.g-

@@ -423,7 +423,8 @@ def get_choice_by_id(choice_id, media_type: str):
         choice_str = "bestvideo+bestaudio/best"
         disp_str = "best(video+audio)"
     elif choice_id == "mp4":
-        # Download best Webm / Mp4 format available or any other best if no mp4 available
+        # Download best Webm / Mp4 format available or any other best if no mp4
+        # available
         choice_str = "bestvideo[ext=webm]+251/bestvideo[ext=mp4]+(258/256/140/bestaudio[ext=m4a])/bestvideo[ext=webm]+(250/249)/best"
         disp_str = "best(video+audio)[webm/mp4]"
     elif choice_id == "mp3":

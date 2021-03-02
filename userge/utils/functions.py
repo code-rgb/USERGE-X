@@ -17,6 +17,8 @@ _EMOJI_REGEXP = None
 
 # For Downloading & Checking Media then Converting to Image.
 # RETURNS an "Image".
+
+
 async def media_to_image(message):
     replied = message.reply_to_message
     if not (
