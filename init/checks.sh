@@ -121,20 +121,6 @@ _checkPaths() {
     done
 }
 
-_checkBins() {
-    editLastMessage "Checking BINS ..."
-    declare -rA bins=(
-        [bin/megadown]="https://raw.githubusercontent.com/yshalsager/megadown/master/megadown"
-        [bin/cmrudl]="https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py"
-    )
-    for bin in ${!bins[@]}; do
-        test ! -f $bin && {
-            log "\tDownloading $bin ..."
-            curl -so $bin ${bins[$bin]}
-        }
-    done
-}
-
 _checkGit() {
     editLastMessage "Checking GIT ..."
     if test ! -d .git; then
@@ -213,7 +199,6 @@ assertEnvironment() {
     _checkDatabase
     _checkTriggers
     _checkPaths
-    _checkBins
     _checkGit
     _checkUpstreamRepo
     _checkUnoffPlugins

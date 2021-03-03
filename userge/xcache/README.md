@@ -1,1 +1,0 @@
-USERGE-X Cache Folder
