@@ -39,7 +39,6 @@ class Styled:
     normal = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 
 
-
 def font_gen(type_choice: str, input_str: str):
     font_type = list(Styled.all_fonts[type_choice])
     for _ in input_str:
@@ -55,9 +54,9 @@ def font_gen(type_choice: str, input_str: str):
         "header": "Make Font stylish",
         "description": "create text in style",
         "usage": "{tr}style -sans [text | reply]",
-        "themes": Styled.font_flags
+        "themes": Styled.font_flags,
     },
-    del_pre=True
+    del_pre=True,
 )
 async def _style_text(message: Message):
     """Make text stylish"""

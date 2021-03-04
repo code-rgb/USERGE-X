@@ -19,10 +19,12 @@ CHANNEL = userge.getCLogger(__name__)
             "-pull": "pull updates",
             "-branch": "Default is -alpha",
         },
-        "usage": ("{tr}update : check updates from default branch\n"
-        "{tr}update -[branch_name] : check updates from any branch\n"
-        "add -pull if you want to pull updates\n"),
-        "examples": "{tr}update -pull"
+        "usage": (
+            "{tr}update : check updates from default branch\n"
+            "{tr}update -[branch_name] : check updates from any branch\n"
+            "add -pull if you want to pull updates\n"
+        ),
+        "examples": "{tr}update -pull",
     },
     del_pre=True,
     allow_channels=False,

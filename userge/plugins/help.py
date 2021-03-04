@@ -38,7 +38,7 @@ from .bot.utube_inline import (
     result_formatter,
     ytsearch_data,
 )
-from .fun.stylish import font_gen, Styled
+from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
@@ -1032,7 +1032,9 @@ if userge.has_bot:
                     results.append(
                         InlineQueryResultArticle(
                             title=f_name.upper(),
-                            input_message_content=InputTextMessageContent(f"`{styled_str}`"),
+                            input_message_content=InputTextMessageContent(
+                                f"`{styled_str}`"
+                            ),
                             description=styled_str,
                         )
                     )
