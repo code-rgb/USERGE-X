@@ -1,10 +1,10 @@
 """ run shell or python command(s) """
 
-# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
+# Please see < https://github.com/UsergeTeam/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
 
@@ -19,6 +19,8 @@ from os import geteuid
 from userge import Config, Message, userge
 from userge.utils import runcmd
 
+CHANNEL = userge.getCLogger()
+
 
 @userge.on_cmd(
     "eval",
@@ -27,8 +29,8 @@ from userge.utils import runcmd
         "flags": {"-s": "silent mode (hide STDIN)"},
         "usage": "{tr}eval [flag] [code lines]",
         "examples": [
-            "{tr}eval print('USERGE-X')",
-            "{tr}eval -s print('USERGE-X')",
+            "{tr}eval print('Userge')",
+            "{tr}eval -s print('Userge')",
             "{tr}eval 5 + 6",
             "{tr}eval -s 5 + 6",
         ],
@@ -86,7 +88,10 @@ async def eval_(message: Message):
         output += f"**>** ```{cmd}```\n\n"
     if evaluation is not None:
         output += f"**>>** ```{evaluation}```"
-    if output:
+    if (exc or stderr) and message.chat.type in ("group", "supergroup", "channel"):
+        msg_id = await CHANNEL.log(output)
+        await message.edit(f"**Logs**: {CHANNEL.get_link(msg_id)}")
+    elif output:
         await message.edit_or_send_as_file(
             text=output, parse_mode="md", filename="eval.txt", caption=cmd
         )
@@ -99,7 +104,7 @@ async def eval_(message: Message):
     about={
         "header": "run commands in exec",
         "usage": "{tr}exec [commands]",
-        "examples": '{tr}exec echo "USERGE-X"',
+        "examples": '{tr}exec echo "Userge"',
     },
     allow_channels=False,
 )
@@ -112,7 +117,7 @@ async def exec_(message: Message):
     try:
         out, err, ret, pid = await runcmd(cmd)
     except Exception as t_e:  # pylint: disable=broad-except
-        await message.err(t_e)
+        await message.err(str(t_e))
         return
     out = out or "no output"
     err = err or "no error"
@@ -130,7 +135,7 @@ __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
     about={
         "header": "run commands in shell (terminal)",
         "usage": "{tr}term [commands]",
-        "examples": '{tr}term echo "USERGE-X"',
+        "examples": '{tr}term echo "Userge"',
     },
     allow_channels=False,
 )
@@ -143,7 +148,7 @@ async def term_(message: Message):
     try:
         t_obj = await Term.execute(cmd)  # type: Term
     except Exception as t_e:  # pylint: disable=broad-except
-        await message.err(t_e)
+        await message.err(str(t_e))
         return
     curruser = getuser()
     try:

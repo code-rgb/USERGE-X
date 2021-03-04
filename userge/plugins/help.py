@@ -38,7 +38,7 @@ from .bot.utube_inline import (
     result_formatter,
     ytsearch_data,
 )
-from .fun.stylish import font_gen
+from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
@@ -1027,37 +1027,14 @@ if userge.has_bot:
 
             if str_y[0].lower() == "stylish" and len(str_y) == 2:
                 results = []
-                input_text = str_y[1]
-                font_names = [
-                    "serif",
-                    "sans",
-                    "sans_i",
-                    "serif_i",
-                    "medi_b",
-                    "medi",
-                    "double",
-                    "cursive_b",
-                    "cursive",
-                    "bigsmall",
-                    "reverse",
-                    "circle",
-                    "circle_b",
-                    "mono",
-                    "square_b",
-                    "square",
-                    "smoth",
-                    "goth",
-                    "wide",
-                    "web",
-                    "weeb",
-                    "weeeb",
-                ]
-                for f_name in font_names:
-                    styled_str = await font_gen(f_name, input_text)
+                for f_name in Styled.font_choice:
+                    styled_str = await font_gen(f_name, str_y[1])
                     results.append(
                         InlineQueryResultArticle(
                             title=f_name.upper(),
-                            input_message_content=InputTextMessageContent(styled_str),
+                            input_message_content=InputTextMessageContent(
+                                f"`{styled_str}`"
+                            ),
                             description=styled_str,
                         )
                     )
