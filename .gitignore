@@ -12,7 +12,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-userge/xcache/
 eggs/
 .eggs/
 lib/
@@ -92,12 +91,10 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
 # Celery stuff
-celerybeat-schedule
 celerybeat.pid
+# celery beat schedule file
+celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
@@ -130,7 +127,14 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# config files
+userge/xcache/
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat.pid
+
+# USERGE-X
 .apt/
 .heroku/
 .profile.d/
@@ -141,10 +145,9 @@ config.env
 *.session
 unknown_errors.txt
 logs/
-bin/
+userge/plugins/dev/
 resources/base_profile_pic.jpg
 resources/mdfy_profile_pic.jpg
-userge/plugins/dev/
 resources/ProductSans-BoldItalic.ttf
 resources/ProductSans-Light.ttf
 resources/Roboto-Regular.ttf
