@@ -9,7 +9,6 @@ RUN sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
 WORKDIR /app/
 
 RUN apt -qq update && apt -qq upgrade -y && \
-    rm -rf /var/lib/apt/lists/* && \
     apt -qq install -y --no-install-recommends \
     apt-utils \
     curl \
