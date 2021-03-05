@@ -6,9 +6,9 @@ RUN sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
 
 WORKDIR /app/
 
-RUN apt -qq update && apt -qq upgrade -y && \
+RUN apt-get -qq update && apt-get -qq upgrade -y && \
     rm -rf /var/lib/apt/lists/* && \
-    apt -qq install -y --no-install-recommends \
+    apt-get -qq install -y --no-install-recommends \
     apt-utils \
     curl \
     git \
@@ -35,12 +35,13 @@ RUN mkdir -p /tmp/ && \
 ENV GOOGLE_CHROME_DRIVER /usr/bin/chromedriver
 ENV GOOGLE_CHROME_BIN /usr/bin/google-chrome-stable
 
-RUN apt -qq update && apt -qq install -y --no-install-recommends \
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
     gcc python3-dev zlib1g-dev \
     apt-transport-https \
     build-essential coreutils jq pv \
     ffmpeg mediainfo \
     neofetch \
+    p7zip-full \
     libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
 
