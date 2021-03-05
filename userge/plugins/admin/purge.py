@@ -15,7 +15,7 @@ from userge import Message, userge
         "use {tr}purge [user_id | user_name] to purge messages from that user or use flags",
         "examples": ["{tr}purge", "{tr}purge -u", "{tr}purge [user_id | user_name]"],
     },
-    allow_bots=False,
+    allow_bots=True,
     del_pre=True,
 )
 async def purge_(message: Message):
