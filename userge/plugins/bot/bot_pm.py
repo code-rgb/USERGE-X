@@ -48,11 +48,11 @@ Nice To Meet You! I'm **{bot.first_name}** A Bot.
 
         
 <b>My Master is: {master.first_name}</b>
-<i>You can contact my <b>Master</b> and checkout the <b>Repo</b> For more info.</i>
+<i>You can contact my <b>Master</b> using me.</i>
 """
         if Config.BOT_FORWARDS:
             hello += "\n<b>NOTE: </b> "
-            hello += "**Bot Forwarding is** :  ☑️ `Enabled`\n"
+            hello += "**Message Forwarding is** :  ☑️ `Enabled`\n"
             hello += "All your messages here will be forwarded to my **MASTER**"
         if u_id not in Config.OWNER_ID:
             found = await BOT_START.find_one({"user_id": u_id})
