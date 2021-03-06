@@ -1,24 +1,21 @@
 FROM python:3.9-slim-buster
 
 ENV PIP_NO_CACHE_DIR 1
+ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN sed -i.bak 's/us-west-2\.ec2\.//' /etc/apt/sources.list
 
 WORKDIR /app/
 
-RUN apt-get -qq update && apt-get -qq upgrade -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get -qq install -y --no-install-recommends \
+RUN apt -qq update && apt -qq upgrade -y && \
+    apt -qq install -y --no-install-recommends \
     apt-utils \
     curl \
     git \
     gnupg2 \
     wget \
     unzip
-
-ENV LANG C.UTF-8
-
-ENV DEBIAN_FRONTEND noninteractive
 
 RUN mkdir -p /tmp/ && \
     cd /tmp/ && \
@@ -35,7 +32,7 @@ RUN mkdir -p /tmp/ && \
 ENV GOOGLE_CHROME_DRIVER /usr/bin/chromedriver
 ENV GOOGLE_CHROME_BIN /usr/bin/google-chrome-stable
 
-RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
+RUN apt -qq update && apt -qq install -y --no-install-recommends \
     gcc python3-dev zlib1g-dev \
     apt-transport-https \
     build-essential coreutils jq pv \
