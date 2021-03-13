@@ -157,7 +157,7 @@ async def kang_(message: Message):
                             await message.delete()
                         else:
                             out = (
-                                "__kanged__"
+                                "__aka ne link dene se na bole hai__"
                                 if "-s" in message.flags
                                 else f"[Here](t.me/addstickers/{packname})"
                             )
@@ -211,7 +211,7 @@ async def kang_(message: Message):
             await message.delete()
         else:
             out = (
-                "__kanged__"
+                "__aka ne link dene se na bole hai__"
                 if "-s" in message.flags
                 else f"[Here](t.me/addstickers/{packname})"
             )
