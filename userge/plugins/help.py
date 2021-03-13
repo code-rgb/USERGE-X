@@ -113,7 +113,7 @@ async def helpme(
                 + "</code>\n\n"
             )
         out_str += (
-            f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code> \n <b>Plugin Edied by @KMohZaid :</b> kang(for 🎨fun)"""
+            f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code> \n <b>🧑‍💻Plugin Edited by @KMohZaid :</b> kang(for 🎨fun)"""
         )
     else:
         key = message.input_str
@@ -136,7 +136,8 @@ async def helpme(
                     f"    🤖 <b>cmd(<code>{i}</code>):</b>  <code>{cmd.name}</code>\n"
                     f"    📚 <b>info:</b>  <i>{cmd.doc}</i>\n\n"
                 )
-            out_str += f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code>"""
+            out_str += f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [command_name]</code> \n <b>🧑‍💻Plugin Edited by @KMohZaid :</b> kang(for 🎨fun)"""
+            )
         else:
             commands = userge.manager.enabled_commands
             key = key.lstrip(Config.CMD_TRIGGER)
