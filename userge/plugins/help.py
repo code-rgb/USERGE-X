@@ -56,6 +56,7 @@ _CATEGORY = {
     "plugins": "💎",
     "bot": "💠",
     "custom": "🔧",
+    "Edited By @KMohZaid": "🧑‍💻",
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -112,7 +113,7 @@ async def helpme(
                 + "</code>\n\n"
             )
         out_str += (
-            f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code>"""
+            f"""📕 <b>Usage:</b>  <code>{Config.CMD_TRIGGER}help [plugin_name]</code> \n <b>Plugin Edied by @KMohZaid :</b> kang(for 🎨fun)"""
         )
     else:
         key = message.input_str
