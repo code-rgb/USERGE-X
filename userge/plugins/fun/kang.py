@@ -159,10 +159,10 @@ async def kang_(message: Message):
                             out = (
                                 "__kanged__"
                                 if "-s" in message.flags
-                                else f"Aka sticker leliya hai chaldi chalo yaha se.\nHame sticker yaha milega 👉[Here](t.me/addstickers/{packname})"
+                                else f"[Here](t.me/addstickers/{packname})"
                             )
                             await message.edit(
-                                f"**Sticker** {out} __in a Different Pack__**!**"
+                                f"**Aka sticker leliya hai,jaldi chalo yaha se.\nHame sticker yaha milega 👉** {out} __in a Different Pack__**!**"
                             )
                         return
                 await conv.send_document(photo)
@@ -213,9 +213,9 @@ async def kang_(message: Message):
             out = (
                 "__kanged__"
                 if "-s" in message.flags
-                else f"[kanged](t.me/addstickers/{packname})"
+                else f"[Here](t.me/addstickers/{packname})"
             )
-            await message.edit(f"**Sticker** {out}**!**")
+            await message.edit(f"**Aka sticker leliya hai jaldi chalo yaha se.\nHame sticker yaha milega 👉** {out}**!**")
         if os.path.exists(str(photo)):
             os.remove(photo)
 
