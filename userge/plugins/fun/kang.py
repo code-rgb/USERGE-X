@@ -159,7 +159,7 @@ async def kang_(message: Message):
                             out = (
                                 "__kanged__"
                                 if "-s" in message.flags
-                                else f"[kanged](t.me/addstickers/{packname})"
+                                else f"Aka sticker leliya hai chaldi chalo yaha se.\nHame sticker yaha milega 👉[Here](t.me/addstickers/{packname})"
                             )
                             await message.edit(
                                 f"**Sticker** {out} __in a Different Pack__**!**"
@@ -284,6 +284,11 @@ KANGING_STR = (
     "Roses are red violets are blue, kanging this sticker so my pacc looks cool",
     "Imprisoning this sticker...",
     "Mr.Steal Your Sticker is stealing this sticker... ",
+    "Udhar Dekho Sir... Mujhe apka sticker churane dijiye 😁😁",
+    "Dekho pikachu hai vaha..",
+    "Please gussa mat hoiye sticker chori kar raha hu",
+    "Aree upar dekho!!! UFO ",
+    "Ye Sticker Tu muje dede😠",
 )
 
 
