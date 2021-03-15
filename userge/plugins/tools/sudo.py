@@ -118,7 +118,7 @@ async def del_sudo(message: Message):
         await message.err("invalid type!")
         return
     if user_id not in Config.SUDO_USERS:
-        await message.edit(f"user : `{user_id}` not in **SUDO**!", del_in=5)
+        await message.edit(f"user : `{user_id}` not in **SUDO** !", del_in=5)
     else:
         Config.SUDO_USERS.remove(user_id)
         await asyncio.gather(
