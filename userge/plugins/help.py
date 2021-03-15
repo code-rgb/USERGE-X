@@ -70,10 +70,7 @@ REPO_X = InlineQueryResultArticle(
                 ),
                 InlineKeyboardButton(
                     "Anime Channel",
-                    url=(
-                        "https://t.me"
-                        "/AnimeIndexOfficial"
-                    ),
+                    url=("https://t.me" "/AnimeIndexOfficial"),
                 ),
             ]
         ]
