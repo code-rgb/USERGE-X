@@ -66,7 +66,7 @@ async def see_info(message: Message):
         plugin_link = f"{extra_plugins}/{plugin_name}.py"
     elif plugin_loc == "/custom":
         custom_plugins = (
-            os.environ.get("CUSTOM_PLUGINS_REPO") or "" + "/blob/main/plugins/"
+            os.environ.get("CUSTOM_PLUGINS_REPO") or "" + "/blob/main/plugins"
         )
         plugin_link = f"{custom_plugins}/{plugin_name}.py"
     elif plugin_loc == "/temp":
