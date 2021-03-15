@@ -112,7 +112,8 @@ _checkTriggers() {
 
 _checkPaths() {
     editLastMessage "Checking Paths ..."
-    for path in $DOWN_PATH logs "userge/xcache"; do
+    mkdir -p "userge/xcache"
+    for path in $DOWN_PATH logs ; do
         test ! -d $path && {
             log "\tCreating Path : ${path%/} ..."
             mkdir -p $path
