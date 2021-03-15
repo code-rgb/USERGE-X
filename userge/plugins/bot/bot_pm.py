@@ -307,7 +307,7 @@ My Master is : {owner_.flname}</b>
                 await userge.bot.send_message(
                     Config.OWNER_ID[0],
                     f"⚠️  **[Bot Flood Warning !]({fa_msg.link})**",
-                ) 
+                )
             except UserIsBlocked:
                 await CHANNEL.log("**Unblock your bot !**")
         if FloodConfig.ALERT[user_.id].get("fa_id") is None and fa_msg:
