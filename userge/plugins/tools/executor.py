@@ -29,8 +29,8 @@ CHANNEL = userge.getCLogger()
         "flags": {"-s": "silent mode (hide STDIN)"},
         "usage": "{tr}eval [flag] [code lines]",
         "examples": [
-            "{tr}eval print('Userge')",
-            "{tr}eval -s print('Userge')",
+            "{tr}eval print('USERGE-X')",
+            "{tr}eval -s print('USERGE-X')",
             "{tr}eval 5 + 6",
             "{tr}eval -s 5 + 6",
         ],
@@ -104,7 +104,7 @@ async def eval_(message: Message):
     about={
         "header": "run commands in exec",
         "usage": "{tr}exec [commands]",
-        "examples": '{tr}exec echo "Userge"',
+        "examples": '{tr}exec echo "USERGE-X"',
     },
     allow_channels=False,
 )
@@ -135,7 +135,7 @@ __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
     about={
         "header": "run commands in shell (terminal)",
         "usage": "{tr}term [commands]",
-        "examples": '{tr}term echo "Userge"',
+        "examples": '{tr}term echo "USERGE-X"',
     },
     allow_channels=False,
 )

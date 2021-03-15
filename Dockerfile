@@ -15,7 +15,8 @@ RUN apt -qq update && apt -qq upgrade -y && \
     git \
     gnupg2 \
     wget \
-    unzip
+    unzip \
+    tree
 
 RUN mkdir -p /tmp/ && \
     cd /tmp/ && \
