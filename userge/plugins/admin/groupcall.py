@@ -126,39 +126,39 @@ async def inv_vc_(message: Message):
         await message.edit("✅ Invited Successfully !", del_in=5)
 
 
-"""
-@userge.on_cmd(
-    "vcinfo",
-    about={
-        "header": "Voice Chat info",
-        "examples": "{tr}vcinfo",
-    },
-    allow_channels=False,
-    allow_private=False,
-    allow_via_bot=False,
-)
-async def vcinfo_(message: Message):
-    group_call = await get_group_call(message.chat.id)
-    if not group_call:
-        await message.edit("**No Voice Chat Found** !", del_in=8)
-        return
+# """
+# @userge.on_cmd(
+#     "vcinfo",
+#     about={
+#         "header": "Voice Chat info",
+#         "examples": "{tr}vcinfo",
+#     },
+#     allow_channels=False,
+#     allow_private=False,
+#     allow_via_bot=False,
+# )
+# async def vcinfo_(message: Message):
+#     group_call = await get_group_call(message.chat.id)
+#     if not group_call:
+#         await message.edit("**No Voice Chat Found** !", del_in=8)
+#         return
 
-    await message.edit_or_send_as_file(
-        text=yamlify(
-            loads(
-                str(
-                    await userge.send(
-                        GetGroupCall(
-                            call=group_call,
-                        )
-                    )
-                )
-            )
-        ),
-        filename="group_call.txt",
-        caption="Too Large",
-    )
-"""
+#     await message.edit_or_send_as_file(
+#         text=yamlify(
+#             loads(
+#                 str(
+#                     await userge.send(
+#                         GetGroupCall(
+#                             call=group_call,
+#                         )
+#                     )
+#                 )
+#             )
+#         ),
+#         filename="group_call.txt",
+#         caption="Too Large",
+#     )
+# """
 
 
 @userge.on_cmd(

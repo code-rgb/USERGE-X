@@ -246,7 +246,7 @@ My Master is : {owner_.flname}</b>
                     ),
                     InlineKeyboardButton(
                         "➖ Bot Antiflood [OFF]",
-                        callback_data=f"toggle_bot-antiflood_off",
+                        callback_data="toggle_bot-antiflood_off",
                     ),
                 ]
             ]
@@ -376,7 +376,7 @@ My Master is : {owner_.flname}</b>
             #     f"\n\nBanned UserID: {user_id} ignored from bot."
             # )
             raise StopPropagation
-        elif await is_flood(user_id):
+        if await is_flood(user_id):
             await c_q.answer("Wooh, Mate Chill ! go slow")
             await send_flood_alert(c_q.from_user)
             FloodConfig.BANNED_USERS.add(user_id)
