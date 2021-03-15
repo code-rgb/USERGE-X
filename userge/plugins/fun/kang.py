@@ -162,7 +162,7 @@ async def kang_(message: Message):
                                 else f"[Here](t.me/addstickers/{packname})"
                             )
                             await message.edit(
-                                f"**Aka sticker leliya hai,jaldi chalo yaha se.\nHame sticker yaha milega 👉** {out} __in a Different Pack__**!**"
+                                f"**Aka sticker leliya hai,jaldi chalo yaha se.\nHame sticker yaha milega 👉** {out} __Aka Dusri jaga rakha hai ye kyu ki pehli jaga bhara gay hai__**!**"
                             )
                         return
                 await conv.send_document(photo)
