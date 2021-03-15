@@ -27,8 +27,10 @@ _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])
 
 def get_file_id(
     message: "userge.Message",
-) -> Tuple[Optional[str], Optional[str]]:
+) -> Optional[str]:
     """ get file_id """
+    if message is None:
+        return
     file_ = (
         message.audio
         or message.animation
@@ -159,5 +161,4 @@ def safe_filename(path_):
     safename = path_.replace("'", "").replace('"', "")
     if safename != path_:
         os.rename(path_, safename)
-        return safename
-    return path_
+    return safename

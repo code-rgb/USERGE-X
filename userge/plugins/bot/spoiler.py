@@ -14,18 +14,20 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html
 
+from .bot_pm import check_new_bot_user
+
 CHANNEL = userge.getCLogger(__name__)
 PATH = "./userge/xcache/spoiler_db.json"
 BOT_BAN = get_collection("BOT_BAN")
-BOT_START = get_collection("BOT_START")
 
 
 class Spoiler_DB:
     def __init__(self):
         if not os.path.exists(PATH):
-            d = {}
-            ujson.dump(d, open(PATH, "w"))
-        self.db = ujson.load(open(PATH))
+            with open(PATH, "w") as f:
+                ujson.dump({}, f)
+        with open(PATH) as load_db:
+            self.db = ujson.load(load_db)
 
     def stats_(self, rnd_id: str, user_id: int, user_name: str):
         if user_id not in Config.OWNER_ID and user_id not in self.db[rnd_id]["stats"]:
@@ -127,23 +129,7 @@ if userge.has_bot:
                 pass
         if u_user.id not in Config.OWNER_ID and u_user.id not in Config.SUDO_USERS:
             SPOILER_DB.stats_(spoiler_key, u_user.id, u_user.first_name)
-            user_list = await BOT_START.find_one({"user_id": u_user.id})
-            if not user_list:
-                today = datetime.date.today()
-                d2 = today.strftime("%B %d, %Y")
-                start_date = d2.replace(",", "")
-                BOT_START.insert_one(
-                    {
-                        "firstname": u_user.first_name,
-                        "user_id": u_user.id,
-                        "date": start_date,
-                    }
-                )
-                log_msg = f"A New User Started your Bot \n\n• <i>ID</i>: `{u_user.id}`\n   👤 : "
-                log_msg += (
-                    f"@{u_user.username}" if u_user.username else u_user.first_name
-                )
-                await CHANNEL.log(log_msg)
+            await check_new_bot_user(u_user)
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^getl([\S]+)$"))
     async def get_spoiler_link(_, c_q: CallbackQuery):

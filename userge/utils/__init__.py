@@ -1,5 +1,6 @@
 from .aiohttp_helper import AioHttp as get_response
 from .functions import (
+    AttributeDict,
     check_owner,
     cleanhtml,
     deEmojify,

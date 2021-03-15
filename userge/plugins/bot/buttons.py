@@ -3,7 +3,7 @@
 # IMPROVED BY code-rgb
 
 import os
-from re import compile
+from re import compile as comp_regex
 
 import ujson
 from pyrogram.errors import BadRequest, UserIsBot
@@ -13,7 +13,7 @@ from userge import Config, Message, userge
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-BTN_REGEX = compile(
+BTN_REGEX = comp_regex(
     r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 )
 PATH = "./userge/xcache/inline_db.json"
