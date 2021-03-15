@@ -1,35 +1,32 @@
-name: PyLint
-
-on: push
-
+name: Code Formatter
+"on": push
 jobs:
   PEP8:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.9.2
-
+          python-version: 3.9
       - name: Install Python lint libraries
         run: |
           pip install autopep8 autoflake isort black
       - name: Check for showstoppers
-        run: |
-          autopep8 --verbose --in-place --recursive --aggressive --aggressive --ignore=W605 userge/plugins/ userge/utils
+        run: >
+          autopep8 --verbose --in-place --recursive --aggressive --aggressive
+          --ignore=W605 userge/plugins/ userge/utils
       - name: Remove unused imports and variables
-        run: |
-          autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports .
+        run: >
+          autoflake --in-place --recursive --remove-all-unused-imports
+          --remove-unused-variables --ignore-init-module-imports .
       - name: lint with isort and black
         run: |
           isort userge/plugins/ userge/utils/
           black userge/plugins/ userge/utils/
-      # commit changes
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "black autoformat"
+          commit_message: "auto: black code format"
           commit_options: "--no-verify"
           repository: .
           commit_user_name: code-rgb

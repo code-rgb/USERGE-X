@@ -1,13 +1,13 @@
-""" Download Youtube Video/ Audio in a User friendly interface """
+""" Download Youtube Video / Audio in a User friendly interface """
 # --------------------------- #
 #   Modded ytdl by code-rgb   #
 # --------------------------- #
 
 import glob
 import os
-import re
 from collections import defaultdict
 from pathlib import Path
+from re import compile as comp_regex
 from time import time
 
 import ujson
@@ -22,7 +22,7 @@ from pyrogram.types import (
     InputMediaVideo,
 )
 from wget import download
-from youtube_dl.utils import DownloadError, ExtractorError
+from youtube_dl.utils import DownloadError, ExtractorError, GeoRestrictedError
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, pool, userge
@@ -39,10 +39,9 @@ from userge.utils import (
 from ..misc.upload import upload
 
 LOGGER = userge.getLogger(__name__)
-CHANNEL = userge.getCLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
-YOUTUBE_REGEX = re.compile(
-    r"(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:(?:youtube\.com|youtu.be))(?:\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(?:\S+)?"
+YOUTUBE_REGEX = comp_regex(
+    r"(?:youtube\.com|youtu\.be)/(?:[\w-]+\?v=|embed/|v/)?([\w-]{11})"
 )
 PATH = "./userge/xcache/ytsearch.json"
 
@@ -206,7 +205,9 @@ if userge.has_bot:
             await upload_msg.err("nothing found !")
             return
         if not thumb_pic and downtype == "v":
-            thumb_pic = str(download(await get_ytthumb(yt_code)))
+            thumb_pic = str(
+                await pool.run_in_thread(download)(await get_ytthumb(yt_code))
+            )
         uploaded_media = await upload(
             upload_msg,
             path=Path(_fpath),
@@ -372,7 +373,11 @@ def _tubeDl(url: str, starttime, uid: str):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             x = ydl.download([url])
     except DownloadError as e:
-        CHANNEL.log(str(e))
+        LOGGER.error(e)
+    except GeoRestrictedError:
+        LOGGER.error(
+            "ERROR: The uploader has not made this video available in your country"
+        )
     else:
         return x
 
@@ -409,7 +414,7 @@ def _mp3Dl(url: str, starttime, uid: str):
 
 
 def get_yt_video_id(url: str):
-    # https://regex101.com/r/boXuXb/1
+    # https://regex101.com/r/6OrGWH/1
     match = YOUTUBE_REGEX.search(url)
     if match:
         return match.group(1)
