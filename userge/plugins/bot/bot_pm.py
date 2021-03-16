@@ -194,7 +194,7 @@ My Master is : {owner_.flname}</b>
             )
             btns = [
                 [
-                    InlineKeyboardButton("👤  CONTACT", url=contact_url),
+                    InlineKeyboardButton("Owner", url=contact_url),
                 ]
             ]
         try:
