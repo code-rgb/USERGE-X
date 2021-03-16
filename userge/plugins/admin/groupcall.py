@@ -9,10 +9,10 @@ from pyrogram.raw.functions.messages import GetFullChat
 from pyrogram.raw.functions.phone import (
     CreateGroupCall,
     DiscardGroupCall,
-    EditGroupCallParticipant
-    InviteToGroupCall,
+    EditGroupCallParticipant,
     EditGroupCallTitle,
-    GetGroupCall
+    GetGroupCall,
+    InviteToGroupCall,
 )
 from pyrogram.raw.types import (
     InputGroupCall,
@@ -20,11 +20,9 @@ from pyrogram.raw.types import (
     InputPeerChat,
     InputPeerUser,
 )
-
-from userge import Message, userge
-
 from ujson import loads
 
+from userge import Message, userge
 
 from ..tools.json import yamlify
 
@@ -128,7 +126,6 @@ async def inv_vc_(message: Message):
         await message.edit("✅ Invited Successfully !", del_in=5)
 
 
-
 @userge.on_cmd(
     "vcinfo",
     about={
@@ -186,6 +183,7 @@ async def vc_title(message: Message):
     await userge.send(
         EditGroupCallTitle(call=group_call, title=message.input_str.strip())
     )
+
 
 @userge.on_cmd(
     "vcunmute",
