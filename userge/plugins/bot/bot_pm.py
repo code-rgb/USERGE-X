@@ -83,10 +83,10 @@ if userge.has_bot:
                 from_chat = str(match.group(1))
                 if from_chat.isdigit():
                     from_chat = int("-100" + from_chat)
-                from_chat_msg = match.group(2)
+                msg_id = int(match.group(2))
                 try:
                     bot_m_fid = get_file_id(
-                        await userge.bot.get_messages(from_chat, from_chat_msg)
+                        await userge.bot.get_messages(from_chat, msg_id)
                     )
                 except Exception as b_m_err:
                     LOGGER.error(b_m_err)
