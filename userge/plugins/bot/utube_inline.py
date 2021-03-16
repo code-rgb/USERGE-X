@@ -41,7 +41,7 @@ from ..misc.upload import upload
 LOGGER = userge.getLogger(__name__)
 BASE_YT_URL = "https://www.youtube.com/watch?v="
 YOUTUBE_REGEX = comp_regex(
-    r"(?:youtube\.com|youtu\.be)/(?:[\w-]+\?v=|embed/|v/)?([\w-]{11})"
+    r"(?:youtube\.com|youtu\.be)/(?:[\w-]+\?v=|embed/|v/|shorts/)?([\w-]{11})"
 )
 PATH = "./userge/xcache/ytsearch.json"
 
@@ -414,11 +414,10 @@ def _mp3Dl(url: str, starttime, uid: str):
 
 
 def get_yt_video_id(url: str):
-    # https://regex101.com/r/6OrGWH/1
+    # https://regex101.com/r/c06cbV/1
     match = YOUTUBE_REGEX.search(url)
     if match:
         return match.group(1)
-    return
 
 
 # Based on https://gist.github.com/AgentOak/34d47c65b1d28829bb17c24c04a0096f
