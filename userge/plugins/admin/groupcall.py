@@ -58,7 +58,7 @@ def check_vc_perm(func):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-     only_admins=True
+    only_admins=True,
 )
 async def start_vc_(message: Message):
     """Start voice chat"""
@@ -84,7 +84,7 @@ async def start_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-     only_admins=True
+    only_admins=True,
 )
 async def end_vc_(message: Message):
     """End voice chat"""
@@ -111,7 +111,6 @@ async def end_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-   
 )
 async def inv_vc_(message: Message):
     """invite to voice chat"""
@@ -196,7 +195,7 @@ async def vcinfo_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-     only_admins=True
+    only_admins=True,
 )
 async def vc_title(message: Message):
     """Change title of voice chat"""
@@ -221,7 +220,7 @@ async def vc_title(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-     only_admins=True
+    only_admins=True,
 )
 async def unmute_vc_(message: Message):
     """Unmute a member in voice chat"""
@@ -239,7 +238,7 @@ async def unmute_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
-     only_admins=True
+    only_admins=True,
 )
 async def mute_vc_(message: Message):
     """Mute a member in voice chat"""
