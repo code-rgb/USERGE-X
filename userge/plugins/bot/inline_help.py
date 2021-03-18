@@ -3,9 +3,11 @@
 
 """Module that handles Inline Help"""
 
+from asyncio import gather
+
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from asyncio import gather
+
 from userge import Config, Message, userge
 from userge.utils import sublists
 
@@ -80,16 +82,17 @@ if userge.has_bot:
             for cmd in list(_COMMANDS)
         ]
         return InlineKeyboardMarkup(sublists(help_list))
-    
+
     async def help_btn():
         global HELP_BUTTONS
         if HELP_BUTTONS is None:
             HELP_BUTTONS = await help_btn_generator()
         return HELP_BUTTONS
 
-
-    inline_help_txt = (" <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands."
-                        "\nChoose a command and for usage see:\n**📕  EXAMPLE**")
+    inline_help_txt = (
+        " <u><b>INLINE COMMANDS</b></u>\n\nHere is a list of all available inline commands."
+        "\nChoose a command and for usage see:\n**📕  EXAMPLE**"
+    )
 
     @userge.bot.on_message(
         OwnerFilter
@@ -107,25 +110,32 @@ if userge.has_bot:
         OwnerFilter & filters.regex(pattern=r"^backbtn_ihelp$")
     )
     async def back_btn(_, c_q: CallbackQuery):
-        await gather(c_q.answer(),
-        c_q.edit_message_text(
-            text=inline_help_txt, reply_markup=(await help_btn())
-        ))
+        await gather(
+            c_q.answer(),
+            c_q.edit_message_text(
+                text=inline_help_txt, reply_markup=(await help_btn())
+            ),
+        )
 
     @userge.bot.on_callback_query(
         OwnerFilter & filters.regex(pattern=r"^ihelp_([a-zA-Z]+)$")
     )
     async def help_query(_, c_q: CallbackQuery):
         command_name = c_q.matches[0].group(1)
-        buttons = InlineKeyboardMarkup([
+        buttons = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton("◀️  Back", callback_data="backbtn_ihelp"),
-                InlineKeyboardButton(
-                    "📕  EXAMPLE", switch_inline_query_current_chat=_COMMANDS[command_name]["i_q"]
-                ),
+                [
+                    InlineKeyboardButton("◀️  Back", callback_data="backbtn_ihelp"),
+                    InlineKeyboardButton(
+                        "📕  EXAMPLE",
+                        switch_inline_query_current_chat=_COMMANDS[command_name]["i_q"],
+                    ),
+                ]
             ]
-        ])
+        )
         await gather(
             c_q.answer(),
-            c_q.edit_message_text(_COMMANDS[command_name]["help_txt"], reply_markup=buttons)
+            c_q.edit_message_text(
+                _COMMANDS[command_name]["help_txt"], reply_markup=buttons
+            ),
         )
