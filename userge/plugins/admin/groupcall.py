@@ -12,6 +12,7 @@ from pyrogram.raw.functions.phone import (
     EditGroupCallParticipant,
     EditGroupCallTitle,
     InviteToGroupCall,
+    GetGroupCall
 )
 from pyrogram.raw.types import (
     InputGroupCall,
@@ -162,16 +163,17 @@ async def inv_vc_(message: Message):
 async def vcinfo_(message: Message):
     if not (group_call := (await get_group_call(message))):
         return
+    gc_data = await userge.send(GetGroupCall(call=group_call))
     gc_info = {}
-    gc_info["ℹ️ INFO"] = clean_obj(group_call.call, convert=True)
-    if len(group_call.users) != 0:
+    gc_info["ℹ️ INFO"] = clean_obj(gc_data.call, convert=True)
+    if len(gc_data.users) != 0:
         if "-d" in message.flags:
             gc_info["👥 Participant"] = [
-                clean_obj(x, convert=True) for x in group_call.participants
+                clean_obj(x, convert=True) for x in gc_data.participants
             ]
         else:
             gc_info["👥 Participant"] = [
-                {"Name": x.first_name, "ID": x.id} for x in group_call.users
+                {"Name": x.first_name, "ID": x.id} for x in gc_data.users
             ]
     await message.edit_or_send_as_file(
         text=yamlify(gc_info),
