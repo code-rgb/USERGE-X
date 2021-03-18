@@ -245,7 +245,7 @@ async def get_group_call(message : Message, err_msg:str="") -> Optional[InputGro
             ).full_chat
         if full_chat is not None:
             return full_chat.call
-    await message.err( or f"**No Voice Chat Found** !{err_msg}", del_in=8)
+    await message.err(f"**No Voice Chat Found** !{err_msg}", del_in=8)
     return False
 
 
