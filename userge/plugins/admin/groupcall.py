@@ -48,7 +48,7 @@ def check_vc_perm(func):
     return vc_perm
 
 
-@check_vc_perm
+
 @userge.on_cmd(
     "vc_start",
     about={
@@ -60,6 +60,7 @@ def check_vc_perm(func):
     allow_via_bot=False,
     only_admins=True,
 )
+@check_vc_perm
 async def start_vc_(message: Message):
     """Start voice chat"""
     chat_id = message.chat.id
@@ -74,7 +75,7 @@ async def start_vc_(message: Message):
     )
 
 
-@check_vc_perm
+
 @userge.on_cmd(
     "vc_end",
     about={
@@ -86,6 +87,7 @@ async def start_vc_(message: Message):
     allow_via_bot=False,
     only_admins=True,
 )
+@check_vc_perm
 async def end_vc_(message: Message):
     """End voice chat"""
     chat_id = message.chat.id
@@ -168,14 +170,14 @@ async def vcinfo_(message: Message):
         return
     gc_data = await userge.send(GetGroupCall(call=group_call))
     gc_info = {}
-    gc_info["ℹ️  INFO"] = clean_obj(gc_data.call, convert=True)
+    gc_info["ℹ️ INFO"] = clean_obj(gc_data.call, convert=True)
     if len(gc_data.users) != 0:
         if "-d" in message.flags:
-            gc_info["👥  Participants"] = [
+            gc_info["👥 Participants"] = [
                 clean_obj(x, convert=True) for x in gc_data.participants
             ]
         else:
-            gc_info["👥  Users"] = [
+            gc_info["👥 Users"] = [
                 {"Name": x.first_name, "ID": x.id} for x in gc_data.users
             ]
     await message.edit_or_send_as_file(
@@ -185,7 +187,7 @@ async def vcinfo_(message: Message):
     )
 
 
-@check_vc_perm
+
 @userge.on_cmd(
     "vc_title",
     about={
@@ -197,6 +199,7 @@ async def vcinfo_(message: Message):
     allow_via_bot=False,
     only_admins=True,
 )
+@check_vc_perm
 async def vc_title(message: Message):
     """Change title of voice chat"""
     if not message.input_str:
@@ -209,7 +212,7 @@ async def vc_title(message: Message):
     )
 
 
-@check_vc_perm
+
 @userge.on_cmd(
     "vc_unmute",
     about={
@@ -222,12 +225,13 @@ async def vc_title(message: Message):
     allow_via_bot=False,
     only_admins=True,
 )
+@check_vc_perm
 async def unmute_vc_(message: Message):
     """Unmute a member in voice chat"""
     await manage_vcmember(message, to_mute=False)
 
 
-@check_vc_perm
+
 @userge.on_cmd(
     "vc_mute",
     about={
@@ -240,6 +244,7 @@ async def unmute_vc_(message: Message):
     allow_via_bot=False,
     only_admins=True,
 )
+@check_vc_perm
 async def mute_vc_(message: Message):
     """Mute a member in voice chat"""
     await manage_vcmember(message, to_mute=True)
