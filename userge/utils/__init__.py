@@ -15,6 +15,7 @@ from .functions import (
 from .progress import progress
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate
 from .tools import (
+    clean_obj,
     get_file_id,
     humanbytes,
     parse_buttons,
@@ -24,5 +25,4 @@ from .tools import (
     sublists,
     take_screen_shot,
     time_formatter,
-    clean_obj
 )

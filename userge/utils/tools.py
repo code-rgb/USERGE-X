@@ -18,6 +18,7 @@ from typing import List, Optional, Tuple
 from html_telegraph_poster import TelegraphPoster
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from ujson import loads
+
 import userge
 
 _LOG = userge.logging.getLogger(__name__)
@@ -164,7 +165,7 @@ def safe_filename(path_):
     return safename
 
 
-def clean_obj(obj, convert:bool=False):
+def clean_obj(obj, convert: bool = False):
     if convert:
         # Pyrogram object to python Dict
         obj = loads(str(obj))

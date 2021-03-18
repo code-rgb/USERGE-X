@@ -1,7 +1,7 @@
 """Manage Voice Chat Settings"""
 
 from random import randint, sample
-from typing import List, Optional, Union, Dict
+from typing import List, Optional
 
 from pyrogram.errors import Forbidden, PeerIdInvalid
 from pyrogram.raw.functions.channels import GetFullChannel
@@ -11,7 +11,6 @@ from pyrogram.raw.functions.phone import (
     DiscardGroupCall,
     EditGroupCallParticipant,
     EditGroupCallTitle,
-    GetGroupCall,
     InviteToGroupCall,
 )
 from pyrogram.raw.types import (
@@ -20,20 +19,31 @@ from pyrogram.raw.types import (
     InputPeerChat,
     InputPeerUser,
 )
-from ujson import loads
 
 from userge import Message, userge
 from userge.utils import clean_obj
+
 from ..tools.json import yamlify
 
 
 def check_vc_perm(func):
     """ to check if can_manage_voice_chats=True  """
+
     async def vc_perm(m: Message):
-        if m.chat.type in ["group", "supergroup"] and not (m.from_user.is_deleted or m.from_user.is_bot) and m.from_user.is_self and getattr((await m.chat.get_member(m.from_user.id)), "can_manage_voice_chats", False):
+        if (
+            m.chat.type in ["group", "supergroup"]
+            and not (m.from_user.is_deleted or m.from_user.is_bot)
+            and m.from_user.is_self
+            and getattr(
+                (await m.chat.get_member(m.from_user.id)),
+                "can_manage_voice_chats",
+                False,
+            )
+        ):
             await func(m)
         else:
             await m.err("You can't manage Voice Chats in this Chat !", del_in=7)
+
     return vc_perm
 
 
@@ -61,6 +71,7 @@ async def start_vc_(message: Message):
         f"Started Voice Chat in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
     )
 
+
 @check_vc_perm
 @userge.on_cmd(
     "vc_end",
@@ -75,12 +86,17 @@ async def start_vc_(message: Message):
 async def end_vc_(message: Message):
     """End voice chat"""
     chat_id = message.chat.id
-    if not (group_call := (await get_group_call(message, err_msg=", Voice Chat already ended"))):
+    if not (
+        group_call := (
+            await get_group_call(message, err_msg=", Voice Chat already ended")
+        )
+    ):
         return
     await userge.send(DiscardGroupCall(call=group_call))
     await message.edit(
         f"Ended Voice Chat in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
     )
+
 
 @vc_participant
 @userge.on_cmd(
@@ -117,7 +133,11 @@ async def inv_vc_(message: Message):
         peer_list = await append_peer_user([reply.from_user.id])
     if not peer_list:
         return
-    if not (group_call := (await get_group_call(message, err_msg=", first start by .startvc"))):
+    if not (
+        group_call := (
+            await get_group_call(message, err_msg=", first start by .startvc")
+        )
+    ):
         return
     try:
         await userge.send(InviteToGroupCall(call=group_call, users=peer_list))
@@ -145,9 +165,13 @@ async def vcinfo_(message: Message):
     gc_info["ℹ️ INFO"] = clean_obj(group_call.call, convert=True)
     if len(group_call.users) != 0:
         if "-d" in message.flags:
-            gc_info["👥 Participant"] = [clean_obj(x, convert=True) for x in group_call.participants]
+            gc_info["👥 Participant"] = [
+                clean_obj(x, convert=True) for x in group_call.participants
+            ]
         else:
-            gc_info["👥 Participant"] = [{"Name" : x.first_name, "ID": x.id} for x in group_call.users]
+            gc_info["👥 Participant"] = [
+                {"Name": x.first_name, "ID": x.id} for x in group_call.users
+            ]
     await message.edit_or_send_as_file(
         text=yamlify(gc_info),
         filename="group_call.yaml",
@@ -169,7 +193,7 @@ async def vcinfo_(message: Message):
 async def vc_title(message: Message):
     """Change title of voice chat"""
     if not message.input_str:
-        return await message.err("No Input Found !",del_in=10)
+        return await message.err("No Input Found !", del_in=10)
 
     if not (group_call := (await get_group_call(message))):
         return
@@ -234,7 +258,9 @@ async def manage_vcmember(message: Message, to_mute: bool):
         )
 
 
-async def get_group_call(message : Message, err_msg:str="") -> Optional[InputGroupCall]:
+async def get_group_call(
+    message: Message, err_msg: str = ""
+) -> Optional[InputGroupCall]:
     chat_peer = await userge.resolve_peer(message.chat.id)
     if isinstance(chat_peer, (InputPeerChannel, InputPeerChat)):
         if isinstance(chat_peer, InputPeerChannel):
@@ -278,7 +304,7 @@ async def append_peer_user(user_ids: List, limit: int = None) -> Optional[List]:
 
 
 async def vc_member(m: Message, gc: InputGroupCall) -> bool:
-    if p := getattr(gc,"participants",None):
+    if p := getattr(gc, "participants", None):
         for x in p:
             if x.peer.user_id == m.from_user.id:
                 return True
