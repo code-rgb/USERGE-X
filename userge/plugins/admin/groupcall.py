@@ -11,8 +11,8 @@ from pyrogram.raw.functions.phone import (
     DiscardGroupCall,
     EditGroupCallParticipant,
     EditGroupCallTitle,
+    GetGroupCall,
     InviteToGroupCall,
-    GetGroupCall
 )
 from pyrogram.raw.types import (
     InputGroupCall,
