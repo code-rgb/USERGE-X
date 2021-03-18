@@ -58,6 +58,7 @@ def check_vc_perm(func):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+     only_admins=True
 )
 async def start_vc_(message: Message):
     """Start voice chat"""
@@ -83,6 +84,7 @@ async def start_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+     only_admins=True
 )
 async def end_vc_(message: Message):
     """End voice chat"""
@@ -109,6 +111,7 @@ async def end_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+   
 )
 async def inv_vc_(message: Message):
     """invite to voice chat"""
@@ -132,6 +135,7 @@ async def inv_vc_(message: Message):
     elif reply and reply.from_user and not reply.from_user.is_bot:
         peer_list = await append_peer_user([reply.from_user.id])
     if not peer_list:
+        await message.err("No User Found to Invite !", del_in=5)
         return
     if not (
         group_call := (
@@ -146,7 +150,7 @@ async def inv_vc_(message: Message):
     except Forbidden:
         await message.err("Join Voice Chat First !", del_in=8)
     else:
-        await message.edit("✅ Invited Successfully !", del_in=5)
+        await message.edit("✅  Invited Successfully !", del_in=5)
 
 
 @userge.on_cmd(
@@ -165,18 +169,18 @@ async def vcinfo_(message: Message):
         return
     gc_data = await userge.send(GetGroupCall(call=group_call))
     gc_info = {}
-    gc_info["ℹ️ INFO"] = clean_obj(gc_data.call, convert=True)
+    gc_info["ℹ️  INFO"] = clean_obj(gc_data.call, convert=True)
     if len(gc_data.users) != 0:
         if "-d" in message.flags:
-            gc_info["👥 Participant"] = [
+            gc_info["👥  Participants"] = [
                 clean_obj(x, convert=True) for x in gc_data.participants
             ]
         else:
-            gc_info["👥 Participant"] = [
+            gc_info["👥  Users"] = [
                 {"Name": x.first_name, "ID": x.id} for x in gc_data.users
             ]
     await message.edit_or_send_as_file(
-        text=yamlify(gc_info),
+        text="🎙  **Voice Chat**\n\n" + yamlify(gc_info),
         filename="group_call.yaml",
         caption="Group_Call_Info",
     )
@@ -192,6 +196,7 @@ async def vcinfo_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+     only_admins=True
 )
 async def vc_title(message: Message):
     """Change title of voice chat"""
@@ -216,6 +221,7 @@ async def vc_title(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+     only_admins=True
 )
 async def unmute_vc_(message: Message):
     """Unmute a member in voice chat"""
@@ -233,6 +239,7 @@ async def unmute_vc_(message: Message):
     allow_channels=False,
     allow_private=False,
     allow_via_bot=False,
+     only_admins=True
 )
 async def mute_vc_(message: Message):
     """Mute a member in voice chat"""
