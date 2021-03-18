@@ -98,7 +98,6 @@ async def end_vc_(message: Message):
     )
 
 
-@vc_participant
 @userge.on_cmd(
     "vc_inv",
     about={
@@ -138,6 +137,8 @@ async def inv_vc_(message: Message):
             await get_group_call(message, err_msg=", first start by .startvc")
         )
     ):
+        return
+    if not await vc_member(message, group_call):
         return
     try:
         await userge.send(InviteToGroupCall(call=group_call, users=peer_list))
