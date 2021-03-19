@@ -109,7 +109,7 @@ if userge.has_bot:
                     Config.OWNER_ID[0],
                     "`You can't reply to old messages with if user's"
                     "forward privacy is enabled`",
-                    del_in=5,
+                    del_in=5
                 )
                 return
         try:
@@ -119,8 +119,8 @@ if userge.has_bot:
                 await message.forward(user_id)
         except UserIsBlocked:
             await message.err(
-                "You cannot reply to this user as he blocked your bot !"
-                del_in=5,
+                "You cannot reply to this user as he blocked your bot !",
+                del_in=5
             )
         except Exception as fwd_e:
             LOG.error(fwd_e)
@@ -152,7 +152,7 @@ if userge.has_bot:
                 "That user is in my Sudo List,"
                 "Hence I can't ban him from bot\n"
                 "\n**Tip:** Remove them from Sudo List and try again.",
-                del_in=5,
+                del_in=5
             )
             return
         if found := await BOT_BAN.find_one({"user_id": ban_user.id}):
@@ -160,7 +160,7 @@ if userge.has_bot:
                 "**#Already_Banned_from_Bot_PM**\n\n"
                 "User Already Exists in My Bot BAN List.\n"
                 f"**Reason For Bot BAN:** `{found.get('reason')}`",
-                del_in=5,
+                del_in=5
             )
         else:
             await start_ban.edit(await ban_from_bot_pm(ban_user, reason), log=__name__)
