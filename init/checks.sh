@@ -150,7 +150,7 @@ _setupPlugins() {
 }
 
 _checkUnoffPlugins() {
-    _setupPlugins Xtra true $LOAD_UNOFFICIAL_PLUGINS https://github.com/code-rgb/Userge-Plugins.git
+    _setupPlugins Xtra true $LOAD_UNOFFICIAL_PLUGINS https://github.com/F36/Userge-Plugins.git
 }
 
 _checkCustomPlugins() {
