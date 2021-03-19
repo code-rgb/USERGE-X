@@ -48,7 +48,10 @@ async def alive_inline(message: Message):
         if message.client.is_bot:
             await send_alive_message(message)
         elif userge.has_bot:
-            await send_inline_alive(message)
+            try:
+                await send_inline_alive(message)
+            except BadRequest:
+                await send_alive_message(message)
         else:
             await send_alive_message(message)
     except Exception as e_all:

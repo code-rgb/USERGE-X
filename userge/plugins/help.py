@@ -677,7 +677,7 @@ if userge.has_bot:
                             if Bot_Alive.is_photo(c_file_id):
                                 results.append(
                                     InlineQueryResultCachedPhoto(
-                                        file_id=_media_url,
+                                        file_id=c_file_id,
                                         caption=alive_info,
                                         reply_markup=buttons,
                                     )
@@ -686,7 +686,7 @@ if userge.has_bot:
                                 results.append(
                                     InlineQueryResultCachedDocument(
                                         title="USERGE-X",
-                                        file_id=_media_url,
+                                        file_id=c_file_id,
                                         caption=alive_info,
                                         description="ALIVE",
                                         reply_markup=buttons,
