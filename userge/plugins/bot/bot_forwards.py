@@ -242,7 +242,7 @@ if userge.has_bot:
                 await BOT_START.find_one_and_delete({"user_id": buser})
 
     @userge.bot.on_message(
-        & filters.user(Config.OWNER_ID[0])
+        filters.user(Config.OWNER_ID[0])
         & filters.private
         & filters.reply
         & filters.command("uinfo")
