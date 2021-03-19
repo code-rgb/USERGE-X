@@ -1,7 +1,8 @@
 import csv
-from typing import Union, List
 from datetime import datetime, timedelta
 from os import remove
+from typing import List, Union
+
 
 class BotChat:
     def __init__(self, dbname: str, clean_in: int = 15):

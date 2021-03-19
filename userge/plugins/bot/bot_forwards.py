@@ -4,16 +4,13 @@
 """Bot Message forwarding"""
 
 import asyncio
-import os
 from time import time
 
-import ujson
 from pyrogram import filters
 from pyrogram.errors import (
     BadRequest,
     FloodWait,
     Forbidden,
-    MessageIdInvalid,
     PeerIdInvalid,
     UserIsBlocked,
 )
@@ -21,6 +18,7 @@ from pyrogram.errors import (
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html, time_formatter
 from userge.utils.extras import BotChat
+
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 BOT_BAN = get_collection("BOT_BAN")
@@ -33,7 +31,6 @@ async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "BOT_FORWARDS"})
     if data:
         Config.BOT_FORWARDS = bool(data["is_active"])
-
 
 
 allowForwardFilter = filters.create(lambda _, __, ___: Config.BOT_FORWARDS)
@@ -58,7 +55,6 @@ async def bot_fwd_(message: Message):
     )
 
 
-
 if userge.has_bot:
 
     @userge.bot.on_message(
@@ -81,7 +77,6 @@ if userge.has_bot:
             )
         else:
             BOT_MSGS.store(msg.message_id, msg.from_user.id)
-
 
     @userge.bot.on_message(
         allowForwardFilter
@@ -109,7 +104,7 @@ if userge.has_bot:
                     Config.OWNER_ID[0],
                     "`You can't reply to old messages with if user's"
                     "forward privacy is enabled`",
-                    del_in=5
+                    del_in=5,
                 )
                 return
         try:
@@ -119,12 +114,10 @@ if userge.has_bot:
                 await message.forward(user_id)
         except UserIsBlocked:
             await message.err(
-                "You cannot reply to this user as he blocked your bot !",
-                del_in=5
+                "You cannot reply to this user as he blocked your bot !", del_in=5
             )
         except Exception as fwd_e:
             LOG.error(fwd_e)
-
 
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID[0])
@@ -140,8 +133,7 @@ if userge.has_bot:
             await start_ban.err("User ID Not found", del_in=10)
             return
         if not reason:
-            await message.err("Ban Aborted! provide a reason first!"
-            )
+            await message.err("Ban Aborted! provide a reason first!")
             return
         ban_user = await userge.bot.get_user_dict(user_id, attr_dict=True)
         if ban_user.id in Config.OWNER_ID:
@@ -152,7 +144,7 @@ if userge.has_bot:
                 "That user is in my Sudo List,"
                 "Hence I can't ban him from bot\n"
                 "\n**Tip:** Remove them from Sudo List and try again.",
-                del_in=5
+                del_in=5,
             )
             return
         if found := await BOT_BAN.find_one({"user_id": ban_user.id}):
@@ -160,7 +152,7 @@ if userge.has_bot:
                 "**#Already_Banned_from_Bot_PM**\n\n"
                 "User Already Exists in My Bot BAN List.\n"
                 f"**Reason For Bot BAN:** `{found.get('reason')}`",
-                del_in=5
+                del_in=5,
             )
         else:
             await start_ban.edit(await ban_from_bot_pm(ban_user, reason), log=__name__)
@@ -250,8 +242,7 @@ if userge.has_bot:
     async def uinfo_(_, message: Message):
         replied = message.reply_to_message
         if not replied:
-            await message.reply("Reply to a message to see user info"
-            )
+            await message.reply("Reply to a message to see user info")
             return
         fwd = replied.forward_from
         info_msg = await message.reply("`🔎 Searching for user in database ...`")
@@ -269,7 +260,9 @@ if userge.has_bot:
             user_id = fwd.id
         if not (user_id and usr):
             return await message.err("Not Found", del_in=3)
-        await info_msg.edit(f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr_m}")
+        await info_msg.edit(
+            f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr_m}"
+        )
 
 
 def extract_content(msg: Message):  # Modified a bound method
