@@ -19,6 +19,13 @@ from pyrogram import filters
 
 from userge import logging, logbot
 
+####  Heroku Version
+from re import compile as comp_regex
+from requests import Session
+from json.decoder import JSONDecodeError
+GRepo_regex = comp_regex("http[s]?://github\.com/(?P<owner>[-\w.]+)/(?P<repo>[-\w.]+)(?:\.git)?")
+####
+
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
 logbot.reply_last_msg("Setting Configs ...")
@@ -37,6 +44,7 @@ class Config:
     DB_URI = os.environ.get("DATABASE_URL")
     LANG = os.environ.get("PREFERRED_LANGUAGE")
     DOWN_PATH = os.environ.get("DOWN_PATH")
+    CACHE_PATH = "userge/xcache"
     CMD_TRIGGER = os.environ.get("CMD_TRIGGER")
     SUDO_TRIGGER = os.environ.get("SUDO_TRIGGER")
     FINISHED_PROGRESS_STR = os.environ.get("FINISHED_PROGRESS_STR")
@@ -105,19 +113,48 @@ class Config:
     BOT_ANTIFLOOD = False
 
 
+
 def get_version() -> str:
     """ get USERGE-X version """
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
+    if Config.HEROKU_ENV:
+        if not hasattr(Config, "HBOT_VERSION"):
+            setattr(Config, "HBOT_VERSION", hbot_version(ver))
+        return Config.HBOT_VERSION
     try:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f'v{ver}..HEAD'))
             if diff:
-                return f"{ver}-LOGAN.{len(diff)}"
+                ver = f"{ver}|LOGAN.{len(diff)}"
         else:
             diff = list(_REPO.iter_commits(f'{Config.UPSTREAM_REMOTE}/alpha..HEAD'))
             if diff:
-                return f"{ver}-fork-[X].{len(diff)}"
-    except Exception as e:
-        _LOG.error(e)
-        return ver
+                ver = f"{ver}|fork-[X].{len(diff)}"
+        branch = f"@{_REPO.active_branch.name}"
+    except Exception as err:
+        _LOG.error(err)
+    else:
+        ver += branch
+    return ver
 
+
+
+def hbot_version(tag: str) -> str:
+    tag_name, commits, branch = None, None, None
+    pref_branch = os.environ.get("PREF_BRANCH")
+    if match := GRepo_regex.match(Config.UPSTREAM_REPO):
+        g_api = f"https://api.github.com/repos/{match.group('owner')}/{match.group('repo')}"
+        with Session() as req:
+            try:
+                if (r_com := req.get(g_api + f"/compare/v{tag}...HEAD")).status_code == 200:
+                    rcom = r_com.json()
+                    if commits := rcom.get("total_commits"):
+                        commits = f".{commits}"
+                    if not pref_branch:
+                        if branch := rcom.get("target_commitish"):
+                            branch = f"@{branch}"
+                if (r_name := req.get(g_api + f"/releases/tags/v{tag}")).status_code == 200:
+                    tag_name = (r_name.json().get("name") or '').replace(" ", "-")
+            except JSONDecodeError:
+                pass
+    return f"{tag}|{tag_name or ''}{commits or ''}{branch or '@' + pref_branch}"

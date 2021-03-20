@@ -26,6 +26,8 @@ class BotChat:
             reader = csv.reader(csvfile)
             if msg_id:
                 for x in reversed(list(reader)):
+                    # not the best way to do that but works :)
+                    # Still better than reversing the whole file imo
                     if x[0] == str(msg_id):
                         # LOG.info("SUCCESS !")
                         return int(x[1])
