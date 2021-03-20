@@ -199,15 +199,13 @@ async def vcinfo_(message: Message):
 @check_vc_perm
 async def vc_title(message: Message):
     """Change title of voice chat"""
-    title=message.input_str
+    title = message.input_str
     if not title:
         return await message.err("No Input Found !", del_in=10)
 
     if not (group_call := (await get_group_call(message))):
         return
-    if await userge.send(
-        EditGroupCallTitle(call=group_call, title=title.strip())
-    ):
+    if await userge.send(EditGroupCallTitle(call=group_call, title=title.strip())):
         await message.edit(f"**Successfully** Changed VC Title to `{title}`", del_in=5)
     else:
         await message.edit("Oops 😬, Something Went Wrong !", del_in=5)
