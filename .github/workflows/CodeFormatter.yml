@@ -15,15 +15,15 @@ jobs:
       - name: Check for showstoppers
         run: >
           autopep8 --verbose --in-place --recursive --aggressive --aggressive
-          --ignore=W605 userge/plugins/ userge/utils
+          --ignore=W605 userge/plugins/ userge/utils userge/config.py
       - name: Remove unused imports and variables
         run: >
           autoflake --in-place --recursive --remove-all-unused-imports
           --remove-unused-variables --ignore-init-module-imports .
       - name: lint with isort and black
         run: |
-          isort userge/plugins/ userge/utils/
-          black userge/plugins/ userge/utils/
+          isort userge/plugins/ userge/utils/ userge/config.py
+          black userge/plugins/ userge/utils/ userge/config.py
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "auto: black code format"
