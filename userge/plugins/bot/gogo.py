@@ -168,7 +168,7 @@ if userge.has_bot:
         url_ = key_data.get("url")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__\n**Note:** for uploading to TG:\n`{Config.CMD_TRIGGER}upload [link] | [filename].mp4`",
+            text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
