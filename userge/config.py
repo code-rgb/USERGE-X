@@ -146,7 +146,7 @@ def get_version() -> str:
 
 def hbot_version(tag: str) -> str:
     tag_name, commits, branch = None, None, None
-    pref_branch = os.environ.get("PREF_BRANCH")
+    pref_branch = os.environ.get("PREF_BRANCH", "alpha")
     if match := GRepo_regex.match(Config.UPSTREAM_REPO):
         g_api = (
             f"https://api.github.com/repos/{match.group('owner')}/{match.group('repo')}"
@@ -159,13 +159,12 @@ def hbot_version(tag: str) -> str:
                     rcom = r_com.json()
                     if commits := rcom.get("total_commits"):
                         commits = f".{commits}"
-                    if not pref_branch:
-                        if branch := rcom.get("target_commitish"):
-                            branch = f"@{branch}"
+                    if branch := rcom.get("target_commitish"):
+                        pref_branch = branch
                 if (
                     r_name := req.get(g_api + f"/releases/tags/v{tag}")
                 ).status_code == 200:
                     tag_name = (r_name.json().get("name") or "").replace(" ", "-")
             except JSONDecodeError:
                 pass
-    return f"{tag}|{tag_name or ''}{commits or ''}{branch or '@' + pref_branch}"
+    return f"{tag}|{tag_name or ''}{commits or ''}@{pref_branch}"
