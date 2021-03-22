@@ -303,8 +303,11 @@ class RawDecorator(RawClient):
                             elif await _bot_is_present(r_c, r_m) and isinstance(
                                     r_c, _client.Userge):
                                 return
-                if flt.check_downpath and not os.path.isdir(Config.DOWN_PATH):
-                    os.makedirs(Config.DOWN_PATH)
+                if flt.check_downpath:
+                    if not os.path.isdir(Config.DOWN_PATH):
+                        os.makedirs(Config.DOWN_PATH)
+                    if not os.path.isdir(Config.CACHE_PATH):
+                        os.makedirs(Config.CACHE_PATH)
                 try:
                     await func(types.bound.Message.parse(
                         r_c, r_m, module=func.__module__, **kwargs))
