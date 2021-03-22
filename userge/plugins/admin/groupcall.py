@@ -1,8 +1,9 @@
 """Manage Voice Chat Settings"""
 
+from functools import wraps
 from random import randint, sample
 from typing import List, Optional
-from functools import wraps
+
 from pyrogram.errors import Forbidden, PeerIdInvalid
 from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.messages import GetFullChat
@@ -29,8 +30,8 @@ from ..tools.json import yamlify
 
 def check_vc_perm(func):
     """ to check if can_manage_voice_chats=True  """
-    @wraps(func)
 
+    @wraps(func)
     async def vc_perm(m: Message):
         if (
             m.chat.type in ["group", "supergroup"]
