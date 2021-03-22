@@ -159,7 +159,7 @@ def hbot_version(tag: str) -> str:
                     rcom = r_com.json()
                     if commits := rcom.get("total_commits"):
                         commits = f".{commits}"
-                    branch = rcom.get("target_commitish")        
+                    branch = rcom.get("target_commitish")
                 if (
                     r_name := req.get(g_api + f"/releases/tags/v{tag}")
                 ).status_code == 200:
