@@ -13,7 +13,6 @@ __all__ = ["Config", "get_version"]
 import os
 from json.decoder import JSONDecodeError
 
-# Heroku Version
 from re import compile as comp_regex
 from typing import Set
 
@@ -29,7 +28,6 @@ from . import versions
 GRepo_regex = comp_regex(
     "http[s]?://github\.com/(?P<owner>[-\w.]+)/(?P<repo>[-\w.]+)(?:\.git)?"
 )
-####
 
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
@@ -37,7 +35,7 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """ Configs to setup Userge """
+    """ Configs to setup USERGE-X """
 
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")

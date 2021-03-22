@@ -85,7 +85,7 @@ if userge.has_bot:
         & filters.reply
         & ~filters.regex(
             pattern=f"^(/.+|\{Config.SUDO_TRIGGER}(spoiler|cbutton)\s(.+)?)"
-        )
+        ),
     )
     async def forward_reply(_, message: Message):
         reply = message.reply_to_message
@@ -240,29 +240,29 @@ if userge.has_bot:
         & filters.command("uinfo")
     )
     async def uinfo_(_, message: Message):
-        replied = message.reply_to_message
-        if not replied:
+        reply = message.reply_to_message
+        user_ = None
+        if not reply:
             await message.reply("Reply to a message to see user info")
             return
-        fwd = replied.forward_from
-        info_msg = await message.reply("`🔎 Searching for user in database ...`")
-        usr = None
-        if replied.forward_sender_name:
-            user_id = BOT_MSGS.search(replied.message_id)
+        info_msg = await message.reply("`🔎 Searching for this user in my database ...`")
+        if uid_from_db := BOT_MSGS.search(reply.message_id):
             try:
-                usr = await userge.bot.get_users(user_id)
+                user_ = await userge.bot.get_user_dict(uid_from_db, attr_dict=True)
             except Exception:
-                usr_m = ""
-            else:
-                usr_m = usr.mention
-        elif fwd:
-            usr_m = fwd.mention
-            user_id = fwd.id
-        if not (user_id and usr):
-            return await message.err("Not Found", del_in=3)
-        await info_msg.edit(
-            f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr_m}"
+                pass
+        elif user_from_fwd := reply.forward_from:
+            user_ = await userge.bot.get_user_dict(user_from_fwd, attr_dict=True)
+            
+        if not user_:
+            return await message.edit("**ERROR:** `Sorry !, Can't Find this user in my database :(`", del_in=3)
+        uinfo = (
+            "**#User_Info**"
+            f"\n\n👤 {user_.mention}\n"
+            f"**First Name:** {user_.fname}\n"
+            f"**User ID:** `{user_.id}`"
         )
+        await info_msg.edit(uinfo)
 
 
 def extract_content(msg: Message):  # Modified a bound method

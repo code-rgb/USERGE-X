@@ -182,8 +182,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
         if os.path.exists(PATH_):
             SP_DATABASE = Database()
         else:
-            db_ = await SPOTIFY_DB.find_one({"_id": "database"})
-            if db_:
+            if db_ := await SPOTIFY_DB.find_one({"_id": "database"}):
                 access_token = db_.get("access_token")
                 refresh_token = db_.get("refresh_token")
                 if access_token and refresh_token:
