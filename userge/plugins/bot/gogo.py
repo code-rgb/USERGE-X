@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup as soup
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, userge
+from userge import Message, userge
 from userge.utils import check_owner, get_response, rand_key
 
 GOGO = "https://gogoanime.so"
