@@ -22,7 +22,7 @@ async def to_json_(message: Message):
     """Json-ify"""
     msg = message.reply_to_message or message
     if "-c" in message.flags:
-        msg = clean_obj(msg)
+        msg = clean_obj(msg, True)
     await message.edit_or_send_as_file(
         text=str(msg), filename="message.json", caption="Too Large"
     )
@@ -38,7 +38,7 @@ async def to_json_(message: Message):
 async def to_yaml_(message: Message):
     """yaml-ify"""
     await message.edit_or_send_as_file(
-        yamlify(convert(clean_obj(message.reply_to_message or message))),
+        yamlify(convert(clean_obj(message.reply_to_message or message, True))),
         filename="message.yaml",
         caption="Too Large",
     )
