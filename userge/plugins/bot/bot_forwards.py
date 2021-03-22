@@ -18,6 +18,7 @@ from pyrogram.errors import (
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html, time_formatter
 from userge.utils.extras import BotChat
+from math import floor
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -76,7 +77,7 @@ if userge.has_bot:
                 f"\n\n**ERROR:** `{new_m_e}`"
             )
         else:
-            BOT_MSGS.store(msg.message_id, msg.from_user.id)
+            BOT_MSGS.store(msg.message_id, message.from_user.id)
 
     @userge.bot.on_message(
         allowForwardFilter
@@ -185,26 +186,31 @@ if userge.has_bot:
         & filters.command("broadcast")
     )
     async def broadcast_(_, message: Message):
+        broadcaster = message.from_user.id
         replied = message.reply_to_message
         if not replied:
             await message.reply("Reply to a message for Broadcasting First !")
             return
         start_ = time()
-        br_cast = await replied.reply("`Broadcasting ...`")
+        br_cast = await replied.reply("Broadcasting ...")
         blocked_users = []
         count = 0
         to_copy = not replied.poll
+        bot_users_count = await BOT_START.estimated_document_count()
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
-                await userge.bot.send_message(
-                    b_id, "🔊 You received a **new** Broadcast."
-                )
-                if to_copy:
-                    await replied.copy(b_id)
+                if b_id in Config.OWNER_ID:
+                    await BOT_START.find_one_and_delete({"user_id": b_id})
                 else:
-                    await replied.forward(b_id)
-                await asyncio.sleep(0.8)
+                    await userge.bot.send_message(
+                        b_id, "🔊 You received a **new** Broadcast."
+                    )
+                    if to_copy:
+                        await replied.copy(b_id)
+                    else:
+                        await replied.forward(b_id)
+                    await asyncio.sleep(0.8)
                 # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
                 await asyncio.sleep(e.x)
@@ -218,9 +224,13 @@ if userge.has_bot:
                 count += 1
                 if count % 5 == 0:
                     try:
-                        await br_cast.edit(
-                            f"`Broadcasting ...`\n\n• ✔️ Success:  **{count}**\n• ✖️ Failed:  **{len(blocked_users)}**"
+                        prog_ = (
+                            "🔊 Broadcasting ...\n\n"
+                            + progress_str(total=bot_users_count, current=count + len(blocked_users))
+                            + f"\n\n• ✔️ **Success** :  `{count}`\n"
+                            + f"• ✖️ **Failed** :  `{len(blocked_users)}`"
                         )
+                        await br_cast.edit(prog_)
                     except FloodWait as e:
                         await asyncio.sleep(e.x)
         end_ = time()
@@ -230,8 +240,7 @@ if userge.has_bot:
         b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
         await br_cast.edit(b_info, log=__name__)
         if blocked_users:
-            for buser in blocked_users:
-                await BOT_START.find_one_and_delete({"user_id": buser})
+            await asyncio.gather(*[BOT_START.find_one_and_delete({"user_id": buser}) for buser in blocked_users])
 
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID[0])
@@ -405,3 +414,18 @@ async def bf_help(message: Message):
     Hint: Check bblist for banned users.
 """
     await message.edit(bot_forwards_help, del_in=60)
+
+
+def progress_str(total: int , current: int) -> str:
+    percentage = current * 100 / total
+    return ("**Progress** : `{}%`\n" + "```[{}{}]```").format(percentage, "".join(
+                    (
+                        Config.FINISHED_PROGRESS_STR
+                        for i in range(floor(percentage / 5))
+                    )
+                ),
+                "".join(
+                    (
+                        Config.UNFINISHED_PROGRESS_STR
+                        for i in range(20 - floor(percentage / 5))
+                    )
