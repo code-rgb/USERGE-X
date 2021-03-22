@@ -4,6 +4,7 @@
 """Bot Message forwarding"""
 
 import asyncio
+from math import floor
 from time import time
 
 from pyrogram import filters
@@ -18,7 +19,6 @@ from pyrogram.errors import (
 from userge import Config, Message, get_collection, userge
 from userge.utils import mention_html, time_formatter
 from userge.utils.extras import BotChat
-from math import floor
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -186,7 +186,7 @@ if userge.has_bot:
         & filters.command("broadcast")
     )
     async def broadcast_(_, message: Message):
-        broadcaster = message.from_user.id
+        message.from_user.id
         replied = message.reply_to_message
         if not replied:
             await message.reply("Reply to a message for Broadcasting First !")
@@ -226,7 +226,10 @@ if userge.has_bot:
                     try:
                         prog_ = (
                             "🔊 Broadcasting ...\n\n"
-                            + progress_str(total=bot_users_count, current=count + len(blocked_users))
+                            + progress_str(
+                                total=bot_users_count,
+                                current=count + len(blocked_users),
+                            )
                             + f"\n\n• ✔️ **Success** :  `{count}`\n"
                             + f"• ✖️ **Failed** :  `{len(blocked_users)}`"
                         )
@@ -240,7 +243,12 @@ if userge.has_bot:
         b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
         await br_cast.edit(b_info, log=__name__)
         if blocked_users:
-            await asyncio.gather(*[BOT_START.find_one_and_delete({"user_id": buser}) for buser in blocked_users])
+            await asyncio.gather(
+                *[
+                    BOT_START.find_one_and_delete({"user_id": buser})
+                    for buser in blocked_users
+                ]
+            )
 
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID[0])
@@ -416,20 +424,13 @@ async def bf_help(message: Message):
     await message.edit(bot_forwards_help, del_in=60)
 
 
-def progress_str(total: int , current: int) -> str:
+def progress_str(total: int, current: int) -> str:
     percentage = current * 100 / total
-    prog_arg = ("**Progress** : `{}%`\n" "```[{}{}]```")
+    prog_arg = "**Progress** : `{}%`\n" "```[{}{}]```"
     return prog_arg.format(
         percentage,
+        "".join((Config.FINISHED_PROGRESS_STR for i in range(floor(percentage / 5)))),
         "".join(
-                    (
-                        Config.FINISHED_PROGRESS_STR
-                        for i in range(floor(percentage / 5))
-                    )
-                ),
-        "".join(
-                    (
-                        Config.UNFINISHED_PROGRESS_STR
-                        for i in range(20 - floor(percentage / 5))
-                    )
-    ))
+            (Config.UNFINISHED_PROGRESS_STR for i in range(20 - floor(percentage / 5)))
+        ),
+    )
