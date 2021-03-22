@@ -432,4 +432,4 @@ def progress_str(total: int , current: int) -> str:
                         Config.UNFINISHED_PROGRESS_STR
                         for i in range(20 - floor(percentage / 5))
                     )
-    )
+    ))
