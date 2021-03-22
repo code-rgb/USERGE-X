@@ -418,14 +418,18 @@ async def bf_help(message: Message):
 
 def progress_str(total: int , current: int) -> str:
     percentage = current * 100 / total
-    return ("**Progress** : `{}%`\n" + "```[{}{}]```").format(percentage, "".join(
+    prog_arg = ("**Progress** : `{}%`\n" "```[{}{}]```")
+    return prog_arg.format(
+        percentage,
+        "".join(
                     (
                         Config.FINISHED_PROGRESS_STR
                         for i in range(floor(percentage / 5))
                     )
                 ),
-                "".join(
+        "".join(
                     (
                         Config.UNFINISHED_PROGRESS_STR
                         for i in range(20 - floor(percentage / 5))
                     )
+    )
