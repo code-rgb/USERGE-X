@@ -186,7 +186,6 @@ if userge.has_bot:
         & filters.command("broadcast")
     )
     async def broadcast_(_, message: Message):
-        message.from_user.id
         replied = message.reply_to_message
         if not replied:
             await message.reply("Reply to a message for Broadcasting First !")
@@ -216,7 +215,7 @@ if userge.has_bot:
                 await asyncio.sleep(e.x)
             except (BadRequest, Forbidden):
                 blocked_users.append(
-                    b_id
+                    BOT_START.find_one_and_delete({"user_id": b_id})
                 )  # Collect the user id and removing them later
             except Exception as err:
                 await CHANNEL.log(str(err))
@@ -243,12 +242,7 @@ if userge.has_bot:
         b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
         await br_cast.edit(b_info, log=__name__)
         if blocked_users:
-            await asyncio.gather(
-                *[
-                    BOT_START.find_one_and_delete({"user_id": buser})
-                    for buser in blocked_users
-                ]
-            )
+            await asyncio.gather(*blocked_users)
 
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID[0])
