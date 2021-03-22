@@ -12,7 +12,6 @@ __all__ = ["Config", "get_version"]
 
 import os
 from json.decoder import JSONDecodeError
-
 from re import compile as comp_regex
 from typing import Set
 

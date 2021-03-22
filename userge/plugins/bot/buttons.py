@@ -3,15 +3,17 @@
 # IMPROVED BY code-rgb
 
 import os
+from asyncio import gather
 from re import compile as comp_regex
 
 import ujson
 from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
-from asyncio import gather
+
 from userge import Config, Message, userge
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
+
 from .bot_pm import get_bot_info
 
 BTN_REGEX = comp_regex(
@@ -117,7 +119,7 @@ async def create_button(msg: Message):
         "<code>[name][buttonurl:link:same]</code> - "
         "<b>add a url button to same row</b>",
     },
-    check_downpath=True
+    check_downpath=True,
 )
 async def inline_buttons(message: Message):
     await message.edit("<code>Creating an Inline Button...</code>")
@@ -146,14 +148,16 @@ async def inline_buttons(message: Message):
     rnd_id = userge.rnd_id()
     msg_content = check_brackets(msg_content)
     InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
-    x = await userge.get_inline_bot_results((await get_bot_info())['bot'].uname, f"btn_{rnd_id}")
+    x = await userge.get_inline_bot_results(
+        (await get_bot_info())["bot"].uname, f"btn_{rnd_id}"
+    )
     await gather(
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
             query_id=x.query_id,
             result_id=x.results[0].id,
         ),
-        message.delete()
+        message.delete(),
     )
 
 
@@ -217,7 +221,7 @@ async def noformat_message(message: Message):
                 caption=f"{msg_text}{buttons}",
                 reply_to_message_id=reply.message_id,
                 parse_mode=None,
-            )
+            ),
         )
     else:
         await message.edit(f"{msg_text}{buttons}", parse_mode=None)

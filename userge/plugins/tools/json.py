@@ -3,19 +3,19 @@
 # by - @DeletedUser420
 
 
-import ujson
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
 from userge import Message, userge
 from userge.utils import clean_obj
 
+
 @userge.on_cmd(
     "json",
     about={
         "header": "message object to json",
         "usage": "reply {tr}json to any message",
-        "flags": {"-c": "clean json"}
+        "flags": {"-c": "clean json"},
     },
 )
 async def to_json_(message: Message):
@@ -38,8 +38,9 @@ async def to_json_(message: Message):
 async def to_yaml_(message: Message):
     """yaml-ify"""
     await message.edit_or_send_as_file(
-    yamlify(convert(clean_obj(message.reply_to_message or message)))
-    ,filename="message.yaml", caption="Too Large"
+        yamlify(convert(clean_obj(message.reply_to_message or message))),
+        filename="message.yaml",
+        caption="Too Large",
     )
 
 

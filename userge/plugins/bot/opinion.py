@@ -140,7 +140,7 @@ def _choice(res):
     },
     allow_channels=False,
     allow_via_bot=False,
-    check_downpath=True
+    check_downpath=True,
 )
 async def op_(message: Message):
     replied = message.reply_to_message

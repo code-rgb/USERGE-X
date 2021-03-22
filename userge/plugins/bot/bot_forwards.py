@@ -253,9 +253,11 @@ if userge.has_bot:
                 pass
         elif user_from_fwd := reply.forward_from:
             user_ = await userge.bot.get_user_dict(user_from_fwd, attr_dict=True)
-            
+
         if not user_:
-            return await message.edit("**ERROR:** `Sorry !, Can't Find this user in my database :(`", del_in=3)
+            return await message.edit(
+                "**ERROR:** `Sorry !, Can't Find this user in my database :(`", del_in=3
+            )
         uinfo = (
             "**#User_Info**"
             f"\n\n👤 {user_.mention}\n"
