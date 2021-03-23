@@ -139,7 +139,7 @@ if userge.has_bot:
 
     async def check_new_bot_user(user: Union[int, str, User]) -> bool:
         user_ = await userge.bot.get_user_dict(user, attr_dict=True)
-        if user_.id in Config.OWNER_ID or user_.id in Config.SUDO_USERS:
+        if user_.id in Config.OWNER_ID:
             found = True
         else:
             found = await BOT_START.find_one({"user_id": user_.id})
@@ -208,8 +208,7 @@ My Master is : {owner_.flname}</b>
             await CHANNEL.log(
                 f"**ERROR**: {str(bpm_e)}\n\nFatal Error occured while sending Bot Pm Media"
             )
-        if from_user.id not in Config.OWNER_ID:
-            await check_new_bot_user(message.from_user)
+        await check_new_bot_user(message.from_user)
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^add_to_grp$"))
     @check_owner
