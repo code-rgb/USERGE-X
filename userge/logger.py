@@ -22,6 +22,6 @@ logging.basicConfig(level=logging.DEBUG,
                         logging.StreamHandler()
                     ])
 
-for a, k in logging.root.manager.loggerDict.items():
-    if not 'pytgcalls' in a:
-        k.disabled = True
+for name, logger in logging.root.manager.loggerDict.items():
+    if name.startswith('pyrogram'):
+        logger.disabled = True
