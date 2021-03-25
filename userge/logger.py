@@ -13,7 +13,7 @@ __all__ = ['logging']
 import logging
 from logging.handlers import RotatingFileHandler
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='[%(asctime)s - %(levelname)s] - %(name)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S',
                     handlers=[
@@ -22,7 +22,6 @@ logging.basicConfig(level=logging.INFO,
                         logging.StreamHandler()
                     ])
 
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-logging.getLogger("pyrogram.parser.html").setLevel(logging.ERROR)
-logging.getLogger("pyrogram.session.session").setLevel(logging.ERROR)
-logging.getLogger('googleapiclient.discovery').setLevel(logging.WARNING)
+for a, k in logging.root.manager.loggerDict.items():
+    if not 'pytgcalls' in a:
+        k.disabled = True
