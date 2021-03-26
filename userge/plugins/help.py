@@ -1141,7 +1141,7 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent("𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨 "),
-                url="t.me/MissSerenaBot
+                url="t.me/MissSerenaBot",
                 description="Main Menu",
                 thumb_url="https://i.imgur.com/1xsOo9o.png",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
