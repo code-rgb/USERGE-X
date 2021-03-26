@@ -89,6 +89,7 @@ async def get_ytthumb(videoid: str):
         "header": "ytdl with inline buttons",
         "usage": "{tr}iytdl [URL / Text] or [Reply to URL / Text]",
     },
+    check_downpath=True,
 )
 async def iytdl_inline(message: Message):
     reply = message.reply_to_message

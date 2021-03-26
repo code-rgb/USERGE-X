@@ -4,6 +4,7 @@
 """Bot Message forwarding"""
 
 import asyncio
+from math import floor
 from time import time
 
 from pyrogram import filters
@@ -76,7 +77,7 @@ if userge.has_bot:
                 f"\n\n**ERROR:** `{new_m_e}`"
             )
         else:
-            BOT_MSGS.store(msg.message_id, msg.from_user.id)
+            BOT_MSGS.store(msg.message_id, message.from_user.id)
 
     @userge.bot.on_message(
         allowForwardFilter
@@ -85,7 +86,7 @@ if userge.has_bot:
         & filters.reply
         & ~filters.regex(
             pattern=f"^(/.+|\{Config.SUDO_TRIGGER}(spoiler|cbutton)\s(.+)?)"
-        )
+        ),
     )
     async def forward_reply(_, message: Message):
         reply = message.reply_to_message
@@ -190,37 +191,47 @@ if userge.has_bot:
             await message.reply("Reply to a message for Broadcasting First !")
             return
         start_ = time()
-        br_cast = await replied.reply("`Broadcasting ...`")
+        br_cast = await replied.reply("Broadcasting ...")
         blocked_users = []
         count = 0
         to_copy = not replied.poll
+        bot_users_count = await BOT_START.estimated_document_count()
         async for c in BOT_START.find():
             try:
                 b_id = c["user_id"]
-                await userge.bot.send_message(
-                    b_id, "🔊 You received a **new** Broadcast."
-                )
-                if to_copy:
-                    await replied.copy(b_id)
+                if b_id in Config.OWNER_ID:
+                    await BOT_START.find_one_and_delete({"user_id": b_id})
                 else:
-                    await replied.forward(b_id)
-                await asyncio.sleep(0.8)
-                # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
+                    await userge.bot.send_message(
+                        b_id, "🔊 You received a **new** Broadcast."
+                    )
+                    if to_copy:
+                        await replied.copy(b_id)
+                    else:
+                        await replied.forward(b_id)
+                    await asyncio.sleep(0.8)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except (BadRequest, Forbidden):
                 blocked_users.append(
-                    b_id
-                )  # Collect the user id and removing them later
+                    BOT_START.find_one_and_delete({"user_id": b_id})
+                )  # coro list of removing users
             except Exception as err:
                 await CHANNEL.log(str(err))
             else:
                 count += 1
                 if count % 5 == 0:
                     try:
-                        await br_cast.edit(
-                            f"`Broadcasting ...`\n\n• ✔️ Success:  **{count}**\n• ✖️ Failed:  **{len(blocked_users)}**"
+                        prog_ = (
+                            "🔊 Broadcasting ...\n\n"
+                            + progress_str(
+                                total=bot_users_count,
+                                current=count + len(blocked_users),
+                            )
+                            + f"\n\n• ✔️ **Success** :  `{count}`\n"
+                            + f"• ✖️ **Failed** :  `{len(blocked_users)}`"
                         )
+                        await br_cast.edit(prog_)
                     except FloodWait as e:
                         await asyncio.sleep(e.x)
         end_ = time()
@@ -230,8 +241,7 @@ if userge.has_bot:
         b_info += f"\n⏳  <code>Process took: {time_formatter(end_ - start_)}</code>."
         await br_cast.edit(b_info, log=__name__)
         if blocked_users:
-            for buser in blocked_users:
-                await BOT_START.find_one_and_delete({"user_id": buser})
+            await asyncio.gather(*blocked_users)
 
     @userge.bot.on_message(
         filters.user(Config.OWNER_ID[0])
@@ -240,29 +250,31 @@ if userge.has_bot:
         & filters.command("uinfo")
     )
     async def uinfo_(_, message: Message):
-        replied = message.reply_to_message
-        if not replied:
+        reply = message.reply_to_message
+        user_ = None
+        if not reply:
             await message.reply("Reply to a message to see user info")
             return
-        fwd = replied.forward_from
-        info_msg = await message.reply("`🔎 Searching for user in database ...`")
-        usr = None
-        if replied.forward_sender_name:
-            user_id = BOT_MSGS.search(replied.message_id)
+        info_msg = await message.reply("`🔎 Searching for this user in my database ...`")
+        if uid_from_db := BOT_MSGS.search(reply.message_id):
             try:
-                usr = await userge.bot.get_users(user_id)
+                user_ = await userge.bot.get_user_dict(uid_from_db, attr_dict=True)
             except Exception:
-                usr_m = ""
-            else:
-                usr_m = usr.mention
-        elif fwd:
-            usr_m = fwd.mention
-            user_id = fwd.id
-        if not (user_id and usr):
-            return await message.err("Not Found", del_in=3)
-        await info_msg.edit(
-            f"<b><u>User Info</u></b>\n\n__ID__ `{user_id}`\n👤: {usr_m}"
+                pass
+        elif user_from_fwd := reply.forward_from:
+            user_ = await userge.bot.get_user_dict(user_from_fwd, attr_dict=True)
+
+        if not user_:
+            return await message.edit(
+                "**ERROR:** `Sorry !, Can't Find this user in my database :(`", del_in=3
+            )
+        uinfo = (
+            "**#User_Info**"
+            f"\n\n👤 {user_.mention}\n"
+            f"**First Name:** {user_.fname}\n"
+            f"**User ID:** `{user_.id}`"
         )
+        await info_msg.edit(uinfo)
 
 
 def extract_content(msg: Message):  # Modified a bound method
@@ -403,3 +415,15 @@ async def bf_help(message: Message):
     Hint: Check bblist for banned users.
 """
     await message.edit(bot_forwards_help, del_in=60)
+
+
+def progress_str(total: int, current: int) -> str:
+    percentage = current * 100 / total
+    prog_arg = "**Progress** : `{}%`\n" "```[{}{}]```"
+    return prog_arg.format(
+        percentage,
+        "".join((Config.FINISHED_PROGRESS_STR for i in range(floor(percentage / 5)))),
+        "".join(
+            (Config.UNFINISHED_PROGRESS_STR for i in range(20 - floor(percentage / 5)))
+        ),
+    )

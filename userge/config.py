@@ -12,8 +12,6 @@ __all__ = ["Config", "get_version"]
 
 import os
 from json.decoder import JSONDecodeError
-
-# Heroku Version
 from re import compile as comp_regex
 from typing import Set
 
@@ -29,7 +27,6 @@ from . import versions
 GRepo_regex = comp_regex(
     "http[s]?://github\.com/(?P<owner>[-\w.]+)/(?P<repo>[-\w.]+)(?:\.git)?"
 )
-####
 
 _REPO = Repo()
 _LOG = logging.getLogger(__name__)
@@ -37,7 +34,7 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """ Configs to setup Userge """
+    """ Configs to setup USERGE-X """
 
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
@@ -134,7 +131,7 @@ def get_version() -> str:
         if "/code-rgb/userge-x" in Config.UPSTREAM_REPO.lower():
             diff = list(_REPO.iter_commits(f"v{ver}..HEAD"))
             if diff:
-                ver = f"{ver}|LOGAN.{len(diff)}"
+                ver = f"{ver}|VULCAN.{len(diff)}"
         else:
             diff = list(_REPO.iter_commits(f"{Config.UPSTREAM_REMOTE}/alpha..HEAD"))
             if diff:
@@ -162,13 +159,11 @@ def hbot_version(tag: str) -> str:
                     rcom = r_com.json()
                     if commits := rcom.get("total_commits"):
                         commits = f".{commits}"
-                    if not pref_branch:
-                        if branch := rcom.get("target_commitish"):
-                            branch = f"@{branch}"
+                    branch = rcom.get("target_commitish")
                 if (
                     r_name := req.get(g_api + f"/releases/tags/v{tag}")
                 ).status_code == 200:
                     tag_name = (r_name.json().get("name") or "").replace(" ", "-")
             except JSONDecodeError:
                 pass
-    return f"{tag}|{tag_name or ''}{commits or ''}{branch or '@' + pref_branch}"
+    return f"{tag}|{tag_name or ''}{commits or ''}@{pref_branch or branch or 'alpha'}"

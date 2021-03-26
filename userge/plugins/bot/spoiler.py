@@ -53,6 +53,7 @@ SPOILER_DB = Spoiler_DB()
         "header": "Share a spoiler",
         "usage": "{tr}spoiler [reply to media] or Text",
     },
+    check_downpath=True,
 )
 async def spoiler_alert_(message: Message):
     content = message.input_str

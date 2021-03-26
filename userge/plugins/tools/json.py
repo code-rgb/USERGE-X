@@ -3,11 +3,11 @@
 # by - @DeletedUser420
 
 
-import ujson
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
 from userge import Message, userge
+from userge.utils import clean_obj
 
 
 @userge.on_cmd(
@@ -15,16 +15,16 @@ from userge import Message, userge
     about={
         "header": "message object to json",
         "usage": "reply {tr}json to any message",
+        "flags": {"-c": "clean json"},
     },
 )
 async def to_json_(message: Message):
     """Json-ify"""
-    if message.reply_to_message:
-        msg = str(message.reply_to_message)
-    else:
-        msg = str(message)
+    msg = message.reply_to_message or message
+    if "-c" in message.flags:
+        msg = clean_obj(msg, True)
     await message.edit_or_send_as_file(
-        text=msg, filename="json.txt", caption="Too Large"
+        text=str(msg), filename="Json.txt", caption="Too Large"
     )
 
 
@@ -37,10 +37,10 @@ async def to_json_(message: Message):
 )
 async def to_yaml_(message: Message):
     """yaml-ify"""
-    msg = message.reply_to_message or message
-    result = yamlify(convert(ujson.loads(str(msg))))
     await message.edit_or_send_as_file(
-        text=result, filename="yaml.txt", caption="Too Large"
+        yamlify(convert(clean_obj(message.reply_to_message or message, True))),
+        filename="YAML.txt",
+        caption="Too Large",
     )
 
 

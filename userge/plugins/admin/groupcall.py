@@ -1,5 +1,6 @@
 """Manage Voice Chat Settings"""
 
+from functools import wraps
 from random import randint, sample
 from typing import List, Optional
 
@@ -30,6 +31,7 @@ from ..tools.json import yamlify
 def check_vc_perm(func):
     """ to check if can_manage_voice_chats=True  """
 
+    @wraps(func)
     async def vc_perm(m: Message):
         if (
             m.chat.type in ["group", "supergroup"]
