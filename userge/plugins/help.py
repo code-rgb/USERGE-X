@@ -639,7 +639,7 @@ if userge.has_bot:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         results.append(
                             InlineQueryResultArticle(
-                                title="Serena
+                                title="Serena"
                                 input_message_content=InputTextMessageContent(
                                     alive_info, disable_web_page_preview=True
                                 ),
