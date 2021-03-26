@@ -250,7 +250,7 @@ Serena is Up and Running.</b>
         buttons = [
             [
                 InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
-                InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
+                InlineKeyboardButton(text="👑  Owner", url="t.me/DetectiveVI"),
             ]
         ]
         return InlineKeyboardMarkup(buttons)
