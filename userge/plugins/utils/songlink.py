@@ -13,7 +13,7 @@ from re import search
 from typing import Dict, Optional
 from urllib.parse import quote
 
-from userge import Message, pool, userge
+from userge import Message, userge
 from userge.utils import get_response
 
 
@@ -46,6 +46,7 @@ async def get_song_link(link: str) -> Optional[Dict]:
     except ValueError:
         r = None
     return r
+
 
 async def find_url_from_msg(message: Message) -> Optional[str]:
     reply = message.reply_to_message
