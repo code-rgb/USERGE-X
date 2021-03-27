@@ -26,7 +26,7 @@ from userge.utils import get_response
 )
 async def getlink_(message: Message):
     """song links"""
-    if not (link := await find_url_from_msg(msg)):
+    if not (link := await find_url_from_msg(message)):
         return
     await message.edit(f'🔎 Searching for `"{link}"`')
     resp = await get_song_link(link)
@@ -50,13 +50,14 @@ async def get_song_link(link: str) -> Optional[Dict]:
 
 async def find_url_from_msg(message: Message) -> Optional[str]:
     reply = message.reply_to_message
+    msg = None
     if message.input_str:
         txt = message.input_str
         msg = message
     elif reply and (reply.text or reply.caption):
         txt = reply.text or reply.caption
         msg = reply
-    else:
+    if not msg:
         await message.err("No Input Found !", del_in=5)
         return
     try:
