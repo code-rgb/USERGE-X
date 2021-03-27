@@ -26,6 +26,28 @@ from userge.utils import get_response
 )
 async def getlink_(message: Message):
     """song links"""
+    if not (link := await find_url_from_msg(msg)):
+        return
+    await message.edit(f'🔎 Searching for `"{link}"`')
+    resp = await get_song_link(link)
+    if resp is None:
+        await message.err(
+            "Oops something went wrong! Please try again later.", del_in=5
+        )
+        return
+    await message.edit(get_data(resp) or "404 Not Found")
+
+
+async def get_song_link(link: str) -> Optional[Dict]:
+    try:
+        r = await get_response.json(
+            "https://api.song.link/v1-alpha.1/links?url=" + quote(link)
+        )
+    except ValueError:
+        r = None
+    return r
+
+async def find_url_from_msg(message: Message) -> Optional[str]:
     reply = message.reply_to_message
     if message.input_str:
         txt = message.input_str
@@ -47,24 +69,7 @@ async def getlink_(message: Message):
         return
     y = url_e[0]
     link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
-    await message.edit(f'🔎 Searching for `"{link}"`')
-    resp = await get_song_link(link)
-    if resp is None:
-        await message.err(
-            "Oops something went wrong! Please try again later.", del_in=5
-        )
-        return
-    await message.edit((await get_data(resp)) or "404 Not Found")
-
-
-async def get_song_link(link: str) -> Optional[Dict]:
-    try:
-        r = await get_response.json(
-            "https://api.song.link/v1-alpha.1/links?url=" + quote(link)
-        )
-    except ValueError:
-        r = None
-    return r
+    return link
 
 
 def beautify(text: str) -> str:
@@ -82,7 +87,6 @@ def beautify(text: str) -> str:
     return out
 
 
-@pool.run_in_thread
 def get_data(resp: Dict) -> str:
     platforms = resp["linksByPlatform"]
     data_ = resp["entitiesByUniqueId"][resp["entityUniqueId"]]
