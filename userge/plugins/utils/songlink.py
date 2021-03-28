@@ -48,7 +48,7 @@ async def get_song_link(link: str) -> Optional[Dict]:
     return r
 
 
-async def find_url_from_msg(message: Message) -> Optional[str]:
+async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional[str]:
     reply = message.reply_to_message
     msg = None
     if message.input_str:
@@ -58,7 +58,8 @@ async def find_url_from_msg(message: Message) -> Optional[str]:
         txt = reply.text or reply.caption
         msg = reply
     if not msg:
-        await message.err("No Input Found !", del_in=5)
+        if show_err:
+            await message.err("No Input Found !", del_in=5)
         return
     try:
         url_e = [
@@ -67,7 +68,8 @@ async def find_url_from_msg(message: Message) -> Optional[str]:
             if _.type in ("url", "text_link")
         ]
     except TypeError:
-        await message.err("No Valid URL was found !", del_in=5)
+        if show_err:
+            await message.err("No Valid URL was found !", del_in=5)
         return
     y = url_e[0]
     link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
