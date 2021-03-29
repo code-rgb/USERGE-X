@@ -73,7 +73,7 @@ async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional
         return
     y = url_e[0]
     link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
-    return link, msg.link
+    return link, msg
 
 
 def beautify(text: str) -> str:
