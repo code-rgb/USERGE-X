@@ -26,7 +26,7 @@ from userge.utils import get_response
 )
 async def getlink_(message: Message):
     """song links"""
-    if not (link := await find_url_from_msg(message)):
+    if not (link := (await find_url_from_msg(message))[0]):
         return
     await message.edit(f'🔎 Searching for `"{link}"`')
     resp = await get_song_link(link)
@@ -73,7 +73,7 @@ async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional
         return
     y = url_e[0]
     link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
-    return link
+    return link, msg
 
 
 def beautify(text: str) -> str:
