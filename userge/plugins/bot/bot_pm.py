@@ -16,6 +16,7 @@ from pyrogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     User,
+InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 )
 
 from userge import Config, Message, get_collection, pool, userge
@@ -180,7 +181,7 @@ if userge.has_bot:
             start_msg, btns = default_owner_start(from_user)
         else:
             start_msg = f"""
-Hello 👋 {from_user.fname},
+Hello {from_user.fname},
 Nice To Meet You !, I'm <b>{bot_.fname}</b> A Bot.
 
         <b><i>Powered by</i> [USERGE-X](https://t.me/x_xtests)
@@ -380,7 +381,31 @@ My Master is : {owner_.flname}</b>
             await send_flood_alert(c_q.from_user)
             FloodConfig.BANNED_USERS.add(user_id)
             raise StopPropagation
-        elif user_id in FloodConfig.BANNED_USERS:
+        if user_id in FloodConfig.BANNED_USERS:
+            FloodConfig.BANNED_USERS.remove(user_id)
+
+
+    @userge.bot.on_inline_query(~FloodConfig.OWNER & BotAntiFloodFilter, group=-100)
+    async def antif_on_iq(_, i_q: InlineQuery):
+        user_id = i_q.from_user.id
+        if await BOT_BAN.find_one({"user_id": user_id}):
+            banned_msg = [InlineQueryResultArticle(
+                title="Spammer Detect !",
+                input_message_content=InputTextMessageContent(
+                "**I'm sorry for spamming this bot please forgive me**"
+                ),
+                thumb_url="https://i.imgur.com/huI3XzP.png",
+            )]
+            await i_q.answer(
+                results=banned_msg,
+                cache_time=1,
+                switch_pm_text="You are Banned from this bot",
+                switch_pm_parameter="start",
+            )
+        if await is_flood(user_id):
+            FloodConfig.BANNED_USERS.add(user_id)
+            raise StopPropagation
+        if user_id in FloodConfig.BANNED_USERS:
             FloodConfig.BANNED_USERS.remove(user_id)
 
         ########################################################
