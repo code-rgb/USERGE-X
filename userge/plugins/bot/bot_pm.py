@@ -173,7 +173,7 @@ if userge.has_bot:
     @userge.bot.on_message(start_filter())
     async def start_bot(_, message: Message):
         c_info = await get_bot_info()
-        bot_ = c_info.get("bot")
+        c_info.get("bot")
         owner_ = c_info.get("owner")
         from_user = await userge.bot.get_user_dict(message.from_user, attr_dict=True)
         if from_user.id in Config.OWNER_ID:
