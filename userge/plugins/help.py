@@ -72,7 +72,7 @@ REPO_X = InlineQueryResultArticle(
                     "🚀 Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
-                        "https://github.com/code-rgb/USERGE-X/tree/alpha"
+                        "https://github.com/code-pms/MyGpack"
                     ),
                 ),
             ]
