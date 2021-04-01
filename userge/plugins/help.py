@@ -485,9 +485,6 @@ if userge.has_bot:
     @userge.bot.on_inline_query()
     async def inline_answer(_, inline_query: InlineQuery):
 
-
-
-        
         results = []
         i_q = inline_query.query
         string = i_q.lower()  # All lower

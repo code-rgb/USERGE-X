@@ -15,8 +15,10 @@ from pyrogram.types import (
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
+    InlineQuery,
+    InlineQueryResultArticle,
+    InputTextMessageContent,
     User,
-InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 )
 
 from userge import Config, Message, get_collection, pool, userge
@@ -384,18 +386,19 @@ My Master is : {owner_.flname}</b>
         if user_id in FloodConfig.BANNED_USERS:
             FloodConfig.BANNED_USERS.remove(user_id)
 
-
     @userge.bot.on_inline_query(~FloodConfig.OWNER & BotAntiFloodFilter, group=-100)
     async def antif_on_iq(_, i_q: InlineQuery):
         user_id = i_q.from_user.id
         if await BOT_BAN.find_one({"user_id": user_id}):
-            banned_msg = [InlineQueryResultArticle(
-                title="Spammer Detect !",
-                input_message_content=InputTextMessageContent(
-                "**I'm sorry for spamming this bot please forgive me**"
-                ),
-                thumb_url="https://i.imgur.com/huI3XzP.png",
-            )]
+            banned_msg = [
+                InlineQueryResultArticle(
+                    title="Spammer Detect !",
+                    input_message_content=InputTextMessageContent(
+                        "**I'm sorry for spamming this bot please forgive me**"
+                    ),
+                    thumb_url="https://i.imgur.com/huI3XzP.png",
+                )
+            ]
             await i_q.answer(
                 results=banned_msg,
                 cache_time=1,
