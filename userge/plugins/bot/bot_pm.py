@@ -180,10 +180,9 @@ if userge.has_bot:
             start_msg, btns = default_owner_start(from_user)
         else:
             start_msg = f"""
-Hello 👋 {from_user.fname},
-Nice To Meet You !, I'm <b>{bot_.fname}</b> A Bot.
+Hey! <pre>{from_user.fname}</pre>,
 
-My Master is : {owner_.flname}</b>
+My Master is : {owner_.flname}
 """
             if Config.BOT_FORWARDS:
                 start_msg += "<b>\n📌 NOTE:</b>\nYou can 📨 <b>Send Message</b> here to contact my <b>Master.</b>"
