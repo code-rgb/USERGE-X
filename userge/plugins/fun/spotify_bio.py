@@ -119,7 +119,7 @@ async def get_auth_():
 
 
 @userge.on_cmd(
-    "sp_setup",
+    "spsetup",
     about={
         "header": "Setup for Spotify Auth",
         "description": "[In LOG Channel]\nLogin in your spotify account before doing this, then follow the instructions",
@@ -479,7 +479,7 @@ async def sp_var_check(message: Message):
 
 
 @userge.on_cmd(
-    "sp_bio",
+    "spbio",
     about={"header": "enable / disable Spotify Bio"},
     allow_channels=False,
 )
@@ -510,7 +510,7 @@ async def spotify_bio_toggle(message: Message):
     )
 
 
-@userge.on_cmd("sp_now", about={"header": "Now Playing Spotify Song"})
+@userge.on_cmd("spnow", about={"header": "Now Playing Spotify Song"})
 async def now_playing_(message: Message):
     """Spotify Now Playing"""
     if not await sp_var_check(message):
@@ -526,7 +526,7 @@ async def now_playing_(message: Message):
     await message.edit(spolink)
 
 
-@userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
+@userge.on_cmd("spinfo", about={"header": "Get Info about Your Songs and Device"})
 async def sp_info_(message: Message):
     """Spotify Device Info"""
     if not await sp_var_check(message):
@@ -576,7 +576,7 @@ async def sp_info_(message: Message):
     await message.edit(status_pn)
 
 
-@userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
+@userge.on_cmd("spprofile", about={"header": "Get Your Spotify Account Info"})
 async def sp_profile_(message: Message):
     """Spotify Profile"""
     if not await sp_var_check(message):
@@ -597,7 +597,7 @@ async def sp_profile_(message: Message):
     await message.edit(profile_text)
 
 
-@userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
+@userge.on_cmd("sprecents", about={"header": "Get Recently Played Spotify Songs"})
 async def sp_recents_(message: Message):
     """Spotify Recent Songs"""
     if not await sp_var_check(message):
