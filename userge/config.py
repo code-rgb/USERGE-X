@@ -119,7 +119,6 @@ class Config:
     INLINE_NOTES = False
     BOT_ANTIFLOOD = False
     VC_GROUP_MODE = False
-    
 
 
 def get_version() -> str:
