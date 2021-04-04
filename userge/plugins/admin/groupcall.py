@@ -118,12 +118,12 @@ async def inv_vc_(message: Message):
     """invite to group call"""
     peer_list = None
     reply = message.reply_to_message
-    limit_ = int(message.flags.get("-l", 0))
     await message.edit("`Inviting Members to group call ...`")
-    if limit_ != 0:
+    if "-l" in message.flags:
+        limit = max(int(message.flags.get("-l", 1)), 1)
         peer_list = (
-            await get_peer_list(message, limit_)
-            if limit_ > 0
+            await get_peer_list(message, limit)
+            if limit > 0
             else await get_peer_list(message)
         )
     elif message.input_str:
@@ -257,8 +257,8 @@ async def manage_vcmember(message: Message, to_mute: bool):
         return
     if message.input_str:
         peer_ = message.input_str.strip()
-    elif message.reply_to_message and message.reply_to_message.text:
-        peer_ = message.reply_to_message.text
+    elif message.reply_to_message:
+        peer_ = message.reply_to_message.from_user
     if peer_ and (user_ := (await append_peer_user([peer_]))):
         await userge.send(
             EditGroupCallParticipant(
