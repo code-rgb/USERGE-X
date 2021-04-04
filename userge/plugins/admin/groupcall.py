@@ -261,7 +261,9 @@ async def manage_vcmember(message: Message, to_mute: bool):
         peer_ = message.reply_to_message.text
     if peer_ and (user_ := (await append_peer_user([peer_]))):
         await userge.send(
-            EditGroupCallParticipant(call=group_call, participant=user_[0], muted=to_mute)
+            EditGroupCallParticipant(
+                call=group_call, participant=user_[0], muted=to_mute
+            )
         )
         await message.edit(
             str(user_[0].user_id)
