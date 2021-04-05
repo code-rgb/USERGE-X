@@ -118,7 +118,6 @@ class Config:
     TG_IDS = [777000, 1087968824, 454000]
     INLINE_NOTES = False
     BOT_ANTIFLOOD = False
-    VC_GROUP_MODE = False
 
 
 def get_version() -> str:
