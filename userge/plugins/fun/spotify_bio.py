@@ -27,15 +27,14 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 LOG_ = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 USER_INITIAL_BIO = {}  # Saves Users Original Bio
-PATH_ = "./userge/xcache/spotify_database.json"
+PATH_ = f"{Config.CACHE_PATH}/spotify_database.json"
 
 # [---------------------------] Constants [------------------------------]
 KEY = "🎶"
 BIOS = [
+    KEY + " Vibing : {interpret} - {title}",
     KEY + " : {interpret} - {title}",
-    KEY + " : {interpret} - {title}",
-    KEY + " : {interpret} - {title}",
-    KEY + " : {title}",
+    KEY + " Vibing : {title}",
     KEY + " : {title}",
 ]
 OFFSET = 1
@@ -451,7 +450,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     else:
                         pass
             except FloodWait as e:
-                to_wait = e.x + 10
+                to_wait = e.x + 60
                 LOG_.error(f"to wait for {str(to_wait)}")
                 await CHANNEL.log(
                     "**[WARNING]**\n\nI caught a telegram api limit. I shall sleep "
@@ -460,9 +459,9 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 skip = True
                 await asyncio.sleep(to_wait)
             # skip means a flood error stopped the whole program, no need to
-            # wait another 30 seconds after that
+            # wait another 40 seconds after that
             if not skip:
-                await asyncio.sleep(90)
+                await asyncio.sleep(40)
 
 
 async def sp_var_check(message: Message):
@@ -617,6 +616,3 @@ async def sp_recents_(message: Message):
         get_link = ex_link["spotify"]
         recent += "• [{}]({})\n".format(get_name, get_link)
     await message.edit(recent, disable_web_page_preview=True)
-
-
-# 600 Lines Lmafo
