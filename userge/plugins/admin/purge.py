@@ -1,7 +1,9 @@
 import datetime
 
-from userge import Message, userge
 from pyrogram.errors import MessageDeleteForbidden
+
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "purge",
@@ -56,7 +58,7 @@ async def purge_(message: Message):
                     chat_id=message.chat.id, message_ids=list_of_messages
                 )
             except MessageDeleteForbidden:
-                return 
+                return
             purged_messages_count += len(list_of_messages)
             list_of_messages = []
 
