@@ -14,7 +14,7 @@ heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
 motor>=2.3.0
 oauth2client>=4.1.3
-Pillow==8.1.2
+Pillow==8.2.0
 psutil>=5.7.3
 pybase64>=1.1.1
 git+https://github.com/code-rgb/pyrogram.git@x21
