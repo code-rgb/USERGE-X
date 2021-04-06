@@ -6,12 +6,16 @@
 
 
 import os
-
+from ..misc.upload import doc_upload
 from git import Repo
-
+from re import compile as comp_regex
 from userge import Config, Message, userge
-from userge.utils import humanbytes
+from userge.utils import humanbytes, check_owner
+from pathlib import Path
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
+
+plugin_regex = comp_regex(r"Path[\s:]{1,5}(userge/plugins/\w+/\w+\.py)")
 
 @userge.on_cmd(
     "cmdinfo",
@@ -96,7 +100,8 @@ async def see_info(message: Message):
                 if line_c >= 8:
                     break
         result += "  <b>{}</b>".format(s_result)
-    await message.edit(result, disable_web_page_preview=True)
+    buttons = InlineKeyboardMarkup([[InlineKeyboardButton("📤  Upload", callback_data="plugin_upload")]]) if message.client.is_bot else None
+    await message.edit(result, disable_web_page_preview=True, reply_markup=buttons)
 
 
 def count_lines(cmd_path: str, word: str = None):
@@ -109,3 +114,18 @@ def count_lines(cmd_path: str, word: str = None):
             if word and word in line.lower():
                 arr.append(num_lines)
     return num_lines, arr
+
+
+if userge.has_bot:
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^plugin_upload$"))
+    @check_owner
+    async def plugin_upload_(c_q: CallbackQuery):
+        if match := plugin_regex.search(c_q.message.text):
+            if os.path.exists(plugin_loc := match.group(1)):
+                await  c_q.answer(f"📤  Uploading - {plugin_loc.split('/')[-1]}")
+                await doc_upload(c_q.message, path=Path(plugin_loc))
+            else:
+                await c_q.answer("❌ ERROR: Plugin Not Found !")
+        else:
+            await c_q.answer()
