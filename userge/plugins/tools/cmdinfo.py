@@ -133,9 +133,16 @@ if userge.has_bot:
     async def plugin_upload_(c_q: CallbackQuery):
         if match := plugin_regex.search(c_q.message.text):
             if os.path.exists(plugin_loc := match.group(1)):
-                await c_q.answer(f"📤  Uploading - {plugin_loc.split('/')[-1]}")
-                setattr(c_q.message, "client", userge.bot)
-                await doc_upload(c_q.message, path=Path(plugin_loc))
+                p_name = plugin_loc.split('/')[-1]
+                await c_q.answer(f"📤  Uploading - {p_name}")
+                await userge.bot.send_chat_action(c_q.message.chat.id, "upload_document")
+                await userge.bot.send_document(
+                    document=plugin_loc,
+                    caption=p_name,
+                    parse_mode="html",
+                    disable_notification=True,
+                    reply_to_message_id=c_q.message.message_id
+                )
             else:
                 await c_q.answer("❌ ERROR: Plugin Not Found !")
         else:
