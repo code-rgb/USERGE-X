@@ -137,6 +137,7 @@ if userge.has_bot:
                 await c_q.answer(f"📤  Uploading - {p_name}")
                 await userge.bot.send_chat_action(c_q.message.chat.id, "upload_document")
                 await userge.bot.send_document(
+                    chat_id=c_q.message.chat.id,
                     document=plugin_loc,
                     caption=p_name,
                     parse_mode="html",
