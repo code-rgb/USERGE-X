@@ -6,7 +6,6 @@
 
 
 import os
-from pathlib import Path
 from re import compile as comp_regex
 
 from git import Repo
@@ -15,8 +14,6 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 
 from userge import Config, Message, userge
 from userge.utils import check_owner, humanbytes
-
-from ..misc.upload import doc_upload
 
 plugin_regex = comp_regex(r"Path[\s:]{1,5}(userge/plugins/\w+/\w+\.py)")
 
@@ -133,16 +130,18 @@ if userge.has_bot:
     async def plugin_upload_(c_q: CallbackQuery):
         if match := plugin_regex.search(c_q.message.text):
             if os.path.exists(plugin_loc := match.group(1)):
-                p_name = plugin_loc.split('/')[-1]
+                p_name = plugin_loc.split("/")[-1]
                 await c_q.answer(f"📤  Uploading - {p_name}")
-                await userge.bot.send_chat_action(c_q.message.chat.id, "upload_document")
+                await userge.bot.send_chat_action(
+                    c_q.message.chat.id, "upload_document"
+                )
                 await userge.bot.send_document(
                     chat_id=c_q.message.chat.id,
                     document=plugin_loc,
                     caption=p_name,
                     parse_mode="html",
                     disable_notification=True,
-                    reply_to_message_id=c_q.message.message_id
+                    reply_to_message_id=c_q.message.message_id,
                 )
             else:
                 await c_q.answer("❌ ERROR: Plugin Not Found !")
