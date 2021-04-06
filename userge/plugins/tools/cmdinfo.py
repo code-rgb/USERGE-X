@@ -134,6 +134,7 @@ if userge.has_bot:
         if match := plugin_regex.search(c_q.message.text):
             if os.path.exists(plugin_loc := match.group(1)):
                 await c_q.answer(f"📤  Uploading - {plugin_loc.split('/')[-1]}")
+                setattr(c_q.message, "client", userge.bot)
                 await doc_upload(c_q.message, path=Path(plugin_loc))
             else:
                 await c_q.answer("❌ ERROR: Plugin Not Found !")
