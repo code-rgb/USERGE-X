@@ -210,13 +210,12 @@ if userge.has_bot:
                     else:
                         await replied.forward(b_id)
                     await asyncio.sleep(0.8)
-                # https://github.com/aiogram/aiogram/blob/ee12911f240175d216ce33c78012994a34fe2e25/examples/broadcast_example.py#L65
             except FloodWait as e:
                 await asyncio.sleep(e.x)
             except (BadRequest, Forbidden):
                 blocked_users.append(
                     BOT_START.find_one_and_delete({"user_id": b_id})
-                )  # Collect the user id and removing them later
+                )  # coro list of removing users
             except Exception as err:
                 await CHANNEL.log(str(err))
             else:
