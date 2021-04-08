@@ -44,8 +44,38 @@ async def get_song_link(link: str) -> Optional[Dict]:
             "https://api.song.link/v1-alpha.1/links?url=" + quote(link)
         )
     except ValueError:
-        r = None
-    return r
+        pass
+    else:
+        return r
+
+
+async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional[str]:
+    reply = message.reply_to_message
+    msg = None
+    if message.input_str:
+        txt = message.input_str
+        msg = message
+    elif reply and (reply.text or reply.caption):
+        txt = reply.text or reply.caption
+        msg = reply
+    if not msg:
+        if show_err:
+            await message.err("No Input Found !", del_in=5)
+        return
+    try:
+        url_e = [
+            _
+            for _ in (msg.entities or msg.caption_entities)
+            if _.type in ("url", "text_link")
+        ]
+    except TypeError:
+        if show_err:
+            await message.err("No Valid URL was found !", del_in=5)
+        return
+    if len(url_e) > 0:
+        y = url_e[0]
+        link = txt[y.offset : (y.offset + y.length)] if y.type == "url" else y.url
+        return link, msg
 
 
 async def find_url_from_msg(message: Message, show_err: bool = True) -> Optional[str]:

@@ -42,7 +42,6 @@ from .utils.notes import get_inote
 
 CHANNEL = userge.getCLogger(__name__)
 
-PATH = "userge/xcache"
 _CATEGORY = {
     "admin": "🙋🏻‍♂️",
     "fun": "🎨",
@@ -73,7 +72,7 @@ REPO_X = InlineQueryResultArticle(
                     "🚀 Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
-                        "https://github.com/code-rgb/USERGE-X/tree/alpha"
+                        "https://github.com/code-pms/MyGpack"
                     ),
                 ),
             ]
@@ -850,7 +849,7 @@ if userge.has_bot:
                     return
 
             if str_y[0] == "spoiler":
-                if not os.path.exists("./userge/xcache/spoiler_db.json"):
+                if not os.path.exists(f"{Config.CACHE_PATH}/spoiler_db.json"):
                     results.append(
                         InlineQueryResultArticle(
                             title="No Spoiler Found",
@@ -879,7 +878,7 @@ if userge.has_bot:
                             )
                         )
                     else:
-                        fo = open("./userge/xcache/spoiler_db.json")
+                        fo = open(f"{Config.CACHE_PATH}/spoiler_db.json")
                         view_db = ujson.load(fo)
                         fo.close()
                         if len(view_db) != 0:
@@ -910,7 +909,7 @@ if userge.has_bot:
 
             if str_x[0].lower() == "op" and len(str_x) > 1:
                 txt = i_q[3:]
-                opinion = os.path.join(PATH, "emoji_data.txt")
+                opinion = os.path.join(Config.CACHE_PATH, "emoji_data.txt")
                 if os.path.exists(opinion):
                     with open(opinion) as fo:
                         view_data = ujson.load(fo)
@@ -942,7 +941,7 @@ if userge.has_bot:
                 )
 
             if "btn_" in str_y[0] or str_y[0] == "btn":
-                inline_db_path = "./userge/xcache/inline_db.json"
+                inline_db_path = f"{Config.CACHE_PATH}/inline_db.json"
                 if os.path.exists(inline_db_path):
                     with open(inline_db_path, "r") as data_file:
                         view_db = ujson.load(data_file)
@@ -1007,7 +1006,7 @@ if userge.has_bot:
             if str_y[0].lower() == "stylish" and len(str_y) == 2:
                 results = []
                 for f_name in Styled.font_choice:
-                    styled_str = await font_gen(f_name, str_y[1])
+                    styled_str = font_gen(f_name, str_y[1])
                     results.append(
                         InlineQueryResultArticle(
                             title=f_name.upper(),
@@ -1032,7 +1031,7 @@ if userge.has_bot:
                     receiver = await userge.get_users(user_name)
                 except (BadRequest, IndexError):
                     return
-                secret = os.path.join(PATH, "secret.json")
+                secret = os.path.join(Config.CACHE_PATH, "secret.json")
                 key_ = rand_key()
                 r_name = (
                     ("@" + receiver.username)
