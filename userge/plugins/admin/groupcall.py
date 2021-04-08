@@ -1,4 +1,4 @@
-"""Manage Voice Chat Settings"""
+"""Manage group call Settings"""
 
 from functools import wraps
 from random import randint, sample
@@ -45,16 +45,16 @@ def check_vc_perm(func):
         ):
             await func(m)
         else:
-            await m.err("You can't manage Voice Chats in this Chat !", del_in=10)
+            await m.err("You can't manage group calls in this Chat !", del_in=10)
 
     return vc_perm
 
 
 @userge.on_cmd(
-    "vc_start",
+    "gcstart",
     about={
-        "header": "Create a voice chat",
-        "examples": "{tr}vc_start",
+        "header": "Create a group call",
+        "examples": "{tr}gcstart",
     },
     allow_channels=False,
     allow_private=False,
@@ -63,7 +63,7 @@ def check_vc_perm(func):
 )
 @check_vc_perm
 async def start_vc_(message: Message):
-    """Start voice chat"""
+    """Start group call"""
     chat_id = message.chat.id
     await userge.send(
         CreateGroupCall(
@@ -72,15 +72,15 @@ async def start_vc_(message: Message):
         )
     )
     await message.edit(
-        f"Started Voice Chat in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
+        f"Started group call in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
     )
 
 
 @userge.on_cmd(
-    "vc_end",
+    "gcend",
     about={
-        "header": "End a voice chat",
-        "examples": "{tr}vc_end",
+        "header": "End a group call",
+        "examples": "{tr}gcend",
     },
     allow_channels=False,
     allow_private=False,
@@ -89,25 +89,25 @@ async def start_vc_(message: Message):
 )
 @check_vc_perm
 async def end_vc_(message: Message):
-    """End voice chat"""
+    """End group call"""
     chat_id = message.chat.id
     if not (
         group_call := (
-            await get_group_call(message, err_msg=", Voice Chat already ended")
+            await get_group_call(message, err_msg=", group call already ended")
         )
     ):
         return
     await userge.send(DiscardGroupCall(call=group_call))
     await message.edit(
-        f"Ended Voice Chat in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
+        f"Ended group call in **Chat ID** : `{chat_id}`", del_in=5, log=__name__
     )
 
 
 @userge.on_cmd(
-    "vc_inv",
+    "gcinv",
     about={
-        "header": "Invite to a voice chat",
-        "examples": "{tr}vc_inv",
+        "header": "Invite to a group call",
+        "examples": "{tr}gcinv",
         "flags": {"-l": "randomly invite members"},
     },
     allow_channels=False,
@@ -115,15 +115,15 @@ async def end_vc_(message: Message):
     allow_via_bot=False,
 )
 async def inv_vc_(message: Message):
-    """invite to voice chat"""
+    """invite to group call"""
     peer_list = None
     reply = message.reply_to_message
-    limit_ = int(message.flags.get("-l", 0))
-    await message.edit("`Inviting Members to Voice Chat ...`")
-    if limit_ != 0:
+    await message.edit("`Inviting Members to group call ...`")
+    if "-l" in message.flags:
+        limit = max(int(message.flags.get("-l", 1)), 1)
         peer_list = (
-            await get_peer_list(message, limit_)
-            if limit_ > 0
+            await get_peer_list(message, limit)
+            if limit > 0
             else await get_peer_list(message)
         )
     elif message.input_str:
@@ -149,16 +149,16 @@ async def inv_vc_(message: Message):
     try:
         await userge.send(InviteToGroupCall(call=group_call, users=peer_list))
     except Forbidden:
-        await message.err("Join Voice Chat First !", del_in=8)
+        await message.err("Join group call First !", del_in=8)
     else:
         await message.edit("✅  Invited Successfully !", del_in=5)
 
 
 @userge.on_cmd(
-    "vc_info",
+    "gcinfo",
     about={
-        "header": "Voice Chat info",
-        "examples": "{tr}vc_info",
+        "header": "group call info",
+        "examples": "{tr}gcinfo",
         "flags": {"-d": "Detailed User info"},
     },
     allow_channels=False,
@@ -181,17 +181,17 @@ async def vcinfo_(message: Message):
                 {"Name": x.first_name, "ID": x.id} for x in gc_data.users
             ]
     await message.edit_or_send_as_file(
-        text="🎙  **Voice Chat**\n\n" + yamlify(gc_info),
+        text="🎙  **group call**\n\n" + yamlify(gc_info),
         filename="group_call.yaml",
         caption="Group_Call_Info",
     )
 
 
 @userge.on_cmd(
-    "vc_title",
+    "gctitle",
     about={
-        "header": "Change title of voice chat",
-        "examples": "{tr}vc_title [New title]",
+        "header": "Change title of group call",
+        "examples": "{tr}gctitle [New title]",
     },
     allow_channels=False,
     allow_private=False,
@@ -200,7 +200,7 @@ async def vcinfo_(message: Message):
 )
 @check_vc_perm
 async def vc_title(message: Message):
-    """Change title of voice chat"""
+    """Change title of group call"""
     title = message.input_str
     if not title:
         return await message.err("No Input Found !", del_in=10)
@@ -214,10 +214,10 @@ async def vc_title(message: Message):
 
 
 @userge.on_cmd(
-    "vc_unmute",
+    "gcunmute",
     about={
-        "header": "unmute a person in voice chat",
-        "examples": "{tr}vc_unmute 519198181",
+        "header": "unmute a person in group call",
+        "examples": "{tr}gcunmute 519198181",
         "flags": {"-all": "unmute all"},
     },
     allow_channels=False,
@@ -227,15 +227,15 @@ async def vc_title(message: Message):
 )
 @check_vc_perm
 async def unmute_vc_(message: Message):
-    """Unmute a member in voice chat"""
+    """Unmute a member in group call"""
     await manage_vcmember(message, to_mute=False)
 
 
 @userge.on_cmd(
-    "vc_mute",
+    "gcmute",
     about={
-        "header": "mute a person in voice chat",
-        "examples": "{tr}vc_mute 519198181",
+        "header": "mute a person in group call",
+        "examples": "{tr}gcmute 519198181",
         "flags": {"-all": "mute all"},
     },
     allow_channels=False,
@@ -245,7 +245,7 @@ async def unmute_vc_(message: Message):
 )
 @check_vc_perm
 async def mute_vc_(message: Message):
-    """Mute a member in voice chat"""
+    """Mute a member in group call"""
     await manage_vcmember(message, to_mute=True)
 
 
@@ -257,11 +257,13 @@ async def manage_vcmember(message: Message, to_mute: bool):
         return
     if message.input_str:
         peer_ = message.input_str.strip()
-    elif message.reply_to_message and message.reply_to_message.text:
-        peer_ = message.reply_to_message.text
+    elif message.reply_to_message:
+        peer_ = message.reply_to_message.from_user.id
     if peer_ and (user_ := (await append_peer_user([peer_]))):
         await userge.send(
-            EditGroupCallParticipant(call=group_call, user_id=user_[0], muted=to_mute)
+            EditGroupCallParticipant(
+                call=group_call, participant=user_[0], muted=to_mute
+            )
         )
         await message.edit(
             str(user_[0].user_id)
@@ -284,7 +286,7 @@ async def get_group_call(
             ).full_chat
         if full_chat is not None:
             return full_chat.call
-    await message.err(f"**No Voice Chat Found** !{err_msg}", del_in=8)
+    await message.err(f"**No group call Found** !{err_msg}", del_in=8)
     return False
 
 
@@ -317,9 +319,10 @@ async def append_peer_user(user_ids: List, limit: int = None) -> Optional[List]:
 
 
 async def vc_member(m: Message, gc: InputGroupCall) -> bool:
-    if p := getattr(gc, "participants", None):
+    gc_info = await userge.send(GetGroupCall(call=gc))
+    if p := getattr(gc_info, "participants", None):
         for x in p:
             if x.peer.user_id == m.from_user.id:
                 return True
-    await m.err("Join Voice Chat Manually First !", del_in=7)
+    await m.err("Join group call Manually First !", del_in=7)
     return False
