@@ -1162,3 +1162,23 @@ if userge.has_bot:
                 switch_pm_text=f"This bot is only for {owner_name}",
                 switch_pm_parameter="start",
             )
+            
+            elif "pmpermit" in inline_query.query:
+                owner = await userge.get_me()
+                text = f"Hello, welcome to **{owner.first_name}** Dm.\n\nWhat you want to do ?"
+                buttons = [[
+                    InlineKeyboardButton(
+                        "Contact Me", callback_data="pm_contact"),
+                    InlineKeyboardButton(
+                        "Spam here", callback_data="pm_spam")]]
+                results.append(
+                    InlineQueryResultArticle(
+                        id=uuid4(),
+                        title="Pm Permit",
+                        input_message_content=InputTextMessageContent(text),
+                        description="Inline Pm Permit Handler",
+                        thumb_url="https://imgur.com/download/Inyeb1S",
+                        reply_markup=InlineKeyboardMarkup(buttons)
+                    )
+                )
+        await inline_query.answer(results=results, cache_time=3)
