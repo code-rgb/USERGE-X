@@ -24,9 +24,10 @@ PMPERMIT_MSG = {}
 pmCounter: Dict[int, int] = {}
 allowAllFilter = filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
 noPmMessage = bk_noPmMessage = (
-    "Hello {fname} this is an automated message\n"
-    "Please wait until you get approved to direct message "
-    "And please dont spam until then "
+  """Hello {fname} this is an automated message⚠️\n"""
+  """You can Use @MissSerenaBot to contact **Detective**\n"""
+  """Usually DM/PM's are ignored or blocked right away...but you can wait maybe I'll reply you next **few years**😂\n"""
+  """So it's better to use the assistant bot to contact me.🤷‍♀️"""
 )
 blocked_message = bk_blocked_message = "**You were automatically blocked**"
 
