@@ -39,6 +39,6 @@ git+https://github.com/ytdl-org/youtube-dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ruamel.yaml==0.17.2
 ujson>=4.0.1
-youtube-search-python==1.4.2
+youtube-search-python==1.4.5
 git+https://github.com/code-rgb/google-images-download.git
 feedparser>=6.0.2
