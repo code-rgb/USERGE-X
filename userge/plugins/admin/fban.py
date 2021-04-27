@@ -5,11 +5,11 @@
 # Ported to Pyrogram + Rewrite with Mongo DB
 # by: (TG - @DeletedUser420) [https://github.com/code-rgb]
 # Thanks @Lostb053  for writing help
-
+import asyncio
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid
-
+from pyrogram.errors import PeerIdInvalid, Forbidden, FloodWait
 from userge import Config, Message, get_collection, userge
+from userge.utils import escape_markdown
 
 FED_LIST = get_collection("FED_LIST")
 CHANNEL = userge.getCLogger(__name__)
@@ -39,8 +39,7 @@ async def addfed_(message: Message):
         return
     await FED_LIST.insert_one({"fed_name": name, "chat_id": chat_id})
     msg_ = f"__ID__ `{chat_id}` added to Fed: **{name}**"
-    await message.edit(msg_, del_in=7)
-    await CHANNEL.log(msg_)
+    await message.edit(msg_, log=__name__, del_in=7)
 
 
 @userge.on_cmd(
@@ -59,7 +58,7 @@ async def delfed_(message: Message):
     """Removes current chat from connected Feds."""
     if "-all" in message.flags:
         msg_ = "**Disconnected from all connected federations!**"
-        await message.edit(msg_, del_in=7)
+        await message.edit(msg_, log=__name__, del_in=7)
         await FED_LIST.drop()
     else:
         try:
@@ -71,13 +70,12 @@ async def delfed_(message: Message):
         found = await FED_LIST.find_one({"chat_id": chat_id})
         if found:
             msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
-            await message.edit(msg_, del_in=7)
+            await message.edit(msg_, log=__name__, del_in=7)
             await FED_LIST.delete_one(found)
         else:
             return await message.err(
                 out + "**Does't exist in your Fed List !**", del_in=7
             )
-    await CHANNEL.log(msg_)
 
 
 @userge.on_cmd(
@@ -86,6 +84,7 @@ async def delfed_(message: Message):
         "header": "Fban user",
         "description": "Fban the user from the list of fed",
         "usage": "{tr}fban [username|reply to user|user_id] [reason (optional)]",
+        "flags": {"-p": "Fban with proof"}
     },
     allow_bots=False,
     allow_channels=False,
@@ -109,15 +108,23 @@ async def fban_(message: Message):
         or user == (await message.client.get_me()).id
     ):
         return await message.err(
-            "Can't F-Ban users that exists in Sudo or Owners", del_in=7
+            "Can't F-Ban user that exists in Sudo or Owner", del_in=7
         )
     failed = []
     total = 0
     reason = reason or "Not specified."
+    reply = message.reply_to_message
+    with_proof = bool("-p" in message.flags and reply)
     await message.edit(fban_arg[1])
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
+        if with_proof:
+            try:
+                await reply.forward(chat_id)
+            except Forbidden:
+                # Can't send media
+                pass
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 await conv.send_message(f"/fban {user} {reason}")
@@ -125,16 +132,17 @@ async def fban_(message: Message):
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
                 )
-                resp = response.text
-                if (
-                    ("New FedBan" not in resp)
-                    and ("Starting a federation ban" not in resp)
-                    and ("Start a federation ban" not in resp)
-                    and ("FedBan reason updated" not in resp)
+                resp = response.text.lower()
+                if not (
+                    ("new fedban" in resp)
+                    or ("starting a federation ban" in resp)
+                    or ("start a federation ban" in resp)
+                    or ("fedban reason updated" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
-
-        except BaseException:
+        except FloodWait as f:
+            await asyncio.sleep(f.x + 3)
+        except Exception:
             failed.append(data["fed_name"])
     if total == 0:
         return await message.err(
@@ -152,8 +160,10 @@ async def fban_(message: Message):
         fban_arg[3].format(user_.mention)
         + f"\n**Reason:** {reason}\n**Status:** {status}"
     )
-    await message.edit(msg_)
-    await CHANNEL.log(msg_)
+    if with_proof:
+        proof_link = (await reply.forward(Config.LOG_CHANNEL_ID)).link
+        msg_ += f"\n\n#Proof =>  **[{escape_markdown(f'[link]({proof_link})')}]**"
+    await message.edit(msg_, log=__name__)
 
 
 @userge.on_cmd(
@@ -192,11 +202,11 @@ async def unfban_(message: Message):
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
                 )
-                resp = response.text
-                if (
-                    ("New un-FedBan" not in resp)
-                    and ("I'll give" not in resp)
-                    and ("Un-FedBan" not in resp)
+                resp = response.text.lower()
+                if not (
+                    ("new un-fedban" in resp)
+                    or ("i'll give" in resp)
+                    or ("un-fedban" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
 
@@ -215,8 +225,7 @@ async def unfban_(message: Message):
     else:
         status = f"Success! Un-Fbanned in `{total}` feds."
     msg_ = fban_arg[3].format(user_.mention) + f"\n**Status:** {status}"
-    await message.edit(msg_)
-    await CHANNEL.log(msg_)
+    await message.edit(msg_, log=__name__)
 
 
 @userge.on_cmd(
