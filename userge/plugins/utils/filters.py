@@ -91,7 +91,7 @@ async def _init() -> None:
     allow_bots=False,
 )
 async def filters_active(message: Message) -> None:
-    """ list filters in current chat """
+    """list filters in current chat"""
     out = ""
     if "-all" in message.flags:
         await message.edit("`getting filters ...`")
@@ -125,7 +125,7 @@ async def filters_active(message: Message) -> None:
     allow_bots=False,
 )
 async def delete_filters(message: Message) -> None:
-    """ delete filter in current chat """
+    """delete filter in current chat"""
     if "-every" in message.flags:
         FILTERS_DATA.clear()
         await asyncio.gather(
@@ -180,7 +180,7 @@ async def delete_filters(message: Message) -> None:
     allow_bots=False,
 )
 async def add_filter(message: Message) -> None:
-    """ add filter to current chat """
+    """add filter to current chat"""
     filter_ = message.matches[0].group(1).strip()
     content = message.matches[0].group(2)
     replied = message.reply_to_message
@@ -214,7 +214,7 @@ async def add_filter(message: Message) -> None:
 
 @userge.on_filters(~filters.me & ~filters.edited & FILTERS_CHATS, group=1)
 async def chat_filter(message: Message) -> None:
-    """ filter handler """
+    """filter handler"""
     if not message.from_user:
         return
     try:

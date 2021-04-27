@@ -22,7 +22,7 @@ LOG = userge.getLogger(__name__)
     },
 )
 async def video_note(message: Message):
-    """ Covert to video note """
+    """Covert to video note"""
     _cache_path = "userge/xcache/circle"
     _vid_path = _cache_path + "/temp_vid.mp4"
     reply = message.reply_to_message

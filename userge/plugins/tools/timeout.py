@@ -37,7 +37,7 @@ async def _init() -> None:
     },
 )
 async def set_delete_timeout(message: Message):
-    """ set delete timeout """
+    """set delete timeout"""
     await message.edit("`Setting auto message delete timeout...`")
     t_o = int(message.matches[0].group(1))
     Config.MSG_DELETE_TIMEOUT = t_o
@@ -54,7 +54,7 @@ async def set_delete_timeout(message: Message):
 
 @userge.on_cmd("vdelto", about={"header": "View auto message delete timeout"})
 async def view_delete_timeout(message: Message):
-    """ view delete timeout """
+    """view delete timeout"""
     if Config.MSG_DELETE_TIMEOUT:
         await message.edit(
             f"`Messages will be deleted after {Config.MSG_DELETE_TIMEOUT} seconds!`",
@@ -73,7 +73,7 @@ async def view_delete_timeout(message: Message):
     },
 )
 async def set_welcome_timeout(message: Message):
-    """ set welcome/left timeout """
+    """set welcome/left timeout"""
     await message.edit("`Setting auto welcome/left message delete timeout...`")
     t_o = int(message.matches[0].group(1))
     Config.WELCOME_DELETE_TIMEOUT = t_o
@@ -93,7 +93,7 @@ async def set_welcome_timeout(message: Message):
     "vwelto", about={"header": "View auto welcome/left message delete timeout"}
 )
 async def view_welcome_timeout(message: Message):
-    """ view welcome/left timeout """
+    """view welcome/left timeout"""
     if Config.WELCOME_DELETE_TIMEOUT:
         await message.edit(
             "`Welcome/Left messages will be deleted after "
@@ -113,7 +113,7 @@ async def view_welcome_timeout(message: Message):
     },
 )
 async def set_app_timeout(message: Message):
-    """ set auto profile picture timeout """
+    """set auto profile picture timeout"""
     t_o = int(message.matches[0].group(1))
     if t_o < 15:
         await message.err("too short! (min = 15sec)")
@@ -130,7 +130,7 @@ async def set_app_timeout(message: Message):
 
 @userge.on_cmd("vapicto", about={"header": "View auto profile picture timeout"})
 async def view_app_timeout(message: Message):
-    """ view profile picture timeout """
+    """view profile picture timeout"""
     await message.edit(
         f"`Profile picture will be updated after {Config.AUTOPIC_TIMEOUT} seconds!`",
         del_in=5,
@@ -146,7 +146,7 @@ async def view_app_timeout(message: Message):
     },
 )
 async def set_es_timeout(message: Message):
-    """ set edit sleep timeout """
+    """set edit sleep timeout"""
     t_o = int(message.matches[0].group(1))
     if t_o < 5:
         await message.err("too short! (min = 5sec)")
@@ -161,7 +161,7 @@ async def set_es_timeout(message: Message):
 
 @userge.on_cmd("vesto", about={"header": "View edit sleep timeout"})
 async def view_es_timeout(message: Message):
-    """ view edit sleep timeout """
+    """view edit sleep timeout"""
     await message.edit(
         f"`Current edit sleep timeout = {Config.EDIT_SLEEP_TIMEOUT} seconds!`", del_in=5
     )

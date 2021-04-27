@@ -15,7 +15,7 @@ from userge import Message, userge
     },
 )
 async def gizoo_(message: Message):
-    """ gizoogle the text """
+    """gizoogle the text"""
     input_str = message.input_or_reply_str
     if not input_str:
         await message.edit("```You didn't gave the text```", del_in=3)

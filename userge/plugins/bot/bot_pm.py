@@ -94,7 +94,7 @@ if userge.has_bot:
                     _BOT_PM_MEDIA = bot_m_fid
 
     async def get_bot_info():
-        """ Caching Owner and bot info """
+        """Caching Owner and bot info"""
         global _CACHED_INFO
         t_now = datetime.now()
         if not (
@@ -432,7 +432,7 @@ async def bot_users_(message: Message):
     allow_channels=False,
 )
 async def bot_antiflood_(message: Message):
-    """ enable / disable Bot Antiflood """
+    """enable / disable Bot Antiflood"""
     if Config.BOT_ANTIFLOOD:
         Config.BOT_ANTIFLOOD = False
         await message.edit("`Bot Antiflood disabled !`", del_in=3)

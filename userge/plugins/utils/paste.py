@@ -30,7 +30,7 @@ NEKOBIN_URL = "https://nekobin.com/"
     del_pre=True,
 )
 async def paste_(message: Message) -> None:
-    """ pastes the text directly to dogbin or nekobin """
+    """pastes the text directly to dogbin or nekobin"""
     await message.edit("`Processing...`")
     text = message.filtered_input_str
     replied = message.reply_to_message
@@ -96,7 +96,7 @@ async def paste_(message: Message) -> None:
     },
 )
 async def get_paste_(message: Message):
-    """ fetches the content of a dogbin or nekobin URL """
+    """fetches the content of a dogbin or nekobin URL"""
     link = message.input_str
     if not link:
         await message.err("input not found!")

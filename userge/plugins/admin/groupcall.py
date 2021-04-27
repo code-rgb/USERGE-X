@@ -29,7 +29,7 @@ from ..tools.json import yamlify
 
 
 def check_vc_perm(func):
-    """ to check if can_manage_voice_chats=True  """
+    """to check if can_manage_voice_chats=True"""
 
     @wraps(func)
     async def vc_perm(m: Message):

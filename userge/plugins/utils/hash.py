@@ -23,7 +23,7 @@ from userge.utils import runcmd
     },
 )
 async def gethash(message: Message):
-    """ find hash of text """
+    """find hash of text"""
     input_ = message.input_or_reply_str
     if not input_:
         await message.err("input not found!")
@@ -52,7 +52,7 @@ async def gethash(message: Message):
     del_pre=True,
 )
 async def endecrypt(message: Message):
-    """ encode or decode """
+    """encode or decode"""
     if message.reply_to_message:
         input_ = message.reply_to_message.text
     else:

@@ -31,7 +31,7 @@ PATH = "resources/meme_data.txt"
     },
 )
 async def gen_meme(message: Message):
-    """ Memesss Generator """
+    """Memesss Generator"""
     if not (Config.IMGFLIP_ID or Config.IMGFLIP_PASS):
         return await message.edit(
             "First get `IMGFLIP_ID` = username and"

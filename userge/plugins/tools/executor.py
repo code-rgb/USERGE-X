@@ -38,7 +38,7 @@ CHANNEL = userge.getCLogger()
     allow_channels=False,
 )
 async def eval_(message: Message):
-    """ run python code """
+    """run python code"""
     cmd = await init_func(message)
     if cmd is None:
         return
@@ -109,7 +109,7 @@ async def eval_(message: Message):
     allow_channels=False,
 )
 async def exec_(message: Message):
-    """ run commands in exec """
+    """run commands in exec"""
     cmd = await init_func(message)
     if cmd is None:
         return
@@ -140,7 +140,7 @@ __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
     allow_channels=False,
 )
 async def term_(message: Message):
-    """ run commands in shell (terminal with live update) """
+    """run commands in shell (terminal with live update)"""
     cmd = await init_func(message)
     if cmd is None:
         return
@@ -186,7 +186,7 @@ async def init_func(message: Message):
 
 
 class Term:
-    """ live update term class """
+    """live update term class"""
 
     def __init__(self, process: asyncio.subprocess.Process) -> None:
         self._process = process

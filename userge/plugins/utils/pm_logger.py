@@ -39,7 +39,7 @@ allowAllFilter = filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
     allow_channels=False,
 )
 async def pm_logger_(message: Message):
-    """ enable / disable PM Logger """
+    """enable / disable PM Logger"""
     if not Config.PM_LOG_GROUP_ID:
         return await message.edit(
             "Make a Group and add it's ID in Heroku," "\n Var: '`PM_LOG_GROUP_ID`' ",
@@ -143,7 +143,7 @@ async def pm_logger(_, message: Message):
     allow_via_bot=False,
 )
 async def pm_user_log_(message: Message):
-    """ disable pm logger for a user """
+    """disable pm logger for a user"""
     user_id = await get_id(message)
     if not user_id:
         return await message.err("See Help", del_in=5)

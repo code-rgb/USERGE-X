@@ -161,7 +161,7 @@ async def send_rss_to_telegram(client, args: dict, path: str = None):
     },
 )
 async def add_rss_feed(msg: Message):
-    """ Add a New feed Url """
+    """Add a New feed Url"""
     if len(RSS_DICT) >= 10:
         return await msg.edit("`Sorry, but not allowing to add urls more than 10.`")
     if not msg.input_str:
@@ -185,7 +185,7 @@ async def add_rss_feed(msg: Message):
     },
 )
 async def delete_rss_feed(msg: Message):
-    """ Delete to a existing Feed Url """
+    """Delete to a existing Feed Url"""
     if msg.flags and "-all" in msg.flags:
         RSS_DICT.clear()
         await RSS_COLLECTION.drop()
@@ -201,7 +201,7 @@ async def delete_rss_feed(msg: Message):
     about={"header": "List all feed URLs that you Subscribed.", "usage": "{tr}listrss"},
 )
 async def list_rss_feed(msg: Message):
-    """ List all Subscribed Feeds """
+    """List all Subscribed Feeds"""
     out_str = ""
     for url, date in RSS_DICT.items():
         out_str += f"**FEED URL:** `{url}`"

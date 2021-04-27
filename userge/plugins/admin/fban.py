@@ -6,8 +6,10 @@
 # by: (TG - @DeletedUser420) [https://github.com/code-rgb]
 # Thanks @Lostb053  for writing help
 import asyncio
+
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid, Forbidden, FloodWait
+from pyrogram.errors import FloodWait, Forbidden, PeerIdInvalid
+
 from userge import Config, Message, get_collection, userge
 from userge.utils import escape_markdown
 
@@ -84,7 +86,7 @@ async def delfed_(message: Message):
         "header": "Fban user",
         "description": "Fban the user from the list of fed",
         "usage": "{tr}fban [username|reply to user|user_id] [reason (optional)]",
-        "flags": {"-p": "Fban with proof"}
+        "flags": {"-p": "Fban with proof"},
     },
     allow_bots=False,
     allow_channels=False,

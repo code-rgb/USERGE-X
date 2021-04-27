@@ -14,7 +14,7 @@ from userge import Message, userge
     allow_private=False,
 )
 async def word_count(message: Message):
-    """ Finds most words used """
+    """Finds most words used"""
     words = custom()
     await message.edit("```Processed 0 messages...```")
     total = 0

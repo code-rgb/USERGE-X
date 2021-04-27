@@ -22,7 +22,7 @@ async def progress(
     c_q: CallbackQuery = None,
     delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
 ) -> None:
-    """ progress function """
+    """progress function"""
     if message.process_is_canceled:
         await message.client.stop_transmission()
     task_id = f"{message.chat.id}.{message.message_id}"

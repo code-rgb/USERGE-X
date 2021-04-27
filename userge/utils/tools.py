@@ -29,7 +29,7 @@ _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])
 def get_file_id(
     message: "userge.Message",
 ) -> Optional[str]:
-    """ get file_id """
+    """get file_id"""
     if message is None:
         return
     file_ = (
@@ -46,7 +46,7 @@ def get_file_id(
 
 
 def humanbytes(size: float) -> str:
-    """ humanize size """
+    """humanize size"""
     if not size:
         return ""
     power = 1024
@@ -59,7 +59,7 @@ def humanbytes(size: float) -> str:
 
 
 def time_formatter(seconds: float) -> str:
-    """ humanize time """
+    """humanize time"""
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
@@ -74,7 +74,7 @@ def time_formatter(seconds: float) -> str:
 
 # https://github.com/UsergeTeam/Userge-Plugins/blob/master/plugins/anilist.py
 def post_to_telegraph(a_title: str, content: str) -> str:
-    """ Create a Telegram Post using HTML Content """
+    """Create a Telegram Post using HTML Content"""
     post_client = TelegraphPoster(use_api=True)
     auth_name = "USERGE-𝑿"
     post_client.create_api_token(auth_name)
@@ -88,7 +88,7 @@ def post_to_telegraph(a_title: str, content: str) -> str:
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
-    """ run command in terminal """
+    """run command in terminal"""
     args = shlex.split(cmd)
     process = await asyncio.create_subprocess_exec(
         *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -105,7 +105,7 @@ async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
 async def take_screen_shot(
     video_file: str, duration: int, path: str = ""
 ) -> Optional[str]:
-    """ take a screenshot """
+    """take a screenshot"""
     _LOG.info(
         "[[[Extracting a frame from %s ||| Video duration => %s]]]",
         video_file,
@@ -123,7 +123,7 @@ async def take_screen_shot(
 
 
 def parse_buttons(markdown_note: str) -> Tuple[str, Optional[InlineKeyboardMarkup]]:
-    """ markdown_note to string and buttons """
+    """markdown_note to string and buttons"""
     prev = 0
     note_data = ""
     buttons: List[Tuple[str, str, str]] = []

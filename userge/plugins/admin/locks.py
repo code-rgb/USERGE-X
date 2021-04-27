@@ -127,7 +127,7 @@ def _get_chat_lock(
     check_restrict_perm=True,
 )
 async def lock_perm(message: Message):
-    """ lock chat permissions from tg group """
+    """lock chat permissions from tg group"""
     lock_type = message.input_str
     chat_id = message.chat.id
     if not lock_type:
@@ -220,7 +220,7 @@ async def lock_perm(message: Message):
     check_restrict_perm=True,
 )
 async def unlock_perm(message: Message):
-    """ unlock chat permissions from tg group """
+    """unlock chat permissions from tg group"""
     unlock_type = message.input_str
     chat_id = message.chat.id
     if not unlock_type:
@@ -315,7 +315,7 @@ async def unlock_perm(message: Message):
     allow_private=False,
 )
 async def view_perm(message: Message):
-    """ check chat permissions from tg group """
+    """check chat permissions from tg group"""
     await message.edit("`Checking group permissions... Hang on!! ⏳`")
 
     def convert_to_emoji(val: bool):

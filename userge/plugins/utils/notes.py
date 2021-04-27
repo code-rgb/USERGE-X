@@ -67,7 +67,7 @@ async def _init() -> None:
     allow_bots=False,
 )
 async def view_notes(message: Message) -> None:
-    """ list notes in current chat """
+    """list notes in current chat"""
     out = ""
     if "-all" in message.flags:
         await message.edit("`getting notes ...`")
@@ -101,7 +101,7 @@ async def view_notes(message: Message) -> None:
     allow_bots=False,
 )
 async def remove_note(message: Message) -> None:
-    """ delete note in current chat """
+    """delete note in current chat"""
     if "-every" in message.flags:
         NOTES_DATA.clear()
         await asyncio.gather(
@@ -143,7 +143,7 @@ async def remove_note(message: Message) -> None:
     allow_bots=False,
 )
 async def mv_to_local_note(message: Message) -> None:
-    """ global to local note """
+    """global to local note"""
     notename = message.input_str
     if not notename:
         out = "`Wrong syntax`\nNo arguements"
@@ -172,7 +172,7 @@ async def mv_to_local_note(message: Message) -> None:
     allow_bots=False,
 )
 async def mv_to_global_note(message: Message) -> None:
-    """ local to global note """
+    """local to global note"""
     notename = message.input_str
     if not notename:
         out = "`Wrong syntax`\nNo arguements"
@@ -200,7 +200,7 @@ async def mv_to_global_note(message: Message) -> None:
     check_client=True,
 )
 async def get_note(message: Message) -> None:
-    """ get any saved note """
+    """get any saved note"""
     if not message.from_user:
         return
     if message.chat.id not in NOTES_DATA:
@@ -274,7 +274,7 @@ async def get_note(message: Message) -> None:
     allow_bots=False,
 )
 async def add_note(message: Message) -> None:
-    """ add note to curent chat """
+    """add note to curent chat"""
     notename = message.matches[0].group(1)
     content = message.matches[0].group(2)
     replied = message.reply_to_message
@@ -341,7 +341,7 @@ def no_mention(text: str):
     allow_channels=False,
 )
 async def inline_note_(message: Message):
-    """ enable / disable inline notes """
+    """enable / disable inline notes"""
     if Config.INLINE_NOTES:
         Config.INLINE_NOTES = False
         await message.edit("`inline notes disabled !`", del_in=3)

@@ -34,7 +34,7 @@ logbot.reply_last_msg("Setting Configs ...")
 
 
 class Config:
-    """ Configs to setup USERGE-X """
+    """Configs to setup USERGE-X"""
 
     API_ID = int(os.environ.get("API_ID"))
     API_HASH = os.environ.get("API_HASH")
@@ -121,7 +121,7 @@ class Config:
 
 
 def get_version() -> str:
-    """ get USERGE-X version """
+    """get USERGE-X version"""
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     if Config.HEROKU_ENV:
         if not hasattr(Config, "HBOT_VERSION"):
