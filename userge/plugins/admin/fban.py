@@ -164,7 +164,7 @@ async def fban_(message: Message):
     )
     if with_proof:
         proof_link = (await reply.forward(Config.LOG_CHANNEL_ID)).link
-        msg_ += f"\n\n#Proof =>  **[{escape_markdown(f'[link]({proof_link})')}]**"
+        msg_ += f"\n\n<b>[ [PROOF]({proof_link}) ]</b>"
     await message.edit(msg_, log=__name__)
 
 
