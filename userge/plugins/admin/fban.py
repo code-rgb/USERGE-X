@@ -11,7 +11,6 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait, Forbidden, PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import escape_markdown
 
 FED_LIST = get_collection("FED_LIST")
 CHANNEL = userge.getCLogger(__name__)
