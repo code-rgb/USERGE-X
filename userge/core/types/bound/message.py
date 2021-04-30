@@ -128,7 +128,7 @@ class Message(RawMessage):
         reply = self.reply_to_message
         if reply and not reply.forward_sender_name:
             if reply.forward_from:
-                user_e = reply.forward_from.from_user.id
+                user_e = reply.forward_from.id
             elif reply.from_user:
                 user_e = reply.from_user.id
             text = self.filtered_input_str
