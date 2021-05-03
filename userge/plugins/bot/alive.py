@@ -93,7 +93,7 @@ async def send_alive_message(message: Message) -> None:
         reply_markup = None
         file_id = _USER_CACHED_MEDIA
         caption += (
-            f"\n⚡️  <a href={Config.UPSTEAM_REPO}><b>REPO</b></a>"
+            f"\n⚡️  <a href={Config.UPSTREAM_REPO}><b>REPO</b></a>"
             "    <code>|</code>    "
             "👥  <a href='https://t.me/useless_x'><b>SUPPORT</b></a>"
         )
