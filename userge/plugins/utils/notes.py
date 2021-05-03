@@ -312,9 +312,7 @@ async def get_inote(note_id: int, chat_id: int, user_id: int):
         u_dict = await userge.get_user_dict(user_id)
         u_dict["mention"] = no_mention(u_dict["mention"])
         chat = await userge.get_chat(chat_id)
-        u_dict.update(
-            {"chat": chat.title or "this group", "count": chat.members_count}
-        )
+        u_dict.update({"chat": chat.title or "this group", "count": chat.members_count})
 
         caption = caption.format_map(SafeDict(**u_dict))
     file_id = get_file_id(message)
