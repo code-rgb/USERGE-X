@@ -45,15 +45,13 @@ async def _init() -> None:
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
     try:
-        if message.client.is_bot:
+        if message.client.is_bot or not userge.has_bot:
             await send_alive_message(message)
-        elif userge.has_bot:
+        else:
             try:
                 await send_inline_alive(message)
             except BadRequest:
                 await send_alive_message(message)
-        else:
-            await send_alive_message(message)
     except Exception as e_all:
         await message.err(str(e_all), del_in=10, log=__name__)
 
@@ -226,7 +224,7 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info() -> str:
-        alive_info_ = f"""
+        return f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
@@ -235,7 +233,6 @@ class Bot_Alive:
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
-        return alive_info_
 
     @staticmethod
     def _get_mode() -> str:

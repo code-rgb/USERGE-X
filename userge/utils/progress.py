@@ -76,8 +76,9 @@ async def progress(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
-            time_to_completion if time_to_completion else "0 s",
+            time_to_completion or "0 s",
         )
+
         try:
             if c_q:
                 await c_q.edit_message_text(progress_str)

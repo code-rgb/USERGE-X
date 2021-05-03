@@ -35,7 +35,8 @@ def check_vc_perm(func):
     async def vc_perm(m: Message):
         if (
             m.chat.type in ["group", "supergroup"]
-            and not (m.from_user.is_deleted or m.from_user.is_bot)
+            and not m.from_user.is_deleted
+            and not m.from_user.is_bot
             and m.from_user.is_self
             and getattr(
                 (await m.chat.get_member(m.from_user.id)),

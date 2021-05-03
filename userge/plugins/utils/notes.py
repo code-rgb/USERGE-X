@@ -313,19 +313,14 @@ async def get_inote(note_id: int, chat_id: int, user_id: int):
         u_dict["mention"] = no_mention(u_dict["mention"])
         chat = await userge.get_chat(chat_id)
         u_dict.update(
-            {
-                "chat": chat.title if chat.title else "this group",
-                "count": chat.members_count,
-            }
+            {"chat": chat.title or "this group", "count": chat.members_count}
         )
+
         caption = caption.format_map(SafeDict(**u_dict))
     file_id = get_file_id(message)
     caption, buttons = parse_buttons(caption)
     if message.media and file_id:
-        if message.photo:
-            type_ = "photo"
-        else:
-            type_ = "media"
+        type_ = "photo" if message.photo else "media"
     else:
         type_ = "text"
     return {"type": type_, "file_id": file_id, "caption": caption, "buttons": buttons}
