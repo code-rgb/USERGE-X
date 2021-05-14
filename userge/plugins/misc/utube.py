@@ -35,7 +35,7 @@ LOGGER = userge.getLogger(__name__)
     },
 )
 async def ytinfo(message: Message):
-    """ get info from a link """
+    """get info from a link"""
     await message.edit("Hold on \u23f3 ..")
     _exracted = await _yt_getInfo(message.input_or_reply_str)
     if isinstance(_exracted, ytdl.utils.YoutubeDLError):
@@ -84,7 +84,7 @@ __{uploader}__
     del_pre=True,
 )
 async def ytDown(message: Message):
-    """ download from a link """
+    """download from a link"""
     edited = False
     startTime = c_time = time()
 
@@ -181,7 +181,7 @@ async def ytDown(message: Message):
     },
 )
 async def ytdes(message: Message):
-    """ get description from a link """
+    """get description from a link"""
     await message.edit("Hold on \u23f3 ..")
     description = await _yt_description(message.input_or_reply_str)
     if isinstance(description, ytdl.utils.YoutubeDLError):

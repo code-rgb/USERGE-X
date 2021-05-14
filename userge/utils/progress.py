@@ -22,7 +22,7 @@ async def progress(
     c_q: CallbackQuery = None,
     delay: int = userge.Config.EDIT_SLEEP_TIMEOUT,
 ) -> None:
-    """ progress function """
+    """progress function"""
     if message.process_is_canceled:
         await message.client.stop_transmission()
     task_id = f"{message.chat.id}.{message.message_id}"
@@ -76,8 +76,9 @@ async def progress(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
-            time_to_completion if time_to_completion else "0 s",
+            time_to_completion or "0 s",
         )
+
         try:
             if c_q:
                 await c_q.edit_message_text(progress_str)

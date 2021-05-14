@@ -23,7 +23,7 @@ CHANNEL = userge.getCLogger(__name__)
     },
 )
 async def block_user(message: Message):
-    """ Blocks a User! """
+    """Blocks a User!"""
     reply = message.reply_to_message
     if not (reply or message.input_str):
         await message.err("Reply to a user or give ID to block him/her !", del_in=5)
@@ -56,7 +56,7 @@ async def block_user(message: Message):
     },
 )
 async def unblock_user(message: Message):
-    """ Unblocks a User! """
+    """Unblocks a User!"""
     reply = message.reply_to_message
     if not (reply or message.input_str):
         await message.err("Reply to a user or give ID to unblock him/her!", del_in=5)

@@ -32,7 +32,7 @@ from userge.utils import get_import_path
     allow_channels=False,
 )
 async def status(message: Message) -> None:
-    """ view current status """
+    """view current status"""
     name_ = message.filtered_input_str
     type_ = list(message.flags)
     if not type_:
@@ -174,7 +174,7 @@ async def status(message: Message) -> None:
     allow_channels=False,
 )
 async def enable(message: Message) -> None:
-    """ enable plugins, commands, filters """
+    """enable plugins, commands, filters"""
     if not message.flags:
         await message.err("flag required!")
         return
@@ -242,7 +242,7 @@ async def enable(message: Message) -> None:
     allow_channels=False,
 )
 async def disable(message: Message) -> None:
-    """ disable plugins, commands, filters """
+    """disable plugins, commands, filters"""
     if not message.flags:
         await message.err("flag required!")
         return
@@ -311,7 +311,7 @@ async def disable(message: Message) -> None:
     allow_channels=False,
 )
 async def load(message: Message) -> None:
-    """ load plugins, commands, filters """
+    """load plugins, commands, filters"""
     if message.flags:
         if not message.filtered_input_str:
             await message.err("name required!")
@@ -402,7 +402,7 @@ async def load(message: Message) -> None:
     allow_channels=False,
 )
 async def unload(message: Message) -> None:
-    """ unload plugins, commands, filters """
+    """unload plugins, commands, filters"""
     if not message.flags:
         await message.err("flag required!")
         return
@@ -460,7 +460,7 @@ async def unload(message: Message) -> None:
 
 @userge.on_cmd("reload", about={"header": "Reload all plugins"}, allow_channels=False)
 async def reload_(message: Message) -> None:
-    """ Reload all plugins """
+    """Reload all plugins"""
     await message.edit("`Reloading All Plugins`")
     await message.edit(
         f"`Reloaded {await userge.reload_plugins()} Plugins`", del_in=3, log=__name__
@@ -471,7 +471,7 @@ async def reload_(message: Message) -> None:
     "clear", about={"header": "clear all save filters in DB"}, allow_channels=False
 )
 async def clear_(message: Message) -> None:
-    """ clear all save filters in DB """
+    """clear all save filters in DB"""
     await message.edit("`Clearing DB...`")
     await message.edit(
         f"**Cleared Filters** : `{await userge.manager.clear()}`",

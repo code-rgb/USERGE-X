@@ -53,7 +53,7 @@ async def cache_admins(msg):
     allow_private=False,
 )
 async def set_flood(msg: Message):
-    """ Set flood on/off and flood limit """
+    """Set flood on/off and flood limit"""
     args = msg.input_str
     if not args:
         await msg.err("read .help setflood")
@@ -129,7 +129,7 @@ async def set_flood(msg: Message):
     allow_private=False,
 )
 async def set_mode(msg: Message):
-    """ Set flood mode to take action """
+    """Set flood mode to take action"""
     mode = msg.input_str
     if not mode:
         await msg.err("read .help setmode")
@@ -159,7 +159,7 @@ async def set_mode(msg: Message):
     allow_private=False,
 )
 async def view_flood_settings(msg: Message):
-    """ view Current Flood Settings """
+    """view Current Flood Settings"""
     chat_data = ANTIFLOOD_DATA.get(msg.chat.id)
     if not chat_data or (chat_data and chat_data.get("data") == "off"):
         return await msg.err("Anti-Flood Disabled in this chat.")
@@ -179,7 +179,7 @@ async def view_flood_settings(msg: Message):
     check_restrict_perm=True,
 )
 async def anti_flood_handler(msg: Message):
-    """ Filtering msgs for Handling Flooding """
+    """Filtering msgs for Handling Flooding"""
 
     if not msg.from_user:
         return

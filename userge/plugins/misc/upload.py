@@ -37,7 +37,7 @@ LOGO_PATH = "resources/logo_x.png"
     check_downpath=True,
 )
 async def rename_(message: Message):
-    """ rename telegram files """
+    """rename telegram files"""
     if not message.filtered_input_str:
         await message.err("new name not found!")
         return
@@ -58,7 +58,7 @@ async def rename_(message: Message):
     check_downpath=True,
 )
 async def convert_(message: Message):
-    """ convert telegram files """
+    """convert telegram files"""
     await message.edit("`Trying to Convert ...`")
     if message.reply_to_message and message.reply_to_message.media:
         message.text = "" if message.reply_to_message.document else ". -d"
@@ -82,7 +82,7 @@ async def convert_(message: Message):
     check_downpath=True,
 )
 async def upload_to_tg(message: Message):
-    """ upload to telegram """
+    """upload to telegram"""
     path_ = message.filtered_input_str
     if not path_:
         await message.edit("invalid input!, check `.help .upload`", del_in=5)

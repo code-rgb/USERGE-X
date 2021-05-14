@@ -62,7 +62,7 @@ async def _init() -> None:
     allow_private=False,
 )
 async def setwel(msg: Message):
-    """ set welcome message """
+    """set welcome message"""
     await raw_set(msg, "Welcome", WELCOME_COLLECTION, WELCOME_CHATS)
 
 
@@ -101,7 +101,7 @@ async def setwel(msg: Message):
     allow_private=False,
 )
 async def setleft(msg: Message):
-    """ set left message """
+    """set left message"""
     await raw_set(msg, "Left", LEFT_COLLECTION, LEFT_CHATS)
 
 
@@ -116,7 +116,7 @@ async def setleft(msg: Message):
     allow_private=False,
 )
 async def nowel(msg: Message):
-    """ disable welcome message """
+    """disable welcome message"""
     await raw_no(msg, "Welcome", WELCOME_COLLECTION, WELCOME_CHATS)
 
 
@@ -131,7 +131,7 @@ async def nowel(msg: Message):
     allow_private=False,
 )
 async def noleft(msg: Message):
-    """ disable left message """
+    """disable left message"""
     await raw_no(msg, "Left", LEFT_COLLECTION, LEFT_CHATS)
 
 
@@ -146,7 +146,7 @@ async def noleft(msg: Message):
     allow_private=False,
 )
 async def dowel(msg: Message):
-    """ enable welcome message """
+    """enable welcome message"""
     await raw_do(msg, "Welcome", WELCOME_COLLECTION, WELCOME_CHATS)
 
 
@@ -161,7 +161,7 @@ async def dowel(msg: Message):
     allow_private=False,
 )
 async def doleft(msg: Message):
-    """ enable left message """
+    """enable left message"""
     await raw_do(msg, "Left", LEFT_COLLECTION, LEFT_CHATS)
 
 
@@ -176,7 +176,7 @@ async def doleft(msg: Message):
     allow_private=False,
 )
 async def delwel(msg: Message):
-    """ delete welcome message """
+    """delete welcome message"""
     await raw_del(msg, "Welcome", WELCOME_COLLECTION, WELCOME_CHATS)
 
 
@@ -191,7 +191,7 @@ async def delwel(msg: Message):
     allow_private=False,
 )
 async def delleft(msg: Message):
-    """ delete left messaage """
+    """delete left messaage"""
     await raw_del(msg, "Left", LEFT_COLLECTION, LEFT_CHATS)
 
 
@@ -206,7 +206,7 @@ async def delleft(msg: Message):
     allow_private=False,
 )
 async def viewwel(msg: Message):
-    """ view welcome message """
+    """view welcome message"""
     await raw_view(msg, "Welcome", WELCOME_COLLECTION)
 
 
@@ -221,13 +221,13 @@ async def viewwel(msg: Message):
     allow_private=False,
 )
 async def viewleft(msg: Message):
-    """ view left message """
+    """view left message"""
     await raw_view(msg, "Left", LEFT_COLLECTION)
 
 
 @userge.on_new_member(WELCOME_CHATS)
 async def saywel(msg: Message):
-    """ welcome message handler """
+    """welcome message handler"""
     try:
         await raw_say(msg, "Welcome", WELCOME_COLLECTION)
     except FloodWait as e:
@@ -236,7 +236,7 @@ async def saywel(msg: Message):
 
 @userge.on_left_member(LEFT_CHATS)
 async def sayleft(msg: Message):
-    """ left message handler """
+    """left message handler"""
     try:
         await raw_say(msg, "Left", LEFT_COLLECTION)
     except FloodWait as e:

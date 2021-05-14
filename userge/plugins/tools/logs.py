@@ -34,7 +34,7 @@ _LEVELS = {
     allow_channels=False,
 )
 async def check_logs(message: Message):
-    """ check logs """
+    """check logs"""
     await message.edit("`checking logs ...`")
     if "-h" in message.flags and Config.HEROKU_APP:
         limit = int(message.flags.get("-l", 100))
@@ -89,7 +89,7 @@ async def check_logs(message: Message):
     },
 )
 async def set_level(message: Message):
-    """ set logger level """
+    """set logger level"""
     await message.edit("`setting logger level ...`")
     level = message.input_str.lower()
     if level not in _LEVELS:

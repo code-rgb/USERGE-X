@@ -34,7 +34,7 @@ LOG = userge.getLogger(__name__)
     allow_bots=False,
 )
 async def gmute_user(msg: Message):
-    """ Mute a user globally """
+    """Mute a user globally"""
     await msg.edit("`Globally Muting this User...`")
     user_id, reason = msg.extract_user_and_text
     if not user_id:
@@ -112,7 +112,7 @@ async def gmute_user(msg: Message):
     allow_bots=False,
 )
 async def ungmute_user(msg: Message):
-    """ unmute a user globally """
+    """unmute a user globally"""
     await msg.edit("`UnGMuting this User...`")
     user_id, _ = msg.extract_user_and_text
     if not user_id:
@@ -159,7 +159,7 @@ async def ungmute_user(msg: Message):
     allow_channels=False,
 )
 async def list_gmuted(msg: Message):
-    """ views gmuted users """
+    """views gmuted users"""
     users = ""
     async for c in GMUTE_USER_BASE.find():
         users += "**User** : " + str(c["firstname"])
@@ -176,7 +176,7 @@ async def list_gmuted(msg: Message):
     filters.group & filters.new_chat_members, group=1, check_restrict_perm=True
 )
 async def gmute_at_entry(msg: Message):
-    """ handle gmute """
+    """handle gmute"""
     chat_id = msg.chat.id
     for user in msg.new_chat_members:
         user_id = user.id

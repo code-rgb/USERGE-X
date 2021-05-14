@@ -33,7 +33,7 @@ async def _init() -> None:
     about={"header": "Save thumbnail", "usage": "{tr}sthumb [reply to any photo]"},
 )
 async def save_thumb_nail(message: Message):
-    """ setup thumbnail """
+    """setup thumbnail"""
     await message.edit("processing ...")
     replied = message.reply_to_message
     if (
@@ -67,7 +67,7 @@ async def save_thumb_nail(message: Message):
 
 @userge.on_cmd("dthumb", about={"header": "Delete thumbnail"}, allow_channels=False)
 async def clear_thumb_nail(message: Message):
-    """ delete thumbnail """
+    """delete thumbnail"""
     await message.edit("`processing ...`")
     if os.path.exists(Config.THUMB_PATH):
         os.remove(Config.THUMB_PATH)
@@ -82,7 +82,7 @@ async def clear_thumb_nail(message: Message):
 
 @userge.on_cmd("vthumb", about={"header": "View thumbnail"}, allow_channels=False)
 async def get_thumb_nail(message: Message):
-    """ view current thumbnail """
+    """view current thumbnail"""
     await message.edit("processing ...")
     if os.path.exists(Config.THUMB_PATH):
         msg = await message.client.send_document(

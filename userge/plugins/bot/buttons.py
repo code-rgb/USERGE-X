@@ -60,7 +60,7 @@ InlineDB = Inline_DB()
     },
 )
 async def create_button(msg: Message):
-    """ Create Buttons Using Bot """
+    """Create Buttons Using Bot"""
     if Config.BOT_TOKEN is None:
         await msg.err("First Create a Bot via @Botfather to Create Buttons...")
         return

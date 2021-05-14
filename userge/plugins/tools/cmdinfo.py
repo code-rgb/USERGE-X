@@ -6,11 +6,16 @@
 
 
 import os
+from re import compile as comp_regex
 
 from git import Repo
+from pyrogram import filters
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, userge
-from userge.utils import humanbytes
+from userge.utils import check_owner, humanbytes
+
+plugin_regex = comp_regex(r"Path[\s:]{1,5}(userge/plugins/\w+/\w+\.py)")
 
 
 @userge.on_cmd(
@@ -65,10 +70,8 @@ async def see_info(message: Message):
         )
         plugin_link = f"{extra_plugins}/{plugin_name}.py"
     elif plugin_loc == "/custom":
-        custom_plugins = (
-            os.environ.get("CUSTOM_PLUGINS_REPO") or "" + "/blob/main/plugins"
-        )
-        plugin_link = f"{custom_plugins}/{plugin_name}.py"
+        custom_plugins = os.environ.get("CUSTOM_PLUGINS_REPO", "")
+        plugin_link = f"{custom_plugins}/blob/master/plugins/{plugin_name}.py"
     elif plugin_loc == "/temp":
         plugin_link = False
     else:
@@ -98,7 +101,14 @@ async def see_info(message: Message):
                 if line_c >= 8:
                     break
         result += "  <b>{}</b>".format(s_result)
-    await message.edit(result, disable_web_page_preview=True)
+    buttons = (
+        InlineKeyboardMarkup(
+            [[InlineKeyboardButton("📤  Upload", callback_data="plugin_upload")]]
+        )
+        if message.client.is_bot
+        else None
+    )
+    await message.edit(result, disable_web_page_preview=True, reply_markup=buttons)
 
 
 def count_lines(cmd_path: str, word: str = None):
@@ -111,3 +121,29 @@ def count_lines(cmd_path: str, word: str = None):
             if word and word in line.lower():
                 arr.append(num_lines)
     return num_lines, arr
+
+
+if userge.has_bot:
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^plugin_upload$"))
+    @check_owner
+    async def plugin_upload_(c_q: CallbackQuery):
+        if match := plugin_regex.search(c_q.message.text):
+            if os.path.exists(plugin_loc := match.group(1)):
+                p_name = plugin_loc.split("/")[-1]
+                await c_q.answer(f"📤  Uploading - {p_name}")
+                await userge.bot.send_chat_action(
+                    c_q.message.chat.id, "upload_document"
+                )
+                await userge.bot.send_document(
+                    chat_id=c_q.message.chat.id,
+                    document=plugin_loc,
+                    caption=p_name,
+                    parse_mode="html",
+                    disable_notification=True,
+                    reply_to_message_id=c_q.message.message_id,
+                )
+            else:
+                await c_q.answer("❌ ERROR: Plugin Not Found !")
+        else:
+            await c_q.answer()

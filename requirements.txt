@@ -14,7 +14,7 @@ heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
 motor>=2.3.0
 oauth2client>=4.1.3
-Pillow==8.1.2
+Pillow==8.2.0
 psutil>=5.7.3
 pybase64>=1.1.1
 git+https://github.com/code-rgb/pyrogram.git@x21
@@ -28,7 +28,7 @@ git+https://github.com/code-rgb/search-engine-parser
 selenium==3.141.0
 setuptools>=40.3.0
 spamwatch>=0.3.0
-speedtest-cli>=2.1.2
+speedtest-cli>=2.1.3
 stagger>=1.0.0
 telegraph>=1.4.1
 tgcrypto
@@ -37,7 +37,7 @@ wget>=3.2
 wikipedia>=1.4.0
 git+https://github.com/ytdl-org/youtube-dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-ruamel.yaml==0.16.13
+ruamel.yaml==0.17.2
 ujson>=4.0.1
 youtube-search-python==1.4.2
 git+https://github.com/code-rgb/google-images-download.git

@@ -42,14 +42,14 @@ _SECURE = [
 
 
 class SafeDict(Dict[str, str]):
-    """ modded dict """
+    """modded dict"""
 
     def __missing__(self, key: str) -> str:
         return "{" + key + "}"
 
 
 def get_import_path(root: str, path: str) -> Union[str, List[str]]:
-    """ return import path """
+    """return import path"""
     seperator = "\\" if "\\" in root else "/"
     if isfile(path):
         return ".".join(relpath(path, root).split(seperator))[:-3]
@@ -64,12 +64,12 @@ def get_import_path(root: str, path: str) -> Union[str, List[str]]:
 
 
 def terminate() -> None:
-    """ terminate programme """
+    """terminate programme"""
     kill(getpid(), SIGTERM)
 
 
 def secure_text(text: str) -> str:
-    """ secure given text """
+    """secure given text"""
     if not text:
         return ""
     for var in _SECURE:

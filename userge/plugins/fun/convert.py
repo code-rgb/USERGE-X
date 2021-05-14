@@ -16,7 +16,7 @@ from userge import Message, userge
     about={"header": "Make caps smaller", "usage": "{tr}small [text | reply to msg]"},
 )
 async def small_(message: Message):
-    """ text to small """
+    """text to small"""
     text = message.input_str
     if message.reply_to_message:
         text = message.reply_to_message.text
@@ -38,7 +38,7 @@ async def small_(message: Message):
     },
 )
 async def lower_(message: Message):
-    """ text to lower """
+    """text to lower"""
     text = message.input_str
     if message.reply_to_message:
         text = message.reply_to_message.text
@@ -56,7 +56,7 @@ async def lower_(message: Message):
     },
 )
 async def upper_(message: Message):
-    """ text to upper """
+    """text to upper"""
     text = message.input_str
     if message.reply_to_message:
         text = message.reply_to_message.text

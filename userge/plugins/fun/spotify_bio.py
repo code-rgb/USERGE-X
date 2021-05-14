@@ -27,12 +27,11 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 LOG_ = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 USER_INITIAL_BIO = {}  # Saves Users Original Bio
-PATH_ = "./userge/xcache/spotify_database.json"
+PATH_ = f"{Config.CACHE_PATH}/spotify_database.json"
 
 # [---------------------------] Constants [------------------------------]
 KEY = "🎶"
 BIOS = [
-    KEY + " Vibing ; {interpret} - {title} {progress}/{duration}",
     KEY + " Vibing : {interpret} - {title}",
     KEY + " : {interpret} - {title}",
     KEY + " Vibing : {title}",
@@ -119,7 +118,7 @@ async def get_auth_():
 
 
 @userge.on_cmd(
-    "sp_setup",
+    "spsetup",
     about={
         "header": "Setup for Spotify Auth",
         "description": "[In LOG Channel]\nLogin in your spotify account before doing this, then follow the instructions",
@@ -451,7 +450,7 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                     else:
                         pass
             except FloodWait as e:
-                to_wait = e.x
+                to_wait = e.x + 60
                 LOG_.error(f"to wait for {str(to_wait)}")
                 await CHANNEL.log(
                     "**[WARNING]**\n\nI caught a telegram api limit. I shall sleep "
@@ -460,9 +459,9 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
                 skip = True
                 await asyncio.sleep(to_wait)
             # skip means a flood error stopped the whole program, no need to
-            # wait another 30 seconds after that
+            # wait another 40 seconds after that
             if not skip:
-                await asyncio.sleep(30)
+                await asyncio.sleep(40)
 
 
 async def sp_var_check(message: Message):
@@ -479,7 +478,7 @@ async def sp_var_check(message: Message):
 
 
 @userge.on_cmd(
-    "sp_bio",
+    "spbio",
     about={"header": "enable / disable Spotify Bio"},
     allow_channels=False,
 )
@@ -510,7 +509,7 @@ async def spotify_bio_toggle(message: Message):
     )
 
 
-@userge.on_cmd("sp_now", about={"header": "Now Playing Spotify Song"})
+@userge.on_cmd("spnow", about={"header": "Now Playing Spotify Song"})
 async def now_playing_(message: Message):
     """Spotify Now Playing"""
     if not await sp_var_check(message):
@@ -526,7 +525,7 @@ async def now_playing_(message: Message):
     await message.edit(spolink)
 
 
-@userge.on_cmd("sp_info", about={"header": "Get Info about Your Songs and Device"})
+@userge.on_cmd("spinfo", about={"header": "Get Info about Your Songs and Device"})
 async def sp_info_(message: Message):
     """Spotify Device Info"""
     if not await sp_var_check(message):
@@ -576,7 +575,7 @@ async def sp_info_(message: Message):
     await message.edit(status_pn)
 
 
-@userge.on_cmd("sp_profile", about={"header": "Get Your Spotify Account Info"})
+@userge.on_cmd("spprofile", about={"header": "Get Your Spotify Account Info"})
 async def sp_profile_(message: Message):
     """Spotify Profile"""
     if not await sp_var_check(message):
@@ -597,7 +596,7 @@ async def sp_profile_(message: Message):
     await message.edit(profile_text)
 
 
-@userge.on_cmd("sp_recents", about={"header": "Get Recently Played Spotify Songs"})
+@userge.on_cmd("sprecents", about={"header": "Get Recently Played Spotify Songs"})
 async def sp_recents_(message: Message):
     """Spotify Recent Songs"""
     if not await sp_var_check(message):
@@ -617,6 +616,3 @@ async def sp_recents_(message: Message):
         get_link = ex_link["spotify"]
         recent += "• [{}]({})\n".format(get_name, get_link)
     await message.edit(recent, disable_web_page_preview=True)
-
-
-# 600 Lines Lmafo

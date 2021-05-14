@@ -278,7 +278,7 @@ if userge.has_bot:
             )
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
-        elif RawClient.DUAL_MODE:
+        else:
             Config.USE_USER_FOR_CLIENT_CHECKS = True
         await SAVED_SETTINGS.update_one(
             {"_id": "CURRENT_CLIENT"},

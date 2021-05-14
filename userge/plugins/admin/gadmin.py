@@ -35,7 +35,7 @@ CHANNEL = userge.getCLogger(__name__)
     check_promote_perm=True,
 )
 async def promote_usr(message: Message):
-    """ promote members in tg group """
+    """promote members in tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Promote User.. Hang on!! ⏳`")
     user_id, custom_rank = message.extract_user_and_text
@@ -96,7 +96,7 @@ async def promote_usr(message: Message):
     check_promote_perm=True,
 )
 async def demote_usr(message: Message):
-    """ demote members in tg group """
+    """demote members in tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Demote User.. Hang on!! ⏳`")
     user_id, _ = message.extract_user_and_text
@@ -150,7 +150,7 @@ async def demote_usr(message: Message):
     check_restrict_perm=True,
 )
 async def ban_user(message: Message):
-    """ ban user from tg group """
+    """ban user from tg group"""
     await message.edit("`Trying to Ban User.. Hang on!! ⏳`")
     user_id, reason = message.extract_user_and_text
     if not user_id:
@@ -219,7 +219,7 @@ async def ban_user(message: Message):
     check_restrict_perm=True,
 )
 async def unban_usr(message: Message):
-    """ unban user from tg group """
+    """unban user from tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Unban User.. Hang on!! ⏳`")
     user_id, _ = message.extract_user_and_text
@@ -264,7 +264,7 @@ async def unban_usr(message: Message):
     check_restrict_perm=True,
 )
 async def kick_usr(message: Message):
-    """ kick user from tg group """
+    """kick user from tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Kick User.. Hang on!! ⏳`")
     user_id, _ = message.extract_user_and_text
@@ -313,7 +313,7 @@ async def kick_usr(message: Message):
     check_restrict_perm=True,
 )
 async def mute_usr(message: Message):
-    """ mute user from tg group """
+    """mute user from tg group"""
     chat_id = message.chat.id
     flags = message.flags
     minutes = flags.get("-m", 0)
@@ -417,7 +417,7 @@ async def mute_usr(message: Message):
     check_restrict_perm=True,
 )
 async def unmute_usr(message: Message):
-    """ unmute user from tg group """
+    """unmute user from tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Unmute User.. Hang on!! ⏳`")
     user_id, _ = message.extract_user_and_text
@@ -467,25 +467,29 @@ async def unmute_usr(message: Message):
     allow_private=False,
 )
 async def zombie_clean(message: Message):
-    """ remove deleted accounts from tg group """
+    """remove deleted accounts from tg group"""
     chat_id = message.chat.id
     flags = message.flags
     rm_delaccs = "-c" in flags
-    can_clean = bool(
-        not message.from_user
-        or message.from_user
-        and (
-            await message.client.get_chat_member(message.chat.id, message.from_user.id)
-        ).status
-        in ("administrator", "creator")
+    del_stats = (
+        r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
     )
+    del_users = 0
     if rm_delaccs:
-        del_users = 0
-        del_admins = 0
-        del_total = 0
-        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
+        can_clean = bool(
+            not message.from_user
+            or message.from_user
+            and (
+                await message.client.get_chat_member(
+                    message.chat.id, message.from_user.id
+                )
+            ).status
+            in ("administrator", "creator")
+        )
         if can_clean:
             await message.edit("`Hang on!! cleaning zombie accounts from this chat..`")
+            del_admins = 0
+            del_total = 0
             async for member in message.client.iter_chat_members(chat_id):
                 if member.user.is_deleted:
                     try:
@@ -519,8 +523,6 @@ async def zombie_clean(message: Message):
                 r"`i don't have proper permission to do that! (* ￣︿￣)`", del_in=5
             )
     else:
-        del_users = 0
-        del_stats = r"`Zero zombie accounts found in this chat... WOOHOO group is clean.. \^o^/`"
         await message.edit("`🔎 Searching for zombie accounts in this chat..`")
         async for member in message.client.iter_chat_members(chat_id):
             if member.user.is_deleted:
@@ -565,7 +567,7 @@ def chat_name_(msg: Message):
     check_pin_perm=True,
 )
 async def unpin_msgs(message: Message):
-    """ unpin message """
+    """unpin message"""
     reply = message.reply_to_message
     unpinall_ = bool("-all" in message.flags)
     try:
@@ -602,7 +604,7 @@ async def unpin_msgs(message: Message):
     check_pin_perm=True,
 )
 async def pin_msgs(message: Message):
-    """ pin message """
+    """pin message"""
     reply = message.reply_to_message
     if not reply:
         await message.err("First  reply to a message to pin !", del_in=5)
@@ -635,7 +637,7 @@ async def pin_msgs(message: Message):
     check_change_info_perm=True,
 )
 async def chatpic_func(message: Message):
-    """ change chat photo """
+    """change chat photo"""
     chat_id = message.chat.id
     flags = message.flags
     gpic_set = "-s" in flags
@@ -717,7 +719,7 @@ async def chatpic_func(message: Message):
     check_promote_perm=True,
 )
 async def smode_switch(message: Message):
-    """ turn on/off chat slow mode """
+    """turn on/off chat slow mode"""
     chat_id = message.chat.id
     flags = message.flags
     seconds = flags.get("-s", 0)

@@ -33,7 +33,7 @@ async def _init() -> None:
     "sudo", about={"header": "enable / disable sudo access"}, allow_channels=False
 )
 async def sudo_(message: Message):
-    """ enable / disable sudo access """
+    """enable / disable sudo access"""
     if Config.SUDO_ENABLED:
         Config.SUDO_ENABLED = False
         await message.edit("`sudo disabled !`", del_in=3)
@@ -51,7 +51,7 @@ async def sudo_(message: Message):
     allow_channels=False,
 )
 async def add_sudo(message: Message):
-    """ add sudo user """
+    """add sudo user"""
     user_id = message.input_str
     if message.reply_to_message:
         user_id = message.reply_to_message.from_user.id
@@ -98,7 +98,7 @@ async def add_sudo(message: Message):
     allow_channels=False,
 )
 async def del_sudo(message: Message):
-    """ delete sudo user """
+    """delete sudo user"""
     if "-all" in message.flags:
         Config.SUDO_USERS.clear()
         await asyncio.gather(
@@ -131,7 +131,7 @@ async def del_sudo(message: Message):
 
 @userge.on_cmd("vsudo", about={"header": "view sudo users"}, allow_channels=False)
 async def view_sudo(message: Message):
-    """ view sudo users """
+    """view sudo users"""
     if not Config.SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
@@ -154,7 +154,7 @@ async def view_sudo(message: Message):
     allow_channels=False,
 )
 async def add_sudo_cmd(message: Message):
-    """ add sudo cmd """
+    """add sudo cmd"""
     if "-all" in message.flags or "-full" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
@@ -222,7 +222,7 @@ async def add_sudo_cmd(message: Message):
     allow_channels=False,
 )
 async def del_sudo_cmd(message: Message):
-    """ delete sudo cmd """
+    """delete sudo cmd"""
     if "-all" in message.flags:
         Config.ALLOWED_COMMANDS.clear()
         await asyncio.gather(
@@ -248,7 +248,7 @@ async def del_sudo_cmd(message: Message):
 
 @userge.on_cmd("vscmd", about={"header": "view sudo cmds"}, allow_channels=False)
 async def view_sudo_cmd(message: Message):
-    """ view sudo cmds """
+    """view sudo cmds"""
     if not Config.ALLOWED_COMMANDS:
         await message.edit("**SUDO** cmds not found!", del_in=5)
         return
