@@ -57,19 +57,23 @@ _CATEGORY = {
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
-    title="Click Me",
-    input_message_content=InputTextMessageContent("**Join These Place's** "),
-    description="Click Me Fast",
-    thumb_url="https://telegra.ph/file/69e1442927cd2dddb6ef6.jpg",
+    title="Repo",
+    input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
+    url="https://github.com/code-rgb/USERGE-X",
+    description="Setup Your Own",
+    thumb_url="https://i.imgur.com/1xsOo9o.png",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "Anime Chat Group", url="https://t.me/AnimeChatOfficial"
+                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
                 ),
                 InlineKeyboardButton(
-                    "Anime Channel",
-                    url=("https://t.me" "/AnimeIndexOfficial"),
+                    "🚀 Deploy USERGE-X",
+                    url=(
+                        "https://heroku.com/deploy?template="
+                        "https://github.com/code-pms/MyGpack"
+                    ),
                 ),
             ]
         ]
@@ -274,7 +278,7 @@ if userge.has_bot:
             )
         if Config.USE_USER_FOR_CLIENT_CHECKS:
             Config.USE_USER_FOR_CLIENT_CHECKS = False
-        else:
+        elif RawClient.DUAL_MODE:
             Config.USE_USER_FOR_CLIENT_CHECKS = True
         await SAVED_SETTINGS.update_one(
             {"_id": "CURRENT_CLIENT"},
@@ -941,11 +945,13 @@ if userge.has_bot:
                 if os.path.exists(inline_db_path):
                     with open(inline_db_path, "r") as data_file:
                         view_db = ujson.load(data_file)
+                    data_count_n = 1
                     reverse_list = list(view_db)
                     reverse_list.reverse()
-                    for data_count_n, butt_ons in enumerate(reverse_list, start=1):
+                    for butt_ons in reverse_list:
                         if data_count_n > 30:
                             view_db.pop(butt_ons, None)
+                        data_count_n += 1
                     with open(inline_db_path, "w") as data_file:
                         ujson.dump(view_db, data_file)
                     if str_y[0] == "btn":
