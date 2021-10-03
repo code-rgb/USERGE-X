@@ -37,7 +37,7 @@ wget>=3.2
 wikipedia>=1.4.0
 git+https://github.com/ytdl-org/youtube-dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-ruamel.yaml==0.17.2
+ruamel.yaml==0.17.4
 ujson>=4.0.1
 youtube-search-python==1.4.2
 git+https://github.com/code-rgb/google-images-download.git
